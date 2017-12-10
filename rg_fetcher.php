@@ -344,7 +344,7 @@ $sql = "INSERT INTO players (playerID, nickname) VALUES ";
 foreach ($t_players as $id => $player) {
   if ($player === true) continue;
   if (!$new_players) $new_players = true;
-  $sql .= "(".$id.",\"".$player."\"),";
+  $sql .= "(".$id.",\"".addslashes($player)."\"),";
 }
 $sql[strlen($sql)-1] = ";";
 
@@ -435,7 +435,7 @@ if ($lg_settings['main']['teams']) {
   foreach($t_team_matches as $match) {
       if($match['is_radiant'] > 1) {
         echo "[W] Error when adding teams-matches data: is_radiant flag has higher value than 1\n".
-            ."[ ]\t".$match['matchid']." - ".$match['teamid']." - ".$match['is_radiant']."\n";
+             "[ ]\t".$match['matchid']." - ".$match['teamid']." - ".$match['is_radiant']."\n";
             continue;
       }
       $sql .= "(".$match['matchid'].",".$match['teamid'].",".$match['is_radiant']."),";
@@ -455,9 +455,9 @@ if ($lg_settings['main']['teams']) {
   if(sizeof($newteams)) {
     $sql = "INSERT INTO teams (teamid, name, tag) VALUES ";
     foreach ($newteams as $id => $team) {
-      $sql .= "(".$id.",\"".$team['name']."\",\"".$team['tag']."\"),";
+      $sql .= "(".$id.",\"".addslashes($team['name'])."\",\"".addslashes($team['tag'])."\"),\n";
     }
-    $sql[strlen($sql)-1] = ";";
+    $sql[strlen($sql)-2] = ";";
 
     if ($conn->multi_query($sql) === TRUE) echo "[S] Successfully recorded new teams data to database.\n";
     else die("[F] Unexpected problems when recording to database.\n".$conn->error."\n");

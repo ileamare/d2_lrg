@@ -27,18 +27,18 @@ $lg_settings['league_id'] = null;
 $lg_settings['time_limit_after'] = false;
 $lg_settings['time_limit_before'] = false;
 
-/* STARLADDER *
+/* STARLADDER */
 
-$lg_settings['league_tag'] = "sl_ileague_s3_minor_oct_2017_finals";
-$lg_settings['league_name'] = "SL i-League Invitational Season 3 Minor LAN Finals";
+$lg_settings['league_tag'] = "mdl_minor_2017_finals";
+$lg_settings['league_name'] = "Mars Dota 2 League 2017";
 $lg_settings['league_desc'] = "Dota 2 Minor";
-$lg_settings['league_id'] = 5579;
+$lg_settings['league_id'] = 5504;
 $lg_settings['time_limit_after'] = null;
 $lg_settings['time_limit_before'] = null;
-$lg_settings['match_limit_after'] = null;
+$lg_settings['match_limit_after'] = 3604953487;
 $lg_settings['match_limit_before'] = null;
-*/
-/* PGL OPEN */
+/*/
+/*
 
 $lg_settings['league_tag'] = "workshop_bots_707";
 $lg_settings['league_name'] = "Workshop Bots - Patch 7.07";
@@ -126,14 +126,14 @@ $lg_settings['ana']['teams']['matches']  = true;
 #   hero pairs
 #   hero triplets
 #   matches list
-$lg_settings['ana']['teams']['team_vs_team']   = true; # TODO
+$lg_settings['ana']['teams']['team_vs_team']   = true;
 }
 
 $lg_settings['web'] = array(
   //"custom_style" => "sa",
   //"custom_style" => "fpl",
   //"custom_style" => "sl-minor-17",
-  "custom_style" => "bots",
+  "custom_style" => "pw-masters",
   "pvp_grid" => false,
 
   "heroes_combo_graph" => true,

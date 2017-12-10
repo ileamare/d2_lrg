@@ -2,7 +2,7 @@
 
 
 # global settings
-  $lrg_version = array(1, 0, 0, 0, 0); # 1.0.0-release-r0
+  $lrg_version = array(1, 0, 1, 0, getlastmod()); # 1.0.0-r0
 
 # SQL Connection information
 

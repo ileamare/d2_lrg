@@ -1,0 +1,440 @@
+@font-face {
+  font-family: 'Radiance';
+  src:url("fonts/radiance.eot");
+  src:url("fonts/radiance.eot?#iefix") format("embedded-opentype"),
+    url("fonts/radiance.woff") format("woff"),url("fonts/radiance.ttf") format("truetype"),
+    url("fonts/radiance.svg#ywftsvg") format("svg");
+  font-weight:normal;
+  font-style:normal
+}
+@font-face {
+  font-family: 'Radiance-SemiBold';
+  src:url("fonts/radiance-semibold.eot");
+  src:url("fonts/radiance-semibold.eot?#iefix") format("embedded-opentype"),
+    url("fonts/radiance-semibold.woff") format("woff"),
+    url("fonts/radiance-semibold.ttf") format("truetype"),
+    url("fonts/radiance-semibold.svg#ywftsvg") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  font-family: Radiance, Noto Sans, arial, helvetica, sans-serif;
+  line-height: normal;
+  font-size: 12px;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-color: #0a0a0a;
+}
+
+a, a:active, a:visited, a:focus {
+	font-size: inherit;
+  line-height: inherit;
+	color: #fff;
+  text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.section-header {
+	margin: 0 auto;
+	height: 438px;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-color: #090909;
+}
+
+#header-image {
+  /* background-image: url('header.jpg'); */
+  background-image: url('header_grafenium.jpg');
+  background-size: cover;
+}
+
+.section-header h1 {
+	width: 100%;
+	text-align: center;
+	font-size: 48px;
+	letter-spacing: 4px;
+	text-transform: uppercase;
+	color: white;
+	padding-top: 158px;
+	margin-bottom: 0px;
+	font-family: 'Radiance-SemiBold';
+	text-shadow: 2px 2px 10px #000000;
+}
+
+.section-header h2 {
+	width: 100%;
+	text-align: center;
+	font-size: 24px;
+	letter-spacing: 3px;
+	text-transform: uppercase;
+	color: #bbb;
+	margin-top: 4px;
+	font-family: 'Radiance-SemiBold';
+	text-shadow: 2px 2px 6px #000000;
+}
+
+.section-header h3 {
+	width: 100%;
+	text-align: center;
+	font-size: 14px;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	color: #999;
+	margin-top: 8px;
+	font-family: 'Radiance-SemiBold';
+	text-shadow: 2px 2px 3px #000000;
+}
+
+.content-section {
+	background-image: url('main_bg.jpg');
+	background-position: top center;
+	background-repeat: no-repeat;
+	margin-top: 0px;
+	padding-top: 40px;
+	background-color: #000000;
+	padding-bottom: 80px;
+  overflow: hidden;
+}
+.content-section div:first-child {
+  margin-top: 0;
+}
+.content-section div:last-child {
+  margin-bottom: 0;
+}
+
+.content-top {
+  margin-bottom: 40px;
+}
+
+.content-section .content-header {
+	background-color: #525353;
+	width: 600px;
+
+	margin-left: auto;
+	margin-right: auto;
+
+	font-size: 22px;
+	text-align: center;
+	color: #D9D9D9;
+	text-transform: uppercase;
+	letter-spacing: 4px;
+	padding: 17px 0;
+	font-family: 'Radiance-SemiBold';
+
+	text-shadow: 2px 2px 6px #000000;
+  margin-top: 30px;
+}
+
+.content-text {
+	text-align: center;
+
+	font-size: 18px;
+	line-height: 34px;
+	color: #aaa;
+
+
+	margin: 30px 20% 0;
+}
+
+.content-cards {
+	text-align: center;
+
+	font-size: 18px;
+	line-height: 34px;
+	color: #ccc;
+
+
+	margin: 30px 15% 0;
+
+	margin-top: 30px;
+}
+
+.selector-modules {
+	margin-left: auto;
+	margin-right: auto;
+
+	color: #464646;
+	font-family: 'Radiance-SemiBold';
+
+	text-align: center;
+
+  margin: 40px 5% 20px;
+
+  font-size: 24px;
+}
+.selector-modules-sublevel {
+	text-align: center;
+
+  border-top: 1px solid #464646;
+  color: #aaa;
+
+  padding-top: 20px;
+	margin: 0 25% 20px;
+
+  font-size: 20px;
+}
+.selector-modules-level-3 {
+	text-align: center;
+
+  border-top: 1px solid #464646;
+  color: #aaa;
+
+  padding-top: 20px;
+	margin: 0 25% 20px;
+
+  font-size: 18px;
+}
+.selector-modules-level-4 {
+	text-align: center;
+
+  border-top: 1px solid #464646;
+  color: #aaa;
+
+  padding-top: 20px;
+	margin: 0 25% 20px;
+
+  font-size: 16px;
+}
+.selector {
+  font-size: inherit;
+	text-transform: uppercase;
+	letter-spacing: 4px;
+
+	padding-left: 10px;
+	padding-right: 10px;
+
+	cursor: pointer;
+
+	font-family: 'Radiance-SemiBold';
+
+	color: #D9D9D9;
+  display: inline-block;
+}
+.select-selectors {
+  background: #323232;
+  color: #fff;
+  line-height: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  padding: 5px 20px;
+}
+.selector a {
+  font-size: inherit;
+  line-height: inherit;
+  font-family: inherit;
+}
+
+.selector:hover {
+	color: white;
+}
+
+.content-text h1 , .content-cards h1{
+    margin: 42px 0 18px;
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-weight: bold;
+    color: #D9D9D9;
+}
+
+.faqAnswer {
+    color: #bbb;
+    line-height: 30px;
+    font-size: 18px;
+    padding-bottom: 20px;
+}
+.faqQuestion {
+    color: #D9D9D9;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 30px;
+}
+
+.selector-module {
+  display: none;
+}
+.selector-module.active {
+  display: block;
+}
+.selector.active {
+  text-decoration: underline;
+}
+
+
+header.navBar {
+    height: 64px;
+    position: relative;
+    z-index: 10001;
+    background-image: url(header_bg.png);
+    font-family: 'Radiance';
+    box-shadow: 0 0 10px #000;
+    text-align: center;
+    padding: 0 10%;
+    font-size: 0;
+}
+.navItem {
+    margin: 20px 0;
+    padding: 0 20px;
+    font-size: 18px;
+    line-height: 18px;
+    color: #cecece;
+    display: inline-block;
+    border-right: 1px solid #464646;
+    float: left;
+}
+.navItem:last-child {
+  border: none;
+}
+.navItem.dotalogo {
+  font-size: 0;
+  height: 33px;
+  width: 33px;
+  background-image: url(spec_dota_logo_small.png);
+  background-position: center;
+  margin: 15px 0;
+  background-repeat: no-repeat;
+}
+.navItem.dotalogo a {
+  width: 33px;
+  height: 33px;
+  display: block;
+}
+
+
+
+/* Modal window code from w3c */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    -webkit-animation-name: fadeIn; /* Fade in the background */
+    -webkit-animation-duration: 0.4s;
+    animation-name: fadeIn;
+    animation-duration: 0.4s
+}
+
+/* Modal Content */
+.modal-content {
+    position: fixed;
+    bottom: 0;
+    background-color: #525353;
+    width: 100%;
+    -webkit-animation-name: slideIn;
+    -webkit-animation-duration: 0.4s;
+    animation-name: slideIn;
+    animation-duration: 0.4s;
+}
+.modal-text {
+    color: #fff;
+    font-size: 22px;
+    font-family: 'Radiance-SemiBold';
+    padding: 30px 5%;
+}
+.modal-sublevel {
+    color: #fff;
+    font-size: 22px;
+    font-family: 'Radiance-SemiBold';
+    padding: 30px 5%;
+    background-color: #999;
+    display: none;
+    -webkit-animation-name: slideIn;
+    -webkit-animation-duration: 0.4s;
+    animation-name: slideIn;
+    animation-duration: 0.4s;
+}
+.modal-header {
+    color: #fff;
+    background-color: #323232;
+    font-size: 22px;
+    font-family: 'Radiance-SemiBold';
+    padding: 30px 5%;
+}
+
+/* Add Animation */
+@-webkit-keyframes slideIn {
+    from {bottom: -300px; opacity: 0}
+    to {bottom: 0; opacity: 1}
+}
+
+@keyframes slideIn {
+    from {bottom: -300px; opacity: 0}
+    to {bottom: 0; opacity: 1}
+}
+
+@-webkit-keyframes fadeIn {
+    from {opacity: 0}
+    to {opacity: 1}
+}
+
+@keyframes fadeIn {
+    from {opacity: 0}
+    to {opacity: 1}
+}
+
+footer {
+  color: #525050;
+  font-size: 12px;
+  line-height: 20px;
+  padding: 40px 0 80px 0;
+  margin: auto;
+  width: 70%;
+}
+footer a, footer a:active, footer a:visited, footer a:focus {
+  color: #948787;
+}
+.share-links {
+  margin: 15px 0;
+  float: right;
+  font-size: 0;
+}
+.share-links .share-link {
+  height: 33px;
+  width: 33px;
+  display: inline-block;
+  opacity: 0.5;
+  background-image: url('share.png');
+  background-repeat: no-repeat;
+  transition: all 300ms ease;
+}
+.share-links .share-link:hover {
+  opacity: 1;
+}
+.share-links .share-link a {
+  font-size: 0;
+  height: 33px;
+  width: 33px;
+  display: inline-block;
+  cursor: pointer;
+}
+.share-links .share-link.reddit {
+  background-position: 0;
+}
+.share-links .share-link.twitter {
+  background-position: -33px;
+}
+.share-links .share-link.vk {
+  background-position: -66px;
+}
+.share-links .share-link.fb {
+  background-position: -99px;
+}

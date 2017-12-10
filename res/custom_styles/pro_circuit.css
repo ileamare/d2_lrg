@@ -1,0 +1,40 @@
+/* background-color: #192023;*/
+
+#header-image {
+  background-image: url('header_procircuit.jpg');
+}
+
+table.list td, table.pvp td {
+    background-color: #233339;
+}
+
+table.list .thead {
+    background-color: #3d5251 !important;
+}
+
+table.pvp tr td:first-child {
+  background-color: #3d5251 !important;
+}
+table.pvp .thead th  {
+  background-color: #3d5251 !important;
+}
+
+.section-header h2 {
+	color: #92bbb7;
+}
+
+.section-header h3 {
+	color: #72938f;
+}
+
+.content-section .content-header {
+	background-color: #3d5251;
+}
+
+.team-card .team-name, .player-card .player-name {
+  background-color: #3d5251;
+}
+
+.player-card .player-team {
+  background-color: #3d5251;
+}

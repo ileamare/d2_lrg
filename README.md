@@ -1,70 +1,47 @@
 Dota 2 League Stats Fetcher and Report Generator
 
-*Q: Why?*
-A: Because I can. Initially I wanted to make script that could generate nice-looking stats report for leagues. Then I wanted to get some special stats for mathes, like average lasthits at 10 minute mark or statistics for a hero on a specific position.
+**Q: But why PHP?**
 
-*Q: Why PHP?*
-A: It's just proof of concept. PHP is the language for making some scripts in small amount of time. I will probably rewrite it in Python or C++ later.
+Just because. There's no reasoning behind it. I just wanted to do so. Don't judge me.
+
+**Q: What does it do?**
+
+* rg_fetcher - Fetches matchdata from OpenDota, adds it to MySQL database (there's no special reason to use it as well).
+* rg_analyzer - Generates precached report file based on matchdata.
+* (TODO) rg_report - Generates fancy (or not so fancy) report page for rg_analyzer output. Can be used on your webserver as well.
+* (TODO) rg_init - Initialises new league database and other resources.
+
+=== settings.php
+
+You can specify your Steam API key and MySQL credentials, as well as change MySQL database prefix.
+
+This module is included by rg_init, rg_fetcher and rg_analyzer
+
+=== rg_init
+
+=== rg_fetcher
+
+=== rg_analyzer
+
+=== rg_report_web
+
+This file should be put on your webserver, as well as "reports/" folder with all the reports in it and "res/".
+
+Settings you can change in it:
+* $lrg_use_get -- Use GET parameters for opening league files and generating modules, `true` by default
+* $lrg_get_depth -- Sets module link depth for GET parameters, `2` by default. Modules deeper than this will be fully generated
+* $locale -- Translation file you will use for your reportm, `"en"` by default
 
 
-- how to use
-- plans
-- Modules
-- - init (create database from template, load settings from database, clone database)
-- - fetcher (load matchdata and add it to database)
-- - - playerinfo (load information about players in league)
-- - - teaminfo (load information about players in league)
-- - analyzer (get required data from database and drop JSON file)
-- - report (generate HTML, Fancy HTML or Makrdown based on JSON report file)
-
-- settings
-- tables
-- how it works
+It can also be used from command line as "php rg_report_web.php > index.html" with following parameters:
+* -lVALUE -- Open report for league VALUE
+* -f -- Generate full report (all-in-one HTML file, equivalent of `$lrg_get_depth = 0`)
+* -dVALUE -- Force module depth, force-sets `$lrg_get_depth` to VALUE
+* -mVALUE -- Generate module VALUE, equivalent to `?mod=VALUE` in GET request
 
 
+**What do I need to use it?**
 
-*Q: Any plans?*
-A: Maybe some kind of UI for generating reports or automatic generating of players nicknames table. I will definately try to minimize resources I fetch data from or maybe try to analyze replays by myself. I also want to add data about match keypoints, item timings. Future versions will definately have teams stats and so on. I'd also like to rewrite all of this and add documentation, but right now let's assume it just works.
+MySQL database server and PHP interpreter. Nothing really special, you can use regular XAMPP for it.
 
-
-*Q: How does it work?*
-I use SQL and PHP for it right now. The script is divided in four parts: init, fetcher, analyzer, report.
-* Firstly, init will check your local SQL server for required d2_general_info database (it has some stuff like HeroIDs and so on). Then it will create d2_league_* database (* = name for league you're working on).
-* Secondly, fetcher part comes in. It gets list of matchIDs from local file OR from Valve's API. Initially it got information from various sources, but now it gets everthing from OpenDota API.
-* Third part is Analyzer. It basically creates LEAGUETAG.report file which is just marked down text. It's divided in thematic blocks.
-* End part: report. It uses .report file and just makes cool HTML page for it. It can be saved to pregenerated .html file or used to get new reports very time.
-
-The database is divided in tables, you mostly care about *matchlines* and *adv matchlines*. Basically, it's just data about every hero in match, divided in 10 different rows. It doesn't look very good, but it makes working with this data much easier.
-
-=== Tables
-
-*matches*. MatchID, winner, length, game mode, league ID and date.
-
-*matchlines*. Just regular dota match data, nothing special. Hero, side, Kills, Deaths, Assists, GPM, XPM, Networth, Damage and heal, lasthits, denies. It doesn't have items data because straight item slots in the end of a game is just useless.
-
-*draft*. What heroes were picked and banned by a team in a specific match and the order of picks/bans.
-
-*adv matchlines*. The most interesting part. This table is kind of second part of *matchlines*, but it's made as separate one just for the cases when something went wrong (replay wasn't analyzed). It has:
-* lasthits at 10 minute mark (OpenDota) -- Just to see how many lasthits the hero usually gets at this point and how good it is at dominating a lane
-* isCore (Dotabuff) -- Getting data about positions
-* lane (Dotabuff) -- In combination with isCore it's used to get data about specific hero on a specific position (safelane core, midlane core, midlane support, etc)
-* efficiency_at10 (OpenDota) -- How efficient player was in lane. Completes the picture of hero's laning phase in combination with lasthits at 10
-* wards and sentries (Dotabuff)
-* roshans and couriers killed (OpenDota)
-* maximum multi kill in game and longest kill streak by a hero (OpenDota)
-* stacks (OpenDota)
-* time dead (OpenDota)
-* buybacks (OpenDota)
-* wards destroyed (OpenDota)
-* map pings by player (OpenDota) -- Just for lulz
-
-Later there will be *players* and *teams*.
-
-=== Console commands
-
-run.sh
-init -n LEAGUETAG
-fetcher -n LEAGUETAG -f FILE -lid LEAGUE_ID
-analyzer -n LEAGUETAG
-report -n REPORTFILE
-report.php?r=REPORTFILE
+I also recommend using PHPMyAdmin for manual data change.

@@ -1,0 +1,8 @@
+output
+report.html
+test.html
+testrun.php
+list.php
+tmp*
+gi_*
+!.gitignore

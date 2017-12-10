@@ -1,0 +1,61 @@
+#header-image {
+  background-image: url('header_starladder_minor.jpg');
+}
+
+.content-section {
+    background-image: url('sl_bg.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+table.list td, table.pvp td {
+    background-color: #392523;
+}
+
+table.list .thead {
+    background-color: #523d3d !important;
+}
+
+table.pvp tr td:first-child {
+  background-color: #523d3d !important;
+}
+table.pvp .thead th  {
+  background-color: #523d3d !important;
+}
+
+.section-header h2 {
+	color: #bb9292;
+}
+
+.section-header h3 {
+	color: #937272;
+}
+
+.content-section .content-header {
+	background-color: #523d3d;
+}
+
+
+.modal-content {
+    background-color: #523d3d;
+}
+.modal-text {
+    color: #fff;
+}
+.modal-sublevel {
+    color: #fff;
+    background-color: #937272;
+}
+.modal-header {
+    color: #fff;
+    background-color: #392523;
+}
+
+.team-card .team-name, .player-card .player-name {
+  background-color: #523d3d;
+}
+
+.player-card .player-team {
+  background-color: #523d3d;
+}

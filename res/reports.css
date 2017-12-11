@@ -124,6 +124,9 @@ table.pvp {
   table-layout: fixed;
   border: 1px solid #000;
 }
+table.pvp td, table.pvp th {
+  padding-left: 0;
+}
 table.pvp tr td:first-child {
   background-color: #525353 !important;
 }

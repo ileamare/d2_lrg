@@ -647,7 +647,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       $max_wr = 0;
       $max_matches = 0;
       foreach ($report['teams'] as $team_id => $team) {
-          if(!$max_matches || $report['teams'][$max_wr]['matches_total'] < $team['matches_total'] )
+          if(!$max_matches || $report['teams'][$max_matches]['matches_total'] < $team['matches_total'] )
             $max_matches = $team_id;
           if(!$max_wr || $report['teams'][$max_wr]['wins']/$report['teams'][$max_wr]['matches_total'] < $team['wins']/$team['matches_total'] )
             $max_wr = $team_id;
@@ -2204,10 +2204,10 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
               echo "<link href=\"http://visjs.org/dist/vis-network.min.css\" rel=\"stylesheet\" type=\"text/css\" />";
             }
 
-       if (!empty($custom_head)) echo "<br />".$custom_head; ?>
+       if (!empty($custom_head)) echo $custom_head; ?>
     </head>
     <body>
-      <?php if (!empty($custom_body)) echo "<br />".$custom_body; ?>
+      <?php if (!empty($custom_body)) echo $custom_body; ?>
       <header class="navBar">
         <!-- these shouldn't be spans, but I was mimicking Valve pro circuit style in everything, so I copied that too. -->
         <span class="navItem dotalogo"><a href="<?php echo $main_path; ?>"></a></span>
@@ -2330,7 +2330,7 @@ echo $output;
           <?php if (!empty($custom_footer)) echo $custom_footer."<br />";
             echo "LRG web version: <a>".parse_ver($lg_version)."</a>. ";
           ?>
-          All changes can be discussed on Spectral Alliance discord channel and on <a href="https://github.org/leamare/d2_lrg" target="_blank" rel="noopener">github</a>.
+          All changes can be discussed on Spectral Alliance discord channel and on <a href="https://github.com/leamare/d2_lrg" target="_blank" rel="noopener">github</a>.
         </footer>
         <div class="modal" id="modal-box">
           <div class="modal-content">

@@ -1,6 +1,19 @@
 <?php
   include_once("settings.php");
 
+  function utf8ize($d) {
+    if (is_array($d))
+        foreach ($d as $k => $v)
+            $d[$k] = utf8ize($v);
+     else if(is_object($d))
+        foreach ($d as $k => $v)
+            $d->$k = utf8ize($v);
+     else if(is_string($d))
+        return utf8_encode($d);
+
+    return $d;
+  }
+
   # TODO
   # Analyzer module
   # JSON output
@@ -1966,7 +1979,7 @@
  $result['ana_version'] = $lrg_version;
 
  echo("[ ] Encoding results to JSON\n");
- $output = json_encode($result);
+ $output = json_encode(utf8ize($result));
 
  $filename = "reports/report_".$lrg_league_tag.".json";
  $f = fopen($filename, "w") or die("[F] Couldn't open file to save results. Check working directory for `reports` folder.\n");

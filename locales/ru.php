@@ -203,7 +203,7 @@
     "over-most-region-right" => ".",
     "over-first-match" => "Первый матч был сыгран ",
     "over-last-match" => "Последний матч был сыгран ",
-    "over-last-match-winner" => " выиграла матч.",
+    "over-last-match-winner" => " выиграли последний матч.",
     "ana_version" => "Версия анализатора",
     "matches_per_day" => "Матчей за день",
     "first_match" => "Первый матч",

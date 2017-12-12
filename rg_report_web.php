@@ -681,7 +681,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
 
 
     }
-    $modules['overview'] .= "<div class=\"content-text\"><a href=\"http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."?league".$leaguetag.
+    $modules['overview'] .= "<div class=\"content-text\"><a href=\"http://".$_SERVER['HTTP_HOST']."?league=".$leaguetag.
       (empty($linkvars) ? "" : "&".$linkvars)."&mod=participants\">".$strings['full_participants']."</a></div>";
     $modules['overview'] .= "</div>";
 
@@ -784,7 +784,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         $modules['overview'] .= "</table>";
     }
 
-    $modules['overview'] .= "<div class=\"content-text\"><a href=\"http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."?league".$leaguetag.
+    $modules['overview'] .= "<div class=\"content-text\"><a href=\"http://".$_SERVER['HTTP_HOST']."?league=".$leaguetag.
       (empty($linkvars) ? "" : "&".$linkvars)."&mod=heroes-pickban\">".$strings['full_pickban']."</a></div>";
 
     if($report['settings']['overview_top_draft']) {
@@ -823,7 +823,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           }
         }
       }
-      $modules['overview'] .= "<div class=\"content-text\"><a href=\"http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."?league".$leaguetag.
+      $modules['overview'] .= "<div class=\"content-text\"><a href=\"http://".$_SERVER['HTTP_HOST']."?league=".$leaguetag.
         (empty($linkvars) ? "" : "&".$linkvars)."&mod=heroes-draft\">".$strings['full_draft']."</a></div>";
     }
 
@@ -851,7 +851,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         }
         $modules['overview'] .= "</table>";
 
-        $modules['overview'] .= "<div class=\"content-text\"><a href=\"http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."?league".$leaguetag.
+        $modules['overview'] .= "<div class=\"content-text\"><a href=\"http://".$_SERVER['HTTP_HOST']."?league=".$leaguetag.
           (empty($linkvars) ? "" : "&".$linkvars)."&mod=heroes-hero_combos\">".$strings['full_hero_combos']."</a></div>";
     }
 
@@ -879,7 +879,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         }
         $modules['overview'] .= "</table>";
 
-        $modules['overview'] .= "<div class=\"content-text\"><a href=\"http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."?league".$leaguetag.
+        $modules['overview'] .= "<div class=\"content-text\"><a href=\"http://".$_SERVER['HTTP_HOST']."?league=".$leaguetag.
           (empty($linkvars) ? "" : "&".$linkvars)."&mod=players-player_combos\">".$strings['full_player_combos']."</a></div>";
     }
 
@@ -898,7 +898,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       if($report['settings']['overview_records_duration'])
         $modules['overview'] .= "<h1>".$strings['longest_match']."</h1>".match_card($report['records']['duration']['matchid']);
 
-      $modules['overview'] .= "<div class=\"content-text\"><a href=\"http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."?league".$leaguetag.
+      $modules['overview'] .= "<div class=\"content-text\"><a href=\"http://".$_SERVER['HTTP_HOST']."?league=".$leaguetag.
         (empty($linkvars) ? "" : "&".$linkvars)."&mod=matches\">".$strings['full_matches']."</a></div>";
 
       $modules['overview'] .= "</div>";

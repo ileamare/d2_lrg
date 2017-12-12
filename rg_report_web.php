@@ -2222,10 +2222,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
             echo '<div class="share-link reddit"><a href="http://www.reddit.com/submit?url='.htmlspecialchars('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].
               (empty($_SERVER['QUERY_STRING']) ? "" : '?'.$_SERVER['QUERY_STRING'])
             ).'" target="_blank" rel="noopener">Share on Reddit</a></div>';
-            echo '<div class="share-link twitter"><a href="http://twitter.com/share?text=League '.
-            htmlspecialchars('Report: '.$leaguetag.' - http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].
-              (empty($_SERVER['QUERY_STRING']) ? "" : '?'.$_SERVER['QUERY_STRING'])
-            ).'" target="_blank" rel="noopener">Share on Twitter</a></div>';
+            echo '<div class="share-link twitter"><a href="http://twitter.com/share?text=League+Report:+'.$leaguetag.'" target="_blank" rel="noopener">Share on Twitter</a></div>';
             echo '<div class="share-link vk"><a href="https://vk.com/share.php?url='.htmlspecialchars('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].
               (empty($_SERVER['QUERY_STRING']) ? "" : '?'.$_SERVER['QUERY_STRING'])
             ).'" target="_blank" rel="noopener">Share on VK</a></div>';

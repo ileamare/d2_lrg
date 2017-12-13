@@ -141,7 +141,7 @@ a:hover {
 	font-size: 18px;
 	line-height: 34px;
 	color: #aaa;
-
+  clear: both;
 
 	margin: 30px 20% 0;
 }
@@ -217,7 +217,7 @@ a:hover {
 
 	font-family: 'Radiance-SemiBold';
 
-	color: #D9D9D9;
+	color: #fff;
   display: inline-block;
 }
 .select-selectors {

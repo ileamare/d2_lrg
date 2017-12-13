@@ -10,6 +10,15 @@
     background-image: url('bg_midas.png');
     background-repeat: repeat;
 }
+.content-text {
+  color:#edd8d8;
+}
+.content-cards, .content-text h1, .content-cards h1 {
+  color:#edd8d8;
+}
+table.list caption, table.pvp caption, .team-name {
+  color: #fff;
+}
 
 table.list td, table.pvp td {
     background-color: #4e1c37;
@@ -27,6 +36,18 @@ table.pvp .thead th  {
 }
 
 
+.selector-modules , .selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4 {
+    color: #ffd057;
+    line-height: 32px;
+}
+.selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4 {
+    border-top-color: #ffd057;
+}
+.content-cards .match-card, .content-cards .player-card {
+  border-bottom-color: #8a702d;
+}
+
+
 .section-header h1 {
 	display: none;
 }
@@ -40,7 +61,8 @@ table.pvp .thead th  {
 }
 
 .content-section .content-header {
-	background-color: #b08633;
+	background-color: #cda01f;
+  color: #fff;
 }
 
 

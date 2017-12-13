@@ -23,6 +23,9 @@
 .selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4 {
     border-top-color: #ff015b;
 }
+.content-cards .match-card, .content-cards .player-card {
+  border-bottom-color: #ff015b;
+}
 
 table.list td, table.pvp td {
     background-color: #2d2339;

@@ -106,8 +106,12 @@ $lg_version = array( 1, 0, 3, 0 );
     global $report;
     global $meta;
     global $strings;
+    global $leaguetag;
 
-    $output = "<div class=\"team-card\"><div class=\"team-name\">".team_name($tid)." (".$tid.")</div>";
+    if(!isset($report['teams'])) return null;
+
+    $output = "<div class=\"team-card\"><div class=\"team-name\">".
+              "<a href=\"?league=".$leaguetag."&mod=teams-team_".$tid."_stats\" title=\"".team_name($tid)."\">".team_name($tid)." (".$tid.")</a></div>";
 
     $output .= "<div class=\"team-info-block\">".
                   "<div class=\"section-caption\">".$strings['summary'].":</div>".
@@ -649,6 +653,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       foreach ($report['teams'] as $team_id => $team) {
           if(!$max_matches || $report['teams'][$max_matches]['matches_total'] < $team['matches_total'] )
             $max_matches = $team_id;
+          if($team['matches_total'] <= $report['settings']['limiter']) continue;
           if(!$max_wr || $report['teams'][$max_wr]['wins']/$report['teams'][$max_wr]['matches_total'] < $team['wins']/$team['matches_total'] )
             $max_wr = $team_id;
       }

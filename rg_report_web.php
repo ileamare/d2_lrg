@@ -107,11 +107,14 @@ $lg_version = array( 1, 0, 4, -4, 1 );
     global $meta;
     global $strings;
     global $leaguetag;
+    global $linkvars;
 
     if(!isset($report['teams'])) return null;
 
     $output = "<div class=\"team-card\"><div class=\"team-name\">".
-              "<a href=\"?league=".$leaguetag."&mod=teams-team_".$tid."_stats\" title=\"".team_name($tid)."\">".team_name($tid)." (".$tid.")</a></div>";
+              "<a href=\"?league=".$leaguetag."&mod=teams-team_".$tid."_stats".
+              (empty($linkvars) ? "" : "&$linkvars")
+              ."\" title=\"".team_name($tid)."\">".team_name($tid)." (".$tid.")</a></div>";
 
     $output .= "<div class=\"team-info-block\">".
                   "<div class=\"section-caption\">".$strings['summary'].":</div>".
@@ -176,6 +179,8 @@ $lg_version = array( 1, 0, 4, -4, 1 );
     global $report;
     global $meta;
     global $strings;
+    global $linkvars;
+    global $leaguetag;
     $output = "<div class=\"match-card\"><div class=\"match-id\">".match_link($mid)."</div>";
     $radiant = "<div class=\"match-team radiant\">";
     $dire = "<div class=\"match-team dire\">";
@@ -195,12 +200,18 @@ $lg_version = array( 1, 0, 4, -4, 1 );
     }
     if(isset($report['teams']) && isset($report['match_participants_teams'][$mid])) {
       if(isset($report['teams'][ $report['match_participants_teams'][$mid]['radiant'] ]['name']))
-        $team_radiant = $report['teams'][ $report['match_participants_teams'][$mid]['radiant'] ]['name'].
-          " (".$report['teams'][ $report['match_participants_teams'][$mid]['radiant'] ]['tag'].")";
+        $team_radiant = "<a href=\"?league=".$leaguetag."&mod=teams-team_".$report['match_participants_teams'][$mid]['radiant']."stats".
+          (empty($linkvars) ? "" : "&$linkvars")
+          ."\" title=\"".$report['teams'][ $report['match_participants_teams'][$mid]['radiant'] ]['name']."\">".
+          $report['teams'][ $report['match_participants_teams'][$mid]['radiant'] ]['name'].
+          " (".$report['teams'][ $report['match_participants_teams'][$mid]['radiant'] ]['tag'].")</a>";
       else $team_radiant = "Radiant";
       if(isset($report['teams'][ $report['match_participants_teams'][$mid]['dire'] ]['name']))
-        $team_dire = $report['teams'][ $report['match_participants_teams'][$mid]['dire'] ]['name'].
-          " (".$report['teams'][ $report['match_participants_teams'][$mid]['dire'] ]['tag'].")";
+        $team_dire = "<a href=\"?league=".$leaguetag."&mod=teams-team_".$report['match_participants_teams'][$mid]['dire']."stats".
+          (empty($linkvars) ? "" : "&$linkvars")
+          ."\" title=\"".$report['teams'][ $report['match_participants_teams'][$mid]['dire'] ]['name']."\">".
+          $report['teams'][ $report['match_participants_teams'][$mid]['dire'] ]['name'].
+          " (".$report['teams'][ $report['match_participants_teams'][$mid]['dire'] ]['tag'].")</a>";
       else $team_dire = "Dire";
     } else {
       $team_radiant = "Radiant";

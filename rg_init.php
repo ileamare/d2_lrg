@@ -29,14 +29,42 @@ $lg_settings['time_limit_before'] = false;
 
 /* STARLADDER */
 
-$lg_settings['league_tag'] = "mdl_minor_2017_finals";
-$lg_settings['league_name'] = "Mars Dota 2 League 2017";
-$lg_settings['league_desc'] = "Dota 2 Minor";
-$lg_settings['league_id'] = 5504;
+$lg_settings['league_tag'] = "d2cl_s13";
+$lg_settings['league_name'] = "Dota 2 Champions League Season 13";
+$lg_settings['league_desc'] = "Minor Tournament from Epic Esports Events";
+$lg_settings['league_id'] = 5850;
 $lg_settings['time_limit_after'] = null;
 $lg_settings['time_limit_before'] = null;
-$lg_settings['match_limit_after'] = 3604953487;
+$lg_settings['match_limit_after'] = 3455406668;
+$lg_settings['match_limit_before'] = 3507199385;
+
+$lg_settings['league_tag'] = "summit8_minor_finals";
+$lg_settings['league_name'] = "Dota Summit 8 Los Angeles LAN Finals";
+$lg_settings['league_desc'] = "Dota 2 Pro Circuit Minor Finals";
+$lg_settings['league_id'] = 5850;
+$lg_settings['time_limit_after'] = null;
+$lg_settings['time_limit_before'] = null;
+$lg_settings['match_limit_after'] = 3565905100;
 $lg_settings['match_limit_before'] = null;
+
+$lg_settings['league_tag'] = "summit8_minor_full";
+$lg_settings['league_name'] = "Dota Summit 8 Los Angeles";
+$lg_settings['league_desc'] = "Dota 2 Pro Circuit Minor";
+$lg_settings['league_id'] = 5850;
+$lg_settings['time_limit_after'] = null;
+$lg_settings['time_limit_before'] = null;
+$lg_settings['match_limit_after'] = null;
+$lg_settings['match_limit_before'] = null;
+
+$lg_settings['league_tag'] = "summit8_minor_qualis";
+$lg_settings['league_name'] = "Dota Summit 8 Los Angeles Qualifiers";
+$lg_settings['league_desc'] = "Dota 2 Pro Circuit Minor Qualifiers";
+$lg_settings['league_id'] = 5850;
+$lg_settings['time_limit_after'] = null;
+$lg_settings['time_limit_before'] = null;
+$lg_settings['match_limit_after'] = null;
+$lg_settings['match_limit_before'] = 3565905100;
+
 /*/
 /*
 
@@ -79,7 +107,7 @@ $lg_settings['ana']['hero_pairs_matches']    = true; #   include matchids
 $lg_settings['ana']['hero_triplets']          = true; # hero triplets winrates
 $lg_settings['ana']['hero_triplets_matches']  = true; #   include matchids
 
-$lg_settings['ana']['hero_combos_graph']      = false; # interactive graph using vis.js
+$lg_settings['ana']['hero_combos_graph']      = true; # interactive graph using vis.js
                                                     # may not work with big amount of data
 
 $lg_settings['ana']['matchlist'] = true; # matches list + drafts in matches and participants
@@ -133,7 +161,7 @@ $lg_settings['web'] = array(
   //"custom_style" => "sa",
   //"custom_style" => "fpl",
   //"custom_style" => "sl-minor-17",
-  "custom_style" => "pw-masters",
+  "custom_style" => "d2cl",
   "pvp_grid" => false,
 
   "heroes_combo_graph" => true,

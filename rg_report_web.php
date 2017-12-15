@@ -2,7 +2,7 @@
 require_once("rg_report_out_settings.php");
 require_once("modules/mod_versions.php");
 
-$lg_version = array( 1, 0, 3, 0 );
+$lg_version = array( 1, 0, 4, -4, 1 );
 
 /* FUNCTIONS */  {
   function has_pair($hid, $pairs) {
@@ -634,14 +634,16 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
     $modules['overview'] .= "<div class=\"content-header\">".$strings['notable_paricipans']."</div>";
     $modules['overview'] .= "<div class=\"content-cards\">";
     if (isset($report['teams'])) {
-      $modules['overview'] .= "<h1>".$strings["np_winner"]."</h1>";
-      if($report['matches_additional'][ $report['last_match']['mid'] ]['radiant_win']) {
-        $tid = $report['match_participants_teams'][ $report['last_match']['mid'] ]['radiant'];
-      } else {
-        $tid = $report['match_participants_teams'][ $report['last_match']['mid'] ]['dire'];
+      if ($report['settings']['overview_last_match_winners']) {
+        $modules['overview'] .= "<h1>".$strings["np_winner"]."</h1>";
+        if($report['matches_additional'][ $report['last_match']['mid'] ]['radiant_win']) {
+            $tid = $report['match_participants_teams'][ $report['last_match']['mid'] ]['radiant'];
+        } else {
+            $tid = $report['match_participants_teams'][ $report['last_match']['mid'] ]['dire'];
+        }
+        $modules['overview'] .= team_card($tid);
+        unset($tid);
       }
-      $modules['overview'] .= team_card($tid);
-      unset($tid);
 
       if (isset($report['records'])) {
         $modules['overview'] .= "<h1>".$strings["widest_hero_pool_team"]."</h1>";
@@ -895,8 +897,14 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         $modules['overview'] .= "<h1>".$strings['match_stomp']."</h1>".match_card($report['records']['stomp']['matchid']);
       if($report['settings']['overview_records_comeback'])
         $modules['overview'] .= "<h1>".$strings['match_comeback']."</h1>".match_card($report['records']['comeback']['matchid']);
-      if($report['settings']['overview_records_duration'])
-        $modules['overview'] .= "<h1>".$strings['longest_match']."</h1>".match_card($report['records']['duration']['matchid']);
+      if($report['settings']['overview_records_duration']) {
+        if (compare_ver($report['ana_version'], array(1,0,4,-4,1)) < 0)
+          $modules['overview'] .= "<h1>".$strings['longest_match']."</h1>".match_card($report['records']['duration']['matchid']);
+        else {
+          $modules['overview'] .= "<h1>".$strings['longest_match']."</h1>".match_card($report['records']['longest_match']['matchid']);
+          $modules['overview'] .= "<h1>".$strings['shortest_match']."</h1>".match_card($report['records']['shortest_match']['matchid']);
+        }
+      }
 
       $modules['overview'] .= "<div class=\"content-text\"><a href=\"http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."&mod=matches\">".$strings['full_matches']."</a></div>";
 

@@ -215,6 +215,7 @@
     "match_stomp" => "Match with biggest stomp",
     "match_comeback" => "Match with biggest comeback",
     "longest_match" => "Longest match",
+    "shortest_match" => "Shortest match",
 
     "desc_overview" => "This page only contains general information about league and small amount of available stats. Look throughout other sections for advanced data.",
     "desc_records" => "This section contains data about highest or lowest values across all matches.",

@@ -31,6 +31,7 @@ function sortTable(n, table_id) {
     switching = false;
     rows = table.getElementsByTagName("TR");
     for (i = 1; i < (rows.length - 1); i++) {
+      if(rows[i].getElementsByTagName("TD").length == 0) continue;
       shouldSwitch = false;
       x = rows[i].getElementsByTagName("TD")[n];
       y = rows[i + 1].getElementsByTagName("TD")[n];
@@ -68,16 +69,21 @@ function sortTableNum(n, table_id) {
     switching = false;
     rows = table.getElementsByTagName("TR");
     for (i = 1; i < (rows.length - 1); i++) {
+      if(rows[i].getElementsByTagName("TD").length == 0) continue;
       shouldSwitch = false;
       x = rows[i].getElementsByTagName("TD")[n];
       y = rows[i + 1].getElementsByTagName("TD")[n];
+      if (x.innerHTML == "-") x = 0;
+      else x = parseFloat(x.innerHTML.replace(/,/, ''));
+      if (y.innerHTML == "-") y = 0;
+      else y = parseFloat(y.innerHTML.replace(/,/, ''))
       if (dir == "asc") {
-        if (parseFloat(x.innerHTML.replace(/,/, '')) > parseFloat(y.innerHTML.replace(/,/, ''))) {
+        if (x > y) {
           shouldSwitch= true;
           break;
         }
       } else if (dir == "desc") {
-        if (parseFloat(x.innerHTML.replace(/,/, '')) < parseFloat(y.innerHTML.replace(/,/, ''))) {
+        if (x < y) {
           shouldSwitch= true;
           break;
         }
@@ -105,6 +111,7 @@ function sortTableValue(n, table_id) {
     switching = false;
     rows = table.getElementsByTagName("TR");
     for (i = 1; i < (rows.length - 1); i++) {
+      if(rows[i].getElementsByTagName("TD").length == 0) continue;
       shouldSwitch = false;
       x = rows[i].getElementsByTagName("TD")[n].getAttribute("value");
       y = rows[i + 1].getElementsByTagName("TD")[n].getAttribute("value");

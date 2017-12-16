@@ -66,15 +66,15 @@ $lg_settings['match_limit_after'] = null;
 $lg_settings['match_limit_before'] = 3565905100;
 
 /*/
-/*
+/*/
 
-$lg_settings['league_tag'] = "workshop_bots_707";
-$lg_settings['league_name'] = "Workshop Bots - Patch 7.07";
+$lg_settings['league_tag'] = "workshop_bots_dec1_dec15";
+$lg_settings['league_name'] = "Workshop Bots - December 1st - 15th";
 $lg_settings['league_desc'] = "Battle between workshop botscripts";
-$lg_settings['league_id'] = 5683;
+$lg_settings['league_id'] = null;
 $lg_settings['time_limit_after'] = null;
 $lg_settings['time_limit_before'] = null;
-$lg_settings['match_limit_after'] = 3530896329;
+$lg_settings['match_limit_after'] = 3592194081;
 $lg_settings['match_limit_before'] = null;
 /* */
 
@@ -90,8 +90,6 @@ $lg_settings['ana']['records']     = true; # records
 $lg_settings['ana']['avg_limit']   = 5;
 $lg_settings['ana']['avg_heroes']  = true; # averages for heroes
 $lg_settings['ana']['avg_players'] = true; # averages for players
-
-$lg_settings['ana']['pickban']     = true; # pick/ban heroes stats
 
 $lg_settings['ana']['hero_positions']             = true; # heroes on positions
 $lg_settings['ana']['hero_positions_matches']     = true; #   include matchids

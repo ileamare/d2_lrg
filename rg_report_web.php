@@ -2,7 +2,7 @@
 require_once("rg_report_out_settings.php");
 require_once("modules/mod_versions.php");
 
-$lg_version = array( 1, 0, 4, -4, 1 );
+$lg_version = array( 1, 0, 4, -4, 3 );
 
 /* FUNCTIONS */  {
   function has_pair($hid, $pairs) {
@@ -1040,47 +1040,116 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         }
     }
     if (isset($report['draft'])) {
-      $modules['heroes']['draft'] = array();
+      $modules['heroes']['draft'] = "";
 
       if (check_module($parent."draft")) {
-        if($mod == $parent."draft") $unset_module = true;
+        $draft = array();
 
         for ($i=0; $i<2; $i++) {
-          $modules['heroes']['draft'][($i ? "pick" : "ban")."_stages"] = "";
-          if(!check_module($parent."draft-".($i ? "pick" : "ban")."_stages")) continue;
+          $type = $i ? "pick" : "ban";
+          $max_stage = 1;
+          if(!isset($report['draft'][$i])) continue;
+          foreach($report['draft'][$i] as $stage_num => $stage) {
+            if ($stage_num > $max_stage) $max_stage = $stage_num;
+            foreach($stage as $hero) {
+              if(!isset($draft[ $hero['heroid'] ])) {
+                if($stage_num > 1) {
+                  for($j=1; $j<$stage_num; $j++) {
+                    $draft[ $hero['heroid'] ][$j] = array ("pick" => 0, "pick_wr" => 0, "ban" => 0, "ban_wr" => 0 );
+                  }
+                }
+              }
 
-
-          for ($j=1; $j<4; $j++) {
-            if(empty($report['draft'][$i][$j])) continue;
-            uasort($report['draft'][$i][$j], function($a, $b) {
-              if($a['matches'] == $b['matches']) return 0;
-              else return ($a['matches'] < $b['matches']) ? 1 : -1;
-            });
-
-            $modules['heroes']['draft'][($i ? "pick" : "ban")."_stages"] .= "<table id=\"heroes-draft-$i-$j\" class=\"list list-small\">
-                                              <caption>".$strings['stage_num_1']." $j ".$strings['stage_num_2']." ".($i ? $strings['picks'] : $strings['bans'])."</caption>
-                                              <tr class=\"thead\">
-                                                <th onclick=\"sortTable(0,'heroes-draft-$i-$j');\">".$strings['hero']."</th>
-                                                <th onclick=\"sortTableNum(1,'heroes-draft-$i-$j');\">".$strings['matches']."</th>
-                                                <th onclick=\"sortTableNum(2,'heroes-draft-$i-$j');\">".$strings['winrate']."</th>
-                                              </tr>";
-
-            foreach($report['draft'][$i][$j] as $hero) {
-              $modules['heroes']['draft'][($i ? "pick" : "ban")."_stages"] .= "<tr>
-                                                  <td>".($hero['heroid'] ? hero_full($hero['heroid']) : "").
-                                                 "</td>
-                                                  <td>".$hero['matches']."</td>
-                                                  <td>".number_format($hero['winrate']*100,2)."%</td>
-                                                </tr>";
+              if(!isset($draft[ $hero['heroid'] ][$stage_num]))
+                $draft[ $hero['heroid'] ][$stage_num] = array ("pick" => 0, "pick_wr" => 0, "ban" => 0, "ban_wr" => 0 );
+              $draft[ $hero['heroid'] ][$stage_num][$type] = $hero['matches'];
+              $draft[ $hero['heroid'] ][$stage_num][$type."_wr"] = $hero['winrate'];
             }
-            $modules['heroes']['draft'][($i ? "pick" : "ban")."_stages"] .= "</table>";
           }
-          if(empty($modules['heroes']['draft'][($i ? "pick" : "ban")."_stages"]))
-            unset($modules['heroes']['draft'][($i ? "pick" : "ban")."_stages"]);
-
-
-          $modules['heroes']['draft'][($i ? "pick" : "ban")."_stages"] .= "<div class=\"content-text\">".$strings['desc_heroes_draft']."</div>";
         }
+
+        foreach ($draft as $hid => $stages) {
+          $total = array (
+            "pick" => $report['pickban'][$hid]['matches_total'],
+            "pick_wins" => 0,
+            "ban" => 0,
+            "ban_wins" => 0
+          );
+
+          $heroline = "";
+
+          $stages_passed = 0;
+          foreach($stages as $stage) {
+            if($max_stage > 1) {
+              if($stage['pick'])
+                $heroline .= "<td class=\"separator\">".$stage['pick']."</td><td>".number_format($stage['pick_wr']*100, 2)."%</td>";
+              else
+                $heroline .= "<td class=\"separator\">-</td><td>-</td>";
+
+              if($stage['ban'])
+                $heroline .= "<td>".$stage['ban']."</td><td>".number_format($stage['ban_wr']*100, 2)."%</td>";
+              else
+                $heroline .= "<td>-</td><td>-</td>";
+            }
+
+            $stages_passed++;
+          }
+
+          if($stages_passed < $max_stage) {
+            for ($i=$stages_passed; $i<$max_stage; $i++)
+              $heroline .= "<td class=\"separator\">-</td><td>-</td><td>-</td><td>-</td>";
+          }
+
+          $draft[$hid] = array ("out" => "", "matches" => $report['pickban'][$hid]['matches_total']);
+          $draft[$hid]['out'] .= "<td>".hero_full($hid)."</td>";
+
+          $draft[$hid]['out'] .= "<td>".$report['pickban'][$hid]['matches_total']."</td>";
+
+          if($report['pickban'][$hid]['matches_picked'])
+            $draft[$hid]['out'] .= "<td>".$total['pick']."</td><td>".number_format($report['pickban'][$hid]['winrate_picked']*100, 2)."%</td>";
+          else
+            $draft[$hid]['out'] .= "<td>-</td><td>-</td>";
+
+          if($report['pickban'][$hid]['matches_banned'])
+            $draft[$hid]['out'] .= "<td>".$total['ban']."</td><td>".number_format($report['pickban'][$hid]['winrate_banned']*100, 2)."%</td>";
+          else
+            $draft[$hid]['out'] .= "<td>-</td><td>-</td>";
+
+          $draft[$hid]['out'] .= $heroline."</tr>";
+        }
+
+
+        uasort($draft, function($a, $b) {
+          if($a['matches'] == $b['matches']) return 0;
+          else return ($a['matches'] < $b['matches']) ? 1 : -1;
+        });
+
+        $modules['heroes']['draft'] .= "<table id=\"heroes-draft\" class=\"list wide\"><tr class=\"thead overhead\"><th width=\"15%\"></th><th colspan=\"5\">".$strings['total']."</th>";
+        $heroline = "<tr class=\"thead\">".
+                      "<th onclick=\"sortTable(0,'heroes-draft');\">".$strings['hero']."</th>".
+                      "<th onclick=\"sortTableNum(1,'heroes-draft');\">".$strings['matches']."</th>".
+                      "<th onclick=\"sortTableNum(2,'heroes-draft');\">".$strings['picks']."</th>".
+                      "<th onclick=\"sortTableNum(3,'heroes-draft');\">".$strings['winrate']."</th>".
+                      "<th onclick=\"sortTableNum(4,'heroes-draft');\">".$strings['bans']."</th>".
+                      "<th onclick=\"sortTableNum(5,'heroes-draft');\">".$strings['winrate']."</th>";
+
+        if($max_stage > 1)
+          for($i=1; $i<=$max_stage; $i++) {
+            $modules['heroes']['draft'] .= "<th class=\"separator\" colspan=\"4\">".$strings['stage']." $i</th>";
+            $heroline .= "<th onclick=\"sortTableNum(".(1+4*$i+1).",'heroes-draft');\" class=\"separator\">".$strings['picks']."</th>".
+                        "<th onclick=\"sortTableNum(".(1+4*$i+2).",'heroes-draft');\">".$strings['winrate']."</th>".
+                        "<th onclick=\"sortTableNum(".(1+4*$i+3).",'heroes-draft');\">".$strings['bans']."</th>".
+                        "<th onclick=\"sortTableNum(".(1+4*$i+4).",'heroes-draft');\">".$strings['winrate']."</th>";
+          }
+        $modules['heroes']['draft'] .= "</tr>".$heroline."</tr>";
+
+        unset($heroline);
+
+        foreach($draft as $hero)
+          $modules['heroes']['draft'] .= $hero['out'];
+
+        $modules['heroes']['draft'] .= "</table>";
+        unset($draft);
       }
     }
     if (isset($report['hero_positions'])) {
@@ -1187,7 +1256,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
             else return ($a['matches'] < $b['matches']) ? 1 : -1;
           });
 
-          $modules['heroes']['hero_sides']['overview'] .= "<table id=\"hero-sides-overiew\" class=\"list\">
+          $modules['heroes']['hero_sides']['overview'] .= "<table id=\"hero-sides-overview\" class=\"list\">
                                         <tr class=\"thead\">
                                           <th onclick=\"sortTable(0,'hero-sides-overview');\">".$strings['hero']."</th>
                                           <th onclick=\"sortTableNum(1,'hero-sides-overview');\">".$strings['matches']."</th>

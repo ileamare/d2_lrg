@@ -103,10 +103,24 @@ table.list .thead {
 table.list .thead th {
     font-size: 12px;
     line-height:normal;
-
 }
 table.wide .thead {
   height: 52px;
+}
+.thead.overhead {
+  text-align: center;
+  height: 26px !important;
+}
+.thead.overhead th {
+  padding-left: 0;
+}
+table .thead:nth-of-type(2) {
+  opacity: 0.8;
+  height: 26px !important;
+}
+table .separator {
+  border-left: 2px solid rgba(0,0,0,0.1);
+  margin-left: 2px;
 }
 
 .small-list-wrapper {

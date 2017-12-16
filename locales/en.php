@@ -32,6 +32,7 @@
     "stage" => "Draft stage",
     "pick"  => "Pick",
     "ban"   => "Ban",
+    "total" => "Total",
     "grid" => "Grid",
     "summary" => "Summary",
     "winrate" => "Winrate",

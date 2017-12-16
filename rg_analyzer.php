@@ -635,14 +635,13 @@
     }
   }
 
-  if ($lg_settings['ana']['pickban']) {
+  //if ($lg_settings['ana']['pickban']) {
     # pick/ban heroes stats
 
     $sql = "SELECT draft.hero_id hero_id, SUM(1) matches, SUM(NOT matches.radiantWin XOR draft.is_radiant)/SUM(1) winrate
     	   FROM draft JOIN matches ON draft.matchid = matches.matchid
     	   WHERE is_pick = true
-    	   GROUP BY draft.hero_id
-    ORDER BY winrate DESC, matches DESC;";
+    	   GROUP BY draft.hero_id;";
 
     $result["pickban"] = array();
 
@@ -696,7 +695,7 @@
     $query_res->free_result();
 
     // TODO Sort
-  }
+  //}
 
   if ($lg_settings['ana']['draft_stages']) {
     # pick/ban draft stages stats

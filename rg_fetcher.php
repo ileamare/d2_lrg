@@ -1,6 +1,16 @@
 #!/bin/php
 <?php
 
+function generate_tag($name) {
+  $name = ucwords($name);
+  $tag = "";
+  for ($i=0, $sz=strlen($name); $i < $sz; $i++) {
+    if (ctype_upper($name[$i])) $tag .= $name[$i];
+  }
+
+  return $tag;
+}
+
 include_once("settings.php");
 
 echo("\nInitialising...\n");
@@ -114,12 +124,12 @@ foreach ($matches as $match) {
         if(!isset($matchdata['radiant_team']['team_id'])) {
             $matchdata['radiant_team']['team_id'] = $tmp['result']['radiant_team_id'];
             $matchdata['radiant_team']['name'] = $tmp['result']['radiant_name'];
-            $matchdata['radiant_team']['tag'] = $tmp['result']['radiant_name'];
+            $matchdata['radiant_team']['tag'] = generate_tag($tmp['result']['radiant_name']);
         }
         if(!isset($matchdata['dire_team']['team_id'])) {
             $matchdata['dire_team']['team_id'] = $tmp['result']['dire_team_id'];
             $matchdata['dire_team']['name'] = $tmp['result']['dire_name'];
-            $matchdata['dire_team']['tag'] = $tmp['result']['dire_name'];
+            $matchdata['dire_team']['tag'] = generate_tag($tmp['result']['dire_name']);
         }
         $json = json_encode($matchdata);
     }
@@ -183,9 +193,9 @@ foreach ($matches as $match) {
               $t_players[$matchdata['players'][$j]['account_id']] = $matchdata['players'][$j]["name"];
           } else if (isset($matchdata['players'][$j]["personaname"])) {
             if($matchdata['players'][$j]["personaname"] == null) {
-              $t_players[$matchdata['players'][$j]['account_id']] = "Bot ".$meta['heroes'][$matchdata['players'][$j]['hero_id']]['name'];
+              $t_players[$matchdata['players'][$j]['account_id']] = "Player ".$matchdata['players'][$j]['account_id'];
             } else $t_players[$matchdata['players'][$j]['account_id']] = $matchdata['players'][$j]["personaname"];
-          }
+          } $t_players[$matchdata['players'][$j]['account_id']] = "Bot ".$meta['heroes'][$matchdata['players'][$j]['hero_id']]['name'];
         }
         $t_matchlines[$i]['heroid'] = $matchdata['players'][$j]['hero_id'];
         $t_matchlines[$i]['isRadiant'] = $matchdata['players'][$j]['isRadiant'];
@@ -463,30 +473,36 @@ if ($lg_settings['main']['teams']) {
     else die("[F] Unexpected problems when recording to database.\n".$conn->error."\n");
 
     if($lg_settings['ana']['teams']['rosters']) {
-        echo "[ ] Getting teams rosters\n";
+      echo "[ ] Getting teams rosters\n";
 
-        $sql = "INSERT INTO teams_rosters (teamid, playerid, position) VALUES ";
+      $sql = "";
 
-        foreach ($newteams as $id => $team) {
-        $json = file_get_contents('https://api.steampowered.com/IDOTA2Match_570/GetTeamInfoByTeamID/v001/?key='.$steamapikey.'&teams_requested=1&start_at_team_id='.$id);
-        $matchdata = json_decode($json, true);
-        # it may return more than 5 players, but we actually care only about the first 5 players
-        # others are probably coach and standins, they aren't part of official active roster
+      foreach ($newteams as $id => $team) {
+      $json = file_get_contents('https://api.steampowered.com/IDOTA2Match_570/GetTeamInfoByTeamID/v001/?key='.$steamapikey.'&teams_requested=1&start_at_team_id='.$id);
+      $matchdata = json_decode($json, true);
+      # it may return more than 5 players, but we actually care only about the first 5 players
+      # others are probably coach and standins, they aren't part of official active roster
 
-        # initial idea about positions was to detect player position somehow and use it in team competitions
-        # to detect heros stats based on player positions
-        # right now it's placeholder
-        # TODO
-        $position = 0;
+      # initial idea about positions was to detect player position somehow and use it in team competitions
+      # to detect heros stats based on player positions
+      # right now it's placeholder
+      # TODO
+      $position = 0;
 
-        for($i=0; isset($matchdata['result']['teams'][0]['player_'.$i.'_account_id']); $i++)
-            $sql .= "(".$id.",".$matchdata['result']['teams'][0]['player_'.$i.'_account_id'].", ".$position."),";
+      for($i=0; isset($matchdata['result']['teams'][0]['player_'.$i.'_account_id']); $i++)
+          $sql .= "(".$id.",".$matchdata['result']['teams'][0]['player_'.$i.'_account_id'].", ".$position."),";
 
-        }
+      }
+
+      if(!empty($sql)) {
         $sql[strlen($sql)-1] = ";";
+        $sql = "INSERT INTO teams_rosters (teamid, playerid, position) VALUES ".$sql;
+
+        var_dump($sql);
 
         if ($conn->multi_query($sql) === TRUE) echo "[S] Successfully recorded new teams rosters to database.\n";
         else die("[F] Unexpected problems when recording to database.\n".$conn->error."\n");
+      }
     }
   }
 

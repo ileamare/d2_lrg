@@ -684,8 +684,9 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         $max_wr = 0;
         $max_matches = 0;
         foreach ($report['players_additional'] as $pid => $player) {
-            if(!$max_matches || $report['players_additional'][$max_wr]['matches'] < $player['matches'] )
+            if(!$max_matches || $report['players_additional'][$max_matches]['matches'] < $player['matches'] )
               $max_matches = $pid;
+            if($player['matches'] <= $report['settings']['limiter']) continue;
             if(!$max_wr || $report['players_additional'][$max_wr]['won']/$report['players_additional'][$max_wr]['matches'] < $player['won']/$player['matches'] )
               $max_wr = $pid;
         }
@@ -1069,13 +1070,6 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         }
 
         foreach ($draft as $hid => $stages) {
-          $total = array (
-            "pick" => $report['pickban'][$hid]['matches_total'],
-            "pick_wins" => 0,
-            "ban" => 0,
-            "ban_wins" => 0
-          );
-
           $heroline = "";
 
           $stages_passed = 0;
@@ -1106,12 +1100,12 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           $draft[$hid]['out'] .= "<td>".$report['pickban'][$hid]['matches_total']."</td>";
 
           if($report['pickban'][$hid]['matches_picked'])
-            $draft[$hid]['out'] .= "<td>".$total['pick']."</td><td>".number_format($report['pickban'][$hid]['winrate_picked']*100, 2)."%</td>";
+            $draft[$hid]['out'] .= "<td>".$report['pickban'][$hid]['matches_picked']."</td><td>".number_format($report['pickban'][$hid]['winrate_picked']*100, 2)."%</td>";
           else
             $draft[$hid]['out'] .= "<td>-</td><td>-</td>";
 
           if($report['pickban'][$hid]['matches_banned'])
-            $draft[$hid]['out'] .= "<td>".$total['ban']."</td><td>".number_format($report['pickban'][$hid]['winrate_banned']*100, 2)."%</td>";
+            $draft[$hid]['out'] .= "<td>".$report['pickban'][$hid]['matches_banned']."</td><td>".number_format($report['pickban'][$hid]['winrate_banned']*100, 2)."%</td>";
           else
             $draft[$hid]['out'] .= "<td>-</td><td>-</td>";
 
@@ -2111,19 +2105,19 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                     "<th onclick=\"sortTable(0,'teams-sum');\">".$strings['team_name']."</th>".
                     "<th onclick=\"sortTableNum(1,'teams-sum');\">".$strings['matches_s']."</th>".
                     "<th onclick=\"sortTableNum(2,'teams-sum');\">".$strings['winrate_s']."</th>".
-                    "<th onclick=\"sortTableNum(2,'teams-sum');\">".$strings['rad_ratio']."</th>".
-                    "<th onclick=\"sortTableNum(2,'teams-sum');\">".$strings['rad_wr']."</th>".
-                    "<th onclick=\"sortTableNum(2,'teams-sum');\">".$strings['dire_wr']."</th>".
-                    "<th onclick=\"sortTableNum(3,'teams-sum');\">".$strings['hero_pool']."</th>".
-                    "<th onclick=\"sortTableNum(4,'teams-sum');\">".$strings['kills']."</th>".
-                    "<th onclick=\"sortTableNum(5,'teams-sum');\">".$strings['deaths']."</th>".
-                    "<th onclick=\"sortTableNum(6,'teams-sum');\">".$strings['assists']."</th>".
-                    "<th onclick=\"sortTableNum(7,'teams-sum');\">".$strings['gpm']."</th>".
-                    "<th onclick=\"sortTableNum(8,'teams-sum');\">".$strings['xpm']."</th>".
-                    "<th onclick=\"sortTableNum(9,'teams-sum');\">".$strings['wards_placed_s']."</th>".
-                    "<th onclick=\"sortTableNum(10,'teams-sum');\">".$strings['sentries_placed_s']."</th>".
-                    "<th onclick=\"sortTableNum(11,'teams-sum');\">".$strings['wards_destroyed_s']."</th>".
-                    "<th onclick=\"sortTableNum(11,'teams-sum');\">".$strings['duration']."</th>".
+                    "<th onclick=\"sortTableNum(3,'teams-sum');\">".$strings['rad_ratio']."</th>".
+                    "<th onclick=\"sortTableNum(4,'teams-sum');\">".$strings['rad_wr']."</th>".
+                    "<th onclick=\"sortTableNum(5,'teams-sum');\">".$strings['dire_wr']."</th>".
+                    "<th onclick=\"sortTableNum(6,'teams-sum');\">".$strings['hero_pool']."</th>".
+                    "<th onclick=\"sortTableNum(7,'teams-sum');\">".$strings['kills']."</th>".
+                    "<th onclick=\"sortTableNum(8,'teams-sum');\">".$strings['deaths']."</th>".
+                    "<th onclick=\"sortTableNum(9,'teams-sum');\">".$strings['assists']."</th>".
+                    "<th onclick=\"sortTableNum(10,'teams-sum');\">".$strings['gpm']."</th>".
+                    "<th onclick=\"sortTableNum(11,'teams-sum');\">".$strings['xpm']."</th>".
+                    "<th onclick=\"sortTableNum(12,'teams-sum');\">".$strings['wards_placed_s']."</th>".
+                    "<th onclick=\"sortTableNum(13,'teams-sum');\">".$strings['sentries_placed_s']."</th>".
+                    "<th onclick=\"sortTableNum(14,'teams-sum');\">".$strings['wards_destroyed_s']."</th>".
+                    "<th onclick=\"sortTableNum(15,'teams-sum');\">".$strings['duration']."</th>".
               "</tr>";
 
     foreach($report['teams'] as $team_id => $team) {
@@ -2273,7 +2267,9 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         Spectral Alliance
         leamare/d2_lrg on github
        -->
-      <link rel="shortcut icon" href="/favicon.ico" />
+      <?php 
+         if(file_exists("favicon.ico")) echo "<link rel=\"shortcut icon\" href=\"favicon.ico\" />";
+      ?>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
       <title>LRG<?php if (!empty($leaguetag)) echo " - ".$report['league_name']; ?></title>
       <link href="res/valve_mimic.css" rel="stylesheet" type="text/css" />
@@ -2283,6 +2279,13 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                 echo "<link href=\"res/custom_styles/".$override_style.".css\" rel=\"stylesheet\" type=\"text/css\" />";
             else if(isset($report['settings']['custom_style']) && file_exists("res/custom_styles/".$report['settings']['custom_style'].".css"))
                 echo "<link href=\"res/custom_styles/".$report['settings']['custom_style'].".css\" rel=\"stylesheet\" type=\"text/css\" />";
+            else {
+
+              if(empty($leaguetag) && !empty($noleague_style))
+                echo "<link href=\"res/custom_styles/".$noleague_style.".css\" rel=\"stylesheet\" type=\"text/css\" />";
+              else if(!empty($default_style))
+                echo "<link href=\"res/custom_styles/".$default_style.".css\" rel=\"stylesheet\" type=\"text/css\" />";
+            }
             if($use_graphjs) {
               echo "<script type=\"text/javascript\" src=\"res/dependencies/Chart.bundle.min.js\"></script>";
             }
@@ -2387,13 +2390,15 @@ echo $output;
             }
 
             uasort($reports, function($a, $b) {
-              if($a['std'] == $b['std']) return 0;
-              else return ($a['std'] < $b['std']) ? 1 : -1;
+              if($a['end'] == $b['end']) {
+                if($a['std'] == $b['std']) return 0;
+                else return ($a['std'] < $b['std']) ? 1 : -1;
+              } else return ($a['end'] < $b['end']) ? 1 : -1;
             });
 
             foreach($reports as $report) {
               echo "<tr><td><a href=\"?league=".$report['name'].(empty($linkvars) ? "" : "&".$linkvars)."\">".$report['head']."</a></td>".
-                "<td>".($report['id'] == "null" ? " - " : $report['id'])."</td>".
+                "<td>".($report['id'] == "null" ? "-" : $report['id'])."</td>".
                 "<td>".$report['desc']."</td>".
                 "<td>".$report['total']."</td>".
                 "<td value=\"".$report['std']."\">".date($strings['date_format'], $report['std'])."</td>".

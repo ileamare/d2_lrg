@@ -189,6 +189,18 @@ foreach ($matches as $match) {
           $t_matchlines[$i]['playerid'] = $matchdata['players'][$j]['account_id'];
         }
         if(!isset($t_players[$matchdata['players'][$j]['account_id']])) {
+          if ($matchdata['players'][$j]['account_id'] < 0) {
+            $t_players[$matchdata['players'][$j]['account_id']] = "Bot ".$meta['heroes'][$matchdata['players'][$j]['hero_id']]['name'];
+          } else {
+            if (isset($matchdata['players'][$j]["name"]) && $matchdata['players'][$j]["name"] != null) {
+              $t_players[$matchdata['players'][$j]['account_id']] = $matchdata['players'][$j]["name"];
+            } else if ($matchdata['players'][$j]["personaname"] != null) {
+              $t_players[$matchdata['players'][$j]['account_id']] = $matchdata['players'][$j]["personaname"];
+            } else
+              $t_players[$matchdata['players'][$j]['account_id']] = "Player ".$matchdata['players'][$j]['account_id'];
+          }
+          
+        /*
           if (isset($matchdata['players'][$j]["name"]) && $matchdata['players'][$j]["name"] != null) {
               $t_players[$matchdata['players'][$j]['account_id']] = $matchdata['players'][$j]["name"];
           } else if (isset($matchdata['players'][$j]["personaname"])) {
@@ -196,6 +208,7 @@ foreach ($matches as $match) {
               $t_players[$matchdata['players'][$j]['account_id']] = "Player ".$matchdata['players'][$j]['account_id'];
             } else $t_players[$matchdata['players'][$j]['account_id']] = $matchdata['players'][$j]["personaname"];
           } $t_players[$matchdata['players'][$j]['account_id']] = "Bot ".$meta['heroes'][$matchdata['players'][$j]['hero_id']]['name'];
+          */
         }
         $t_matchlines[$i]['heroid'] = $matchdata['players'][$j]['hero_id'];
         $t_matchlines[$i]['isRadiant'] = $matchdata['players'][$j]['isRadiant'];
@@ -497,8 +510,6 @@ if ($lg_settings['main']['teams']) {
       if(!empty($sql)) {
         $sql[strlen($sql)-1] = ";";
         $sql = "INSERT INTO teams_rosters (teamid, playerid, position) VALUES ".$sql;
-
-        var_dump($sql);
 
         if ($conn->multi_query($sql) === TRUE) echo "[S] Successfully recorded new teams rosters to database.\n";
         else die("[F] Unexpected problems when recording to database.\n".$conn->error."\n");

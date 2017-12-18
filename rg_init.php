@@ -38,35 +38,17 @@ $lg_settings['time_limit_before'] = null;
 $lg_settings['match_limit_after'] = 3455406668;
 $lg_settings['match_limit_before'] = 3507199385;
 
-$lg_settings['league_tag'] = "summit8_minor_finals";
-$lg_settings['league_name'] = "Dota Summit 8 Los Angeles LAN Finals";
-$lg_settings['league_desc'] = "Dota 2 Pro Circuit Minor Finals";
-$lg_settings['league_id'] = 5850;
-$lg_settings['time_limit_after'] = null;
-$lg_settings['time_limit_before'] = null;
-$lg_settings['match_limit_after'] = 3565905100;
-$lg_settings['match_limit_before'] = null;
-
-$lg_settings['league_tag'] = "summit8_minor_full";
-$lg_settings['league_name'] = "Dota Summit 8 Los Angeles";
-$lg_settings['league_desc'] = "Dota 2 Pro Circuit Minor";
-$lg_settings['league_id'] = 5850;
+$lg_settings['league_tag'] = "pro_circuit_recap_december_2017";
+$lg_settings['league_name'] = "Pro Circuit - December 2017";
+$lg_settings['league_desc'] = "Pro Circuit Profeccional Meta Recap";
+$lg_settings['league_id'] = null;
 $lg_settings['time_limit_after'] = null;
 $lg_settings['time_limit_before'] = null;
 $lg_settings['match_limit_after'] = null;
 $lg_settings['match_limit_before'] = null;
 
-$lg_settings['league_tag'] = "summit8_minor_qualis";
-$lg_settings['league_name'] = "Dota Summit 8 Los Angeles Qualifiers";
-$lg_settings['league_desc'] = "Dota 2 Pro Circuit Minor Qualifiers";
-$lg_settings['league_id'] = 5850;
-$lg_settings['time_limit_after'] = null;
-$lg_settings['time_limit_before'] = null;
-$lg_settings['match_limit_after'] = null;
-$lg_settings['match_limit_before'] = 3565905100;
-
 /*/
-/*/
+/*
 
 $lg_settings['league_tag'] = "workshop_bots_dec1_dec15";
 $lg_settings['league_name'] = "Workshop Bots - December 1st - 15th";
@@ -159,7 +141,7 @@ $lg_settings['web'] = array(
   //"custom_style" => "sa",
   //"custom_style" => "fpl",
   //"custom_style" => "sl-minor-17",
-  "custom_style" => "d2cl",
+  "custom_style" => "",
   "pvp_grid" => false,
 
   "heroes_combo_graph" => true,

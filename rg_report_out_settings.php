@@ -25,4 +25,7 @@ $title_links = array(
 
 $main_path = "/";
 
+$default_style = "";
+$noleague_style = "";
+
 ?>

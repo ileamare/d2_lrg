@@ -365,8 +365,8 @@
         "taken_damage_per_min_s" => $row[11],
         "stuns" => $row[12],
         "lh_at10" => $row[13],
-        "lasthits_per_min_s" => $row[15],
-        "duration" => $row[14],
+        "lasthits_per_min_s" => $row[14],
+        "duration" => $row[15],
       );
     }
 

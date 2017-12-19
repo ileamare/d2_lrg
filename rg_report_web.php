@@ -1006,39 +1006,44 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       if (check_module($parent."pickban")) {
         $heroes = $meta['heroes'];
 
-          $modules['heroes']['pickban'] .=  "<table id=\"heroes-pickban\" class=\"list\">
-                                                <tr class=\"thead\">
-                                                  <th onclick=\"sortTable(0,'heroes-pickban');\">".$strings['hero']."</th>
-                                                  <th onclick=\"sortTableNum(1,'heroes-pickban');\">".$strings['matches_total']."</th>
-                                                  <th onclick=\"sortTableNum(2,'heroes-pickban');\">".$strings['matches_picked']."</th>
-                                                  <th onclick=\"sortTableNum(3,'heroes-pickban');\">".$strings['winrate_picked']."</th>
-                                                  <th onclick=\"sortTableNum(4,'heroes-pickban');\">".$strings['matches_banned']."</th>
-                                                  <th onclick=\"sortTableNum(5,'heroes-pickban');\">".$strings['winrate_banned']."</th>
-                                                </tr>";
-          foreach($report['pickban'] as $hid => $hero) {
-            unset($heroes[$hid]);
-            $modules['heroes']['pickban'] .=  "<tr>
-                                                  <td>".($hid ? hero_full($hid) : "").
-                                                 "</td>
-                                                  <td>".$hero['matches_total']."</td>
-                                                  <td>".$hero['matches_picked']."</td>
-                                                  <td>".number_format($hero['winrate_picked']*100,2)."%</td>
-                                                  <td>".$hero['matches_banned']."</td>
-                                                  <td>".number_format($hero['winrate_banned']*100,2)."%</td>
-                                                </tr>";
-          }
-          $modules['heroes']['pickban'] .= "</table>";
+        uasort($report['pickban'], function($a, $b) {
+          if($a['matches_total'] == $b['matches_total']) return 0;
+          else return ($a['matches_total'] < $b['matches_total']) ? 1 : -1;
+        });
 
-          $modules['heroes']['pickban'] .= "<div class=\"content-text\"><h1>".$strings['heroes_uncontested'].": ".sizeof($heroes)."</h1><div class=\"hero-list\">";
-
-          foreach($heroes as $hero) {
-            $modules['heroes']['pickban'] .= "<div class=\"hero\"><img src=\"res/heroes/".$hero['tag'].
-                ".png\" alt=\"".$hero['tag']."\" /><span class=\"hero_name\">".
-                $hero['name']."</span></div>";
-          }
-          $modules['heroes']['pickban'] .= "</div></div>";
-          $modules['heroes']['pickban'] .= "<div class=\"content-text\">".$strings['desc_heroes_pickban']."</div>";
+        $modules['heroes']['pickban'] .=  "<table id=\"heroes-pickban\" class=\"list\">
+                                              <tr class=\"thead\">
+                                                <th onclick=\"sortTable(0,'heroes-pickban');\">".$strings['hero']."</th>
+                                                <th onclick=\"sortTableNum(1,'heroes-pickban');\">".$strings['matches_total']."</th>
+                                                <th onclick=\"sortTableNum(2,'heroes-pickban');\">".$strings['matches_picked']."</th>
+                                                <th onclick=\"sortTableNum(3,'heroes-pickban');\">".$strings['winrate_picked']."</th>
+                                                <th onclick=\"sortTableNum(4,'heroes-pickban');\">".$strings['matches_banned']."</th>
+                                                <th onclick=\"sortTableNum(5,'heroes-pickban');\">".$strings['winrate_banned']."</th>
+                                              </tr>";
+        foreach($report['pickban'] as $hid => $hero) {
+          unset($heroes[$hid]);
+          $modules['heroes']['pickban'] .=  "<tr>
+                                                <td>".($hid ? hero_full($hid) : "").
+                                               "</td>
+                                                <td>".$hero['matches_total']."</td>
+                                                <td>".$hero['matches_picked']."</td>
+                                                <td>".number_format($hero['winrate_picked']*100,2)."%</td>
+                                                <td>".$hero['matches_banned']."</td>
+                                                <td>".number_format($hero['winrate_banned']*100,2)."%</td>
+                                              </tr>";
         }
+        $modules['heroes']['pickban'] .= "</table>";
+
+        $modules['heroes']['pickban'] .= "<div class=\"content-text\"><h1>".$strings['heroes_uncontested'].": ".sizeof($heroes)."</h1><div class=\"hero-list\">";
+
+        foreach($heroes as $hero) {
+          $modules['heroes']['pickban'] .= "<div class=\"hero\"><img src=\"res/heroes/".$hero['tag'].
+              ".png\" alt=\"".$hero['tag']."\" /><span class=\"hero_name\">".
+              $hero['name']."</span></div>";
+        }
+        $modules['heroes']['pickban'] .= "</div></div>";
+        $modules['heroes']['pickban'] .= "<div class=\"content-text\">".$strings['desc_heroes_pickban']."</div>";
+      }
     }
     if (isset($report['draft'])) {
       $modules['heroes']['draft'] = "";
@@ -1823,79 +1828,112 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
             $modules['teams']["team_".$tid."_stats"]['overview'] .= "<div class=\"content-text\">".$strings['desc_teams']."</div>";
           }
         }
-        if (isset($report['teams'][$tid]['pickban'])) {
-          $modules['teams']["team_".$tid."_stats"]['pickban'] = "";
-
-          if(check_module($parent."team_".$tid."_stats-pickban")) {
-            $heroes = $meta['heroes'];
-
-            $modules['teams']["team_".$tid."_stats"]['pickban'] .=  "<table id=\"pickban-team$tid\" class=\"list\">
-                                                  <tr class=\"thead\">
-                                                    <th onclick=\"sortTable(0,'pickban-team$tid');\">".$strings['hero']."</th>
-                                                    <th onclick=\"sortTableNum(1,'pickban-team$tid');\">".$strings['matches_total']."</th>
-                                                    <th onclick=\"sortTableNum(2,'pickban-team$tid');\">".$strings['matches_picked']."</th>
-                                                    <th onclick=\"sortTableNum(3,'pickban-team$tid');\">".$strings['winrate_picked']."</th>
-                                                    <th onclick=\"sortTableNum(4,'pickban-team$tid');\">".$strings['matches_banned']."</th>
-                                                    <th onclick=\"sortTableNum(5,'pickban-team$tid');\">".$strings['winrate_banned']."</th>
-                                                  </tr>";
-            foreach($report['teams'][$tid]['pickban'] as $hid => $hero) {
-              unset($heroes[$hid]);
-              $modules['teams']["team_".$tid."_stats"]['pickban'] .=  "<tr>
-                                                    <td>".($hid ? hero_full($hid) : "").
-                                                   "</td>
-                                                    <td>".$hero['matches_total']."</td>
-                                                    <td>".$hero['matches_picked']."</td>
-                                                    <td>".($hero['matches_picked'] ? number_format($hero['wins_picked']*100/$hero['matches_picked'],2) : 0)."%</td>
-                                                    <td>".$hero['matches_banned']."</td>
-                                                    <td>".($hero['matches_banned'] ? number_format($hero['wins_banned']*100/$hero['matches_banned'],2) : 0)."%</td>
-                                                  </tr>";
-            }
-            $modules['teams']["team_".$tid."_stats"]['pickban'] .= "</table>";
-
-            $modules['teams']["team_".$tid."_stats"]['pickban'] .= "<div class=\"content-text\"><h1>".$strings['heroes_uncontested'].": ".sizeof($heroes)."</h1><div class=\"hero-list\">";
-
-            foreach($heroes as $hero) {
-              $modules['teams']["team_".$tid."_stats"]['pickban'] .= "<div class=\"hero\"><img src=\"res/heroes/".$hero['tag'].
-                  ".png\" alt=\"".$hero['tag']."\" /><span class=\"hero_name\">".
-                  $hero['name']."</span></div>";
-            }
-            $modules['teams']["team_".$tid."_stats"]['pickban'] .= "</div></div>";
-
-            $modules['teams']["team_".$tid."_stats"]['pickban'] .= "<div class=\"content-text\">".$strings['desc_heroes_pickban']."</div>";
-          }
-        }
         if (isset($report['teams'][$tid]['draft'])) {
           $modules['teams']["team_".$tid."_stats"]['draft'] = "";
 
           if(check_module($parent."team_".$tid."_stats-draft")) {
+            $draft = array();
+
             for ($i=0; $i<2; $i++) {
-              for ($j=1; $j<4; $j++, isset($report['teams'][$tid]['draft'])) {
-                uasort($report['teams'][$tid]['draft'][$i][$j], function($a, $b) {
-                  if($a['matches'] == $b['matches']) return 0;
-                  else return ($a['matches'] < $b['matches']) ? 1 : -1;
-                });
+              $type = $i ? "pick" : "ban";
+              $max_stage = 1;
+              if(!isset($report['teams'][$tid]['draft'][$i])) continue;
+              foreach($report['teams'][$tid]['draft'][$i] as $stage_num => $stage) {
+                if ($stage_num > $max_stage) $max_stage = $stage_num;
+                foreach($stage as $hero) {
+                  if(!isset($draft[ $hero['heroid'] ])) {
+                    if($stage_num > 1) {
+                      for($j=1; $j<$stage_num; $j++) {
+                        $draft[ $hero['heroid'] ][$j] = array ("pick" => 0, "pick_wr" => 0, "ban" => 0, "ban_wr" => 0 );
+                      }
+                    }
+                  }
 
-                $modules['teams']["team_".$tid."_stats"]['draft'] .= "<table id=\"team$tid-draft-$i-$j\" class=\"list list-small\">
-                                                  <caption> Stage $j of ".($i ? $strings['picks'] : $strings['bans'])."</caption>
-                                                  <tr class=\"thead\">
-                                                    <th onclick=\"sortTable(0,'team$tid-draft-$i-$j');\">".$strings['hero']."</th>
-                                                    <th onclick=\"sortTableNum(1,'team$tid-draft-$i-$j');\">".$strings['matches']."</th>
-                                                    <th onclick=\"sortTableNum(2,'team$tid-draft-$i-$j');\">".$strings['winrate']."</th>
-                                                  </tr>";
-
-                foreach($report['teams'][$tid]['draft'][$i][$j] as $hero) {
-                  $modules['teams']["team_".$tid."_stats"]['draft'] .= "<tr>
-                                                      <td>".($hero['heroid'] ? hero_full($hero['heroid']) : "").
-                                                     "</td>
-                                                      <td>".$hero['matches']."</td>
-                                                      <td>".number_format($hero['winrate']*100,2)."%</td>
-                                                    </tr>";
+                  if(!isset($draft[ $hero['heroid'] ][$stage_num]))
+                    $draft[ $hero['heroid'] ][$stage_num] = array ("pick" => 0, "pick_wr" => 0, "ban" => 0, "ban_wr" => 0 );
+                  $draft[ $hero['heroid'] ][$stage_num][$type] = $hero['matches'];
+                  $draft[ $hero['heroid'] ][$stage_num][$type."_wr"] = $hero['winrate'];
                 }
-                $modules['teams']["team_".$tid."_stats"]['draft'] .= "</table>";
-
-                $modules['teams']["team_".$tid."_stats"]['draft'] .= "<div class=\"content-text\">".$strings['desc_heroes_draft']."</div>";
               }
             }
+
+            foreach ($draft as $hid => $stages) {
+              $heroline = "";
+
+              $stages_passed = 0;
+              foreach($stages as $stage) {
+                if($max_stage > 1) {
+                  if($stage['pick'])
+                    $heroline .= "<td class=\"separator\">".$stage['pick']."</td><td>".number_format($stage['pick_wr']*100, 2)."%</td>";
+                  else
+                    $heroline .= "<td class=\"separator\">-</td><td>-</td>";
+
+                  if($stage['ban'])
+                    $heroline .= "<td>".$stage['ban']."</td><td>".number_format($stage['ban_wr']*100, 2)."%</td>";
+                  else
+                    $heroline .= "<td>-</td><td>-</td>";
+                }
+
+                $stages_passed++;
+              }
+
+              if($stages_passed < $max_stage) {
+                for ($i=$stages_passed; $i<$max_stage; $i++)
+                  $heroline .= "<td class=\"separator\">-</td><td>-</td><td>-</td><td>-</td>";
+              }
+
+              $draft[$hid] = array ("out" => "", "matches" => $report['teams'][$tid]['pickban'][$hid]['matches_total']);
+              $draft[$hid]['out'] .= "<td>".hero_full($hid)."</td>";
+
+              $draft[$hid]['out'] .= "<td>".$report['teams'][$tid]['pickban'][$hid]['matches_total']."</td>";
+
+              if(isset($report['teams'][$tid]['pickban'][$hid]['matches_picked']) && $report['teams'][$tid]['pickban'][$hid]['matches_picked'])
+                $draft[$hid]['out'] .= "<td>".$report['teams'][$tid]['pickban'][$hid]['matches_picked']."</td><td>".
+                  number_format($report['teams'][$tid]['pickban'][$hid]['wins_picked']*100/$report['teams'][$tid]['pickban'][$hid]['matches_picked'], 2)."%</td>";
+              else
+                $draft[$hid]['out'] .= "<td>-</td><td>-</td>";
+
+              if(isset($report['teams'][$tid]['pickban'][$hid]['matches_banned']) && $report['teams'][$tid]['pickban'][$hid]['matches_banned'])
+                $draft[$hid]['out'] .= "<td>".$report['pickban'][$hid]['matches_banned']."</td><td>".
+                    number_format($report['teams'][$tid]['pickban'][$hid]['wins_banned']*100/$report['teams'][$tid]['pickban'][$hid]['matches_banned'], 2)."%</td>";
+              else
+                $draft[$hid]['out'] .= "<td>-</td><td>-</td>";
+
+              $draft[$hid]['out'] .= $heroline."</tr>";
+            }
+
+
+            uasort($draft, function($a, $b) {
+              if($a['matches'] == $b['matches']) return 0;
+              else return ($a['matches'] < $b['matches']) ? 1 : -1;
+            });
+
+            $modules['teams']["team_".$tid."_stats"]['draft'] .= "<table id=\"heroes-draft-team-$tid\" class=\"list wide\"><tr class=\"thead overhead\"><th width=\"15%\"></th><th colspan=\"5\">".$strings['total']."</th>";
+            $heroline = "<tr class=\"thead\">".
+                          "<th onclick=\"sortTable(0,'heroes-draft');\">".$strings['hero']."</th>".
+                          "<th onclick=\"sortTableNum(1,'heroes-draft');\">".$strings['matches']."</th>".
+                          "<th onclick=\"sortTableNum(2,'heroes-draft');\">".$strings['picks']."</th>".
+                          "<th onclick=\"sortTableNum(3,'heroes-draft');\">".$strings['winrate']."</th>".
+                          "<th onclick=\"sortTableNum(4,'heroes-draft');\">".$strings['bans']."</th>".
+                          "<th onclick=\"sortTableNum(5,'heroes-draft');\">".$strings['winrate']."</th>";
+
+            if($max_stage > 1)
+              for($i=1; $i<=$max_stage; $i++) {
+                $modules['teams']["team_".$tid."_stats"]['draft'] .= "<th class=\"separator\" colspan=\"4\">".$strings['stage']." $i</th>";
+                $heroline .= "<th onclick=\"sortTableNum(".(1+4*$i+1).",'heroes-draft');\" class=\"separator\">".$strings['picks']."</th>".
+                            "<th onclick=\"sortTableNum(".(1+4*$i+2).",'heroes-draft');\">".$strings['winrate']."</th>".
+                            "<th onclick=\"sortTableNum(".(1+4*$i+3).",'heroes-draft');\">".$strings['bans']."</th>".
+                            "<th onclick=\"sortTableNum(".(1+4*$i+4).",'heroes-draft');\">".$strings['winrate']."</th>";
+              }
+            $modules['teams']["team_".$tid."_stats"]['draft'] .= "</tr>".$heroline."</tr>";
+
+            unset($heroline);
+
+            foreach($draft as $hero)
+              $modules['teams']["team_".$tid."_stats"]['draft'] .= $hero['out'];
+
+            $modules['teams']["team_".$tid."_stats"]['draft'] .= "</table>";
+            unset($draft);
           }
         }
         if (isset($report['teams'][$tid]['hero_positions'])) {
@@ -2267,7 +2305,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         Spectral Alliance
         leamare/d2_lrg on github
        -->
-      <?php 
+      <?php
          if(file_exists("favicon.ico")) echo "<link rel=\"shortcut icon\" href=\"favicon.ico\" />";
       ?>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />

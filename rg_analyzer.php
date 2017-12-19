@@ -1277,7 +1277,7 @@
           for ($stage = 1; $stage < 4; $stage++) {
             $sql = "SELECT draft.hero_id hero_id, SUM(1) matches, SUM(NOT matches.radiantWin XOR draft.is_radiant)/SUM(1) winrate
                     FROM draft JOIN matches ON draft.matchid = matches.matchid
-                               JOIN teams_matches ON teams_matches.matchid = draft.matchid
+                               JOIN teams_matches ON teams_matches.matchid = draft.matchid AND draft.is_radiant = teams_matches.is_radiant
                     WHERE is_pick = ".($pick ? "true" : "false")." AND stage = ".$stage." AND teams_matches.teamid = ".$id."
                     GROUP BY draft.hero_id";
             if ($conn->multi_query($sql) === TRUE);

@@ -439,7 +439,7 @@ table .hero_portrait {
 
 .graph {
   width: 1100px;
-  height: 700px;
+  height: 1000px;
   margin: 0 auto;
 }
 
@@ -465,7 +465,7 @@ table .hero_portrait {
 }
 
 .chart-pie {
-  width: 50%;
+  width: 30%;
   margin: 0%;
   height: auto;
   display: inline-block;
@@ -473,7 +473,7 @@ table .hero_portrait {
 
 
 .content-text.overview:first-of-type {
-    margin-top: 60px;
+    margin-top: 30px;
 }
 .content-text.overview {
     margin: 0;
@@ -506,7 +506,8 @@ table .hero_portrait {
     margin: 0;
 }
 .content-text.overview.overview-graphs {
-    padding: 30px 25% 30px 25%;
+    padding: 30px 15% 30px 15%;
+    text-align: center;
 }
 .left-placing {
     text-align: left;

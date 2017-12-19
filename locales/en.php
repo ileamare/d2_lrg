@@ -61,7 +61,7 @@
     "ban_stages" => "Ban stages",
     "stage_num_1" => "Stage",
     "stage_num_2" => "of",
-    "draft" => "Draft stages",
+    "draft" => "Draft",
     "hero_positions" => "Positions stats",
     "hero_sides" => "Factions",
     "hero_pairs" => "Pairs",
@@ -147,7 +147,7 @@
     "smallest_hero_pool" => "Player with Smallest Hero Pool",
     "widest_hero_pool_team" => "Team with Widest Hero Pool",
     "smallest_hero_pool_team" => "Team with Smallest Hero Pool",
-    "diversity" => "Player Diversity",
+    "diversity" => "Hero Diversity",
     "common_position" => "Common Position",
 
     "stomp" => "Networth stomp by a team",
@@ -246,8 +246,9 @@
 
     "full" => "Full section",
     "full_participants" => "All participants",
+    "full_records" => "All records",
     "full_pickban" => "Full picks and bans stats",
-    "full_draft" => "Full draft stages stats",
+    "full_draft" => "Full draft stats",
     "full_hero_combos" => "Full hero combinations stats",
     "full_player_combos" => "Full player combinations stats",
     "full_matches" => "All matches"

@@ -101,7 +101,7 @@ a:hover {
 	margin-top: 0px;
 	padding-top: 40px;
 	background-color: #000000;
-	padding-bottom: 80px;
+	padding-bottom: 40px;
   overflow: hidden;
   overflow-x: auto;
 }
@@ -144,6 +144,10 @@ a:hover {
   clear: both;
 
 	margin: 30px 20% 0;
+}
+.content-text.small {
+  font-size: 12px;
+  line-height: 14px;
 }
 
 .content-cards {

@@ -2,7 +2,7 @@
 require_once("rg_report_out_settings.php");
 require_once("modules/mod_versions.php");
 
-$lg_version = array( 1, 0, 4, -4, 3 );
+$lg_version = array( 1, 1, 0, -4, 0 );
 
 /* FUNCTIONS */  {
   function has_pair($hid, $pairs) {
@@ -1256,15 +1256,22 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           });
 
           $modules['heroes']['hero_sides']['overview'] .= "<table id=\"hero-sides-overview\" class=\"list\">
-                                        <tr class=\"thead\">
-                                          <th onclick=\"sortTable(0,'hero-sides-overview');\">".$strings['hero']."</th>
-                                          <th onclick=\"sortTableNum(1,'hero-sides-overview');\">".$strings['matches']."</th>
-                                          <th onclick=\"sortTableNum(2,'hero-sides-overview');\">".$strings['rad_ratio']."</th>
-                                          <th onclick=\"sortTableNum(3,'hero-sides-overview');\">".$strings['radiant']." ".$strings['matches']."</th>
-                                          <th onclick=\"sortTableNum(4,'hero-sides-overview');\">".$strings['radiant']." ".$strings['winrate']."</th>
-                                          <th onclick=\"sortTableNum(5,'hero-sides-overview');\">".$strings['dire']." ".$strings['matches']."</th>
-                                          <th onclick=\"sortTableNum(6,'hero-sides-overview');\">".$strings['dire']." ".$strings['winrate']."</th>
-                                        </tr>";
+                                <tr class=\"thead overhead\">
+                                  <th width=\"25%\"></th>
+                                  <th width=\"10%\"></th>
+                                  <th width=\"15%\"></th>
+                                  <th class=\"separator\" colspan=\"2\">".$strings['radiant']."</th>
+                                  <th class=\"separator\" colspan=\"2\">".$strings['dire']."</th>
+                                </tr>
+                                <tr class=\"thead\">
+                                  <th onclick=\"sortTable(0,'hero-sides-overview');\">".$strings['hero']."</th>
+                                  <th onclick=\"sortTableNum(1,'hero-sides-overview');\">".$strings['matches']."</th>
+                                  <th onclick=\"sortTableNum(2,'hero-sides-overview');\">".$strings['rad_ratio']."</th>
+                                  <th class=\"separator\" onclick=\"sortTableNum(3,'hero-sides-overview');\">".$strings['matches']."</th>
+                                  <th onclick=\"sortTableNum(4,'hero-sides-overview');\">".$strings['winrate']."</th>
+                                  <th class=\"separator\" onclick=\"sortTableNum(5,'hero-sides-overview');\">".$strings['matches']."</th>
+                                  <th onclick=\"sortTableNum(6,'hero-sides-overview');\">".$strings['winrate']."</th>
+                                </tr>";
           foreach ($heroes as $hid => $hero) {
             if(!isset($hero["side0matches"])) {
               $hero["side0matches"] = 0;
@@ -1279,9 +1286,9 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                                                 <td>".($hid ? hero_full($hid) : "")."</td>".
                                                 "<td>".$hero['matches']."</td>".
                                                 "<td>".number_format($hero["side0matches"]*100/$hero["matches"],2)."%</td>".
-                                                "<td>".$hero["side0matches"]."</td>".
+                                                "<td class=\"separator\">".$hero["side0matches"]."</td>".
                                                 "<td>".number_format($hero["side0winrate"]*100,2)."%</td>".
-                                                "<td>".$hero["side1matches"]."</td>".
+                                                "<td class=\"separator\">".$hero["side1matches"]."</td>".
                                                 "<td>".number_format($hero["side1winrate"]*100,2)."%</td>".
                                               "</tr>";
           }
@@ -2245,7 +2252,15 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                     ($teamline[$team_ids[$i]]['winrate'] > 0.55 ? " class=\"high-wr\"" : (
                           $teamline[$team_ids[$i]]['winrate'] < 0.45 ? " class=\"low-wr\"" : ""
                         )
-                      ).">".number_format($teamline[$team_ids[$i]]['winrate']*100,0)."</td>";
+                      )." onclick=\"showModal('".$strings['matches'].": ".$tvt[$tid][$team_ids[$i]]['matches']
+                            ."<br />".$strings['winrate'].": ".number_format($tvt[$tid][$team_ids[$i]]['winrate']*100,2)
+                            ."%<br />".$strings['won']." ".$tvt[$tid][$team_ids[$i]]['won']." - "
+                                     .$strings['lost']." ".$tvt[$tid][$team_ids[$i]]['lost'].(
+                                       isset($tvt[$tid][$team_ids[$i]]['matchids']) ?
+                                        "<br />MatchIDs: ".implode($tvt[$tid][$team_ids[$i]]['matchids'], ", ")
+                                        : "").
+                            "','".$report['teams'][$tid]['name']." vs ".$report['teams'][$team_ids[$i]]['name']."')\">".
+                            number_format($teamline[$team_ids[$i]]['winrate']*100,0)."</td>";
           }
         }
         $modules['tvt'] .= "</tr>";

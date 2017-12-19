@@ -199,16 +199,7 @@ foreach ($matches as $match) {
             } else
               $t_players[$matchdata['players'][$j]['account_id']] = "Player ".$matchdata['players'][$j]['account_id'];
           }
-          
-        /*
-          if (isset($matchdata['players'][$j]["name"]) && $matchdata['players'][$j]["name"] != null) {
-              $t_players[$matchdata['players'][$j]['account_id']] = $matchdata['players'][$j]["name"];
-          } else if (isset($matchdata['players'][$j]["personaname"])) {
-            if($matchdata['players'][$j]["personaname"] == null) {
-              $t_players[$matchdata['players'][$j]['account_id']] = "Player ".$matchdata['players'][$j]['account_id'];
-            } else $t_players[$matchdata['players'][$j]['account_id']] = $matchdata['players'][$j]["personaname"];
-          } $t_players[$matchdata['players'][$j]['account_id']] = "Bot ".$meta['heroes'][$matchdata['players'][$j]['hero_id']]['name'];
-          */
+
         }
         $t_matchlines[$i]['heroid'] = $matchdata['players'][$j]['hero_id'];
         $t_matchlines[$i]['isRadiant'] = $matchdata['players'][$j]['isRadiant'];
@@ -337,9 +328,7 @@ foreach ($matches as $match) {
                 else if ($draft_instance['order'] < 15) $t_draft[$i]['stage'] = 2;
                 else $t_draft[$i]['stage'] = 3;
             } else {
-                if ($draft_instance['order'] < 3) $t_draft[$i]['stage'] = 1;
-                else if ($draft_instance['order'] < 5) $t_draft[$i]['stage'] = 2;
-                else $t_draft[$i]['stage'] = 3;
+                $t_draft[$i]['stage'] = 1;
             }
             $i++;
         }

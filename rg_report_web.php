@@ -2,7 +2,7 @@
 require_once("rg_report_out_settings.php");
 require_once("modules/mod_versions.php");
 
-$lg_version = array( 1, 1, 0, -4, 0 );
+$lg_version = array( 1, 1, 1, -4, 0 );
 
 /* FUNCTIONS */  {
   function has_pair($hid, $pairs) {
@@ -511,7 +511,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       $modules['overview'] .= "<div class=\"block-content\">";
 
       if( $report['matches_additional'][ $report['last_match']['mid'] ]['radiant_win'] ) {
-        if(isset($report['teams']) && isset($report['teams'][ $report['match_participants_teams'][ $report['last_match']['mid'] ]['radiant'] ]['name']))
+        if(isset($report['teams']) && isset($report['teams'][ $report['match _participants_teams'][ $report['last_match']['mid'] ]['radiant'] ]['name']))
           $modules['overview'] .= $report['teams'][ $report['match_participants_teams'][ $report['last_match']['mid'] ]['radiant'] ]['name'];
         else $modules['overview'] .= $strings['radiant'];
       } else {
@@ -668,12 +668,6 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
 
     $modules['overview'] .= "</div><table class=\"list\">";
     if (isset($report['teams'])) {
-      if (isset($report['records'])) {
-        $modules['overview'] .= "<tr><td>".$strings["widest_hero_pool_team"]."</td><td>".
-            team_name($report['records']['widest_hero_pool_team']['playerid'])."</td><td>".
-            $report['records']['widest_hero_pool_team']['value']."</td></tr>";
-      }
-
       $max_wr = 0;
       $max_matches = 0;
       foreach ($report['teams'] as $team_id => $team) {
@@ -689,29 +683,42 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
 
       $modules['overview'] .= "<tr><td>".$strings["highest_winrate"]."</td><td>".
           team_name($max_wr)."</td><td>".number_format($report['teams'][$max_wr]['wins']*100/$report['teams'][$max_wr]['matches_total'],2)."%</td></tr>";
-    } else {
+
       if (isset($report['records'])) {
-        $modules['overview'] .= "<h1>".$strings["widest_hero_pool"]."</h1>";
-        $modules['overview'] .= player_card($report['records']['widest_hero_pool']['playerid']);
+        $modules['overview'] .= "<tr><td>".$strings["widest_hero_pool_team"]."</td><td>".
+            team_name($report['records']['widest_hero_pool_team']['playerid'])."</td><td>".
+            $report['records']['widest_hero_pool_team']['value']."</td></tr>";
 
-        $max_wr = 0;
-        $max_matches = 0;
-        foreach ($report['players_additional'] as $pid => $player) {
-            if(!$max_matches || $report['players_additional'][$max_matches]['matches'] < $player['matches'] )
-              $max_matches = $pid;
-            if($player['matches'] <= $report['settings']['limiter']) continue;
-            if(!$max_wr || $report['players_additional'][$max_wr]['won']/$report['players_additional'][$max_wr]['matches'] < $player['won']/$player['matches'] )
-              $max_wr = $pid;
-        }
-
-        $modules['overview'] .= "<h1>".$strings["most_matches"]."</h1>";
-        $modules['overview'] .= player_card($max_matches);
-
-        $modules['overview'] .= "<h1>".$strings["highest_winrate"]."</h1>";
-        $modules['overview'] .= player_card($max_wr);
+        $modules['overview'] .= "<tr><td>".$strings["smallest_hero_pool_team"]."</td><td>".
+            team_name($report['records']['smallest_hero_pool_team']['playerid'])."</td><td>".
+            $report['records']['smallest_hero_pool_team']['value']."</td></tr>";
       }
 
+    } else {
+      $max_wr = 0;
+      $max_matches = 0;
+      foreach ($report['players_additional'] as $pid => $player) {
+          if(!$max_matches || $report['players_additional'][$max_matches]['matches'] < $player['matches'] )
+            $max_matches = $pid;
+          if($player['matches'] <= $report['settings']['limiter']) continue;
+          if(!$max_wr || $report['players_additional'][$max_wr]['won']/$report['players_additional'][$max_wr]['matches'] < $player['won']/$player['matches'] )
+            $max_wr = $pid;
+      }
+
+      $modules['overview'] .= "<tr><td>".$strings["most_matches"]."</td><td>".
+        player_name($max_matches)."</td><td>".$report['players_additional'][$max_matches]['matches']."</td></tr>";
+
+      $modules['overview'] .= "<tr><td>".$strings["highest_winrate"]."</td><td>".
+        player_name($max_wr)."</td><td>".
+        number_format($report['players_additional'][$max_wr]['won']*100/$report['players_additional'][$max_wr]['matches'],2)."%</td></tr>";
     }
+      if (isset($report['records'])) {
+        $modules['overview'] .= "<tr><td>".$strings["widest_hero_pool"]."</td><td>".
+          player_name($report['records']['widest_hero_pool']['playerid'])."</td><td>".$report['records']['widest_hero_pool']['value']."</td></tr>";
+        $modules['overview'] .= "<tr><td>".$strings["smallest_hero_pool"]."</td><td>".
+          player_name($report['records']['smallest_hero_pool']['playerid'])."</td><td>".$report['records']['smallest_hero_pool']['value']."</td></tr>";
+      }
+
     $modules['overview'] .= "</table>";
 
     $modules['overview'] .= "<div class=\"content-text\"><a href=\"http://".
@@ -758,19 +765,22 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         $modules['overview'] .= "</table>";
     }
 
+    $modules['overview'] .= "<div class=\"small-list-wrapper\">";
     if($report['settings']['overview_top_picked']) {
-        $modules['overview'] .=  "<table id=\"over-heroes-pick\" class=\"list\"><caption>".$strings['top_picked_heroes']."</caption>
+        $modules['overview'] .=  "<table id=\"over-heroes-pick\" class=\"list list-small\"><caption>".$strings['top_picked_heroes']."</caption>
                                               <tr class=\"thead\">
                                                 <th>".$strings['hero']."</th>
                                                 <th>".$strings['matches_total']."</th>
                                                 <th>".$strings['matches_picked']."</th>
-                                                <th>".$strings['winrate_picked']."</th>
+                                                <th>".$strings['winrate']."</th>
                                               </tr>";
 
         $workspace = $report['pickban'];
         uasort($workspace, function($a, $b) {
-          if($a['matches_picked'] == $b['matches_picked']) return 0;
-          else return ($a['matches_picked'] < $b['matches_picked']) ? 1 : -1;
+          if($a['matches_picked'] == $b['matches_picked']) {
+            if($a['matches_total'] == $b['matches_total']) return 0;
+            else return ($a['matches_total'] < $b['matches_total']) ? 1 : -1;
+          } else return ($a['matches_picked'] < $b['matches_picked']) ? 1 : -1;
         });
 
         $counter = $report['settings']['overview_top_picked_count'];
@@ -780,8 +790,8 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                                       <td>".($hid ? hero_full($hid) : "").
                                      "</td>
                                       <td>".$hero['matches_total']."</td>
-                                      <td>".$hero['matches_banned']."</td>
-                                      <td>".number_format($hero['winrate_banned']*100,2)."%</td>
+                                      <td>".$hero['matches_picked']."</td>
+                                      <td>".number_format($hero['winrate_picked']*100,2)."%</td>
                                     </tr>";
           $counter--;
         }
@@ -790,18 +800,20 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
     }
 
     if($report['settings']['overview_top_bans']) {
-        $modules['overview'] .=  "<table id=\"over-heroes-ban\" class=\"list\"><caption>".$strings['top_banned_heroes']."</caption>
+        $modules['overview'] .=  "<table id=\"over-heroes-ban\" class=\"list list-small\"><caption>".$strings['top_banned_heroes']."</caption>
                                               <tr class=\"thead\">
                                                 <th>".$strings['hero']."</th>
                                                 <th>".$strings['matches_total']."</th>
                                                 <th>".$strings['matches_banned']."</th>
-                                                <th>".$strings['winrate_banned']."</th>
+                                                <th>".$strings['winrate']."</th>
                                               </tr>";
 
         $workspace = $report['pickban'];
         uasort($workspace, function($a, $b) {
-          if($a['matches_banned'] == $b['matches_banned']) return 0;
-          else return ($a['matches_banned'] < $b['matches_banned']) ? 1 : -1;
+          if($a['matches_banned'] == $b['matches_banned']) {
+            if($a['matches_total'] == $b['matches_total']) return 0;
+            else return ($a['matches_total'] < $b['matches_total']) ? 1 : -1;
+          } else return ($a['matches_banned'] < $b['matches_banned']) ? 1 : -1;
         });
 
         $counter = $report['settings']['overview_top_bans_count'];
@@ -819,6 +831,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         unset($workspace);
         $modules['overview'] .= "</table>";
     }
+    $modules['overview'] .= "</div>";
 
     if($report['settings']['overview_top_draft']) {
       $modules['overview'] .= "<div class=\"small-list-wrapper\">";
@@ -883,7 +896,10 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         $modules['overview'] .= "</table>";
     }
 
-    $modules['overview'] .= "<div class=\"content-text\"><a href=\"http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."&mod=heroes-draft\">".$strings['full_draft']."</a></div>";
+    $modules['overview'] .= "<div class=\"content-text\"><a href=\"http://".
+        $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."&mod=heroes-draft\">".$strings['full_draft'].
+        "</a> / <a href=\"http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."&mod=heroes-hero_combo_graph\">".
+        $strings['hero_combo_graph']."</a></div>";
 
     if(!isset($report['teams']) && $report['settings']['overview_top_player_pairs'] && isset($report['player_pairs']) && !empty($report['player_pairs'])) {
         $modules['overview'] .= "<div class=\"content-header\">".$strings['top_player_pairs']."</div>";

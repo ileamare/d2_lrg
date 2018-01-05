@@ -42,6 +42,7 @@
     "opponent" => "Opponent",
     "core" => "Core",
     "support" => "Support",
+    "ratio" => "Ratio",
 
     "radiant" => "Radiant",
     "radiant_wr" => "Radiant Winrate",

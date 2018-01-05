@@ -1,5 +1,5 @@
 <?php
-  $strings = array(
+  $strings['ru'] = array(
     "date_format" => "j.m.Y",
     "time_format" => "h:i:s",
 

@@ -1,5 +1,5 @@
 <?php
-  $strings = array(
+  $strings['en'] = array(
     "date_format" => "j M Y",
     "time_format" => "h:i:s",
 

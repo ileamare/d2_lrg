@@ -114,6 +114,21 @@ $lg_version = array( 1, 1, 1, -4, 0 );
     return "(no team)";
   }
 
+  function team_tag($tid) {
+    global $report;
+    if($tid && isset($report['teams'][ $tid ]['tag']))
+      return $report['teams'][ $tid ]['tag'];
+    return "";
+  }
+
+  function team_link($tid) {
+    global $leaguetag;
+    global $linkvars;
+
+    return "<a href=\"?league=".$leaguetag."&mod=teams-team_".$tid."_stats".(empty($linkvars) ? "" : "&$linkvars")
+      ."\" title=\"".team_name($tid)."\">".team_name($tid)." (".team_tag($tid).")</a>";
+  }
+
   function team_card($tid) {
     global $report;
     global $meta;
@@ -523,7 +538,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       $modules['overview'] .= "<div class=\"block-content\">";
 
       if( $report['matches_additional'][ $report['last_match']['mid'] ]['radiant_win'] ) {
-        if(isset($report['teams']) && isset($report['teams'][ $report['match _participants_teams'][ $report['last_match']['mid'] ]['radiant'] ]['name']))
+        if(isset($report['teams']) && isset($report['teams'][ $report['match_participants_teams'][ $report['last_match']['mid'] ]['radiant'] ]['name']))
           $modules['overview'] .= $report['teams'][ $report['match_participants_teams'][ $report['last_match']['mid'] ]['radiant'] ]['name'];
         else $modules['overview'] .= locale_string("radiant");
       } else {
@@ -691,18 +706,18 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       }
 
       $modules['overview'] .= "<tr><td>".locale_string("most_matches")."</td><td>".
-          team_name($max_matches)."</td><td>".$report['teams'][$max_matches]['matches_total']."</td></tr>";
+          team_link($max_matches)."</td><td>".$report['teams'][$max_matches]['matches_total']."</td></tr>";
 
       $modules['overview'] .= "<tr><td>".locale_string("highest_winrate")."</td><td>".
-          team_name($max_wr)."</td><td>".number_format($report['teams'][$max_wr]['wins']*100/$report['teams'][$max_wr]['matches_total'],2)."%</td></tr>";
+          team_link($max_wr)."</td><td>".number_format($report['teams'][$max_wr]['wins']*100/$report['teams'][$max_wr]['matches_total'],2)."%</td></tr>";
 
       if (isset($report['records'])) {
         $modules['overview'] .= "<tr><td>".locale_string("widest_hero_pool_team")."</td><td>".
-            team_name($report['records']['widest_hero_pool_team']['playerid'])."</td><td>".
+            team_link($report['records']['widest_hero_pool_team']['playerid'])."</td><td>".
             $report['records']['widest_hero_pool_team']['value']."</td></tr>";
 
         $modules['overview'] .= "<tr><td>".locale_string("smallest_hero_pool_team")."</td><td>".
-            team_name($report['records']['smallest_hero_pool_team']['playerid'])."</td><td>".
+            team_link($report['records']['smallest_hero_pool_team']['playerid'])."</td><td>".
             $report['records']['smallest_hero_pool_team']['value']."</td></tr>";
       }
 
@@ -729,6 +744,12 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           player_name($report['records']['widest_hero_pool']['playerid'])."</td><td>".$report['records']['widest_hero_pool']['value']."</td></tr>";
         $modules['overview'] .= "<tr><td>".locale_string("smallest_hero_pool")."</td><td>".
           player_name($report['records']['smallest_hero_pool']['playerid'])."</td><td>".$report['records']['smallest_hero_pool']['value']."</td></tr>";
+      }
+
+      if (isset($report['averages_players'])) {
+        $modules['overview'] .= "<tr><td>".locale_string("diversity")."</td><td>".
+          player_name($report['averages_players']['diversity'][0]['playerid'])."</td><td>".
+          number_format($report['averages_players']['diversity'][0]['value']*100,2)."%</td></tr>";
       }
 
     $modules['overview'] .= "</table>";
@@ -993,7 +1014,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                                 <td>".number_format($record['value'],2)."</td>
                                 <td>". ($record['playerid'] ?
                                           (strstr($key, "_team") != FALSE ?
-                                            $report['teams'][ $record['playerid'] ]['name']." ( ".$report['teams'][ $record['playerid'] ]['tag']." )" :
+                                            team_link($record['playerid']) :
                                             $report['players'][$record['playerid']]
                                           ) :
                                      "")."</td>
@@ -2201,7 +2222,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
 
     foreach($report['teams'] as $team_id => $team) {
       $modules['summary_teams'] .= "<tr>".
-                    "<td>".team_name($team_id)."</td>".
+                    "<td>".team_link($team_id)."</td>".
                     "<td>".$team['matches_total']."</td>".
                     "<td>".number_format($team['wins']*100/$team['matches_total'],2)."%</td>".
                     "<td>".number_format($team['averages']['rad_ratio']*100,2)."%</td>".

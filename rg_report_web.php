@@ -803,9 +803,9 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         $modules['overview'] .=  "<table id=\"over-heroes-pick\" class=\"list list-small\"><caption>".locale_string("top_picked_heroes")."</caption>
                                               <tr class=\"thead\">
                                                 <th>".locale_string("hero")."</th>
-                                                <th>".locale_string("matches_total")."</th>
+                                                <th>".locale_string("matches_s")."</th>
                                                 <th>".locale_string("matches_picked")."</th>
-                                                <th>".locale_string("winrate")."</th>
+                                                <th>".locale_string("winrate_s")."</th>
                                               </tr>";
 
         $workspace = $report['pickban'];
@@ -836,9 +836,9 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         $modules['overview'] .=  "<table id=\"over-heroes-ban\" class=\"list list-small\"><caption>".locale_string("top_banned_heroes")."</caption>
                                               <tr class=\"thead\">
                                                 <th>".locale_string("hero")."</th>
-                                                <th>".locale_string("matches_total")."</th>
+                                                <th>".locale_string("matches_s")."</th>
                                                 <th>".locale_string("matches_banned")."</th>
-                                                <th>".locale_string("winrate")."</th>
+                                                <th>".locale_string("winrate_s")."</th>
                                               </tr>";
 
         $workspace = $report['pickban'];
@@ -878,7 +878,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                                                     <tr class=\"thead\">
                                                       <th>".locale_string("hero")."</th>
                                                       <th>".locale_string("matches")."</th>
-                                                      <th>".locale_string("winrate")."</th>
+                                                      <th>".locale_string("winrate_s")."</th>
                                                     </tr>";
 
               $counter = $report['settings']["overview_draft_".$i."_".$j."_count"];
@@ -1256,6 +1256,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
               if (!$i) { break; }
             }
           }
+          ksort($overview);
 
           $modules['heroes']['hero_positions']['overview'] .= "<table id=\"heroes-positions-overview\" class=\"list wide\"><tr class=\"thead overhead\"><th width=\"20%\" colspan=\"2\"></th>";
 

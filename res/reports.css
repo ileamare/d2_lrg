@@ -78,7 +78,7 @@ table.list-small caption {
   margin-bottom: auto;
 }
 table.list-small tr th:first-child {
-  width: 60%;
+  width: 45%;
 }
 table.wide {
   width: 90%;

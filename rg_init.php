@@ -29,15 +29,16 @@ $lg_settings['time_limit_before'] = false;
 
 /* STARLADDER */
 
-$lg_settings['league_tag'] = "d2cl_s13";
-$lg_settings['league_name'] = "Dota 2 Champions League Season 13";
-$lg_settings['league_desc'] = "Minor Tournament from Epic Esports Events";
-$lg_settings['league_id'] = 5850;
+$lg_settings['league_tag'] = "ti7_lan";
+$lg_settings['league_name'] = "The International 2017 LAN";
+$lg_settings['league_desc'] = "Dota 2 World Championships Group Stage and Main Event";
+$lg_settings['league_id'] = 5401;
 $lg_settings['time_limit_after'] = null;
 $lg_settings['time_limit_before'] = null;
-$lg_settings['match_limit_after'] = 3455406668;
-$lg_settings['match_limit_before'] = 3507199385;
+$lg_settings['match_limit_after'] = 3351963839;
+$lg_settings['match_limit_before'] = null;
 
+/*
 $lg_settings['league_tag'] = "pro_circuit_recap_december_2017";
 $lg_settings['league_name'] = "Pro Circuit - December 2017";
 $lg_settings['league_desc'] = "Pro Circuit Profeccional Meta Recap";

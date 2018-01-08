@@ -698,17 +698,20 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       $max_wr = 0;
       $max_matches = 0;
       foreach ($report['teams'] as $team_id => $team) {
-          if(!$max_matches || $report['teams'][$max_matches]['matches_total'] < $team['matches_total'] )
-            $max_matches = $team_id;
-          if($team['matches_total'] <= $report['settings']['limiter']) continue;
-          if(!$max_wr || $report['teams'][$max_wr]['wins']/$report['teams'][$max_wr]['matches_total'] < $team['wins']/$team['matches_total'] )
-            $max_wr = $team_id;
+        if(!$max_matches || $report['teams'][$max_matches]['matches_total'] < $team['matches_total'] )
+          $max_matches = $team_id;
+        if($team['matches_total'] <= $report['settings']['limiter']) continue;
+
+        if($max_wr == 0) $max_wr = $team_id;
+        else if(!$max_wr || $report['teams'][$max_wr]['wins']/$report['teams'][$max_wr]['matches_total'] < $team['wins']/$team['matches_total'] )
+          $max_wr = $team_id;
       }
 
       $modules['overview'] .= "<tr><td>".locale_string("most_matches")."</td><td>".
           team_link($max_matches)."</td><td>".$report['teams'][$max_matches]['matches_total']."</td></tr>";
 
-      $modules['overview'] .= "<tr><td>".locale_string("highest_winrate")."</td><td>".
+      if($max_wr)
+        $modules['overview'] .= "<tr><td>".locale_string("highest_winrate")."</td><td>".
           team_link($max_wr)."</td><td>".number_format($report['teams'][$max_wr]['wins']*100/$report['teams'][$max_wr]['matches_total'],2)."%</td></tr>";
 
       if (isset($report['records'])) {
@@ -1228,10 +1231,10 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           for ($j=1; $j<6 && $j>0; $j++) {
             if (!$i) { $j = 0; }
             if(sizeof($report['hero_positions'][$i][$j]))
-              $position_overview_template["$i-$j"] = array("matches" => 0, "wr" => 0);
+              $position_overview_template["$i.$j"] = array("matches" => 0, "wr" => 0);
 
-            if(!isset($strings['en']["positions_$i-$j"]))
-              $strings['en']["positions_$i-$j"] = ($i ? locale_string("core") : locale_string("support"))." ".$meta['lanes'][$j];
+            if(!isset($strings['en']["positions_$i.$j"]))
+              $strings['en']["positions_$i.$j"] = ($i ? locale_string("core") : locale_string("support"))." ".$meta['lanes'][$j];
 
             if (!$i) { break; }
           }
@@ -1248,8 +1251,8 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
               foreach($report['hero_positions'][$i][$j] as $hero) {
                 if (!isset($overview[ $hero['heroid'] ])) $overview[ $hero['heroid'] ] = $position_overview_template;
 
-                $overview[ $hero['heroid'] ]["$i-$j"]['matches'] = $hero['matches_s'];
-                $overview[ $hero['heroid'] ]["$i-$j"]['wr'] = $hero['winrate_s'];
+                $overview[ $hero['heroid'] ]["$i.$j"]['matches'] = $hero['matches_s'];
+                $overview[ $hero['heroid'] ]["$i.$j"]['wr'] = $hero['winrate_s'];
                 $overview[ $hero['heroid'] ]["total"] += $hero['matches_s'];
               }
 
@@ -1300,16 +1303,16 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
             if (!$i) { $j = 0; }
 
             if(sizeof($report['hero_positions'][$i][$j])) {
-              $modules['heroes']['hero_positions']["positions_$i-$j"]  = "";
-              if (!check_module($parent."hero_positions-"."positions_$i-$j")) { if (!$i) { break; } continue; }
+              $modules['heroes']['hero_positions']["positions_$i.$j"]  = "";
+              if (!check_module($parent."hero_positions-"."positions_$i.$j")) { if (!$i) { break; } continue; }
 
-              $modules['heroes']['hero_positions']["positions_$i-$j"] .= "<table id=\"heroes-positions-$i-$j\" class=\"list wide\">
+              $modules['heroes']['hero_positions']["positions_$i.$j"] .= "<table id=\"heroes-positions-$i-$j\" class=\"list wide\">
                                                 <tr class=\"thead\">
                                                   <th onclick=\"sortTable(0,'heroes-positions-$i-$j');\">".locale_string("hero")."</th>";
               for($k=1, $end=sizeof($keys); $k < $end; $k++) {
-                $modules['heroes']['hero_positions']["positions_$i-$j"] .= "<th onclick=\"sortTableNum($k,'heroes-positions-$i-$j');\">".locale_string($keys[$k])."</th>";
+                $modules['heroes']['hero_positions']["positions_$i.$j"] .= "<th onclick=\"sortTableNum($k,'heroes-positions-$i-$j');\">".locale_string($keys[$k])."</th>";
               }
-              $modules['heroes']['hero_positions']["positions_$i-$j"] .= "</tr>";
+              $modules['heroes']['hero_positions']["positions_$i.$j"] .= "</tr>";
 
               uasort($report['hero_positions'][$i][$j], function($a, $b) {
                 if($a['matches_s'] == $b['matches_s']) return 0;
@@ -1318,22 +1321,22 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
 
               foreach($report['hero_positions'][$i][$j] as $hero) {
 
-                $modules['heroes']['hero_positions']["positions_$i-$j"] .= "<tr".(isset($report['hero_positions_matches']) ?
+                $modules['heroes']['hero_positions']["positions_$i.$j"] .= "<tr".(isset($report['hero_positions_matches']) ?
                                                                   " onclick=\"showModal('".htmlspecialchars(join_matches($report['hero_positions_matches'][$i][$j][$hero['heroid']])).
                                                                           "', '".$meta['heroes'][ $hero['heroid'] ]['name']." - ".
-                                                                          locale_string("positions_$i-$j")." - ".locale_string("matches")."');\"" : "").">
+                                                                          locale_string("positions_$i.$j")." - ".locale_string("matches")."');\"" : "").">
                                                     <td>".($hero['heroid'] ? hero_full($hero['heroid']) : "").
                                                    "</td>
                                                     <td>".$hero['matches_s']."</td>
                                                     <td>".number_format($hero['winrate_s']*100,1)."%</td>";
                 for($k=3, $end=sizeof($keys); $k < $end; $k++) {
-                  $modules['heroes']['hero_positions']["positions_$i-$j"] .= "<td>".number_format($hero[$keys[$k]],1)."</td>";
+                  $modules['heroes']['hero_positions']["positions_$i.$j"] .= "<td>".number_format($hero[$keys[$k]],1)."</td>";
                 }
-                $modules['heroes']['hero_positions']["positions_$i-$j"] .= "</tr>";
+                $modules['heroes']['hero_positions']["positions_$i.$j"] .= "</tr>";
               }
-              $modules['heroes']['hero_positions']["positions_$i-$j"] .= "</table>";
+              $modules['heroes']['hero_positions']["positions_$i.$j"] .= "</table>";
 
-              $modules['heroes']['hero_positions']["positions_$i-$j"] .= "<div class=\"content-text\">".locale_string("desc_heroes_positions")."</div>";
+              $modules['heroes']['hero_positions']["positions_$i.$j"] .= "<div class=\"content-text\">".locale_string("desc_heroes_positions")."</div>";
             }
             if (!$i) { break; }
           }
@@ -1887,41 +1890,41 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           for ($j=1; $j<6 && $j>0; $j++) {
             if (!$i) { $j = 0; }
 
-            if(!isset($strings['en']["positions_$i-$j"]))
-              $strings['en']["positions_$i-$j"] = ($i ? locale_string("core") : locale_string("support"))." ".$meta['lanes'][$j];
+            if(!isset($strings['en']["positions_$i.$j"]))
+              $strings['en']["positions_$i.$j"] = ($i ? locale_string("core") : locale_string("support"))." ".$meta['lanes'][$j];
 
             if(sizeof($report['player_positions'][$i][$j])) {
-              $modules['players']['player_positions']["positions_$i-$j"]  = "";
-              if (!check_module($parent."player_positions-"."positions_$i-$j")) { if (!$i) { break; } continue; }
+              $modules['players']['player_positions']["positions_$i.$j"]  = "";
+              if (!check_module($parent."player_positions-"."positions_$i.$j")) { if (!$i) { break; } continue; }
 
-              $modules['players']['player_positions']["positions_$i-$j"] .= "<table id=\"players-positions-$i-$j\" class=\"list wide\">
+              $modules['players']['player_positions']["positions_$i.$j"] .= "<table id=\"players-positions-$i-$j\" class=\"list wide\">
                                                 <tr class=\"thead\">
                                                   <th onclick=\"sortTable(0,'players-positions-$i-$j');\">".locale_string("player")."</th>";
               for($k=1, $end=sizeof($keys); $k < $end; $k++) {
-                $modules['players']['player_positions']["positions_$i-$j"] .= "<th onclick=\"sortTableNum($k,'players-positions-$i-$j');\">".locale_string($keys[$k])."</th>";
+                $modules['players']['player_positions']["positions_$i.$j"] .= "<th onclick=\"sortTableNum($k,'players-positions-$i-$j');\">".locale_string($keys[$k])."</th>";
               }
-              $modules['players']['player_positions']["positions_$i-$j"] .= "</tr>";
+              $modules['players']['player_positions']["positions_$i.$j"] .= "</tr>";
 
 
               foreach($report['player_positions'][$i][$j] as $player) {
 
-                $modules['players']['player_positions']["positions_$i-$j"] .= "<tr".(isset($report['player_positions_matches']) ?
+                $modules['players']['player_positions']["positions_$i.$j"] .= "<tr".(isset($report['player_positions_matches']) ?
                                                     " onclick=\"showModal('".htmlspecialchars(join_matches($report['player_positions_matches'][$i][$j][$player['playerid']])).
                                                                           "', '".$report['players'][$player['playerid']]." - ".
-                                                                          locale_string("positions_$i-$j")." - ".locale_string("matches")."');\"" : "").">
+                                                                          locale_string("positions_$i.$j")." - ".locale_string("matches")."');\"" : "").">
                                                     <td>".$report['players'][$player['playerid']]."</td>
                                                     <td>".$player['matches_s']."</td>
                                                     <td>".number_format($player['winrate_s']*100,1)."%</td>";
                 for($k=3, $end=sizeof($keys); $k < $end; $k++) {
                   if ($player[$keys[$k]] > 1)
-                    $modules['players']['player_positions']["positions_$i-$j"] .= "<td>".number_format($player[$keys[$k]],1)."</td>";
-                  else $modules['players']['player_positions']["positions_$i-$j"] .= "<td>".number_format($player[$keys[$k]],2)."</td>";
+                    $modules['players']['player_positions']["positions_$i.$j"] .= "<td>".number_format($player[$keys[$k]],1)."</td>";
+                  else $modules['players']['player_positions']["positions_$i.$j"] .= "<td>".number_format($player[$keys[$k]],2)."</td>";
                 }
-                $modules['players']['player_positions']["positions_$i-$j"] .= "</tr>";
+                $modules['players']['player_positions']["positions_$i.$j"] .= "</tr>";
               }
-              $modules['players']['player_positions']["positions_$i-$j"] .= "</table>";
+              $modules['players']['player_positions']["positions_$i.$j"] .= "</table>";
 
-              $modules['players']['player_positions']["positions_$i-$j"] .= "<div class=\"content-text\">".locale_string("desc_players_positions")."</div>";
+              $modules['players']['player_positions']["positions_$i.$j"] .= "<div class=\"content-text\">".locale_string("desc_players_positions")."</div>";
             }
             if (!$i) { break; }
           }
@@ -2087,20 +2090,20 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
               for ($j=1; $j<6 && $j>0; $j++) {
                 if (!$i) { $j = 0; }
 
-                if(!isset($strings['en']["positions_$i-$j"]))
-                  $strings['en']["positions_$i-$j"] = ($i ? locale_string("core") : locale_string("support"))." ".$meta['lanes'][$j];
+                if(!isset($strings['en']["positions_$i.$j"]))
+                  $strings['en']["positions_$i.$j"] = ($i ? locale_string("core") : locale_string("support"))." ".$meta['lanes'][$j];
 
                 if(sizeof($report['teams'][$tid]['hero_positions'][$i][$j])) {
-                  $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i-$j"]  = "";
+                  $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i.$j"]  = "";
 
-                  if (check_module($parent."team_".$tid."_stats-hero_positions-positions_$i-$j")) {
-                    $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i-$j"] .= "<table id=\"heroes-positions-$i-$j\" class=\"list wide\">
+                  if (check_module($parent."team_".$tid."_stats-hero_positions-positions_$i.$j")) {
+                    $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i.$j"] .= "<table id=\"heroes-positions-$i-$j\" class=\"list wide\">
                                                       <tr class=\"thead\">
                                                         <th onclick=\"sortTable(0,'heroes-positions-$i-$j');\">".locale_string("hero")."</th>";
                     for($k=1, $end=sizeof($keys); $k < $end; $k++) {
-                      $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i-$j"] .= "<th onclick=\"sortTableNum($k,'heroes-positions-$i-$j');\">".locale_string($keys[$k])."</th>";
+                      $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i.$j"] .= "<th onclick=\"sortTableNum($k,'heroes-positions-$i-$j');\">".locale_string($keys[$k])."</th>";
                     }
-                    $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i-$j"] .= "</tr>";
+                    $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i.$j"] .= "</tr>";
 
                     uasort($report['teams'][$tid]['hero_positions'][$i][$j], function($a, $b) {
                       if($a['matches_s'] == $b['matches_s']) return 0;
@@ -2109,23 +2112,23 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
 
                     foreach($report['teams'][$tid]['hero_positions'][$i][$j] as $hero) {
 
-                      $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i-$j"] .= "<tr".(isset($report['teams'][$tid]['hero_positions_matches']) ?
+                      $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i.$j"] .= "<tr".(isset($report['teams'][$tid]['hero_positions_matches']) ?
                                                                         " onclick=\"showModal('".htmlspecialchars(join_matches($report['teams'][$tid]['hero_positions_matches'][$i][$j][$hero['heroid']])).
                                                                                 "', '".$meta['heroes'][ $hero['heroid'] ]['name']." - ".
-                                                                                locale_string("positions_$i-$j")." - ".locale_string("matches")."');\"" : "").">
+                                                                                locale_string("positions_$i.$j")." - ".locale_string("matches")."');\"" : "").">
                                                           <td>".($hero['heroid'] ? hero_full($hero['heroid']) : "").
                                                          "</td>
                                                           <td>".$hero['matches_s']."</td>
                                                           <td>".number_format($hero['winrate_s']*100,1)."%</td>";
                       for($k=3, $end=sizeof($keys); $k < $end; $k++) {
-                        $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i-$j"] .= "<td>".number_format($hero[$keys[$k]],1)."</td>";
+                        $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i.$j"] .= "<td>".number_format($hero[$keys[$k]],1)."</td>";
                       }
-                      $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i-$j"] .= "</tr>";
+                      $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i.$j"] .= "</tr>";
                     }
-                    $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i-$j"] .= "</table>";
+                    $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i.$j"] .= "</table>";
                   }
                 }
-                $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i-$j"] .= "<div class=\"content-text\">".locale_string("desc_heroes_positions")."</div>";
+                $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i.$j"] .= "<div class=\"content-text\">".locale_string("desc_heroes_positions")."</div>";
 
                 if (!$i) { break; }
               }

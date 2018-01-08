@@ -29,13 +29,13 @@ $lg_settings['time_limit_before'] = false;
 
 /* STARLADDER */
 
-$lg_settings['league_tag'] = "ti7_lan";
-$lg_settings['league_name'] = "The International 2017 LAN";
-$lg_settings['league_desc'] = "Dota 2 World Championships Group Stage and Main Event";
-$lg_settings['league_id'] = 5401;
+$lg_settings['league_tag'] = "cd40_minor_finals";
+$lg_settings['league_name'] = "Captains Draft 4.0";
+$lg_settings['league_desc'] = "Dota 2 Pro Circuit Minor Finals";
+$lg_settings['league_id'] = 5688;
 $lg_settings['time_limit_after'] = null;
 $lg_settings['time_limit_before'] = null;
-$lg_settings['match_limit_after'] = 3351963839;
+$lg_settings['match_limit_after'] = 3660317795;
 $lg_settings['match_limit_before'] = null;
 
 /*
@@ -142,7 +142,7 @@ $lg_settings['web'] = array(
   //"custom_style" => "sa",
   //"custom_style" => "fpl",
   //"custom_style" => "sl-minor-17",
-  "custom_style" => "",
+  "custom_style" => "captains_draft",
   "pvp_grid" => false,
 
   "heroes_combo_graph" => true,
@@ -320,8 +320,8 @@ if ($conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag'])) {
     echo "[ ] Creating table `teams`...";
     $conn->query("CREATE TABLE `teams` (
       `teamid` int(10) UNSIGNED NOT NULL,
-      `name` varchar(25) NOT NULL,
-      `tag` varchar(10) NOT NULL
+      `name` varchar(50) NOT NULL,
+      `tag` varchar(25) NOT NULL
     );");
       if ($conn->connect_error) die("[F] Can't create table `teams`: ".$conn->connect_error."\n");
     echo "OK\n";

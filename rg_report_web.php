@@ -1754,7 +1754,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
 
 
         foreach($pvp as $pid => $playerline) {
-          $strings['pid'.$pid] = $report['players'][$pid];
+          $strings['en']['pid'.$pid] = $report['players'][$pid];
 
           $modules['players']['pvp']['pid'.$pid] = "";
           if(!check_module($parent."pvp-pid".$pid)) continue;

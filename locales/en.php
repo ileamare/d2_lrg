@@ -43,6 +43,7 @@
     "core" => "Core",
     "support" => "Support",
     "ratio" => "Ratio",
+    "none" => "None",
 
     "radiant" => "Radiant",
     "radiant_wr" => "Radiant Winrate",

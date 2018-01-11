@@ -194,6 +194,7 @@ $lg_version = array( 1, 1, 1, -4, 0 );
         $output .= $stats['matches']." - ".number_format($stats['winrate']*100, 2)."%</div>";
         $counter++;
       }
+      if (!$counter) $output .= "<div class=\"team-info-line\"><span class=\"caption\">".locale_string("none")."</span></div>";
       $output .= "</div>";
 
     }
@@ -496,9 +497,22 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
 
     if($report['settings']['overview_versions']) {
       $mode = reset($report['versions']);
+
+      if (compare_ver($report['ana_version'], array(1,1,0,-4,1)) < 0) {
+        $ver = $meta['versions'][ key($report['versions']) ];
+      } else {
+        $ver = $meta['versions'][ (int) (key($report['versions'])/100) ].(
+            key($report['versions']) % 100 ?
+            chr( ord('a') + key($report['versions']) % 100 ) :
+            ""
+          );
+      }
+
       if ($mode/$report['random']['matches_total'] > 0.99)
-        $modules['overview'] .= locale_string("over-one-version-left").$meta['versions'][ key($report['versions']) ].locale_string("over-one-version-right")." ";
-      else $modules['overview'] .= $mode.locale_string("over-most-version-left").$meta['versions'][ key($report['versions']) ].locale_string("over-most-version-right")." ";
+        $modules['overview'] .= locale_string("over-one-version-left").$ver.locale_string("over-one-version-right")." ";
+      else $modules['overview'] .= $mode.locale_string("over-most-version-left").$ver.locale_string("over-most-version-right")." ";
+
+      unset($ver);
     }
 
     if($report['settings']['overview_modes']) {
@@ -562,7 +576,15 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       if ($report['settings']['overview_versions'] && $mode/$report['random']['matches_total'] < 0.99) {
         $converted_modes = array();
         foreach ($report['versions'] as $mode => $data) {
-          $converted_modes[] = $meta['versions'][$mode];
+          if (compare_ver($report['ana_version'], array(1,1,0,-4,1)) < 0) {
+            $converted_modes[] = $meta['versions'][$mode];
+          } else {
+            $converted_modes[] = $meta['versions'][ (int) ($mode/100) ].(
+                $mode % 100 ?
+                chr( ord('a') + $mode % 100 ) :
+                ""
+              );
+          }
         }
         $colors = array_slice($charts_colors, 0, sizeof($converted_modes));
         $modules['overview'] .= "<div class=\"chart-pie\"><canvas id=\"overview-patches\" width=\"undefined\" height=\"undefined\"></canvas><script>".

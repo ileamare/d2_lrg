@@ -12,6 +12,7 @@ function generate_tag($name) {
 }
 
 include_once("settings.php");
+include_once("modules/mod.fet.version.php");
 
 echo("\nInitialising...\n");
 
@@ -139,7 +140,7 @@ foreach ($matches as $match) {
 
     $i = sizeof($t_matches);
     $t_matches[$i]['matchid'] = $match;
-    $t_matches[$i]['version'] = $matchdata['patch'];
+    $t_matches[$i]['version'] = get_patchid($matchdata['start_time'], $matchdata['patch']);
     $t_matches[$i]['radiantWin'] = $matchdata['radiant_win'];
     $t_matches[$i]['duration'] = $matchdata['duration'];
     $t_matches[$i]['modeID'] = $matchdata['game_mode'];

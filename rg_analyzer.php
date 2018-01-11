@@ -228,7 +228,10 @@
     $query_res = $conn->store_result();
 
     for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
-      $result["versions"][$row[0]] = $row[1];
+      if ($row[1] < 100)
+        $result["versions"][$row[0]] = $row[1]*100;
+      else
+        $result["versions"][$row[0]] = $row[1];
     }
 
     $query_res->free_result();
@@ -1412,7 +1415,7 @@
                 FROM matchlines m1 JOIN matchlines m2
                   ON m1.matchid = m2.matchid and m1.isRadiant = m2.isRadiant and m1.heroid < m2.heroid
                   JOIN matches ON m1.matchid = matches.matchid
-                  JOIN teams_matches ON m1.matchid = teams_matches.matchid
+                  JOIN teams_matches ON m1.matchid = teams_matches.matchid AND teams_matches.is_radiant = m1.isRadiant
                 WHERE teams_matches.teamid = ".$id."
                 GROUP BY m1.heroid, m2.heroid
                 HAVING match_count > $limiter_lower

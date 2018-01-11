@@ -133,6 +133,10 @@
     $sql .= "SELECT \"deaths\" cap, matchid, deaths, playerid, heroid FROM matchlines ORDER BY deaths DESC;";
     # assists
     $sql .= "SELECT \"assists\" cap, matchid, assists, playerid, heroid FROM matchlines ORDER BY assists DESC;";
+    # kda0
+    $sql .= "SELECT \"kda0\" cap, matchid, kills+assists val, playerid, heroid FROM matchlines WHERE deaths = 0 ORDER BY val DESC;";
+    # kda1
+    $sql .= "SELECT \"kda1\" cap, matchid, (kills+assists)/deaths val, playerid, heroid FROM matchlines WHERE deaths > 0 ORDER BY val DESC;";
     # networth
     $sql .= "SELECT \"networth\" cap, matchid, networth, playerid, heroid FROM matchlines ORDER BY networth DESC;";
     # lasthits

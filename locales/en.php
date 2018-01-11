@@ -108,6 +108,8 @@
     "xpm" => "XPM",
     "kills" => "Kills",
     "deaths" => "Deaths",
+    "kda0" => "KDA with 0 deaths",
+    "kda1" => "KDA with 1 death",
     "least_deaths" => "Least deaths",
     "most_deaths" => "Most deaths",
     "assists" => "Assists",

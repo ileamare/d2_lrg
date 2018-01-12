@@ -1,8 +1,6 @@
 #!/bin/php
 <?php
 
-include_once("settings.php");
-
 $options = getopt("f:");
 if(isset($options['f'])) {
   $filename = $options['f'];

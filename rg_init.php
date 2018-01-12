@@ -14,11 +14,53 @@
 $init = true;
 require_once("settings.php");
 
+function migrate_params(&$host, $vals) {
+  foreach ($vals as $k => $v) {
+    if (is_array($v)) {
+      if(!isset($host[$k])) $host[$k] = $v;
+      else migrate_params($host[$k], $v);
+    } else $host[$k] = $v;
+  }
+}
+
 $lg_settings = array(
   "main"=> array(),
   "ana" => array(),
   "web" => array()
 );
+
+if (!file_exists("templates/default.json")) die("[F] No default league template found, exitting.");
+
+$lg_settings = json_decode(file_get_contents("templates/default.json"), true);
+
+if(isset($argv)) {
+  $options = getopt("ST:l:N:D:I:", [ "settings", "template", "league", "name", "desc", "id" ]);
+
+  if(isset($options['T'])) {
+    if (file_exists("templates/".$options['T'].".json"))
+    $tmp = json_decode(file_get_contents("templates/".$options['T'].".json"), true);
+
+    migrate_params($lg_settings, $tmp);
+    unset($tmp);
+  }
+
+  # TODO Custom settings
+
+  if(isset($options['l'])) $lg_settings['league_tag'] = $options['l'];
+  else $lg_settings['league_tag'] = readline(" >  League tag: ");
+
+  if(isset($options['N'])) $lg_settings['league_name'] = $options['N'];
+  else $lg_settings['league_name'] = readline(" >  League name: ");
+
+  if(isset($options['D'])) $lg_settings['league_desc'] = $options['D'];
+  else $lg_settings['league_desc'] = readline(" >  League description: ");
+
+  if(!isset($lg_settings['league_id']))
+    if(isset($options['I'])) $lg_settings['league_id'] = $options['I'];
+    else $lg_settings['league_id'] = (int) readline(" >  League ID: ");
+  if (!$lg_settings['league_id']) $lg_settings['league_id'] = null;
+
+}
 
 $lg_settings['league_tag'] = "fpl_sept_2017";
 $lg_settings['league_name'] = "FPL - September 2017";

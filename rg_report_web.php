@@ -1238,7 +1238,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         if($mod == $parent."hero_positions") $unset_module = true;
 
         $position_overview_template = array("total" => 0);
-        for ($i=0; $i<2 && !isset($keys); $i++) {
+        for ($i=1; $i>=0 && !isset($keys); $i--) {
           for ($j=1; $j<6 && $j>0; $j++) {
             if (!$i) { $j = 0; }
             if(isset($report['hero_positions'][$i][$j][0])) {
@@ -1249,7 +1249,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           }
         }
 
-        for ($i=0; $i<2; $i++) {
+        for ($i=1; $i>=0; $i--) {
           for ($j=1; $j<6 && $j>0; $j++) {
             if (!$i) { $j = 0; }
             if(sizeof($report['hero_positions'][$i][$j]))
@@ -1266,7 +1266,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         if (check_module($parent."hero_positions-"."overview")) {
           $overview = array();
 
-          for ($i=0; $i<2; $i++) {
+          for ($i=1; $i>=0; $i--) {
             for ($j=1; $j<6 && $j>0; $j++) {
               if (!$i) { $j = 0; }
 
@@ -1285,7 +1285,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
 
           $modules['heroes']['hero_positions']['overview'] .= "<table id=\"heroes-positions-overview\" class=\"list wide\"><tr class=\"thead overhead\"><th width=\"20%\" colspan=\"2\"></th>";
 
-          $heroline = "<tr class=\"thead\"><th onclick=\"sortTableNum(0,'heroes-positions-overview');\">".locale_string("hero")."</th>".
+          $heroline = "<tr class=\"thead\"><th onclick=\"sortTable(0,'heroes-positions-overview');\">".locale_string("hero")."</th>".
                         "<th onclick=\"sortTableNum(1,'heroes-positions-overview');\">".locale_string("matches_s")."</th>";
           $i = 2;
           foreach($position_overview_template as $k => $v) {
@@ -1320,7 +1320,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           unset($overview);
         }
 
-        for ($i=0; $i<2; $i++) {
+        for ($i=1; $i>=0; $i--) {
           for ($j=1; $j<6 && $j>0; $j++) {
             if (!$i) { $j = 0; }
 
@@ -1901,7 +1901,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       if(check_module($parent."player_positions")) {
         if($mod == $parent."player_positions") $unset_module = true;
 
-        for ($i=0; $i<2 && !isset($keys); $i++) {
+        for ($i=1; $i>=0 && !isset($keys); $i--) {
           for ($j=1; $j<6 && $j>0; $j++) {
             if (!$i) { $j = 0; }
             if(isset($report['player_positions'][$i][$j][0])) {
@@ -1912,7 +1912,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           }
         }
 
-        for ($i=0; $i<2; $i++) {
+        for ($i=1; $i>=0; $i--) {
           for ($j=1; $j<6 && $j>0; $j++) {
             if (!$i) { $j = 0; }
 
@@ -2101,7 +2101,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
 
           if (check_module($parent."team_".$tid."_stats-hero_positions")) {
             if($mod == $parent."team_".$tid."_stats-hero_positions") $unset_module = true;
-            for ($i=0; $i<2 && !isset($keys); $i++) {
+            for ($i=1; $i>=0 && !isset($keys); $i--) {
               for ($j=1; $j<6 && $j>0; $j++) {
                 if (!$i) { $j = 0; }
                 if(isset($report['teams'][$tid]['hero_positions'][$i][$j][0])) {
@@ -2112,7 +2112,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
               }
             }
 
-            for ($i=0; $i<2; $i++) {
+            for ($i=1; $i>=1; $i--) {
               for ($j=1; $j<6 && $j>0; $j++) {
                 if (!$i) { $j = 0; }
 

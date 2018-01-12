@@ -2152,9 +2152,11 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                       $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i.$j"] .= "</tr>";
                     }
                     $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i.$j"] .= "</table>";
+
+                    $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i.$j"] .= "<div class=\"content-text\">".locale_string("desc_heroes_positions")."</div>";
                   }
                 }
-                $modules['teams']["team_".$tid."_stats"]['hero_positions']["positions_$i.$j"] .= "<div class=\"content-text\">".locale_string("desc_heroes_positions")."</div>";
+
 
                 if (!$i) { break; }
               }
@@ -2304,8 +2306,8 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                     "<th onclick=\"sortTableNum(1,'teams-sum');\">".locale_string("matches_s")."</th>".
                     "<th onclick=\"sortTableNum(2,'teams-sum');\">".locale_string("winrate_s")."</th>".
                     "<th onclick=\"sortTableNum(3,'teams-sum');\">".locale_string("rad_ratio")."</th>".
-                    "<th onclick=\"sortTableNum(4,'teams-sum');\">".locale_string("rad_wr")."</th>".
-                    "<th onclick=\"sortTableNum(5,'teams-sum');\">".locale_string("dire_wr")."</th>".
+                    "<th onclick=\"sortTableNum(4,'teams-sum');\">".locale_string("rad_wr_s")."</th>".
+                    "<th onclick=\"sortTableNum(5,'teams-sum');\">".locale_string("dire_wr_s")."</th>".
                     "<th onclick=\"sortTableNum(6,'teams-sum');\">".locale_string("hero_pool")."</th>".
                     "<th onclick=\"sortTableNum(7,'teams-sum');\">".locale_string("kills")."</th>".
                     "<th onclick=\"sortTableNum(8,'teams-sum');\">".locale_string("deaths")."</th>".

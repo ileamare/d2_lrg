@@ -11,7 +11,7 @@ function locale_string($string_id, $vars=array()) {
   else $string = $string_id;
 
   foreach($vars as $k => $v) {
-    str_ireplace("%$k%", $v, $string);
+    $string = str_ireplace("%$k%", $v, $string);
   }
 
   return $string;

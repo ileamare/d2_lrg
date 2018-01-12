@@ -232,8 +232,8 @@
     $query_res = $conn->store_result();
 
     for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
-      if ($row[1] < 100)
-        $result["versions"][$row[0]] = $row[1]*100;
+      if ($row[0] < 100)
+        $result["versions"][$row[0]*100] = $row[1];
       else
         $result["versions"][$row[0]] = $row[1];
     }
@@ -391,6 +391,8 @@
     $sql .= "SELECT \"most_deaths\", heroid, SUM(deaths)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
     # assists
     $sql .= "SELECT \"assists\", heroid, SUM(assists)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    # kda
+    $sql .= "SELECT \"kda\", heroid, (SUM(kills)+SUM(assists))/SUM(deaths) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
 
     # gpm
     $sql .= "SELECT \"gpm\", heroid, SUM(gpm)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
@@ -464,6 +466,8 @@
     $sql .= "SELECT \"most_deaths\", playerid, SUM(deaths)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
     # assists
     $sql .= "SELECT \"assists\", playerid, SUM(assists)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+    # kda
+    $sql .= "SELECT \"kda\", playerid, (SUM(kills)+SUM(assists))/SUM(deaths) value, SUM(1) mtch  FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
 
     # gpm
     $sql .= "SELECT \"gpm\", playerid, SUM(gpm)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";

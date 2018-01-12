@@ -12,7 +12,7 @@
   $steamapikey  = "766BB2E9B3343EF6D94851890EDADD1C";
   $lrg_db_prefix= "d2_league";
 
-#TODO settings prefix
+# TODO settings prefix
 if(isset($argv)) {
     $options = getopt("l:m:d:f");
 
@@ -20,12 +20,8 @@ if(isset($argv)) {
       $lrg_league_tag = $options['l'];
     }
   }
-  if(!isset($lrg_league_tag))
-  #$lrg_league_tag = "test";
-  #$lrg_league_desc = "Test Test Test";
-  #$lrg_league_tag = "sl_ileague_s3_minor_oct_2017";
-  $lrg_league_tag = "workshop_bots_707";
-  #$lrg_league_tag = "fpl_sept_2017";
+  // if(!isset($lrg_league_tag))
+  // $lrg_league_tag = "workshop_bots_707";
 
 
   if(!isset($init)) {

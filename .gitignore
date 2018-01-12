@@ -1,7 +1,7 @@
 output
 report.html
 test.html
-testrun.php
+test*.php
 list.php
 tmp*
 gi_*

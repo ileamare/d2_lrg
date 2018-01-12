@@ -488,10 +488,10 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
 
     $modules['overview'] .= "</div><div class=\"block-content\">";
 
-    $modules['overview'] .= locale_string("over-matches-left").$report['random']['matches_total'].locale_string("over-matches-right")." ";
+    $modules['overview'] .= locale_string("over-matches", ["num" => $report['random']['matches_total'] ] )." ";
     if(isset($report['teams']))
-      $modules['overview'] .= locale_string("over-teams-left").$report['random']['teams_on_event'].locale_string("over-teams-right")." ";
-    else $modules['overview'] .= locale_string("over-players-left").$report['random']['players_on_event'].locale_string("over-players-right")." ";
+      $modules['overview'] .= locale_string("over-teams", ["num" => $report['random']['teams_on_event'] ] )." ";
+    else $modules['overview'] .= locale_string("over-players", ["num" => $report['random']['players_on_event'] ] )." ";
 
     $modules['overview'] .= "</div><div class=\"block-content\">";
 
@@ -509,8 +509,8 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       }
 
       if ($mode/$report['random']['matches_total'] > 0.99)
-        $modules['overview'] .= locale_string("over-one-version-left").$ver.locale_string("over-one-version-right")." ";
-      else $modules['overview'] .= $mode.locale_string("over-most-version-left").$ver.locale_string("over-most-version-right")." ";
+        $modules['overview'] .= locale_string("over-one-version", ["ver"=>$ver])." ";
+      else $modules['overview'] .= locale_string("over-most-version", ["num" => $mode, "ver" => $ver])." ";
 
       unset($ver);
     }
@@ -518,8 +518,8 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
     if($report['settings']['overview_modes']) {
       $mode = reset($report['modes']);
       if ($mode/$report['random']['matches_total'] > 0.99)
-        $modules['overview'] .= locale_string("over-one-mode-left").$meta['modes'][ key($report['modes']) ].locale_string("over-one-mode-right")." ";
-      else $modules['overview'] .= $mode.locale_string("over-most-mode-left").$meta['modes'][ key($report['modes']) ].locale_string("over-most-mode-right")." ";
+        $modules['overview'] .= locale_string("over-one-mode", ["gm" => $meta['modes'][ key($report['modes']) ] ])." ";
+      else $modules['overview'] .= locale_string("over-most-mode-left", ["num" => $mode, "gm"=> $meta['modes'][ key($report['modes']) ] ])." ";
     }
 
     if($report['settings']['overview_regions']) {
@@ -1077,7 +1077,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           $modules['heroes']['averages_heroes'] .= "</table>";
         }
         $modules['heroes']['averages_heroes'] .= "</div>";
-        $modules['heroes']['averages_heroes'] .= "<div class=\"content-text\">".locale_string("desc_heroes_avg")."</div>";
+        $modules['heroes']['averages_heroes'] .= "<div class=\"content-text\">".locale_string("desc_heroes_avg", ["lim" => $report['settings']['limiter']+1 ])."</div>";
       }
     }
     if (isset($report['pickban'])) {
@@ -1816,13 +1816,17 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
 
           $modules['players']['players_combo_graph'] .= "var container = document.getElementById('players-combos-graph');\n".
                                                       "var data = { nodes: nodes, edges: edges};\n".
+                                                      "var data = { nodes: nodes, edges: edges};\n".
                                                       "var options={
                                                         physics:{
                                                           barnesHut:{
-                                                            avoidOverlap:0.8,
+                                                            avoidOverlap:0.7,
                                                             centralGravity:0.05,
+                                                            springLength:90,
+                                                            springConstant:0.005,
+                                                            gravitationalConstant:-200
                                                           },
-                                                          timestep: 0.01
+                                                          timestep: 0.05,
                                                         }, nodes: {
                                                            shape: 'dot',
                                                            font: {color:'#ccc',size:14},

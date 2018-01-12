@@ -519,7 +519,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       $mode = reset($report['modes']);
       if ($mode/$report['random']['matches_total'] > 0.99)
         $modules['overview'] .= locale_string("over-one-mode", ["gm" => $meta['modes'][ key($report['modes']) ] ])." ";
-      else $modules['overview'] .= locale_string("over-most-mode-left", ["num" => $mode, "gm"=> $meta['modes'][ key($report['modes']) ] ])." ";
+      else $modules['overview'] .= locale_string("over-most-mode", ["num" => $mode, "gm"=> $meta['modes'][ key($report['modes']) ] ])." ";
     }
 
     if($report['settings']['overview_regions']) {
@@ -532,9 +532,9 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       arsort($regions_matches);
       $mode = reset($regions_matches);
       if ($mode/$report['random']['matches_total'] > 0.99)
-        $modules['overview'] .= locale_string("over-one-region-left").key($regions_matches).locale_string("over-one-region-right")." ";
+        $modules['overview'] .= locale_string("over-one-region", [ "server" => key($regions_matches)] )." ";
       else
-        $modules['overview'] .= $mode.locale_string("over-most-region-left").key($regions_matches).locale_string("over-most-region-right")." ";
+        $modules['overview'] .= locale_string("over-most-region", ["num"=>$mode, "server"=>key($regions_matches) ] )." ";
     }
 
     $modules['overview'] .= "</div>";
@@ -542,8 +542,8 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
     if($report['settings']['overview_time_limits']) {
       $modules['overview'] .= "<div class=\"block-content\">";
 
-      $modules['overview'] .= locale_string("over-first-match")." ".date(locale_string("time_format")." ".locale_string("date_format"), $report['first_match']['date'])."<br />";
-      $modules['overview'] .= locale_string("over-last-match")." ".date(locale_string("time_format")." ".locale_string("date_format"), $report['last_match']['date'])."<br />";
+      $modules['overview'] .= locale_string("over-first-match", ["date"=> date(locale_string("time_format")." ".locale_string("date_format"), $report['first_match']['date']) ])."<br />";
+      $modules['overview'] .= locale_string("over-last-match", ["date"=> date(locale_string("time_format")." ".locale_string("date_format"), $report['last_match']['date']) ])."<br />";
 
       $modules['overview'] .= "</div>";
     }
@@ -553,15 +553,15 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
 
       if( $report['matches_additional'][ $report['last_match']['mid'] ]['radiant_win'] ) {
         if(isset($report['teams']) && isset($report['teams'][ $report['match_participants_teams'][ $report['last_match']['mid'] ]['radiant'] ]['name']))
-          $modules['overview'] .= $report['teams'][ $report['match_participants_teams'][ $report['last_match']['mid'] ]['radiant'] ]['name'];
-        else $modules['overview'] .= locale_string("radiant");
+          $mode = $report['teams'][ $report['match_participants_teams'][ $report['last_match']['mid'] ]['radiant'] ]['name'];
+        else $mode = locale_string("radiant");
       } else {
         if(isset($report['teams']) && isset($report['teams'][ $report['match_participants_teams'][ $report['last_match']['mid'] ]['dire'] ]['name']))
-          $modules['overview'] .= $report['teams'][ $report['match_participants_teams'][ $report['last_match']['mid'] ]['dire'] ]['name'];
-        else $modules['overview'] .= locale_string("dire");
+          $mode = $report['teams'][ $report['match_participants_teams'][ $report['last_match']['mid'] ]['dire'] ]['name'];
+        else $mode = locale_string("dire");
       }
 
-      $modules['overview'] .= locale_string("over-last-match-winner")."</div>";
+      $modules['overview'] .= locale_string("over-last-match-winner", ["team"=>$mode])."</div>";
     }
 
     $modules['overview'] .= "</div>";
@@ -1482,7 +1482,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       $modules['heroes']['hero_combo_graph'] = "";
 
       if (check_module($parent."hero_combo_graph") && isset($report['pickban'])) {
-        $modules['heroes']['hero_combo_graph'] .= "<div class=\"content-text\">".locale_string("desc_heroes_combo_graph")."</div>";
+        $modules['heroes']['hero_combo_graph'] .= "<div class=\"content-text\">".locale_string("desc_heroes_combo_graph", ["lim" => $report['settings']['limiter']+1 ])."</div>";
         if(isset($report['hero_combos_graph'])) {
           $use_visjs = true;
 
@@ -1582,7 +1582,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           }
           $modules['heroes']['hero_combos'] .= "</table>";
 
-          $modules['heroes']['hero_combos'] .= "<div class=\"content-text\">".locale_string("desc_heroes_combos")."</div>";
+          $modules['heroes']['hero_combos'] .= "<div class=\"content-text\">".locale_string("desc_heroes_combos", [ "limh"=>$report['settings']['limiter']+1, "liml"=>$report['settings']['limiter_triplets']+1 ] )."</div>";
         }
       }
     }
@@ -2210,7 +2210,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                                                         "var network = new vis.Network(container, data, options);\n".
                                                         "</script>";
 
-              $modules['teams']["team_".$tid."_stats"]['hero_combo_graph'] .= "<div class=\"content-text\">".locale_string("desc_heroes_combo_graph")."</div>";
+              $modules['teams']["team_".$tid."_stats"]['hero_combo_graph'] .= "<div class=\"content-text\">".locale_string("desc_heroes_combo_graph", ["lim" => $report['settings']['limiter_triplets']+1 ])."</div>";
           }
         }
         if (isset($report['teams'][$tid]['hero_pairs']) || isset($report['teams'][$tid]['hero_triplets'])) {
@@ -2263,9 +2263,9 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                                                     </tr>";
               }
               $modules['teams']["team_".$tid."_stats"]['hero_combos'] .= "</table>";
-
-              $modules['teams']["team_".$tid."_stats"]['hero_combos'] .= "<div class=\"content-text\">".locale_string("desc_heroes_combos")."</div>";
             }
+
+            $modules['teams']["team_".$tid."_stats"]['hero_combos'] .= "<div class=\"content-text\">".locale_string("desc_heroes_combos", [ "limh"=>$report['settings']['limiter']+1, "liml"=>$report['settings']['limiter_triplets']+1 ] )."</div>";
           }
         }
         if (isset($report['teams'][$tid]['matches']) && isset($report['matches'])) {

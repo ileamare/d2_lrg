@@ -38,7 +38,7 @@ if(isset($argv)) {
 
   if(isset($options['T'])) {
     if (file_exists("templates/".$options['T'].".json"))
-    $tmp = json_decode(file_get_contents("templates/".$options['T'].".json"), true);
+      $tmp = json_decode(file_get_contents("templates/".$options['T'].".json"), true);
 
     migrate_params($lg_settings, $tmp);
     unset($tmp);
@@ -55,13 +55,28 @@ if(isset($argv)) {
   if(isset($options['D'])) $lg_settings['league_desc'] = $options['D'];
   else $lg_settings['league_desc'] = readline(" >  League description: ");
 
-  if(!isset($lg_settings['league_id']))
-    if(isset($options['I'])) $lg_settings['league_id'] = $options['I'];
-    else $lg_settings['league_id'] = (int) readline(" >  League ID: ");
-  if (!$lg_settings['league_id']) $lg_settings['league_id'] = null;
+  if(isset($options['I'])) {
+    $lg_settings['league_id'] = $options['I'];
+    if (!$lg_settings['league_id']) $lg_settings['league_id'] = null;
+  }
 
+  if(isset($options['S'])) {
+    echo "[ ] Enter parameters below in format \"Parameter = value\".\n    Divide parameters subcategories by a \".\", empty line to exit.\n";
+    while (!empty($st = readline(" >  "))) {
+      $st = explode("=", $st);
+      $val = &$lg_settings;
+      foreach ($st[0] as $level) {
+        if(!isset($val[$level])) $val[$level] = array();
+        $val = &$val[$level];
+      }
+      $val = $st[1];
+    }
+    unset($st);
+    unset($val);
+  }
 }
 
+/*
 $lg_settings['league_tag'] = "fpl_sept_2017";
 $lg_settings['league_name'] = "FPL - September 2017";
 $lg_settings['league_desc'] = "FPL - September 2017";
@@ -69,7 +84,7 @@ $lg_settings['league_id'] = null;
 $lg_settings['time_limit_after'] = false;
 $lg_settings['time_limit_before'] = false;
 
-/* STARLADDER */
+/* STARLADDER /
 
 $lg_settings['league_tag'] = "cd40_minor_finals";
 $lg_settings['league_name'] = "Captains Draft 4.0";
@@ -102,141 +117,6 @@ $lg_settings['time_limit_before'] = null;
 $lg_settings['match_limit_after'] = 3592194081;
 $lg_settings['match_limit_before'] = null;
 /* */
-
-# League Parameters
-
-$lg_settings['main']['teams'] = true; # set team or player mix competition
-                    # false = players competition
-                    # true  = teams competition
-
-$lg_settings['main']['fantasy'] = false; # not implemented yet TODO
-
-$lg_settings['ana']['records']     = true; # records
-$lg_settings['ana']['avg_limit']   = 5;
-$lg_settings['ana']['avg_heroes']  = true; # averages for heroes
-$lg_settings['ana']['avg_players'] = true; # averages for players
-
-$lg_settings['ana']['hero_positions']             = true; # heroes on positions
-$lg_settings['ana']['hero_positions_matches']     = true; #   include matchids
-$lg_settings['ana']['hero_positions_player_data'] = true;
-  # team games only: rely on player's positions instead of lanes
-$lg_settings['ana']['hero_sides'] = true; # hero stats on sides
-
-$lg_settings['ana']['draft_stages'] = true; # pick/ban draft stages stats
-
-$lg_settings['ana']['hero_pairs']            = true; # hero pairs winrates
-$lg_settings['ana']['hero_pairs_matches']    = true; #   include matchids
-
-$lg_settings['ana']['hero_triplets']          = true; # hero triplets winrates
-$lg_settings['ana']['hero_triplets_matches']  = true; #   include matchids
-
-$lg_settings['ana']['hero_combos_graph']      = true; # interactive graph using vis.js
-                                                    # may not work with big amount of data
-
-$lg_settings['ana']['matchlist'] = true; # matches list + drafts in matches and participants
-
-# PLAYERS ONLY (only work with $lg_settings['main']['teams'] = false)
-$lg_settings['ana']['pvp'] = true; # players only: player vs player winrates
-$lg_settings['ana']['pvp_matches'] = true;
-
-$lg_settings['ana']['player_positions'] = true; # players stats on positions
-$lg_settings['ana']['player_positions_matches'] = true;
-
-$lg_settings['ana']['player_pairs'] = true; # player pairs
-$lg_settings['ana']['player_pairs_matches'] = true;
-
-$lg_settings['ana']['player_triplets'] = true; # player triplets
-$lg_settings['ana']['player_triplets_matches'] = true;
-
-$lg_settings['ana']['players_combo_graph']     = false; # interactive graph using vis.js
-                                                    # may not work with big amount of data
-
-$lg_settings['ana']['player_vs_hero'] = false; # not implemented yet TODO
-$lg_settings['ana']['player_hero_combos'] = false; # not implemented yet TODO
-$lg_settings['ana']['player_hero_stats'] = false;  # not implemented yet TODO
-
-$lg_settings['ana']['hero_vs_hero'] = false; # not implemented yet TODO
-
-if($lg_settings['main']['teams']) {
-$lg_settings['ana']['teams'] = array();
-# TEAMS ONLY (only workwith $lg_settings['main']['teams'] = true)
-$lg_settings['ana']['teams']['rosters']  = true;
-$lg_settings['ana']['teams']['avg']      = true;
-$lg_settings['ana']['teams']['pickbans'] = true;
-$lg_settings['ana']['teams']['draft']    = true;
-$lg_settings['ana']['teams']['heropos']  = true;
-$lg_settings['ana']['teams']['hero_graph']=true;
-$lg_settings['ana']['teams']['pairs']    = true;
-$lg_settings['ana']['teams']['triplets'] = true;
-$lg_settings['ana']['teams']['matches']  = true;
-# teams only: team stats
-#   total games, winrate, average k / d / a / xpm / gpm / wards / wards_destroyed
-#   pick/ban stats
-#   draft stages stats
-#   heroes on positions
-#   hero pairs
-#   hero triplets
-#   matches list
-$lg_settings['ana']['teams']['team_vs_team']   = true;
-}
-
-$lg_settings['web'] = array(
-  //"custom_style" => "sa",
-  //"custom_style" => "fpl",
-  //"custom_style" => "sl-minor-17",
-  "custom_style" => "captains_draft",
-  "pvp_grid" => false,
-
-  "heroes_combo_graph" => true,
-  "players_combo_graph" => true,
-
-  "overview_versions" => true,
-  "overview_versions_chart" => true,
-  "overview_last_match_winners" => true,
-  "overview_charts" => true,
-  "overview_regions" => true,
-  "overview_modes" => true,
-  "overview_sides_graph" => true,
-  "overview_time_limits" => true,
-  "overview_heroes_contested_graph" => true,
-  "overview_days_graph" => true,
-
-  "overview_top_contested" => true,
-  "overview_top_contested_count" => 10,
-  "overview_top_picked" => true,
-  "overview_top_picked_count" => 5,
-  "overview_top_bans" => true,
-  "overview_top_bans_count" => 5,
-
-  "overview_top_hero_pairs" => true,
-  "overview_top_hero_pairs_count" => 5,
-
-  "overview_top_player_pairs" => true,
-  "overview_top_player_pairs_count" => 5,
-
-  "overview_matches" => true,
-  "overview_first_match" => false,
-  "overview_last_match" => true,
-  "overview_records_duration" => true,
-  "overview_records_stomp" => true,
-  "overview_records_comeback" => true,
-
-  "overview_random_stats" => true,
-
-  "overview_top_draft" => true,
-  "overview_draft_1_1" => true,
-  "overview_draft_1_1_count" => 5,
-  "overview_draft_1_2" => false,
-  "overview_draft_1_2_count" => 3,
-  "overview_draft_1_3" => false,
-  "overview_draft_1_3_count" => 3,
-  "overview_draft_0_1" => true,
-  "overview_draft_0_1_count" => 5,
-  "overview_draft_0_2" => false,
-  "overview_draft_0_2_count" => 3,
-  "overview_draft_0_3" => false,
-  "overview_draft_0_3_count" => 4,
-);
 
 $lg_settings['version'] = $lrg_version;
 

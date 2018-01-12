@@ -1,5 +1,14 @@
 <?php
-
+if(!function_exists("readline")) {
+    function readline($prompt = null){
+        if($prompt){
+            echo $prompt;
+        }
+        $fp = fopen("php://stdin","r");
+        $line = rtrim(fgets($fp, 1024));
+        return $line;
+    }
+}
 
 # global settings
   $lrg_version = array(1, 1, 0, -4, 3); # 1.0.0-{alpha/beta/rc1/rc2/release}-rN

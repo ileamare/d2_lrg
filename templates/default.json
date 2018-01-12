@@ -1,15 +1,123 @@
 {
+  "league_id" : null,
   "time_limit_after": null,
   "time_limit_before": null,
   "match_limit_after": null,
   "match_limit_before": null,
   "main": {
-
+    "teams": true,
+    "fantasy": false
   },
   "ana": {
+    "records": true,
 
+    "avg_limit" : 5,
+    "avg_heroes" : true,
+    "avg_players" : true,
+
+    "hero_positions" : true,
+    "hero_positions_matches" : true,
+    "hero_positions_player_data" : true,
+    "hero_sides" : true,
+
+    "draft_stages" : true,
+
+    "hero_pairs" : true,
+    "hero_pairs_matches": true,
+
+    "hero_triplets" : true,
+    "hero_triplets_matches" : true,
+
+    "hero_combos_graph" : true,
+
+    "matchlist" : true,
+
+    "player_positions" : true,
+    "player_positions_matches" : true,
+
+    "pvp" : true,
+    "pvp_matches" : true,
+
+    "player_pairs" : true,
+    "player_pairs_matches": true,
+
+    "player_triplets" : true,
+    "player_triplets_matches" : true,
+
+    "players_combo_graph" : true,
+
+    "player_vs_hero": false,
+    "player_hero_combos": false,
+    "player_hero_stats": false,
+
+    "hero_vs_hero": false,
+
+    "teams": {
+      "rosters": true,
+      "avg" : true,
+      "pickbans" : true,
+      "draft": true,
+      "heropos" : true,
+      "hero_graph" : true,
+      "pairs": true,
+      "triplets": true,
+      "matches": true,
+      "team_vs_team" : true
+    }
   },
   "web": {
-    
+    "custom_style" : "",
+
+    "pvp_grid" : false,
+
+    "heroes_combo_graph" : true,
+    "players_combo_graph" : true,
+
+    "overview_versions" : true,
+    "overview_versions_chart" : true,
+    "overview_last_match_winners" : true,
+    "overview_charts" : true,
+    "overview_regions" : true,
+    "overview_modes" : true,
+    "overview_sides_graph" : true,
+    "overview_time_limits" : true,
+    "overview_heroes_contested_graph" : true,
+    "overview_days_graph" : true,
+
+    "overview_top_contested" : true,
+    "overview_top_contested_count" : 10,
+    "overview_top_picked" : true,
+    "overview_top_picked_count" : 5,
+    "overview_top_bans" : true,
+    "overview_top_bans_count" : 5,
+
+    "overview_top_hero_pairs" : true,
+    "overview_top_hero_pairs_count" : 5,
+
+    "overview_top_player_pairs" : true,
+    "overview_top_player_pairs_count" : 5,
+
+    "overview_matches" : true,
+    "overview_first_match" : false,
+    "overview_last_match" : true,
+    "overview_records_duration" : true,
+    "overview_records_stomp" : true,
+    "overview_records_comeback" : true,
+
+    "overview_random_stats" : true,
+
+    "overview_top_draft" : true,
+    "overview_draft_1_1" : true,
+    "overview_draft_1_1_count" : 5,
+    "overview_draft_1_2" : false,
+    "overview_draft_1_2_count" : 3,
+    "overview_draft_1_3" : false,
+    "overview_draft_1_3_count" : 3,
+    "overview_draft_0_1" : true,
+    "overview_draft_0_1_count" : 5,
+    "overview_draft_0_2" : false,
+    "overview_draft_0_2_count" : 3,
+    "overview_draft_0_3" : false,
+    "overview_draft_0_3_count" : 4
   }
 }

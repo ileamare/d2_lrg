@@ -1,0 +1,9 @@
+{
+  "main": {
+    "teams": false
+  },
+  "web": {
+    "custom_style": "fpl"
+
+  }
+}

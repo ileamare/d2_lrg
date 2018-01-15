@@ -105,11 +105,80 @@ foreach ($matches as $match) {
         echo("[ ] Match duration is less than 5 minutes, skipping...\n");
         continue;
       }
-      if($matchdata['radiant_score'] < 4 && $matchdata['dire_score'] < 4) {
-        echo("[ ] Match score is less than 4 - 4, skipping...\n");
+      if($matchdata['radiant_score'] < 5 && $matchdata['dire_score'] < 5) {
+        echo("[ ] Match score is less than 5 - 5, skipping...\n");
+        continue;
+      }
+      
+      $abandon = false;
+      for($i=0; $i<10; $i++) {
+        if($matchdata['players'][$i]['abandons']) {
+            $abandon = true;
+            break;
+        }
+      }
+      
+      if($abandon) {
+        echo("[ ] Abandon detected, skipping...\n");
         continue;
       }
 
+      if($matchdata['lobby_type'] != 2) {
+        //$json = file_get_contents("https://api.stratz.com/api/v1/match?include=Player,Pickban&matchid=$match");
+
+        echo("[ ] Requesting Stratz for additional match data.\n");
+
+        $json = file_get_contents("https://api.stratz.com/api/v1/match/$match");
+
+        $stratz = json_decode($json, true);
+
+        if($matchdata['game_mode'] == 22 || $matchdata['game_mode'] == 3) {
+          while($stratz['pickBans'] === NULL) {
+            echo "[E] Stratz draft data error. Retrying request in 5 seconds...\n";
+            `sleep 5`;
+            $json = file_get_contents("https://api.stratz.com/api/v1/match/$match");
+            $stratz = json_decode($json, true);
+          }
+          $matchdata['picks_bans'] = $stratz['pickBans'];
+        }
+
+        for($i=0; $i<10; $i++) {
+          if(isset($matchdata['players'][$i]['account_id']) && $matchdata['players'][$i]['account_id'] === null) {
+            $matchdata['players'][$i]['account_id'] = $stratz['results']['players'][$i]['steamid'];
+            $json = file_get_contents("https://api.opendota.com/api/players/".$matchdata['players'][$i]['account_id']);
+            $tmp = json_decode($json, true);
+
+            //$matchdata['players'][$i]["name"] = $tmp['profile']['name'];
+            $matchdata['players'][$i]["name"] = $stratz['results']['players'][$i]['name'];
+            if(isset($tmp['profile']['personaname']))
+              $matchdata['players'][$i]["personaname"] = $tmp['profile']['personaname'];
+          }
+        }
+
+        echo("[ ] Stratz data marged.\n");
+
+        unset($stratz);
+      }
+
+      if($matchdata['human_players'] < 10 && ( !isset($matchdata['radiant_team']['team_id']) || !isset($matchdata['dire_team']['team_id']) )) {
+          $json = file_get_contents("https://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/V001/?match_id=$match&key=$steamapikey");
+          $tmp = json_decode($json, true);
+          unset($json);
+          if(!isset($matchdata['radiant_team']['team_id'])) {
+              $matchdata['radiant_team']['team_id'] = $tmp['result']['radiant_team_id'];
+              $matchdata['radiant_team']['name'] = $tmp['result']['radiant_name'];
+              $matchdata['radiant_team']['tag'] = generate_tag($tmp['result']['radiant_name']);
+          }
+          if(!isset($matchdata['dire_team']['team_id'])) {
+              $matchdata['dire_team']['team_id'] = $tmp['result']['dire_team_id'];
+              $matchdata['dire_team']['name'] = $tmp['result']['dire_name'];
+              $matchdata['dire_team']['tag'] = generate_tag($tmp['result']['dire_name']);
+          }
+      }
+
+      unset($matchdata['chat']);
+
+      $json = json_encode($matchdata);
       if($lrg_use_cache) {
         $f = fopen("cache/".$match.".json", "w");
         fwrite($f, $json);
@@ -118,23 +187,6 @@ foreach ($matches as $match) {
         echo("[S] Match $match: Saved cached version\n");
       }
     }
-    if($matchdata['human_players'] < 10 && ( !isset($matchdata['radiant_team']['team_id']) || !isset($matchdata['dire_team']['team_id']) )) {
-        $json = file_get_contents("https://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/V001/?match_id=$match&key=$steamapikey");
-        $tmp = json_decode($json, true);
-        unset($json);
-        if(!isset($matchdata['radiant_team']['team_id'])) {
-            $matchdata['radiant_team']['team_id'] = $tmp['result']['radiant_team_id'];
-            $matchdata['radiant_team']['name'] = $tmp['result']['radiant_name'];
-            $matchdata['radiant_team']['tag'] = generate_tag($tmp['result']['radiant_name']);
-        }
-        if(!isset($matchdata['dire_team']['team_id'])) {
-            $matchdata['dire_team']['team_id'] = $tmp['result']['dire_team_id'];
-            $matchdata['dire_team']['name'] = $tmp['result']['dire_name'];
-            $matchdata['dire_team']['tag'] = generate_tag($tmp['result']['dire_name']);
-        }
-        $json = json_encode($matchdata);
-    }
-
 
     unset($json);
 
@@ -333,6 +385,36 @@ foreach ($matches as $match) {
             }
             $i++;
         }
+    } else if ($matchdata['game_mode'] == 22) {
+      foreach ($matchdata['picks_bans'] as $draft_instance) {
+        # ban nominants counts as bans ? Need to thing about that.
+        if (!$draft_instance['isPick']) {
+          if(!$draft_instance['wasBannedSuccessfully']) continue;
+          $t_draft[$i]['matchid'] = $match;
+          $t_draft[$i]['is_radiant'] = ($draft_instance['playerIndex'] < 5) ? 1 : 0;
+          $t_draft[$i]['is_pick'] = 0;
+          $t_draft[$i]['hero_id'] = $draft_instance['heroId'];
+          $t_draft[$i]['stage'] = 1;
+        } else {
+          $t_draft[$i]['matchid'] = $match;
+          $t_draft[$i]['is_radiant'] = ($draft_instance['playerIndex'] < 5) ? 1 : 0;
+          $t_draft[$i]['is_pick'] = 1;
+          $t_draft[$i]['hero_id'] = $draft_instance['heroId'];
+          if ($draft_instance['order'] < 2) $t_draft[$i]['stage'] = 1;
+          else if ($draft_instance['order'] < 4) $t_draft[$i]['stage'] = 2;
+          else $t_draft[$i]['stage'] = 3;
+        }
+        $i++;
+      }
+    } else if ($matchdata['game_mode'] == 3) {
+      $t_draft[$i]['matchid'] = $match;
+      $t_draft[$i]['is_radiant'] = ($draft_instance['playerIndex'] < 5) ? 1 : 0;
+      $t_draft[$i]['is_pick'] = 1;
+      $t_draft[$i]['hero_id'] = $draft_instance['heroId'];
+      if ($draft_instance['order'] < 2) $t_draft[$i]['stage'] = 1;
+      else if ($draft_instance['order'] < 4) $t_draft[$i]['stage'] = 2;
+      else $t_draft[$i]['stage'] = 3;
+      $i++;
     } else {
         foreach($matchdata['players'] as $draft_instance) {
             $t_draft[$i]['matchid'] = $match;
@@ -343,6 +425,8 @@ foreach ($matches as $match) {
             $i++;
         }
     }
+
+
 }
 
 # recording to database

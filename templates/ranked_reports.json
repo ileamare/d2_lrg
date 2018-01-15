@@ -2,8 +2,11 @@
   "main": {
     "teams": false
   },
+  "ana": {
+    "avg_limit": 10
+  },
   "web": {
-    "custom_style": "fpl",
+    "custom_style": "ranked",
     "overview_last_match_winners" : false,
     "overview_first_match" : false,
     "overview_last_match" : false

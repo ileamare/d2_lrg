@@ -1,16 +1,4 @@
 <?php
-# TODO
-# init empty database
-# get matchids for league
-# clone
-# reload settings from database
-# reload settings to database
-# export to JSON
-# import from json
-
-# create database
-# create tables
-# check for reports folder
 $init = true;
 require_once("settings.php");
 
@@ -75,48 +63,6 @@ if(isset($argv)) {
     unset($val);
   }
 }
-
-/*
-$lg_settings['league_tag'] = "fpl_sept_2017";
-$lg_settings['league_name'] = "FPL - September 2017";
-$lg_settings['league_desc'] = "FPL - September 2017";
-$lg_settings['league_id'] = null;
-$lg_settings['time_limit_after'] = false;
-$lg_settings['time_limit_before'] = false;
-
-/* STARLADDER /
-
-$lg_settings['league_tag'] = "cd40_minor_finals";
-$lg_settings['league_name'] = "Captains Draft 4.0";
-$lg_settings['league_desc'] = "Dota 2 Pro Circuit Minor Finals";
-$lg_settings['league_id'] = 5688;
-$lg_settings['time_limit_after'] = null;
-$lg_settings['time_limit_before'] = null;
-$lg_settings['match_limit_after'] = 3660317795;
-$lg_settings['match_limit_before'] = null;
-
-/*
-$lg_settings['league_tag'] = "pro_circuit_recap_december_2017";
-$lg_settings['league_name'] = "Pro Circuit - December 2017";
-$lg_settings['league_desc'] = "Pro Circuit Profeccional Meta Recap";
-$lg_settings['league_id'] = null;
-$lg_settings['time_limit_after'] = null;
-$lg_settings['time_limit_before'] = null;
-$lg_settings['match_limit_after'] = null;
-$lg_settings['match_limit_before'] = null;
-
-/*/
-/*
-
-$lg_settings['league_tag'] = "workshop_bots_dec1_dec15";
-$lg_settings['league_name'] = "Workshop Bots - December 1st - 15th";
-$lg_settings['league_desc'] = "Battle between workshop botscripts";
-$lg_settings['league_id'] = null;
-$lg_settings['time_limit_after'] = null;
-$lg_settings['time_limit_before'] = null;
-$lg_settings['match_limit_after'] = 3592194081;
-$lg_settings['match_limit_before'] = null;
-/* */
 
 $lg_settings['version'] = $lrg_version;
 
@@ -333,11 +279,4 @@ echo "\n";
 fwrite($f, $out);
 fclose($f);
 
-/*
-https://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/V001/?match_id=27110133&key=<key>
-league_id=<id> # matches for a particular league
-start_at_match_id=<id> # Start the search at the indicated match id, descending
-date_min=<date> # date in UTC seconds since Jan 1, 1970 (unix time format)
-date_max=<date> # date in UTC seconds since Jan 1, 1970 (unix time format)
-*/
  ?>

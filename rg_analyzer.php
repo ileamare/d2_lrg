@@ -318,7 +318,8 @@ include_once("modules/mod.migrate_params.php");
     }
   }
 
-  /* Players Summary */ {
+  // Players Summary
+  if($lg_settings['ana']['players']) {
     $result["players_summary"] = array();
 
     $sql = "SELECT
@@ -450,7 +451,7 @@ include_once("modules/mod.migrate_params.php");
     } while($conn->next_result());
   }
 
-  if ($lg_settings['ana']['avg_players']) {
+  if ($lg_settings['ana']['players'] && $lg_settings['ana']['avg_players']) {
     # average for players
 
     # kills
@@ -549,7 +550,7 @@ include_once("modules/mod.migrate_params.php");
    } while($conn->next_result());
   }
 
-  if ($lg_settings['ana']['player_positions']) {
+  if ($lg_settings['ana']['players'] && $lg_settings['ana']['player_positions']) {
     $result["player_positions"] = array();
 
     for ($core = 0; $core < 2; $core++) {
@@ -1535,7 +1536,7 @@ include_once("modules/mod.migrate_params.php");
   } else {
     echo "[ ] Working for players competition...\n";
 
-    if ($lg_settings['ana']['pvp']) {
+    if ($lg_settings['ana']['players'] && $lg_settings['ana']['pvp']) {
         $result["pvp"] = array ();
 
         $sql = "SELECT m1.playerid, m2.playerid, SUM(1) match_count, SUM(NOT matches.radiantWin XOR m1.isRadiant) player1_won, SUM(NOT matches.radiantWin XOR m1.isRadiant)/SUM(1) p1_winrate
@@ -1587,7 +1588,7 @@ include_once("modules/mod.migrate_params.php");
         }
     }
 
-    if ($lg_settings['ana']['players_combo_graph']) {
+    if ($lg_settings['ana']['players'] && $lg_settings['ana']['players_combo_graph']) {
       $result["players_combo_graph"] = array();
 
       $sql = "SELECT m1.playerid, m2.playerid, SUM(NOT matches.radiantWin XOR m1.isRadiant) wins, SUM(1) match_count
@@ -1613,7 +1614,7 @@ include_once("modules/mod.migrate_params.php");
       $query_res->free_result();
     }
 
-    if ($lg_settings['ana']['player_pairs']) {
+    if ($lg_settings['ana']['players'] && $lg_settings['ana']['player_pairs']) {
       $result["player_pairs"] = array();
 
       $sql = "SELECT m1.playerid, m2.playerid, SUM(1) match_count, SUM(NOT matches.radiantWin XOR m1.isRadiant)/SUM(1) winrate
@@ -1670,7 +1671,7 @@ include_once("modules/mod.migrate_params.php");
       }
     }
 
-    if ($lg_settings['ana']['player_triplets']) {
+    if ($lg_settings['ana']['players'] && $lg_settings['ana']['player_triplets']) {
       $result["player_triplets"] = array();
 
       $sql = "SELECT m1.playerid, m2.playerid, m3.playerid, SUM(1) match_count, SUM(NOT matches.radiantWin XOR m1.isRadiant)/SUM(1) winrate
@@ -1818,7 +1819,7 @@ include_once("modules/mod.migrate_params.php");
   }
 
 # players metadata
-  {
+if ($lg_settings['ana']['players'])  {
     $result["players"] = array();
     $sql = "SELECT playerid, nickname FROM players";
 

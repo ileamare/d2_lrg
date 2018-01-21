@@ -703,91 +703,93 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       $modules['overview'] .= "</table>";
     }
 
-    $modules['overview'] .= "<div class=\"content-header\">".locale_string("notable_paricipans")."</div>";
-    $modules['overview'] .= "<div class=\"content-cards\">";
+    if(isset($report['players_additional']) || isset($report["teams"])) {
+      $modules['overview'] .= "<div class=\"content-header\">".locale_string("notable_paricipans")."</div>";
+      $modules['overview'] .= "<div class=\"content-cards\">";
 
-    if (isset($report['teams']) && $report['settings']['overview_last_match_winners']) {
-      $modules['overview'] .= "<h1>".locale_string("np_winner")."</h1>";
-      if($report['matches_additional'][ $report['last_match']['mid'] ]['radiant_win']) {
-          $tid = $report['match_participants_teams'][ $report['last_match']['mid'] ]['radiant'];
-      } else {
-          $tid = $report['match_participants_teams'][ $report['last_match']['mid'] ]['dire'];
+      if (isset($report['teams']) && $report['settings']['overview_last_match_winners']) {
+        $modules['overview'] .= "<h1>".locale_string("np_winner")."</h1>";
+        if($report['matches_additional'][ $report['last_match']['mid'] ]['radiant_win']) {
+            $tid = $report['match_participants_teams'][ $report['last_match']['mid'] ]['radiant'];
+        } else {
+            $tid = $report['match_participants_teams'][ $report['last_match']['mid'] ]['dire'];
+        }
+        $modules['overview'] .= team_card($tid);
+        unset($tid);
       }
-      $modules['overview'] .= team_card($tid);
-      unset($tid);
+
+      $modules['overview'] .= "</div><table class=\"list\">";
+      if (isset($report['teams'])) {
+        $max_wr = 0;
+        $max_matches = 0;
+        foreach ($report['teams'] as $team_id => $team) {
+          if(!$max_matches || $report['teams'][$max_matches]['matches_total'] < $team['matches_total'] )
+            $max_matches = $team_id;
+          if($team['matches_total'] <= $report['settings']['limiter']) continue;
+
+          if($max_wr == 0) $max_wr = $team_id;
+          else if(!$max_wr || $report['teams'][$max_wr]['wins']/$report['teams'][$max_wr]['matches_total'] < $team['wins']/$team['matches_total'] )
+            $max_wr = $team_id;
+        }
+
+        $modules['overview'] .= "<tr><td>".locale_string("most_matches")."</td><td>".
+            team_link($max_matches)."</td><td>".$report['teams'][$max_matches]['matches_total']."</td></tr>";
+
+        if($max_wr)
+          $modules['overview'] .= "<tr><td>".locale_string("highest_winrate")."</td><td>".
+            team_link($max_wr)."</td><td>".number_format($report['teams'][$max_wr]['wins']*100/$report['teams'][$max_wr]['matches_total'],2)."%</td></tr>";
+
+        if (isset($report['records'])) {
+          $modules['overview'] .= "<tr><td>".locale_string("widest_hero_pool_team")."</td><td>".
+              team_link($report['records']['widest_hero_pool_team']['playerid'])."</td><td>".
+              $report['records']['widest_hero_pool_team']['value']."</td></tr>";
+
+          $modules['overview'] .= "<tr><td>".locale_string("smallest_hero_pool_team")."</td><td>".
+              team_link($report['records']['smallest_hero_pool_team']['playerid'])."</td><td>".
+              $report['records']['smallest_hero_pool_team']['value']."</td></tr>";
+        }
+
+      } else if (isset($report['players_additional'])) {
+        $max_wr = 0;
+        $max_matches = 0;
+        foreach ($report['players_additional'] as $pid => $player) {
+            if(!$max_matches || $report['players_additional'][$max_matches]['matches'] < $player['matches'] )
+              $max_matches = $pid;
+            if($player['matches'] <= $report['settings']['limiter']) continue;
+            if(!$max_wr || ( $report['players_additional'][$max_wr]['won']/$report['players_additional'][$max_wr]['matches'] < $player['won']/$player['matches']) )
+              $max_wr = $pid;
+        }
+
+        $modules['overview'] .= "<tr><td>".locale_string("most_matches")."</td><td>".
+          player_name($max_matches)."</td><td>".$report['players_additional'][$max_matches]['matches']."</td></tr>";
+
+        if($max_wr)
+          $modules['overview'] .= "<tr><td>".locale_string("highest_winrate")."</td><td>".
+              player_name($max_wr)."</td><td>".
+              number_format($report['players_additional'][$max_wr]['won']*100/$report['players_additional'][$max_wr]['matches'],2)."%</td></tr>";
+      }
+        if (isset($report['records'])) {
+          $modules['overview'] .= "<tr><td>".locale_string("widest_hero_pool")."</td><td>".
+            player_name($report['records']['widest_hero_pool']['playerid'])."</td><td>".$report['records']['widest_hero_pool']['value']."</td></tr>";
+          $modules['overview'] .= "<tr><td>".locale_string("smallest_hero_pool")."</td><td>".
+            player_name($report['records']['smallest_hero_pool']['playerid'])."</td><td>".$report['records']['smallest_hero_pool']['value']."</td></tr>";
+        }
+
+        if (isset($report['averages_players'])) {
+          $modules['overview'] .= "<tr><td>".locale_string("diversity")."</td><td>".
+            player_name($report['averages_players']['diversity'][0]['playerid'])."</td><td>".
+            number_format($report['averages_players']['diversity'][0]['value']*100,2)."%</td></tr>";
+        }
+
+      $modules['overview'] .= "</table>";
+
+      $modules['overview'] .= "<div class=\"content-text\"><a href=\"http://".
+          $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."&mod=participants\">".locale_string("full_participants").
+          "</a> / <a href=\"http://".
+          $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."&mod=records\">".locale_string("full_records").
+          "</a></div>";
+      $modules['overview'] .= "</div>";
     }
-
-    $modules['overview'] .= "</div><table class=\"list\">";
-    if (isset($report['teams'])) {
-      $max_wr = 0;
-      $max_matches = 0;
-      foreach ($report['teams'] as $team_id => $team) {
-        if(!$max_matches || $report['teams'][$max_matches]['matches_total'] < $team['matches_total'] )
-          $max_matches = $team_id;
-        if($team['matches_total'] <= $report['settings']['limiter']) continue;
-
-        if($max_wr == 0) $max_wr = $team_id;
-        else if(!$max_wr || $report['teams'][$max_wr]['wins']/$report['teams'][$max_wr]['matches_total'] < $team['wins']/$team['matches_total'] )
-          $max_wr = $team_id;
-      }
-
-      $modules['overview'] .= "<tr><td>".locale_string("most_matches")."</td><td>".
-          team_link($max_matches)."</td><td>".$report['teams'][$max_matches]['matches_total']."</td></tr>";
-
-      if($max_wr)
-        $modules['overview'] .= "<tr><td>".locale_string("highest_winrate")."</td><td>".
-          team_link($max_wr)."</td><td>".number_format($report['teams'][$max_wr]['wins']*100/$report['teams'][$max_wr]['matches_total'],2)."%</td></tr>";
-
-      if (isset($report['records'])) {
-        $modules['overview'] .= "<tr><td>".locale_string("widest_hero_pool_team")."</td><td>".
-            team_link($report['records']['widest_hero_pool_team']['playerid'])."</td><td>".
-            $report['records']['widest_hero_pool_team']['value']."</td></tr>";
-
-        $modules['overview'] .= "<tr><td>".locale_string("smallest_hero_pool_team")."</td><td>".
-            team_link($report['records']['smallest_hero_pool_team']['playerid'])."</td><td>".
-            $report['records']['smallest_hero_pool_team']['value']."</td></tr>";
-      }
-
-    } else {
-      $max_wr = 0;
-      $max_matches = 0;
-      foreach ($report['players_additional'] as $pid => $player) {
-          if(!$max_matches || $report['players_additional'][$max_matches]['matches'] < $player['matches'] )
-            $max_matches = $pid;
-          if($player['matches'] <= $report['settings']['limiter']) continue;
-          if(!$max_wr || ( $report['players_additional'][$max_wr]['won']/$report['players_additional'][$max_wr]['matches'] < $player['won']/$player['matches']) ) 
-            $max_wr = $pid;
-      }
-
-      $modules['overview'] .= "<tr><td>".locale_string("most_matches")."</td><td>".
-        player_name($max_matches)."</td><td>".$report['players_additional'][$max_matches]['matches']."</td></tr>";
-
-      if($max_wr)
-        $modules['overview'] .= "<tr><td>".locale_string("highest_winrate")."</td><td>".
-            player_name($max_wr)."</td><td>".
-            number_format($report['players_additional'][$max_wr]['won']*100/$report['players_additional'][$max_wr]['matches'],2)."%</td></tr>";
-    }
-      if (isset($report['records'])) {
-        $modules['overview'] .= "<tr><td>".locale_string("widest_hero_pool")."</td><td>".
-          player_name($report['records']['widest_hero_pool']['playerid'])."</td><td>".$report['records']['widest_hero_pool']['value']."</td></tr>";
-        $modules['overview'] .= "<tr><td>".locale_string("smallest_hero_pool")."</td><td>".
-          player_name($report['records']['smallest_hero_pool']['playerid'])."</td><td>".$report['records']['smallest_hero_pool']['value']."</td></tr>";
-      }
-
-      if (isset($report['averages_players'])) {
-        $modules['overview'] .= "<tr><td>".locale_string("diversity")."</td><td>".
-          player_name($report['averages_players']['diversity'][0]['playerid'])."</td><td>".
-          number_format($report['averages_players']['diversity'][0]['value']*100,2)."%</td></tr>";
-      }
-
-    $modules['overview'] .= "</table>";
-
-    $modules['overview'] .= "<div class=\"content-text\"><a href=\"http://".
-        $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."&mod=participants\">".locale_string("full_participants").
-        "</a> / <a href=\"http://".
-        $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."&mod=records\">".locale_string("full_records").
-        "</a></div>";
-    $modules['overview'] .= "</div>";
 
     $modules['overview'] .= "<div class=\"content-header\">".locale_string("draft")."</div>";
 

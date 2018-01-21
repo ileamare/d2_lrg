@@ -10,6 +10,7 @@
   },
   "ana": {
     "records": true,
+    "players": true,
 
     "avg_limit" : 5,
     "avg_heroes" : true,

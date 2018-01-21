@@ -11,10 +11,9 @@ if(!function_exists("readline")) {
 }
 
 # global settings
-  $lrg_version = array(1, 1, 0, -4, 3); # 1.0.0-{alpha/beta/rc1/rc2/release}-rN
+  $lrg_version = array(1, 1, 0, -3, 3); # 1.0.0-{alpha/beta/rc1/rc2/release}-rN
 
 # SQL Connection information
-
   $lrg_sql_host = "localhost";
   $lrg_sql_user = "root";
   $lrg_sql_pass = "";

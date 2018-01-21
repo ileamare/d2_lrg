@@ -61,7 +61,9 @@ $lg_version = array( 1, 1, 1, -4, 0 );
 
   function player_name($pid) {
     global $report;
-    return $report['players'][$pid];
+    if($pid)
+        return $report['players'][$pid];
+    return "null";
   }
 
   function player_card_link() {
@@ -753,16 +755,17 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           if(!$max_matches || $report['players_additional'][$max_matches]['matches'] < $player['matches'] )
             $max_matches = $pid;
           if($player['matches'] <= $report['settings']['limiter']) continue;
-          if(!$max_wr || $report['players_additional'][$max_wr]['won']/$report['players_additional'][$max_wr]['matches'] < $player['won']/$player['matches'] )
+          if(!$max_wr || ( $report['players_additional'][$max_wr]['won']/$report['players_additional'][$max_wr]['matches'] < $player['won']/$player['matches']) ) 
             $max_wr = $pid;
       }
 
       $modules['overview'] .= "<tr><td>".locale_string("most_matches")."</td><td>".
         player_name($max_matches)."</td><td>".$report['players_additional'][$max_matches]['matches']."</td></tr>";
 
-      $modules['overview'] .= "<tr><td>".locale_string("highest_winrate")."</td><td>".
-        player_name($max_wr)."</td><td>".
-        number_format($report['players_additional'][$max_wr]['won']*100/$report['players_additional'][$max_wr]['matches'],2)."%</td></tr>";
+      if($max_wr)
+        $modules['overview'] .= "<tr><td>".locale_string("highest_winrate")."</td><td>".
+            player_name($max_wr)."</td><td>".
+            number_format($report['players_additional'][$max_wr]['won']*100/$report['players_additional'][$max_wr]['matches'],2)."%</td></tr>";
     }
       if (isset($report['records'])) {
         $modules['overview'] .= "<tr><td>".locale_string("widest_hero_pool")."</td><td>".

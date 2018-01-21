@@ -152,7 +152,7 @@
     "widest_hero_pool_team" => "Team with Widest Hero Pool",
     "smallest_hero_pool_team" => "Team with Smallest Hero Pool",
     "diversity" => "Hero Diversity",
-    "common_position" => "Common Position",
+    "common_position" => "Main Position",
 
     "stomp" => "Networth stomp by a team",
     "comeback" => "Networth comeback by a team",

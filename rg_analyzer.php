@@ -1,22 +1,10 @@
 <?php
-  include_once("settings.php");
+ini_set('memory_limit', '4000M');
 
-  function utf8ize($d) {
-    if (is_array($d))
-        foreach ($d as $k => $v)
-            $d[$k] = utf8ize($v);
-     else if(is_object($d))
-        foreach ($d as $k => $v)
-            $d->$k = utf8ize($v);
-     else if(is_string($d))
-        return mb_convert_encoding($d, "utf-8");
+include_once("settings.php");
 
-    return $d;
-  }
-
-  # TODO
-  # Analyzer module
-  # JSON output
+include_once("modules/mod.utf8ize.php");
+include_once("modules/mod.migrate_params.php");
 
 
   echo("\nConnecting to database...\n");
@@ -31,6 +19,13 @@
   $result['league_id'] = $lg_settings['league_id'];
   $result["league_tag"] = $lrg_league_tag;
 
+  if(compare_ver($lg_settings['version'], $lrg_version) == -1) {
+    if (!file_exists("templates/default.json")) die("[F] No default league template found, exitting.");
+    $tmp = json_decode(file_get_contents("templates/default.json"), true);
+    migrate_params($tmp, $lg_settings);
+    $lg_settings = $tmp;
+    unset($tmp);
+  }
 
   /* first and last match */ {
     $sql = "SELECT matchid, start_date

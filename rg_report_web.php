@@ -1,7 +1,7 @@
 <?php
 require_once("rg_report_out_settings.php");
-require_once("modules/mod_versions.php");
-require_once("modules/mod_locale_strings.php");
+require_once("modules/mod.versions.php");
+require_once("modules/mod.locale_strings.php");
 
 $lg_version = array( 1, 1, 1, -4, 0 );
 

@@ -1,24 +1,9 @@
 <?php
 $init = true;
 require_once("settings.php");
-
-function migrate_params(&$host, $vals) {
-  foreach ($vals as $k => $v) {
-    if (is_array($v)) {
-      if(!isset($host[$k])) $host[$k] = $v;
-      else migrate_params($host[$k], $v);
-    } else $host[$k] = $v;
-  }
-}
-
-$lg_settings = array(
-  "main"=> array(),
-  "ana" => array(),
-  "web" => array()
-);
+require_once("modules/mod.migrate_params.php");
 
 if (!file_exists("templates/default.json")) die("[F] No default league template found, exitting.");
-
 $lg_settings = json_decode(file_get_contents("templates/default.json"), true);
 
 if(isset($argv)) {
@@ -32,7 +17,6 @@ if(isset($argv)) {
     unset($tmp);
   }
 
-  # TODO Custom settings
 
   if(isset($options['l'])) $lg_settings['league_tag'] = $options['l'];
   else $lg_settings['league_tag'] = readline(" >  League tag: ");
@@ -54,7 +38,7 @@ if(isset($argv)) {
       $st = explode("=", $st);
       $val = &$lg_settings;
       $st[0] = explode(".", $st[0]);
-      //if(!is_array($st[0])) $st[0] = array($st[0]);
+
       foreach ($st[0] as $level) {
         if(!isset($val[$level])) $val[$level] = array();
         $val = &$val[$level];

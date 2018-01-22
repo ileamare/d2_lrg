@@ -29,11 +29,18 @@ table.list-small:nth-child(2n) {
   margin: 0 9% 30px 1%;
   float: left;
 }
+/*div:not(#module-overview) >
+.small-list-wrapper > */
+table.list-small:last-of-type:not(:nth-child(2n)) {
+    margin: 0 auto 30px auto;
+    float: none;
+}
 #heroes-draft-0-3, #heroes-draft-1-3 {
   margin: 0 auto;
   float: none;
   clear: both;
 }
+
 
 
 table.list , table.pvp * {
@@ -78,7 +85,7 @@ table.list-small caption {
   margin-bottom: auto;
 }
 table.list-small tr th:first-child {
-  width: 45%;
+  width: 55%;
 }
 table.wide {
   width: 90%;

@@ -107,7 +107,7 @@ include_once("modules/mod.migrate_params.php");
     # sometimes getting all the pairs will be too much
     # using 3.5% to 10% of total matches as limiter
     # 10% would be too much, while 3% can be not enough
-    $limiter = (int)($result['random']['matches_total']*0.035);
+    $limiter = (int)($result['random']['matches_total']*0.022);
     $limiter_lower = (int)($result['random']['matches_total']*0.005);
 
     $limiter = $limiter>1 ? $limiter : 1;

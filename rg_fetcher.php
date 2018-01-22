@@ -120,7 +120,7 @@ foreach ($matches as $match) {
       }
       echo("[S] Match $match: Request OK\n");
 
-      if($matchdata['lobby_type'] != 2) {
+      if($matchdata['lobby_type'] != 1 && $matchdata['lobby_type'] != 2) {
         //$json = file_get_contents("https://api.stratz.com/api/v1/match?include=Player,Pickban&matchid=$match");
         // API response isn't complete atm, so we will need to parse full response, sadly
 
@@ -574,7 +574,7 @@ if ($lg_settings['main']['teams']) {
     foreach ($newteams as $id => $team) {
       $sql .= "\n\t(".$id.",\"".addslashes($team['name'])."\",\"".addslashes($team['tag'])."\"),";
     }
-    $sql[strlen($sql)-2] = ";";
+    $sql[strlen($sql)-1] = ";";
 
     if(isset($file_query)) $file_query .= $sql."\n\n\n";
     else

@@ -44,7 +44,7 @@ if(isset($argv)) {
   else $lg_settings['league_desc'] = readline(" >  League description: ");
 
   if(isset($options['I'])) {
-    $lg_settings['league_id'] = $options['I'];
+    $lg_settings['league_id'] = (int)$options['I'];
     if (!$lg_settings['league_id']) $lg_settings['league_id'] = null;
   }
 
@@ -53,6 +53,8 @@ if(isset($argv)) {
     while (!empty($st = readline(" >  "))) {
       $st = explode("=", $st);
       $val = &$lg_settings;
+      $st[0] = explode(".", $st[0]);
+      //if(!is_array($st[0])) $st[0] = array($st[0]);
       foreach ($st[0] as $level) {
         if(!isset($val[$level])) $val[$level] = array();
         $val = &$val[$level];
@@ -65,6 +67,53 @@ if(isset($argv)) {
 }
 
 $lg_settings['version'] = $lrg_version;
+
+$f = fopen("leagues/".$lg_settings['league_tag'].".json", "w") or die("[F] Couldn't open file to save results. Check working directory for `reports` folder.\n");
+fwrite($f, json_encode($lg_settings));
+fclose($f);
+
+echo "[ ] Opening matchlist file\n";
+
+$f = fopen("matchlists/".$lg_settings['league_tag'].".list", "w") or die("[F] Couldn't open file to save results. Check working directory for `reports` folder.\n");
+if($lg_settings['league_id'] == null) $out = "";
+else {
+    $request = "https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v0001/?key=".$steamapikey."&league_id=".$lg_settings['league_id'];
+    echo "[ ] Requested...";
+
+    $matches = array();
+    $response = json_decode(file_get_contents($request), true);
+
+    do {
+      echo "OK [".sizeof($response['result']['matches'])."] ";
+      if(isset($last_matchid)) $last_tail = $last_matchid;
+      else $last_tail = 0;
+
+      foreach($response['result']['matches'] as $r_match) {
+        $last_matchid = $r_match['match_id'];
+
+        if($lg_settings['time_limit_after'] != null && $lg_settings['time_limit_after'] > $r_match['start_time'])
+          continue;
+        if($lg_settings['time_limit_after'] != null && $lg_settings['time_limit_before'] < $r_match['start_time'])
+          continue;
+        if($lg_settings['match_limit_after'] != null && $lg_settings['match_limit_after'] > $r_match['match_id'])
+          continue;
+        if($lg_settings['match_limit_before'] != null && $lg_settings['match_limit_before'] < $r_match['match_id'])
+          continue;
+
+
+        if(!in_array($r_match['match_id'], $matches)) {
+          $matches[] = $r_match['match_id'];
+        }
+      }
+      $response = json_decode(file_get_contents($request."&start_at_match_id=".$last_matchid), true);
+    } while (sizeof($response['result']['matches']) > 2 && $last_matchid != $last_tail);
+
+    $out = implode($matches, "\n");
+}
+echo "\n";
+
+fwrite($f, $out);
+fclose($f);
 
 echo "[ ] Creating database...";
 
@@ -234,49 +283,5 @@ if ($conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag'])) {
   }
 }
 
-
-$f = fopen("leagues/".$lg_settings['league_tag'].".json", "w") or die("[F] Couldn't open file to save results. Check working directory for `reports` folder.\n");
-fwrite($f, json_encode($lg_settings));
-fclose($f);
-
-echo "[ ] Opening matchlist file\n";
-
-$f = fopen("matchlists/".$lg_settings['league_tag'].".list", "w") or die("[F] Couldn't open file to save results. Check working directory for `reports` folder.\n");
-if($lg_settings['league_id'] == null) $out = "";
-else {
-    $request = "https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v0001/?key=".$steamapikey."&league_id=".$lg_settings['league_id'];
-    echo "[ ] Requested...";
-
-    $matches = array();
-    $response = json_decode(file_get_contents($request), true);
-
-    do {
-      echo "OK [".sizeof($response['result']['matches'])."] ";
-      foreach($response['result']['matches'] as $r_match) {
-        $last_matchid = $r_match['match_id'];
-
-        if($lg_settings['time_limit_after'] != null && $lg_settings['time_limit_after'] > $r_match['start_time'])
-          continue;
-        if($lg_settings['time_limit_after'] != null && $lg_settings['time_limit_before'] < $r_match['start_time'])
-          continue;
-        if($lg_settings['match_limit_after'] != null && $lg_settings['match_limit_after'] > $r_match['match_id'])
-          continue;
-        if($lg_settings['match_limit_before'] != null && $lg_settings['match_limit_before'] < $r_match['match_id'])
-          continue;
-
-
-        if(!in_array($r_match['match_id'], $matches)) {
-          $matches[] = $r_match['match_id'];
-        }
-      }
-      $response = json_decode(file_get_contents($request."&start_at_match_id=".$last_matchid), true);
-    } while (sizeof($response['result']['matches']) > 2);
-
-    $out = implode($matches, "\n");
-}
-echo "\n";
-
-fwrite($f, $out);
-fclose($f);
 
  ?>

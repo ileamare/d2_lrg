@@ -9,3 +9,4 @@ gi_*
 test/*
 rg_report_out_settings_.php
 _.htaccess
+query.sql

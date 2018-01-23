@@ -1323,6 +1323,8 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           $modules['heroes']['hero_positions']['overview'] .= "</table>";
 
           unset($overview);
+          unset($heroline);
+          unset($position_overview_template);
         }
 
         for ($i=1; $i>=0; $i--) {
@@ -1906,6 +1908,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       if(check_module($parent."player_positions")) {
         if($mod == $parent."player_positions") $unset_module = true;
 
+        $position_overview_template = array("total" => 0);
         for ($i=1; $i>=0 && !isset($keys); $i--) {
           for ($j=1; $j<6 && $j>0; $j++) {
             if (!$i) { $j = 0; }
@@ -1915,6 +1918,79 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
             }
             if (!$i) { break; }
           }
+        }
+
+        for ($i=1; $i>=0; $i--) {
+          for ($j=1; $j<6 && $j>0; $j++) {
+            if (!$i) { $j = 0; }
+            if(sizeof($report['player_positions'][$i][$j]))
+              $position_overview_template["$i.$j"] = array("matches" => 0, "wr" => 0);
+
+            if(!isset($strings['en']["positions_$i.$j"]))
+              $strings['en']["positions_$i.$j"] = ($i ? locale_string("core") : locale_string("support"))." ".$meta['lanes'][$j];
+
+            if (!$i) { break; }
+          }
+        }
+
+        $modules['players']['player_positions']['overview'] = "";
+        if (check_module($parent."player_positions-overview")) {
+          $overview = array();
+
+          for ($i=1; $i>=0; $i--) {
+            for ($j=1; $j<6 && $j>0; $j++) {
+              if (!$i) { $j = 0; }
+
+              foreach($report['player_positions'][$i][$j] as $player) {
+                if (!isset($overview[ $player['playerid'] ])) $overview[ $player['playerid'] ] = $position_overview_template;
+
+                $overview[ $player['playerid'] ]["$i.$j"]['matches'] = $player['matches_s'];
+                $overview[ $player['playerid'] ]["$i.$j"]['wr'] = $player['winrate_s'];
+                $overview[ $player['playerid'] ]["total"] += $player['matches_s'];
+              }
+
+              if (!$i) { break; }
+            }
+          }
+          ksort($overview);
+
+          $modules['players']['player_positions']['overview'] .= "<table id=\"players-positions-overview\" class=\"list wide\"><tr class=\"thead overhead\"><th width=\"20%\" colspan=\"2\"></th>";
+
+          $heroline = "<tr class=\"thead\"><th onclick=\"sortTable(0,'players-positions-overview');\">".locale_string("player")."</th>".
+                        "<th onclick=\"sortTableNum(1,'players-positions-overview');\">".locale_string("matches_s")."</th>";
+          $i = 2;
+          foreach($position_overview_template as $k => $v) {
+            if ($k == "total") continue;
+
+            $modules['players']['player_positions']['overview'] .= "<th colspan=\"3\" class=\"separator\">".locale_string("positions_$k")."</th>";
+            $heroline .= "<th onclick=\"sortTable(".($i++).",'players-positions-overview');\"  class=\"separator\">".locale_string("matches_s")."</th>".
+                          "<th onclick=\"sortTableNum(".($i++).",'players-positions-overview');\">".locale_string("ratio")."</th>".
+                          "<th onclick=\"sortTableNum(".($i++).",'players-positions-overview');\">".locale_string("winrate_s")."</th>";
+          }
+          $modules['players']['player_positions']['overview'] .= "</tr>".$heroline."</tr>";
+
+          foreach ($overview as $pid => $player) {
+            $modules['players']['player_positions']['overview'] .= "<tr><td>".player_name($pid)."</td><td>".$player['total']."</td>";
+            foreach($player as $v) {
+              if (!is_array($v)) continue;
+
+              if(!$v['matches']) {
+                $modules['players']['player_positions']['overview'] .= "<td class=\"separator\">-</td>".
+                              "<td>-</td>".
+                              "<td>-</th>";
+              } else {
+                $modules['players']['player_positions']['overview'] .= "<td class=\"separator\">".$v['matches']."</td>".
+                            "<td>".number_format($v['matches']*100/$player['total'],2)."%</td>".
+                            "<td>".number_format($v['wr']*100,2)."%</th>";
+              }
+            }
+            $modules['players']['player_positions']['overview'] .= "</tr>";
+          }
+          $modules['players']['player_positions']['overview'] .= "</table>";
+
+          unset($overview);
+          unset($position_overview_template);
+          unset($heroline);
         }
 
         for ($i=1; $i>=0; $i--) {

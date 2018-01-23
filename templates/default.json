@@ -85,6 +85,9 @@
     "overview_heroes_contested_graph" : true,
     "overview_days_graph" : true,
 
+    "overview_include_records": false,
+    "overview_teams_summary_short": false,
+
     "overview_top_contested" : true,
     "overview_top_contested_count" : 10,
     "overview_top_picked" : true,

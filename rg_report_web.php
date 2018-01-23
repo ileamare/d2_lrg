@@ -458,7 +458,8 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
     $modules = array();
     # module => array or ""
     $modules['overview'] = "";
-    if (isset($report['records'])) $modules['records'] = "";
+    if (isset($report['records']))
+      require_once("modules/mod.view.records.php");
     if (isset($report['averages_heroes']) || isset($report['pickban']) || isset($report['draft']) || isset($report['hero_positions']) ||
         isset($report['hero_sides']) || isset($report['hero_pairs']) || isset($report['hero_triplets']))
           $modules['heroes'] = array();
@@ -791,6 +792,11 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       $modules['overview'] .= "</div>";
     }
 
+    if (isset($report['records']) && isset($report['settings']['overview_include_records']) && $report['settings']['overview_include_records']) {
+      $modules['overview'] .= "<div class=\"content-header\">".locale_string("records")."</div>";
+      $modules['overview'] .= rg_view_generate_records($report);
+    }
+
     $modules['overview'] .= "<div class=\"content-header\">".locale_string("draft")."</div>";
 
     if($report['settings']['overview_top_contested'] && isset($report['pickban'])) {
@@ -1025,36 +1031,9 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
   }
 
   # records
+  # should I include this part into module later on?..
   if (isset($modules['records']) && check_module("records")) {
-    $modules['records'] .= "<table id=\"records-module-table\" class=\"list\">
-                              <tr class=\"thead\">
-                                <th onclick=\"sortTable(0,'records-module-table');\">".locale_string("record")."</th>".
-                               "<th onclick=\"sortTable(1,'records-module-table');\">".locale_string("match")."</th>
-                                <th onclick=\"sortTableNum(2,'records-module-table');\">".locale_string("value")."</th>
-                                <th onclick=\"sortTable(3,'records-module-table');\">".locale_string("player")."</th>
-                                <th onclick=\"sortTable(4,'records-module-table');\">".locale_string("hero")."</th>
-                              </tr>";
-    foreach($report['records'] as $key => $record) {
-      $modules['records'] .= "<tr>
-                                <td>".locale_string($key)."</td>
-                                <td>". ($record['matchid'] ?
-                                          "<a href=\"https://opendota.com/matches/".$record['matchid']."\" title=\"".locale_string("match")." ".$record['matchid']." on OpenDota\" target=\"_blank\" rel=\"noopener\">".$record['matchid']."</a>" :
-                                          //"<a onclick=\"showModal('".htmlspecialchars(match_card($record['matchid'], $report['matches'][$record['matchid']], $report, $meta))."','');\" alt=\"Match ".$record['matchid']." on OpenDota\" target=\"_blank\">".$record['matchid']."</a>" :
-                                     "")."</td>
-                                <td>".number_format($record['value'],2)."</td>
-                                <td>". ($record['playerid'] ?
-                                          (strstr($key, "_team") != FALSE ?
-                                            team_link($record['playerid']) :
-                                            $report['players'][$record['playerid']]
-                                          ) :
-                                     "")."</td>
-                                <td>".($record['heroid'] ? hero_full($record['heroid']) : "").
-                               "</td>
-                            </tr>";
-    }
-
-    $modules['records'] .= "</table>";
-    $modules['records'] .= "<div class=\"content-text\">".locale_string("desc_records")."</div>";
+    $modules['records'] .= rg_view_generate_records($report);
   }
 
   # heroes

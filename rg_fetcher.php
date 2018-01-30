@@ -133,6 +133,12 @@ foreach ($matches as $match) {
 
         $stratz = json_decode($json, true);
 
+        if(!isset($stratz['results'][0]['pickBans'])) {
+          echo("[E] Match $match: Missing Stratz analysis, skipping\n");
+          $failed_matches[sizeof($failed_matches)] = $match;
+          continue;
+        }
+
         if($matchdata['game_mode'] == 22 || $matchdata['game_mode'] == 3) {
           while($stratz['results'][0]['pickBans'] === NULL) {
             echo "[E] Stratz draft data error. Retrying request in 5 seconds...\n";

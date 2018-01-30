@@ -1491,7 +1491,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
 
           $nodes = "";
           foreach($report['hero_combos_graph'] as $combo) {
-            $nodes .= "{from: ".$combo['heroid1'].", to: ".$combo['heroid2'].", value:".$combo['matches']."},";
+            $nodes .= "{from: ".$combo['heroid1'].", to: ".$combo['heroid2'].", value:".$combo['matches'].", title:\"".$combo['matches']."\"},";
           }
 
           $modules['heroes']['hero_combo_graph'] .= "var edges = [".$nodes."];";
@@ -1501,16 +1501,19 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                                                       "var options={
                                                         physics:{
                                                           barnesHut:{
-                                                            avoidOverlap:0.7,
+                                                            avoidOverlap:1,
                                                             centralGravity:0.05,
-                                                            springLength:90,
+                                                            springLength:80,
                                                             springConstant:0.005,
-                                                            gravitationalConstant:-200
+                                                            gravitationalConstant:-400
                                                           },
                                                           timestep: 0.05,
                                                         }, nodes: {
                                                            shape: 'dot',
-                                                           font: {color:'#ccc',size:14},
+                                                           font: {color:'#ccc', background: 'rgba(0,0,0,0.5)',size:14},
+                                                           shadow: {
+                                                             enabled: true
+                                                           },
                                                            scaling:{
                                                              label: {
                                                                min:8, max:20

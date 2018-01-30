@@ -70,7 +70,7 @@
     "hero_pairs" => "Пары",
     "hero_triplets" => "Тройки",
     "hero_combos" => "Комбинации",
-    "hero_combo_graph" => "Граф комбинаций героев",
+    "hero_combo_graph" => "Граф меты",
     "pvp" => "Игрок против игрока",
     "tvt" => "Команда против команды",
     "player_positions" => "Позиции игроков",

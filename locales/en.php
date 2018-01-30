@@ -69,7 +69,7 @@
     "hero_pairs" => "Pairs",
     "hero_triplets" => "Triplets",
     "hero_combos" => "Combinations",
-    "hero_combo_graph" => "Hero Combos Graph",
+    "hero_combo_graph" => "Meta Graph",
     "pvp" => "Player versus player",
     "tvt" => "Team versus team",
     "player_positions" => "Player positions",

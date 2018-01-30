@@ -107,8 +107,9 @@ include_once("modules/mod.migrate_params.php");
     # sometimes getting all the pairs will be too much
     # using 3.5% to 10% of total matches as limiter
     # 10% would be too much, while 3% can be not enough
-    $limiter = (int)($result['random']['matches_total']*0.022);
+    $limiter = (int)($result['random']['matches_total']*0.028);
     $limiter_lower = (int)($result['random']['matches_total']*0.005);
+    $limiter_graph = (int)ceil($result['random']['matches_total']*0.037);
 
     $limiter = $limiter>1 ? $limiter : 1;
     $limiter_lower = $limiter_lower>1 ? $limiter_lower : 1;
@@ -328,7 +329,7 @@ include_once("modules/mod.migrate_params.php");
               SUM(NOT m.radiantWin XOR ml.isradiant)/SUM(1) winrate,
               (SUM(ml.kills)+SUM(ml.assists))/(SUM(ml.deaths)) kills,
               COUNT(DISTINCT ml.heroid) heropool,
-              COUNT(DISTINCT ml.heroid)/SUM(1) heropool,
+              ((COUNT(DISTINCT ml.heroid)/mhpt.mhp) * (COUNT(DISTINCT ml.heroid)/SUM(1))) diversity,
               SUM(ml.gpm)/SUM(1) gpm,
               SUM(ml.xpm)/SUM(1) xpm,
               SUM( ml.heal / (m.duration/60) )/SUM(1) avg_heal,
@@ -344,6 +345,9 @@ include_once("modules/mod.migrate_params.php");
                   ON am.matchid = ml.matchid AND am.heroid = ml.heroid
                 JOIN matches m
                   ON m.matchid = am.matchid
+                join ( select max(heropool) mhp from
+                	( select COUNT(DISTINCT heroid) heropool, playerid from matchlines group by playerid ) _hp
+                ) mhpt
             GROUP BY pid
             ORDER BY matches DESC, winrate DESC;";
 
@@ -524,8 +528,11 @@ include_once("modules/mod.migrate_params.php");
     # hero pool size
     $sql .= "SELECT \"hero_pool\", playerid, COUNT(DISTINCT heroid) value, SUM(1) mtch FROM matchlines GROUP BY playerid ORDER BY value DESC;";
     # plyer diversity
-    $sql .= "SELECT \"diversity\", playerid, COUNT(DISTINCT heroid)/COUNT(DISTINCT matchid) value, SUM(1) mtch, COUNT(DISTINCT matchid) matches
-              FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY matches DESC, value DESC;";
+    $sql .= "SELECT \"diversity\", playerid, (COUNT(DISTINCT heroid)/mhpt.mhp) * (COUNT(DISTINCT heroid)/COUNT(DISTINCT matchid)) value, SUM(1) mtch, COUNT(DISTINCT matchid) matches
+              FROM matchlines join ( select max(heropool) mhp from
+                	( select COUNT(DISTINCT heroid) heropool, playerid from matchlines group by playerid ) _hp
+                ) mhpt
+              GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
 
    $result["averages_players"] = array();
 
@@ -574,13 +581,16 @@ include_once("modules/mod.migrate_params.php");
                   SUM(m.duration)/(SUM(1)*60) avg_duration,
                   (SUM(ml.kills)+SUM(ml.assists))/(SUM(ml.deaths)) kills,
                   COUNT(DISTINCT ml.heroid) heropool,
-                  COUNT(DISTINCT ml.heroid)/SUM(1) heropool,
+                  (COUNT(DISTINCT ml.heroid)/mhpt.mhp)*(COUNT(DISTINCT ml.heroid)/SUM(1)) diversity,
                   SUM(ml.lasthits)/SUM(m.duration)/(SUM(1)*60) lh
                 FROM adv_matchlines am JOIN
                   matchlines ml
                       ON am.matchid = ml.matchid AND am.playerid = ml.playerid
                     JOIN matches m
-                      ON m.matchid = am.matchid ".
+                      ON m.matchid = am.matchid
+                    join ( select max(heropool) mhp from
+                  	  ( select COUNT(DISTINCT heroid) heropool, playerid from matchlines group by playerid ) _hp
+                    ) mhpt ".
                ($core == 0 ? "WHERE am.isCore = 0"
               :"WHERE am.isCore = 1 AND am.lane = $lane")
               ." GROUP BY am.playerid
@@ -882,7 +892,7 @@ include_once("modules/mod.migrate_params.php");
               ON m1.matchid = m2.matchid and m1.isRadiant = m2.isRadiant and m1.heroid < m2.heroid
               JOIN matches ON m1.matchid = matches.matchid
             GROUP BY m1.heroid, m2.heroid
-            HAVING match_count > $limiter
+            HAVING match_count > $limiter_graph
             ORDER BY match_count DESC, winrate DESC;";
     # wins data is available, altho it's more like "just in case"
     # with graph we care only about popularity
@@ -1983,6 +1993,7 @@ if ($lg_settings['ana']['players'])  {
  $result['settings'] = $lg_settings['web'];
  $result['settings']['limiter'] = $limiter;
  $result['settings']['limiter_triplets'] = $limiter_lower;
+ $result['settings']['limiter_combograph'] = $limiter_graph;
  $result['ana_version'] = $lrg_version;
 
  echo("[ ] Encoding results to JSON\n");

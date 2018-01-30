@@ -3,7 +3,7 @@ require_once("rg_report_out_settings.php");
 require_once("modules/mod.versions.php");
 require_once("modules/mod.locale_strings.php");
 
-$lg_version = array( 1, 1, 1, -4, 0 );
+$lg_version = array( 1, 1, 1, -1, 0 );
 
 /* FUNCTIONS */  {
   if (!function_exists('locale_string')) {
@@ -1027,6 +1027,9 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
     $modules['overview'] .= "<div class=\"content-text small\">".
       locale_string("limiter_h").": ".$report['settings']['limiter']."<br />".
       locale_string("limiter_l").": ".$report['settings']['limiter_triplets']."<br />".
+      (compare_ver($report['ana_version'], array(1,1,0,-3,5)) >= 0 ?
+        locale_string("limiter_gr").": ".$report['settings']['limiter_combograph']."<br />"
+        : "").
       locale_string("ana_version").": ".parse_ver($report['ana_version'])."</div>";
   }
 
@@ -1468,7 +1471,11 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       $modules['heroes']['hero_combo_graph'] = "";
 
       if (check_module($parent."hero_combo_graph") && isset($report['pickban'])) {
-        $modules['heroes']['hero_combo_graph'] .= "<div class=\"content-text\">".locale_string("desc_heroes_combo_graph", ["lim" => $report['settings']['limiter']+1 ])."</div>";
+        $modules['heroes']['hero_combo_graph'] .= "<div class=\"content-text\">".locale_string("desc_heroes_combo_graph", ["lim" =>
+            (compare_ver($report['ana_version'], array(1,1,0,-3,5)) >= 0 ?
+                $report['settings']['limiter_combograph']+1
+                : $report['settings']['limiter']+1)
+        ])."</div>";
         if(isset($report['hero_combos_graph'])) {
           $use_visjs = true;
 
@@ -1628,7 +1635,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           for($k=3, $end=sizeof($keys); $k < $end; $k++) {
             if ($player[$keys[$k]] > 1)
               $modules['players']['summary'] .= "<td>".number_format($player[$keys[$k]],1)."</td>";
-            else $modules['players']['summary'] .= "<td>".number_format($player[$keys[$k]],2)."</td>";
+            else $modules['players']['summary'] .= "<td>".number_format($player[$keys[$k]],4)."</td>";
           }
           $position = reset($report['players_additional'][$player['playerid']]['positions']);
           $modules['players']['summary'] .= "<td>".($position['core'] ? locale_string("core")." " : locale_string("support")).

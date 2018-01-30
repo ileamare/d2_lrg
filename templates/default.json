@@ -21,6 +21,11 @@
     "hero_positions_player_data" : true,
     "hero_sides" : true,
 
+    "hero_vs_hero" : true,
+    "hvh_matches" : false,
+
+    "hero_summary" : true,
+
     "draft_stages" : true,
 
     "hero_pairs" : true,
@@ -50,8 +55,6 @@
     "player_vs_hero": false,
     "player_hero_combos": false,
     "player_hero_stats": false,
-
-    "hero_vs_hero": false,
 
     "teams": {
       "rosters": true,
@@ -86,7 +89,7 @@
     "overview_days_graph" : true,
 
     "overview_include_records": false,
-    "overview_teams_summary_short": false,
+    "overview_teams_summary_short": true,
 
     "overview_top_contested" : true,
     "overview_top_contested_count" : 10,

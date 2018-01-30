@@ -1466,8 +1466,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         unset($keys);
       }
     }
-    if (isset($report['hero_combos_graph']) &&
-    $report['settings']['heroes_combo_graph']) {
+    if (isset($report['hero_combos_graph']) && $report['settings']['heroes_combo_graph']) {
       $modules['heroes']['hero_combo_graph'] = "";
 
       if (check_module($parent."hero_combo_graph") && isset($report['pickban'])) {
@@ -1582,6 +1581,108 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         }
       }
     }
+    if (isset($report['hvh'])) {
+      $pvp = array();
+      $modules['heroes']['hvh'] = array();
+
+      if (check_module($parent."hvh")) {
+        if($mod == $parent."hvh") $unset_module = true;
+
+        $hvh = array();
+
+        foreach($report['hvh'] as $line) {
+          if( !isset($hvh[ $line['heroid1'] ]) )
+            $hvh[ $line['heroid1'] ] = array();
+          if( !isset($hvh[ $line['heroid2'] ]) )
+            $hvh[ $line['heroid2'] ] = array();
+
+          $hvh[ $line['heroid1'] ][ $line['heroid2'] ] = array(
+            "winrate" => $line['h1winrate'],
+            "matches" => $line['matches'],
+            "won" => $line['h1won'],
+            "lost" => $line['matches']-$line['h1won']
+          );
+
+          $hvh[ $line['heroid2'] ][ $line['heroid1'] ] = array(
+            "winrate" => 1-$line['h1winrate'],
+            "matches" => $line['matches'],
+            "won" => $line['matches']-$line['h1won'],
+            "lost" => $line['h1won']
+          );
+        }
+
+        foreach($hvh as $hid => $opponents) {
+          $strings['en']['hid'.$hid."id"] = $meta['heroes'][$hid]['name'];
+
+          $modules['heroes']['hvh']['hid'.$hid."id"] = "";
+          if(!check_module($parent."hvh-hid".$hid."id")) continue;
+
+          $modules['heroes']['hvh']['hid'.$hid."id"] = "<table id=\"hero-hvh-$hid\" class=\"list\">";
+
+          $modules['heroes']['hvh']['hid'.$hid."id"] .= "<tr class=\"thead\">
+                                                        <th onclick=\"sortTable(0,'hero-hvh-$hid');\">".locale_string("opponent")."</th>
+                                                        <th onclick=\"sortTableNum(1,'hero-hvh-$hid');\">".locale_string("winrate")."</th>
+                                                        <th onclick=\"sortTableNum(2,'hero-hvh-$hid');\">".locale_string("matches")."</th>
+                                                        <th onclick=\"sortTableNum(3,'hero-hvh-$hid');\">".locale_string("won")."</th>
+                                                        <th onclick=\"sortTableNum(4,'hero-hvh-$hid');\">".locale_string("lost")."</th>
+                                                     </tr>";
+
+          uasort($opponents, function($a, $b) {
+            if($a['matches'] == $b['matches']) return 0;
+            else return ($a['matches'] < $b['matches']) ? 1 : -1;
+          });
+
+          foreach($opponents as $hid_op => $data) {
+            $modules['heroes']['hvh']['hid'.$hid."id"] .= "<tr ".(isset($data['matchids']) ?
+                                                              "onclick=\"showModal('".implode($data['matchids'], ", ")."','".locale_string("matches")."')\"" :
+                                                              "").">
+                                                          <td>".hero_full($hid_op)."</th>
+                                                          <td>".number_format($data['winrate']*100,2)."%</th>
+                                                          <td>".$data['matches']."</th>
+                                                          <td>".$data['won']."</th>
+                                                          <td>".$data['lost']."</th>
+                                                       </tr>";
+          }
+
+          $modules['heroes']['hvh']['hid'.$hid."id"] .= "</table>";
+
+          $modules['heroes']['hvh']['hid'.$hid."id"] .= "<div class=\"content-text\">".locale_string("desc_heroes_hvh")."</div>";
+        }
+
+        unset($hvh);
+      }
+    }
+    if (isset($report['hero_summary'])) {
+      $modules['heroes']['summary']  = "";
+      if(check_module($parent."summary")) {
+        $keys = array_keys($report['hero_summary'][0]);
+        $modules['heroes']['summary'] .= "<table id=\"heroes-summary\" class=\"list wide\">
+                                          <tr class=\"thead\">
+                                            <th onclick=\"sortTable(0,'heroes-summary');\">".locale_string("hero")."</th>";
+        for($k=1, $end=sizeof($keys); $k < $end; $k++) {
+          $modules['heroes']['summary'] .= "<th onclick=\"sortTableNum($k,'heroes-summary');\">".locale_string($keys[$k])."</th>";
+        }
+        $modules['heroes']['summary'] .= "</tr>";
+
+        foreach($report['hero_summary'] as $hero) {
+
+          $modules['heroes']['summary'] .= "<tr>
+                                              <td>".hero_full($hero['heroid'])."</td>
+                                              <td>".$hero['matches_s']."</td>
+                                              <td>".number_format($hero['winrate_s']*100,1)."%</td>";
+          for($k=3, $end=sizeof($keys); $k < $end; $k++) {
+            if ($hero[$keys[$k]] > 1)
+              $modules['heroes']['summary'] .= "<td>".number_format($hero[$keys[$k]],1)."</td>";
+            else $modules['heroes']['summary'] .= "<td>".number_format($hero[$keys[$k]],3)."</td>";
+          }
+          $modules['heroes']['summary'] .= "</tr>";
+        }
+        $modules['heroes']['summary'] .= "</table>";
+
+        $modules['heroes']['summary'] .= "<div class=\"content-text\">".locale_string("desc_heroes_summary")."</div>";
+        unset($keys);
+      }
+    }
   }
 
   # players
@@ -1622,7 +1723,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         $keys = array_keys($report['players_summary'][0]);
         $modules['players']['summary'] .= "<table id=\"players-summary\" class=\"list wide\">
                                           <tr class=\"thead\">
-                                            <th onclick=\"sortTable(0,'players-summary');\">".locale_string("hero")."</th>";
+                                            <th onclick=\"sortTable(0,'players-summary');\">".locale_string("player")."</th>";
         for($k=1, $end=sizeof($keys); $k < $end; $k++) {
           $modules['players']['summary'] .= "<th onclick=\"sortTableNum($k,'players-summary');\">".locale_string($keys[$k])."</th>";
         }
@@ -1750,14 +1851,14 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
 
 
         foreach($pvp as $pid => $playerline) {
-          $strings['en']['pid'.$pid] = $report['players'][$pid];
+          $strings['en']['pid'.$pid."id"] = $report['players'][$pid];
 
-          $modules['players']['pvp']['pid'.$pid] = "";
-          if(!check_module($parent."pvp-pid".$pid)) continue;
+          $modules['players']['pvp']['pid'.$pid."id"] = "";
+          if(!check_module($parent."pvp-pid".$pid."id")) continue;
 
-          $modules['players']['pvp']['pid'.$pid] = "<table id=\"player-pvp-$pid\" class=\"list\">";
+          $modules['players']['pvp']['pid'.$pid."id"] = "<table id=\"player-pvp-$pid\" class=\"list\">";
 
-          $modules['players']['pvp']['pid'.$pid] .= "<tr class=\"thead\">
+          $modules['players']['pvp']['pid'.$pid."id"] .= "<tr class=\"thead\">
                                                         <th onclick=\"sortTable(0,'player-pvp-$pid');\">".locale_string("opponent")."</th>
                                                         <th onclick=\"sortTableNum(1,'player-pvp-$pid');\">".locale_string("winrate")."</th>
                                                         <th onclick=\"sortTableNum(2,'player-pvp-$pid');\">".locale_string("matches")."</th>
@@ -1768,7 +1869,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
             if($player_ids[$i] == $pid || $pvp[$pid][$player_ids[$i]]['matches'] == 0) {
               continue;
             } else {
-              $modules['players']['pvp']['pid'.$pid] .= "<tr ".(isset($pvp[$pid][$player_ids[$i]]['matchids']) ?
+              $modules['players']['pvp']['pid'.$pid."id"] .= "<tr ".(isset($pvp[$pid][$player_ids[$i]]['matchids']) ?
                                                                 "onclick=\"showModal('".implode($pvp[$pid][$player_ids[$i]]['matchids'], ", ")."','".locale_string("matches")."')\"" :
                                                                 "").">
                                                             <td>".$report['players'][$player_ids[$i]]."</th>
@@ -1779,9 +1880,9 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                                                          </tr>";
             }
           }
-          $modules['players']['pvp']['pid'.$pid] .= "</table>";
+          $modules['players']['pvp']['pid'.$pid."id"] .= "</table>";
 
-          $modules['players']['pvp']['pid'.$pid] .= "<div class=\"content-text\">".locale_string("desc_players_pvp")."</div>";
+          $modules['players']['pvp']['pid'.$pid."id"] .= "<div class=\"content-text\">".locale_string("desc_players_pvp")."</div>";
         }
         unset($pvp);
       }

@@ -1,5 +1,6 @@
 {
   "web": {
-    "overview_last_match_winners" : false
+    "overview_last_match_winners" : false,
+    "overview_last_match" : false
   }
 }

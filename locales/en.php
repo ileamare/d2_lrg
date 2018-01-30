@@ -238,6 +238,7 @@
 
     "limiter_h" => "Higher limiter",
     "limiter_l" => "Lower limiter",
+    "limiter_gr"=> "Graph limiter",
 
     "full" => "Full section",
     "full_participants" => "All participants",

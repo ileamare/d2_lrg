@@ -1635,7 +1635,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           for($k=3, $end=sizeof($keys); $k < $end; $k++) {
             if ($player[$keys[$k]] > 1)
               $modules['players']['summary'] .= "<td>".number_format($player[$keys[$k]],1)."</td>";
-            else $modules['players']['summary'] .= "<td>".number_format($player[$keys[$k]],4)."</td>";
+            else $modules['players']['summary'] .= "<td>".number_format($player[$keys[$k]],3)."</td>";
           }
           $position = reset($report['players_additional'][$player['playerid']]['positions']);
           $modules['players']['summary'] .= "<td>".($position['core'] ? locale_string("core")." " : locale_string("support")).

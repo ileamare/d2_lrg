@@ -121,12 +121,9 @@ foreach ($matches as $match) {
       echo("[S] Match $match: Request OK\n");
 
       if($matchdata['lobby_type'] != 1 && $matchdata['lobby_type'] != 2) {
-        //$json = file_get_contents("https://api.stratz.com/api/v1/match?include=Player,Pickban&matchid=$match");
-        // API response isn't complete atm, so we will need to parse full response, sadly
+        $json = file_get_contents("https://api.stratz.com/api/v1/match?include=Player,Pickban&matchid=$match");
 
         echo("[ ] Requesting Stratz for additional match data.\n");
-
-        $json = file_get_contents("https://api.stratz.com/api/v1/match/$match");
 
         if(empty($json)) {
             echo("[E] Match $match: Missing Stratz report, skipping\n");
@@ -137,19 +134,21 @@ foreach ($matches as $match) {
         $stratz = json_decode($json, true);
 
         if($matchdata['game_mode'] == 22 || $matchdata['game_mode'] == 3) {
-          while($stratz['pickBans'] === NULL) {
+          while($stratz['results'][0]['pickBans'] === NULL) {
             echo "[E] Stratz draft data error. Retrying request in 5 seconds...\n";
             `sleep 5`;
-            $json = file_get_contents("https://api.stratz.com/api/v1/match/$match");
+            $json = file_get_contents("https://api.stratz.com/api/v1/match?include=Player,Pickban&matchid=$match");
             $stratz = json_decode($json, true);
           }
 
-          $matchdata['picks_bans'] = $stratz['pickBans'];
-          unset($stratz);
+          $matchdata['picks_bans'] = $stratz['results'][0]['pickBans'];
+          //unset($stratz);
         }
 
         for($i=0; $i<10; $i++) {
-          if(isset($matchdata['players'][$i]['account_id']) && $matchdata['players'][$i]['account_id'] === null) {
+          if(!isset($matchdata['players'][$i]['account_id']) || $matchdata['players'][$i]['account_id'] === null) {
+            if(!isset($stratz))
+                $stratz = json_decode(file_get_contents("https://api.stratz.com/api/v1/match?include=Player&matchid=$match"), true);
             $matchdata['players'][$i]['account_id'] = $stratz['results'][0]['players'][$i]['steamId'];
             $json = file_get_contents("https://api.opendota.com/api/players/".$matchdata['players'][$i]['account_id']);
             $tmp = json_decode($json, true);

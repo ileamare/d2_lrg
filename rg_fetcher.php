@@ -14,6 +14,8 @@ echo("\nInitialising...\n");
 $conn = new mysqli($lrg_sql_host, $lrg_sql_user, $lrg_sql_pass, $lrg_sql_db);
 $meta = json_decode(file_get_contents('res/metadata.json'), true);
 
+$stratz_old_api_endpoint = 3707179408;
+
 if ($conn->connect_error) die("[F] Connection to SQL server failed: ".$conn->connect_error."\n");
 
 $lrg_input  = "matchlists/".$lrg_league_tag.".list";
@@ -121,9 +123,19 @@ foreach ($matches as $match) {
       echo("[S] Match $match: Request OK\n");
 
       if($matchdata['lobby_type'] != 1 && $matchdata['lobby_type'] != 2) {
-        $json = file_get_contents("https://api.stratz.com/api/v1/match?include=Player,Pickban&matchid=$match");
-
         echo("[ ] Requesting Stratz for additional match data.\n");
+        
+        // Not all matches in Stratz database have PickBan support for /match? endpoint
+        // so there will be kind of workaround for it.
+        // MatchID 3707179408 was chosen just because it was the first match I've found to have
+        // pickban information updated. It's not fixed point, it's just a workaround, so
+        // it will be possible to estimate if match was updated or not.
+        
+        if ($match < $stratz_old_api_endpoint)
+            $request = "https://api.stratz.com/api/v1/match?include=Player,PickBan&matchid=$match";
+        else $request = "https://api.stratz.com/api/v1/match/$match";
+        
+        $json = file_get_contents($request);
 
         if(empty($json)) {
             echo("[E] Match $match: Missing Stratz report, skipping\n");
@@ -133,28 +145,41 @@ foreach ($matches as $match) {
 
         $stratz = json_decode($json, true);
 
-        if(!isset($stratz['results'][0]['pickBans'])) {
+        if(!isset($stratz['results'][0]['parsedDate'])) {
           echo("[E] Match $match: Missing Stratz analysis, skipping\n");
           $failed_matches[sizeof($failed_matches)] = $match;
           continue;
         }
 
+        $full_request = false;
         if($matchdata['game_mode'] == 22 || $matchdata['game_mode'] == 3) {
-          while($stratz['results'][0]['pickBans'] === NULL) {
-            echo "[E] Stratz draft data error. Retrying request in 5 seconds...\n";
+          while(!isset($stratz['results'][0]['pickBans']) || $stratz['results'][0]['pickBans'] === NULL) {
+            echo "[E] $match: Stratz draft data error. Retrying request in 5 seconds...\n";
             `sleep 5`;
-            $json = file_get_contents("https://api.stratz.com/api/v1/match?include=Player,Pickban&matchid=$match");
-            $stratz = json_decode($json, true);
+
+            if (!isset($stratz['results'][0]['pickBans'])) {
+                $request = "https://api.stratz.com/api/v1/match/$match";
+                $full_request = true;
+            }
+                
+            $json = file_get_contents($request);
+            
+            if ($full_request)
+                $stratz = array( "results" => array ( json_decode($json, true) ) );
+            else $stratz = json_decode($json, true);
+            
+            if(!isset($stratz['results'][0]['parsedDate']) || ( $full_request && strlen($json) < 6500 ) ) {
+                echo("[E] Match $match: Missing Stratz analysis, skipping\n");
+                $failed_matches[sizeof($failed_matches)] = $match;
+                continue;
+            }
           }
 
           $matchdata['picks_bans'] = $stratz['results'][0]['pickBans'];
-          //unset($stratz);
         }
 
         for($i=0; $i<10; $i++) {
           if(!isset($matchdata['players'][$i]['account_id']) || $matchdata['players'][$i]['account_id'] === null) {
-            if(!isset($stratz))
-                $stratz = json_decode(file_get_contents("https://api.stratz.com/api/v1/match?include=Player&matchid=$match"), true);
             $matchdata['players'][$i]['account_id'] = $stratz['results'][0]['players'][$i]['steamId'];
             $json = file_get_contents("https://api.opendota.com/api/players/".$matchdata['players'][$i]['account_id']);
             $tmp = json_decode($json, true);
@@ -168,6 +193,7 @@ foreach ($matches as $match) {
         echo("[ ] Stratz data merged.\n");
 
         unset($stratz);
+        unset($full_request);
       }
 
       if($matchdata['human_players'] < 10 && ( !isset($matchdata['radiant_team']['team_id']) || !isset($matchdata['dire_team']['team_id']) )) {

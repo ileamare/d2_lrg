@@ -1,0 +1,20 @@
+{
+  "main": {
+    "teams": false
+  },
+  "ana": {
+    "records":false,
+    "players":false,
+    "matchlist":false,
+    "avg_limit": 10
+  },
+  "web": {
+    "custom_style": "ranked",
+    "overview_last_match_winners" : false,
+    "overview_matches": false,
+    "overview_first_match" : false,
+    "overview_last_match" : false,
+    "overview_records_stomp" : false,
+    "overview_records_comeback": false
+  }
+}

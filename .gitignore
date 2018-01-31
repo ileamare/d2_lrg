@@ -1,8 +1,12 @@
 output
 report.html
 test.html
-testrun.php
+test*.php
 list.php
 tmp*
 gi_*
 !.gitignore
+test/*
+rg_report_out_settings_.php
+_.htaccess
+query.sql

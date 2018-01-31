@@ -1,0 +1,11 @@
+{
+  "main": {
+    "teams": false
+  },
+  "web": {
+    "custom_style": "fpl",
+    "overview_last_match_winners" : false,
+    "overview_first_match" : false,
+    "overview_last_match" : false
+  }
+}

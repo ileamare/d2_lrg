@@ -1,5 +1,10 @@
 Dota 2 League Stats Fetcher and Report Generator
 
+Dependencies:
+* Vis.js and Graph.js (place them into res/dependencies/)
+* PHP
+* MySQL
+
 **Q: But why PHP?**
 
 Just because. There's no reasoning behind it. I just wanted to do so. Don't judge me.

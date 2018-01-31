@@ -17,22 +17,30 @@ table.list-fixed {
   table-layout: fixed;
 }
 table.list-small {
-  width: 34%;
+  width: 39%;
   float: left;
   /* min-width: 250px; */
 }
 table.list-small:nth-child(2n-1) {
-  margin: 0 1% 30px 14%;
+  margin: 0 1% 30px 9%;
   float: left;
 }
 table.list-small:nth-child(2n) {
-  margin: 0 14% 30px 1%;
+  margin: 0 9% 30px 1%;
   float: left;
+}
+/*div:not(#module-overview) >
+.small-list-wrapper > */
+table.list-small:last-of-type:not(:nth-child(2n)) {
+    margin: 0 auto 30px auto;
+    float: none;
 }
 #heroes-draft-0-3, #heroes-draft-1-3 {
   margin: 0 auto;
   float: none;
+  clear: both;
 }
+
 
 
 table.list , table.pvp * {
@@ -77,7 +85,7 @@ table.list-small caption {
   margin-bottom: auto;
 }
 table.list-small tr th:first-child {
-  width: 60%;
+  width: 55%;
 }
 table.wide {
   width: 90%;
@@ -102,10 +110,24 @@ table.list .thead {
 table.list .thead th {
     font-size: 12px;
     line-height:normal;
-
 }
 table.wide .thead {
   height: 52px;
+}
+.thead.overhead {
+  text-align: center;
+  height: 26px !important;
+}
+.thead.overhead th {
+  padding-left: 0;
+}
+table .thead:nth-of-type(2) {
+  opacity: 0.8;
+  height: 26px !important;
+}
+table .separator {
+  border-left: 2px solid rgba(0,0,0,0.1);
+  margin-left: 2px;
 }
 
 .small-list-wrapper {
@@ -424,7 +446,7 @@ table .hero_portrait {
 
 .graph {
   width: 1100px;
-  height: 700px;
+  height: 1000px;
   margin: 0 auto;
 }
 
@@ -450,7 +472,7 @@ table .hero_portrait {
 }
 
 .chart-pie {
-  width: 50%;
+  width: 30%;
   margin: 0%;
   height: auto;
   display: inline-block;
@@ -458,7 +480,7 @@ table .hero_portrait {
 
 
 .content-text.overview:first-of-type {
-    margin-top: 60px;
+    margin-top: 30px;
 }
 .content-text.overview {
     margin: 0;
@@ -491,7 +513,8 @@ table .hero_portrait {
     margin: 0;
 }
 .content-text.overview.overview-graphs {
-    padding: 30px 25% 30px 25%;
+    padding: 30px 15% 30px 15%;
+    text-align: center;
 }
 .left-placing {
     text-align: left;

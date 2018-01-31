@@ -127,13 +127,8 @@ foreach ($matches as $match) {
         
         // Not all matches in Stratz database have PickBan support for /match? endpoint
         // so there will be kind of workaround for it.
-        // MatchID 3707179408 was chosen just because it was the first match I've found to have
-        // pickban information updated. It's not fixed point, it's just a workaround, so
-        // it will be possible to estimate if match was updated or not.
         
-        if ($match < $stratz_old_api_endpoint)
-            $request = "https://api.stratz.com/api/v1/match?include=Player,PickBan&matchid=$match";
-        else $request = "https://api.stratz.com/api/v1/match/$match";
+        $request = "https://api.stratz.com/api/v1/match?include=Player,PickBan&matchid=$match";
         
         $json = file_get_contents($request);
 

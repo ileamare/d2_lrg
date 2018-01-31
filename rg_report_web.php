@@ -3,7 +3,7 @@ require_once("rg_report_out_settings.php");
 require_once("modules/mod.versions.php");
 require_once("modules/mod.locale_strings.php");
 
-$lg_version = array( 1, 1, 1, -1, 0 );
+$lg_version = array( 1, 1, 2, 0, 0 );
 
 /* FUNCTIONS */  {
   if (!function_exists('locale_string')) {

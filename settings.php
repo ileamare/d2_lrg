@@ -11,7 +11,7 @@ if(!function_exists("readline")) {
 }
 
 # global settings
-  $lrg_version = array(1, 1, 0, -3, 7); # 1.0.0-{alpha/beta/rc1/rc2/release}-rN
+  $lrg_version = array(1, 1, 0, 0, 0); # 1.0.0-{alpha/beta/rc1/rc2/release}-rN
 
 # SQL Connection information
   $lrg_sql_host = "localhost";
@@ -20,7 +20,6 @@ if(!function_exists("readline")) {
   $steamapikey  = "766BB2E9B3343EF6D94851890EDADD1C";
   $lrg_db_prefix= "d2_league";
 
-# TODO settings prefix
 if(isset($argv)) {
     $options = getopt("l:m:d:f");
 
@@ -28,8 +27,6 @@ if(isset($argv)) {
       $lrg_league_tag = $options['l'];
     }
   }
-  // if(!isset($lrg_league_tag))
-  // $lrg_league_tag = "workshop_bots_707";
 
 
   if(!isset($init)) {

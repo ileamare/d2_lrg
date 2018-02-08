@@ -306,14 +306,15 @@ foreach ($matches as $match) {
         $t_adv_matchlines[$i]['playerid'] = $matchdata['players'][$j]['account_id'];
         $t_adv_matchlines[$i]['heroid'] = $matchdata['players'][$j]['hero_id'];
         $t_adv_matchlines[$i]['lh10'] = $matchdata['players'][$j]['lh_t'][10];
-        $t_adv_matchlines[$i]['lane'] = $matchdata['players'][$j]['lane_role'];
         if($matchdata['players'][$j]['lane_role'] == 5) $matchdata['players'][$j]['lane_role'] = 4; # we don't care about different jungles
         if ($matchdata['players'][$j]['is_roaming']) {
           $matchdata['players'][$j]['lane_role'] = 5;
         }
+        $t_adv_matchlines[$i]['lane'] = $matchdata['players'][$j]['lane_role'];
 
         # trying to decide, is it a core
         $support_indicators = 0;
+        if ($matchdata['players'][$j]['lane_role'] == 5) $support_indicator++;
         if ($matchdata['players'][$j]['lh_t'][5] < 6) $support_indicators++;
         if ($matchdata['players'][$j]['lh_t'][3] < 2) $support_indicators++;
         if ($matchdata['players'][$j]['obs_placed'] > 1) $support_indicators++;

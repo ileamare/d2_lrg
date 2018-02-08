@@ -35,7 +35,7 @@ if(isset($argv)) {
   if(isset($options['S'])) {
     echo "[ ] Enter parameters below in format \"Parameter = value\".\n    Divide parameters subcategories by a \".\", empty line to exit.\n";
     while (!empty($st = readline(" >  "))) {
-      $st = explode("=", $st);
+      $st = explode("=", trim($st));
       $val = &$lg_settings;
       $st[0] = explode(".", $st[0]);
 

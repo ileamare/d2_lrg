@@ -582,7 +582,7 @@ include_once("modules/mod.migrate_params.php");
                   (SUM(ml.kills)+SUM(ml.assists))/(SUM(ml.deaths)) kills,
                   COUNT(DISTINCT ml.heroid) heropool,
                   (COUNT(DISTINCT ml.heroid)/mhpt.mhp)*(COUNT(DISTINCT ml.heroid)/SUM(1)) diversity,
-                  SUM(ml.lasthits)/SUM(m.duration)/(SUM(1)*60) lh
+                  SUM(ml.lasthits)/(SUM(m.duration)/60) lh
                 FROM adv_matchlines am JOIN
                   matchlines ml
                       ON am.matchid = ml.matchid AND am.playerid = ml.playerid
@@ -772,7 +772,7 @@ include_once("modules/mod.migrate_params.php");
                   SUM(am.stuns)/SUM(1) stuns,
                   SUM(am.lh_at10)/SUM(1) lh_10,
                   SUM(m.duration)/(SUM(1)*60) avg_duration,
-                  SUM(ml.lasthits)/(SUM(m.duration)/(SUM(1)*60)) lh
+                  SUM(ml.lasthits)/(SUM(m.duration)/60) lh
                 FROM adv_matchlines am JOIN
                 	matchlines ml
                     	ON am.matchid = ml.matchid AND am.heroid = ml.heroid

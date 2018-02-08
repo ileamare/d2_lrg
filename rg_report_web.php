@@ -1279,7 +1279,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
             if ($k == "total") continue;
 
             $modules['heroes']['hero_positions']['overview'] .= "<th colspan=\"3\" class=\"separator\">".locale_string("positions_$k")."</th>";
-            $heroline .= "<th onclick=\"sortTable(".($i++).",'heroes-positions-overview');\"  class=\"separator\">".locale_string("matches_s")."</th>".
+            $heroline .= "<th onclick=\"sortTableNum(".($i++).",'heroes-positions-overview');\"  class=\"separator\">".locale_string("matches_s")."</th>".
                           "<th onclick=\"sortTableNum(".($i++).",'heroes-positions-overview');\">".locale_string("ratio")."</th>".
                           "<th onclick=\"sortTableNum(".($i++).",'heroes-positions-overview');\">".locale_string("winrate_s")."</th>";
           }

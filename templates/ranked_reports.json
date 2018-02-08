@@ -9,7 +9,7 @@
     "avg_limit": 10
   },
   "web": {
-    "custom_style": "ranked",
+    "custom_style": "bots",
     "overview_last_match_winners" : false,
     "overview_matches": false,
     "overview_first_match" : false,

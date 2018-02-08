@@ -163,12 +163,13 @@ foreach ($matches as $match) {
                 $stratz = array( "results" => array ( json_decode($json, true) ) );
             else $stratz = json_decode($json, true);
             
-            if(!isset($stratz['results'][0]['parsedDate']) || ( $full_request && strlen($json) < 6500 ) ) {
-                echo("[E] Match $match: Missing Stratz analysis, skipping\n");
+            if($full_request && strlen($json) < 6500) {
+                echo("[E] Match $match: Missing Stratz analysis, try again later\n");
                 $failed_matches[sizeof($failed_matches)] = $match;
-                continue;
+                break;
             }
           }
+          if(in_array($match, $failed_matches)) continue;
 
           $matchdata['picks_bans'] = $stratz['results'][0]['pickBans'];
         }

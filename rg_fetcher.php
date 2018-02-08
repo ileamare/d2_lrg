@@ -306,29 +306,39 @@ foreach ($matches as $match) {
         $t_adv_matchlines[$i]['playerid'] = $matchdata['players'][$j]['account_id'];
         $t_adv_matchlines[$i]['heroid'] = $matchdata['players'][$j]['hero_id'];
         $t_adv_matchlines[$i]['lh10'] = $matchdata['players'][$j]['lh_t'][10];
-        if($matchdata['players'][$j]['lane_role'] == 5) $matchdata['players'][$j]['lane_role'] = 4; # we don't care about different jungles
-        if ($matchdata['players'][$j]['is_roaming']) {
-          $matchdata['players'][$j]['lane_role'] = 5;
-        }
+        if ($matchdata['players'][$j]['lane_role'] == 5)
+            $matchdata['players'][$j]['lane_role'] = 4; # we don't care about different jungles
+        //if ($matchdata['players'][$j]['is_roaming'])
+        //    $matchdata['players'][$j]['lane_role'] = 5;
         $t_adv_matchlines[$i]['lane'] = $matchdata['players'][$j]['lane_role'];
 
         # trying to decide, is it a core
         $support_indicators = 0;
-        if ($matchdata['players'][$j]['lane_role'] == 5) $support_indicator++;
-        if ($matchdata['players'][$j]['lh_t'][5] < 6) $support_indicators++;
-        if ($matchdata['players'][$j]['lh_t'][3] < 2) $support_indicators++;
+        //if ($matchdata['players'][$j]['lane_role'] == 4) $support_indicators+=2;
+        if ($matchdata['players'][$j]['lh_t'][5] <= 6) $support_indicators++;
+        if ($matchdata['players'][$j]['lh_t'][3] <= 2) $support_indicators++;
         if ($matchdata['players'][$j]['obs_placed'] > 1) $support_indicators++;
         if ($matchdata['players'][$j]['obs_placed'] > 5) $support_indicators++;
         if ($matchdata['players'][$j]['obs_placed'] > 10) $support_indicators++;
-        if ($matchdata['players'][$j]['gold_per_min'] < 350) $support_indicators++;
+        if ($matchdata['players'][$j]['gold_per_min'] < 355) $support_indicators++;
         if ($matchdata['players'][$j]['gold_per_min'] < 290) $support_indicators++;
         if ($matchdata['players'][$j]['lane_efficiency'] < 0.45) $support_indicators++;
         if ($matchdata['players'][$j]['lane_efficiency'] < 0.35) $support_indicators++;
         if ($matchdata['players'][$j]['hero_damage']*60/$matchdata['duration'] < 350) $support_indicators++;
-        if ($matchdata['players'][$j]['last_hits']*60/$matchdata['duration'] < 2) $support_indicators++;
+        if ($matchdata['players'][$j]['last_hits']*60/$matchdata['duration'] < 2.2) $support_indicators++;
 
+        if ($matchdata['players'][$j]['is_roaming']) {
+            $support_indicators+=3;
+        }
+        
         if ($support_indicators > 4) $t_adv_matchlines[$i]['is_core'] = 0;
         else $t_adv_matchlines[$i]['is_core'] = 1;
+        
+        if ($t_adv_matchlines[$i]['is_core'] && $matchdata['players'][$j]['is_roaming']) 
+            $t_adv_matchlines[$i]['lane'] = $matchdata['players'][$j]['lane_role'];
+        else if (!$t_adv_matchlines[$i]['is_core'] && $matchdata['players'][$j]['is_roaming'])
+            $t_adv_matchlines[$i]['lane'] = 5;
+            # Gonna put roaming cores into junglers for now
 
 
         $t_adv_matchlines[$i]['lane_efficiency'] = $matchdata['players'][$j]['lane_efficiency'];

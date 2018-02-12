@@ -11,14 +11,23 @@ if(!function_exists("readline")) {
 }
 
 # global settings
-  $lrg_version = array(1, 1, 0, 0, 0); # 1.0.0-{alpha/beta/rc1/rc2/release}-rN
+  $lrg_version = array(1, 1, 0, 0, 0);
 
 # SQL Connection information
-  $lrg_sql_host = "localhost";
-  $lrg_sql_user = "root";
-  $lrg_sql_pass = "";
-  $steamapikey  = "766BB2E9B3343EF6D94851890EDADD1C";
-  $lrg_db_prefix= "d2_league";
+  $lrg_sql_host  = "localhost";
+  $lrg_sql_user  = "root";
+  $lrg_sql_pass  = "";
+  $lrg_db_prefix = "d2_league";
+
+  if (file_exists(".steamapikey"))
+    $steamapikey  = file_get_contents(".steamapikey");
+  else {
+    touch(".steamapikey");
+    die("[F] Missing Steam API Key.\n".
+        "    Place your Steam API Key to `.steamapikey` file in LRG's working directory.\n".
+        "    If you don't have your Steam API Key, you can get one here:\n".
+        "    https://steamcommunity.com/dev/apikey \n");
+  }
 
 if(isset($argv)) {
     $options = getopt("l:m:d:f");

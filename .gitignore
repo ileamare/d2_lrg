@@ -1,3 +1,6 @@
+.steamapikey
+
+
 output
 report.html
 test.html
@@ -5,7 +8,6 @@ test*.php
 list.php
 tmp*
 gi_*
-!.gitignore
 test/*
 rg_report_out_settings_.php
 _.htaccess

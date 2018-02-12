@@ -15,6 +15,8 @@
     "overview_first_match" : false,
     "overview_last_match" : false,
     "overview_records_stomp" : false,
-    "overview_records_comeback": false
+    "overview_records_comeback": false,
+    "overview_draft_1_3" : true,
+    "overview_draft_0_1" : false
   }
 }

@@ -4,7 +4,7 @@
 ini_set('memory_limit', '4000M');
 
 include_once("settings.php");
-include_once("modules/mod.fet.version.php");
+include_once("modules/mod.fet.get_patchid.php");
 include_once("modules/mod.migrate_params.php");
 include_once("modules/mod.generate_tag.php");
 
@@ -124,12 +124,12 @@ foreach ($matches as $match) {
 
       if($matchdata['lobby_type'] != 1 && $matchdata['lobby_type'] != 2) {
         echo("[ ] Requesting Stratz for additional match data.\n");
-        
+
         // Not all matches in Stratz database have PickBan support for /match? endpoint
         // so there will be kind of workaround for it.
-        
+
         $request = "https://api.stratz.com/api/v1/match?include=Player,PickBan&matchid=$match";
-        
+
         $json = file_get_contents($request);
 
         if(empty($json)) {
@@ -156,13 +156,13 @@ foreach ($matches as $match) {
                 $request = "https://api.stratz.com/api/v1/match/$match";
                 $full_request = true;
             }
-                
+
             $json = file_get_contents($request);
-            
+
             if ($full_request)
                 $stratz = array( "results" => array ( json_decode($json, true) ) );
             else $stratz = json_decode($json, true);
-            
+
             if($full_request && strlen($json) < 6500) {
                 echo("[E] Match $match: Missing Stratz analysis, try again later\n");
                 $failed_matches[sizeof($failed_matches)] = $match;
@@ -330,11 +330,11 @@ foreach ($matches as $match) {
         if ($matchdata['players'][$j]['is_roaming']) {
             $support_indicators+=3;
         }
-        
+
         if ($support_indicators > 4) $t_adv_matchlines[$i]['is_core'] = 0;
         else $t_adv_matchlines[$i]['is_core'] = 1;
-        
-        if ($t_adv_matchlines[$i]['is_core'] && $matchdata['players'][$j]['is_roaming']) 
+
+        if ($t_adv_matchlines[$i]['is_core'] && $matchdata['players'][$j]['is_roaming'])
             $t_adv_matchlines[$i]['lane'] = $matchdata['players'][$j]['lane_role'];
         else if (!$t_adv_matchlines[$i]['is_core'] && $matchdata['players'][$j]['is_roaming'])
             $t_adv_matchlines[$i]['lane'] = 5;

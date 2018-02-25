@@ -6,7 +6,26 @@ require_once("modules/mod.locale_strings.php");
 $lg_version = array( 1, 1, 2, 0, 0 );
 
 /* FUNCTIONS */  {
-  if (!function_exists('locale_string')) {
+function GetLanguageCodeISO6391() {
+    $hi_code = "";
+    $hi_quof = 0;
+    $langs = explode(",",$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    foreach($langs as $lang) {
+        if(strpos($lang, ";"))
+            list($codelang, $quoficient) = explode(";",$lang);
+        else
+            list($codelang, $quoficient) = [ $lang, NULL ];
+        
+        if($quoficient == NULL) $quoficient = 1;
+        if($quoficient > $hi_quof) {
+            $hi_code = substr($codelang,0,2);
+            $hi_quof = $quoficient;
+        }
+    }
+    return $hi_code;
+}
+
+if (!function_exists('locale_string')) {
     function locale_string($string_id, $vars=array()) {
       global $strings;
       global $locale;
@@ -415,6 +434,8 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       $linkvars[] = array("stow", $options['S']);
     }
   } else if ($lrg_use_get) {
+    $locale = GetLanguageCodeISO6391();
+  
     if(isset($_GET['league']) && !empty($_GET['league'])) {
       if(file_exists("reports/report_".$_GET['league'].".json")) {
         $leaguetag = $_GET['league'];
@@ -438,7 +459,8 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
   require_once('locales/en.php');
   if(strtolower($locale) != "en" && file_exists('locales/'.$locale.'.php'))
     require_once('locales/'.$locale.'.php');
-
+  else $locale = "en";
+    
   $use_visjs = false;
   $use_graphjs = false;
 
@@ -455,11 +477,16 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
     $meta = file_get_contents("res/metadata.json") or die("[F] Can't open metadata\n");
     $meta = json_decode($meta, true);
 
+    # legacy name for Radiant Winrate
+    if (compare_ver($report['ana_version'], array(1,1,1,-4,0)) < 0) {
+        $strings[$locale]['rad_wr'] = $strings[$locale]['radiant_wr'];
+    }
+    
     $modules = array();
     # module => array or ""
     $modules['overview'] = "";
     if (isset($report['records']))
-      require_once("modules/mod.view.records.php");
+      require_once("modules/view/mod.view.records.php");
     if (isset($report['averages_heroes']) || isset($report['pickban']) || isset($report['draft']) || isset($report['hero_positions']) ||
         isset($report['hero_sides']) || isset($report['hero_pairs']) || isset($report['hero_triplets']))
           $modules['heroes'] = array();
@@ -2225,7 +2252,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                 $draft[$hid]['out'] .= "<td>-</td><td>-</td>";
 
               if(isset($report['teams'][$tid]['pickban'][$hid]['matches_banned']) && $report['teams'][$tid]['pickban'][$hid]['matches_banned'])
-                $draft[$hid]['out'] .= "<td>".$report['pickban'][$hid]['matches_banned']."</td><td>".
+                $draft[$hid]['out'] .= "<td>".$report['teams'][$tid]['pickban'][$hid]['matches_banned']."</td><td>".
                     number_format($report['teams'][$tid]['pickban'][$hid]['wins_banned']*100/$report['teams'][$tid]['pickban'][$hid]['matches_banned'], 2)."%</td>";
               else
                 $draft[$hid]['out'] .= "<td>-</td><td>-</td>";

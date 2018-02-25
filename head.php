@@ -11,7 +11,7 @@ if(!function_exists("readline")) {
 }
 
 # global settings
-  $lrg_version = array(1, 1, 0, 0, 0);
+  $lrg_version = array(1, 1, 1, -4, 0);
 
 # SQL Connection information
   $lrg_sql_host  = "localhost";
@@ -20,7 +20,7 @@ if(!function_exists("readline")) {
   $lrg_db_prefix = "d2_league";
 
   if (file_exists(".steamapikey"))
-    $steamapikey  = file_get_contents(".steamapikey");
+    $steamapikey  = trim(file_get_contents(".steamapikey"));
   else {
     touch(".steamapikey");
     die("[F] Missing Steam API Key.\n".

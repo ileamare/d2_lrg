@@ -1,7 +1,7 @@
 <?php
 ini_set('memory_limit', '4000M');
 
-include_once("settings.php");
+include_once("head.php");
 
 include_once("modules/mod.utf8ize.php");
 include_once("modules/mod.migrate_params.php");
@@ -88,7 +88,9 @@ include_once("modules/mod.migrate_params.php");
     # buybacks total
     $sql .= "SELECT \"buybacks_total\", SUM(buybacks) FROM adv_matchlines;";
     # summary time dead
-    $sql .= "SELECT \"total_time_dead\", SUM(time_dead)/60 FROM adv_matchlines;";
+    # $sql .= "SELECT \"total_time_dead\", SUM(time_dead)/60 FROM adv_matchlines;";
+    # average match length
+    $sql .= "SELECT \"avg_match_len\", SUM(duration)/(60*COUNT(DISTINCT matchid)) FROM matches;";
 
 
     if ($conn->multi_query($sql) === TRUE) echo "[S] Requested data for RANDOM STATS.\n";
@@ -1308,7 +1310,7 @@ include_once("modules/mod.migrate_params.php");
                   WHERE teamid = ".$id.";";
 
         # radiant wr
-        $sql .= "SELECT \"rad_wr\", SUM(matches.radiantWin)/COUNT(DISTINCT matches.matchid) FROM matches JOIN teams_matches
+        $sql .= "SELECT \"radiant_wr\", SUM(matches.radiantWin)/COUNT(DISTINCT matches.matchid) FROM matches JOIN teams_matches
                   ON matches.matchid = teams_matches.matchid
                   AND teams_matches.is_radiant = 1
                   WHERE teams_matches.teamid = ".$id.";";

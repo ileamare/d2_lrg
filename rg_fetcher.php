@@ -3,7 +3,7 @@
 
 ini_set('memory_limit', '4000M');
 
-include_once("settings.php");
+include_once("head.php");
 include_once("modules/mod.fet.get_patchid.php");
 include_once("modules/mod.migrate_params.php");
 include_once("modules/mod.generate_tag.php");

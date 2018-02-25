@@ -1,5 +1,5 @@
 <?php
-require_once("settings.php");
+require_once("head.php");
 
 $options = getopt("m:", [ "match" ]);
 
@@ -16,7 +16,7 @@ $sql = "DELETE from matchlines where matchid = $mid; DELETE from adv_matchlines 
        ( $lg_settings['main']['teams'] ? "delete from teams_matches where matchid = $mid;" : "").
        "delete from matches where matchid = $mid;";
 
-       
+
 if ($conn->multi_query($sql) === TRUE) echo "[S] Removed matches.\n";
 else die("[F] Unexpected problems when quering database.\n".$conn->error."\n");
 

@@ -11,7 +11,7 @@ if(!function_exists("readline")) {
 }
 
 # global settings
-  $lrg_version = array(1, 1, 1, -4, 0);
+  $lrg_version = array(1, 1, 1, -4, 1);
 
 # SQL Connection information
   $lrg_sql_host  = "localhost";

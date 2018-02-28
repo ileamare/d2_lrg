@@ -2503,15 +2503,19 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                     "<th onclick=\"sortTableNum(4,'teams-sum');\">".locale_string("rad_wr_s")."</th>".
                     "<th onclick=\"sortTableNum(5,'teams-sum');\">".locale_string("dire_wr_s")."</th>".
                     "<th onclick=\"sortTableNum(6,'teams-sum');\">".locale_string("hero_pool")."</th>".
-                    "<th onclick=\"sortTableNum(7,'teams-sum');\">".locale_string("kills")."</th>".
-                    "<th onclick=\"sortTableNum(8,'teams-sum');\">".locale_string("deaths")."</th>".
-                    "<th onclick=\"sortTableNum(9,'teams-sum');\">".locale_string("assists")."</th>".
-                    "<th onclick=\"sortTableNum(10,'teams-sum');\">".locale_string("gpm")."</th>".
-                    "<th onclick=\"sortTableNum(11,'teams-sum');\">".locale_string("xpm")."</th>".
-                    "<th onclick=\"sortTableNum(12,'teams-sum');\">".locale_string("wards_placed_s")."</th>".
-                    "<th onclick=\"sortTableNum(13,'teams-sum');\">".locale_string("sentries_placed_s")."</th>".
-                    "<th onclick=\"sortTableNum(14,'teams-sum');\">".locale_string("wards_destroyed_s")."</th>".
-                    "<th onclick=\"sortTableNum(15,'teams-sum');\">".locale_string("duration")."</th>".
+                    (compare_ver($report['ana_version'], array(1,1,1,-4,1)) < 0 ?
+                      "" :
+                      "<th onclick=\"sortTableNum(7,'teams-sum');\">".locale_string("diversity")."</th>"
+                    ).
+                    "<th onclick=\"sortTableNum(8,'teams-sum');\">".locale_string("kills")."</th>".
+                    "<th onclick=\"sortTableNum(9,'teams-sum');\">".locale_string("deaths")."</th>".
+                    "<th onclick=\"sortTableNum(10,'teams-sum');\">".locale_string("assists")."</th>".
+                    "<th onclick=\"sortTableNum(11,'teams-sum');\">".locale_string("gpm")."</th>".
+                    "<th onclick=\"sortTableNum(12,'teams-sum');\">".locale_string("xpm")."</th>".
+                    "<th onclick=\"sortTableNum(13,'teams-sum');\">".locale_string("wards_placed_s")."</th>".
+                    "<th onclick=\"sortTableNum(14,'teams-sum');\">".locale_string("sentries_placed_s")."</th>".
+                    "<th onclick=\"sortTableNum(15,'teams-sum');\">".locale_string("wards_destroyed_s")."</th>".
+                    "<th onclick=\"sortTableNum(16,'teams-sum');\">".locale_string("duration")."</th>".
               "</tr>";
 
     foreach($report['teams'] as $team_id => $team) {
@@ -2527,6 +2531,11 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                         ).
                     "<td>".number_format($team['averages']['dire_wr']*100,2)."%</td>".
                     "<td>".$team['averages']['hero_pool']."</td>".
+                    (
+                      (compare_ver($report['ana_version'], array(1,1,1,-4,1)) < 0) ?
+                        "" :
+                        "<td>".number_format($team['averages']['diversity']*100,2)."%</td>"
+                      ).
                     "<td>".number_format($team['averages']['kills'],1)."</td>".
                     "<td>".number_format($team['averages']['deaths'],1)."</td>".
                     "<td>".number_format($team['averages']['assists'],1)."</td>".
@@ -2535,7 +2544,12 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                     "<td>".number_format($team['averages']['wards_placed'],1)."</td>".
                     "<td>".number_format($team['averages']['sentries_placed'],1)."</td>".
                     "<td>".number_format($team['averages']['wards_destroyed'],1)."</td>".
-                    "<td>".number_format($team['averages']['duration'],1)."</td>".
+                    (
+                      (compare_ver($report['ana_version'], array(1,1,1,-4,1)) < 0) ?
+                        "<td>".number_format($team['averages']['duration'],1)."</td>" :
+                        "<td>".number_format($team['averages']['avg_match_len'],1)."</td>"
+                      ).
+
               "</tr>";
     }
     $modules['summary_teams'] .= "</table>";

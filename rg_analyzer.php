@@ -1304,6 +1304,22 @@ include_once("modules/mod.migrate_params.php");
                   AND matchlines.isRadiant = teams_matches.is_radiant
                   WHERE teams_matches.teamid = ".$id.";";
 
+        # diversity
+        # (COUNT(DISTINCT heroid)/mhpt.mhp) * (COUNT(DISTINCT heroid)/COUNT(DISTINCT matchid))
+        $sql .= "SELECT \"diversity\", (COUNT(DISTINCT matchlines.heroid)/mhpt.mhp)*(COUNT(DISTINCT matchlines.heroid)/COUNT(DISTINCT matchlines.matchid))/5
+                  FROM matchlines JOIN teams_matches JOIN (
+                    select max(heropool) mhp from (
+                      select COUNT(DISTINCT matchlines.heroid) heropool
+                      FROM matchlines JOIN teams_matches
+                      ON matchlines.matchid = teams_matches.matchid
+                      AND matchlines.isRadiant = teams_matches.is_radiant
+                      GROUP BY teams_matches.teamid
+                    ) _hp
+                  ) mhpt
+                  ON matchlines.matchid = teams_matches.matchid
+                  AND matchlines.isRadiant = teams_matches.is_radiant
+                  WHERE teams_matches.teamid = ".$id.";";
+
         # radiant ratio
         $sql .= "SELECT \"rad_ratio\", SUM(is_radiant)/COUNT(DISTINCT matchid)
                   FROM teams_matches
@@ -1316,7 +1332,7 @@ include_once("modules/mod.migrate_params.php");
                   WHERE teams_matches.teamid = ".$id.";";
 
         # dire wr
-        $sql .= "SELECT \"dire_wr\", SUM(matches.radiantWin)/COUNT(DISTINCT matches.matchid) FROM matches JOIN teams_matches
+        $sql .= "SELECT \"dire_wr\", 1-(SUM(matches.radiantWin)/COUNT(DISTINCT matches.matchid)) FROM matches JOIN teams_matches
                   ON matches.matchid = teams_matches.matchid
                   AND teams_matches.is_radiant = 0
                   WHERE teams_matches.teamid = ".$id.";";

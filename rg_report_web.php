@@ -5,6 +5,29 @@ require_once("modules/mod.locale_strings.php");
 
 $lg_version = array( 1, 1, 2, 0, 0 );
 
+$visjs_settings = "physics:{
+  barnesHut:{
+    avoidOverlap:1,
+    centralGravity:0.10,
+    springLength:80,
+    springConstant:0.0035,
+    gravitationalConstant:-600
+  },
+  timestep: 0.1,
+}, nodes: {
+   borderWidth:4,
+   shape: 'dot',
+   font: {color:'#ccc', background: 'rgba(0,0,0,0.5)',size:14},
+   shadow: {
+     enabled: true
+   },
+   scaling:{
+     label: {
+       min:8, max:20
+     }
+   }
+ }";
+
 /* FUNCTIONS */  {
 function GetLanguageCodeISO6391() {
     $hi_code = "";
@@ -15,7 +38,7 @@ function GetLanguageCodeISO6391() {
             list($codelang, $quoficient) = explode(";",$lang);
         else
             list($codelang, $quoficient) = [ $lang, NULL ];
-        
+
         if($quoficient == NULL) $quoficient = 1;
         if($quoficient > $hi_quof) {
             $hi_code = substr($codelang,0,2);
@@ -435,7 +458,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
     }
   } else if ($lrg_use_get) {
     $locale = GetLanguageCodeISO6391();
-  
+
     if(isset($_GET['league']) && !empty($_GET['league'])) {
       if(file_exists("reports/report_".$_GET['league'].".json")) {
         $leaguetag = $_GET['league'];
@@ -460,7 +483,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
   if(strtolower($locale) != "en" && file_exists('locales/'.$locale.'.php'))
     require_once('locales/'.$locale.'.php');
   else $locale = "en";
-    
+
   $use_visjs = false;
   $use_graphjs = false;
 
@@ -481,7 +504,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
     if (compare_ver($report['ana_version'], array(1,1,1,-4,0)) < 0) {
         $strings[$locale]['rad_wr'] = $strings[$locale]['radiant_wr'];
     }
-    
+
     $modules = array();
     # module => array or ""
     $modules['overview'] = "";
@@ -1510,14 +1533,19 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           $nodes = "";
           foreach($meta['heroes'] as $hid => $hero) {
             if(!has_pair($hid, $report['hero_combos_graph'])) continue;
+            //if(!isset($report['pickban'][$hid])) continue;
             $nodes .= "{id: $hid, value: ".$report['pickban'][$hid]['matches_picked'].
-              ", label: '".addslashes($hero['name'])."'},";
+              ", label: '".addslashes($hero['name'])."'".
+              ", shape:'circularImage', image: 'res/heroes/".$hero['tag'].".png'".
+              "},";
           }
           $modules['heroes']['hero_combo_graph'] .= "var nodes = [".$nodes."];";
 
           $nodes = "";
           foreach($report['hero_combos_graph'] as $combo) {
-            $nodes .= "{from: ".$combo['heroid1'].", to: ".$combo['heroid2'].", value:".$combo['matches'].", title:\"".$combo['matches']."\"},";
+            $nodes .= "{from: ".$combo['heroid1'].", to: ".$combo['heroid2'].", value:".$combo['matches'].", title:\"".$combo['matches']."\", color:{color:'rgba(".
+              number_format(255-255*$combo['wins']/$combo['matches'], 0).",124,".
+              number_format(255*$combo['wins']/$combo['matches'],0).",1)'}},";
           }
 
           $modules['heroes']['hero_combo_graph'] .= "var edges = [".$nodes."];";
@@ -1525,27 +1553,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           $modules['heroes']['hero_combo_graph'] .= "var container = document.getElementById('hero-combos-graph');\n".
                                                       "var data = { nodes: nodes, edges: edges};\n".
                                                       "var options={
-                                                        physics:{
-                                                          barnesHut:{
-                                                            avoidOverlap:1,
-                                                            centralGravity:0.05,
-                                                            springLength:80,
-                                                            springConstant:0.005,
-                                                            gravitationalConstant:-400
-                                                          },
-                                                          timestep: 0.05,
-                                                        }, nodes: {
-                                                           shape: 'dot',
-                                                           font: {color:'#ccc', background: 'rgba(0,0,0,0.5)',size:14},
-                                                           shadow: {
-                                                             enabled: true
-                                                           },
-                                                           scaling:{
-                                                             label: {
-                                                               min:8, max:20
-                                                             }
-                                                           }
-                                                         }
+                                                        $visjs_settings
                                                        };\n".
                                                       "var network = new vis.Network(container, data, options);\n".
                                                       "</script>";
@@ -1932,8 +1940,10 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           $modules['players']['players_combo_graph'] .= "var nodes = [".$nodes."];";
 
           $nodes = "";
-          foreach($report['players_combo_graph'] as $combo) {
-            $nodes .= "{from: ".$combo['playerid1'].", to: ".$combo['playerid2'].", value:".$combo['wins']."},";
+          foreach($report['hero_combos_graph'] as $combo) {
+            $nodes .= "{from: ".$combo['playerid1'].", to: ".$combo['playerid2'].", value:".$combo['matches'].", title:\"".$combo['matches']."\", color:{color:'rgba(".
+              number_format(255-255*$combo['wins']/$combo['matches'], 0).",124,".
+              number_format(255*$combo['wins']/$combo['matches'],0).",1)'}},";
           }
 
           $modules['players']['players_combo_graph'] .= "var edges = [".$nodes."];";
@@ -1942,24 +1952,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                                                       "var data = { nodes: nodes, edges: edges};\n".
                                                       "var data = { nodes: nodes, edges: edges};\n".
                                                       "var options={
-                                                        physics:{
-                                                          barnesHut:{
-                                                            avoidOverlap:0.7,
-                                                            centralGravity:0.05,
-                                                            springLength:90,
-                                                            springConstant:0.005,
-                                                            gravitationalConstant:-200
-                                                          },
-                                                          timestep: 0.05,
-                                                        }, nodes: {
-                                                           shape: 'dot',
-                                                           font: {color:'#ccc',size:14},
-                                                           scaling:{
-                                                             label: {
-                                                               min:8, max:20
-                                                             }
-                                                           }
-                                                         }
+                                                        $visjs_settings
                                                        };\n".
                                                       "var network = new vis.Network(container, data, options);\n".
                                                       "</script>";
@@ -2373,14 +2366,19 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
             $nodes = "";
             foreach($meta['heroes'] as $hid => $hero) {
               if(!has_pair($hid, $report['teams'][$tid]['hero_graph'])) continue;
-              $nodes .= "{id: $hid, value: ".$report['pickban'][$hid]['matches_picked'].
-                ", label: '".addslashes($hero['name'])."'},";
+              if(!isset($report['teams'][$tid]['pickban'][$hid])) continue;
+              $nodes .= "{id: $hid, value: ".$report['teams'][$tid]['pickban'][$hid]['matches_picked'].
+                ", label: '".addslashes($hero['name'])."'".
+                ", shape:'circularImage', image: 'res/heroes/".$hero['tag'].".png'".
+                "},";
             }
             $modules['teams']["team_".$tid."_stats"]['hero_combo_graph'] .= "var nodes = [".$nodes."];";
 
             $nodes = "";
             foreach($report['teams'][$tid]['hero_graph'] as $combo) {
-              $nodes .= "{from: ".$combo['heroid1'].", to: ".$combo['heroid2'].", value:".$combo['matches']."},";
+              $nodes .= "{from: ".$combo['heroid1'].", to: ".$combo['heroid2'].", value:".$combo['matches'].", title:\"".$combo['matches']."\", color:{color:'rgba(".
+                number_format(255*(1-$combo['winrate']), 0).",124,".
+                number_format(255*$combo['winrate'],0).",1)'}},";
             }
 
             $modules['teams']["team_".$tid."_stats"]['hero_combo_graph'] .= "var edges = [".$nodes."];";
@@ -2388,24 +2386,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
             $modules['teams']["team_".$tid."_stats"]['hero_combo_graph'] .= "var container = document.getElementById('team$tid-combos-graph');\n".
                                                         "var data = { nodes: nodes, edges: edges};\n".
                                                         "var options={
-                                                          physics:{
-                                                            barnesHut:{
-                                                              avoidOverlap:0.8,
-                                                              centralGravity:0.05,
-                                                              springLength:90,
-                                                              springConstant:0.001,
-                                                              gravitationalConstant:-500
-                                                            },
-                                                            timestep: 0.01
-                                                          }, nodes: {
-                                                             shape: 'dot',
-                                                             font: {color:'#ccc',size:14},
-                                                             scaling:{
-                                                               label: {
-                                                                 min:8, max:20
-                                                               }
-                                                             }
-                                                           }
+                                                          $visjs_settings
                                                          };\n".
                                                         "var network = new vis.Network(container, data, options);\n".
                                                         "</script>";
@@ -2524,7 +2505,11 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                     "<td>".$team['matches_total']."</td>".
                     "<td>".number_format($team['wins']*100/$team['matches_total'],2)."%</td>".
                     "<td>".number_format($team['averages']['rad_ratio']*100,2)."%</td>".
-                    "<td>".number_format($team['averages']['rad_wr']*100,2)."%</td>".
+                      (
+                        (compare_ver($report['ana_version'], array(1,1,1,-4,0)) < 0) ?
+                          "<td>".number_format($team['averages']['rad_wr']*100,2)."%</td>" :
+                          "<td>".number_format($team['averages']['radiant_wr']*100,2)."%</td>"
+                        ).
                     "<td>".number_format($team['averages']['dire_wr']*100,2)."%</td>".
                     "<td>".$team['averages']['hero_pool']."</td>".
                     "<td>".number_format($team['averages']['kills'],1)."</td>".

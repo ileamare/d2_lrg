@@ -26,11 +26,11 @@ D2LRG is made of four scripts, divided into smaller modules:
 - `analyzer` makes series of SQL requests to get ready-to-use data and saves it as .report file as JSON data. It can be transferred to another D2LRG instance from now on and not linked to MySQL anymore
 - `view` is standalone module that reads .report file and allows easy to use basic web interface for it
 
-**Q: But why PHP?**
+### But why PHP?
 
 Just because. There's no reasoning behind it. I just wanted to do so. Don't judge me.
 
-**What do I need to use it?**
+### What do I need to use it?
 
 MySQL database server and PHP interpreter. Nothing really special, you can use regular XAMPP for it.
 
@@ -51,10 +51,10 @@ After getting D2LRG code to your computer, run `php setup.php`. It will install 
 ## How to use
 
 LRG is made of these modules:
+* `rg_init` - Initialises new league database and other resources.
 * `rg_fetcher.php` - Fetches matchdata from OpenDota, adds it to MySQL database (there's no special reason to use it as well).
 * `rg_analyzer.php` - Generates precached report file based on matchdata.
 * `rg_report` - Generates fancy (or not so fancy) report page for rg_analyzer output. Can be used on your webserver as well.
-* `rg_init` - Initialises new league database and other resources.
 
 Beforehand you should use `setup.php` to initialise settings (like database credentials or Steam API key) file and download dependencies.
 
@@ -89,13 +89,22 @@ Parameters:
 This file should be put on your webserver, as well as "reports/" folder with all the reports in it and "res/".
 
 Settings you can change in it:
-* $lrg_use_get -- Use GET parameters for opening league files and generating modules, `true` by default
-* $lrg_get_depth -- Sets module link depth for GET parameters, `2` by default. Modules deeper than this will be fully generated
-* $locale -- Translation file you will use for your reportm, `"en"` by default
+* `$lrg_use_get` - Use GET parameters for opening league files and generating modules, `true` by default
+* `$lrg_get_depth` - Sets module link depth for GET parameters, `2` by default. Modules deeper than this will be fully generated
+* `$locale` - Translation file you will use for your reportm, `"en"` by default
 
 
 It can also be used from command line as "php rg_report_web.php > index.html" with following parameters:
-* -lVALUE -- Open report for league VALUE
-* -f -- Generate full report (all-in-one HTML file, equivalent of `$lrg_get_depth = 0`)
-* -dVALUE -- Force module depth, force-sets `$lrg_get_depth` to VALUE
-* -mVALUE -- Generate module VALUE, equivalent to `?mod=VALUE` in GET request
+* `-lVALUE` - Open report for league VALUE
+* `-f` - Generate full report (all-in-one HTML file, equivalent of `$lrg_get_depth = 0`)
+* `-dVALUE` - Force module depth, force-sets `$lrg_get_depth` to VALUE
+* `-mVALUE` - Generate module VALUE, equivalent to `?mod=VALUE` in GET request
+
+## Tools
+
+Tools are additional scripts that can be used for specific things. All of them should be executed from the main directory with command similar to `php tools/%TOOL%.php %PARAMETERS%`.
+
+* `remove_match` - removes match from a league's database. Uses only `-l%TAG%` and `-m%MATCH%` parameters. Example: `php tools/remove_match.php -ltestleague -m1234567891`
+* `replay_request` - sends API command to OpenDota, requesting every match from a file. Accepts only one arguement: `-f%FILENAME%`. You can use failed matches dump files (from fetcher) with it
+* `clear_database` - removes all data from a league's database. Args: `-l%LEAGUETAG%`
+* `update_league` - updates league parameters to new D2LRG API/leaguefile format. Accepts only `-l%LEAGUETAG%`

@@ -13,7 +13,7 @@
     "notable_matches" => "Notable matches",
     "buybacks_total" => "Total Buybacks",
     "creeps_killed"  => "Total Creeps Killed",
-    "avg_match_len" => "Average match length",
+    "avg_match_len" => "Average match duration",
     "total_time_dead" => "Total time players were dead (minutes)",
     "heroes_contested"=> "Heroes contested",
     "heroes_uncontested"=> "Heroes uncontested",

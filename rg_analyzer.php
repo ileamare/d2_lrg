@@ -1322,7 +1322,7 @@ include_once("modules/mod.migrate_params.php");
                   WHERE teams_matches.teamid = ".$id.";";
 
         # duration
-        $sql .= "SELECT \"duration\", (SUM(matches.duration)/60)/COUNT(DISTINCT matches.matchid) FROM matches JOIN teams_matches
+        $sql .= "SELECT \"avg_match_len\", (SUM(matches.duration)/60)/COUNT(DISTINCT matches.matchid) FROM matches JOIN teams_matches
                   ON matches.matchid = teams_matches.matchid WHERE teams_matches.teamid = ".$id.";";
 
         if ($conn->multi_query($sql) === TRUE) echo "[S] Requested data for TEAM $id AVERAGES.\n";

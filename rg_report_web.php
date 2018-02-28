@@ -8,16 +8,16 @@ $lg_version = array( 1, 1, 2, 0, 0 );
 $visjs_settings = "physics:{
   barnesHut:{
     avoidOverlap:1,
-    centralGravity:0.10,
-    springLength:80,
-    springConstant:0.0035,
+    centralGravity:0.2,
+    springLength:95,
+    springConstant:0.005,
     gravitationalConstant:-600
   },
-  timestep: 0.1,
+  timestep: 0.2,
 }, nodes: {
-   borderWidth:4,
+   borderWidth:3,
    shape: 'dot',
-   font: {color:'#ccc', background: 'rgba(0,0,0,0.5)',size:14},
+   font: {color:'#ccc', background: 'rgba(0,0,0,0.5)',size:12},
    shadow: {
      enabled: true
    },
@@ -1520,23 +1520,38 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       $modules['heroes']['hero_combo_graph'] = "";
 
       if (check_module($parent."hero_combo_graph") && isset($report['pickban'])) {
-        $modules['heroes']['hero_combo_graph'] .= "<div class=\"content-text\">".locale_string("desc_heroes_combo_graph", ["lim" =>
+        $locale_settings = ["lim" =>
             (compare_ver($report['ana_version'], array(1,1,0,-3,5)) >= 0 ?
                 $report['settings']['limiter_combograph']+1
-                : $report['settings']['limiter']+1)
-        ])."</div>";
+                : $report['settings']['limiter']+1),
+            "per" => "25%"
+        ];
+
+        $modules['heroes']['hero_combo_graph'] .= "<div class=\"content-text\">".locale_string("desc_meta_graph", $locale_settings)."</div>";
+
+        $modules['heroes']['hero_combo_graph'] .= "<div class=\"content-text\">".
+          locale_string("desc_meta_graph_add", $locale_settings)."</div>";
+
+        unset($locale_settings);
+
         if(isset($report['hero_combos_graph'])) {
           $use_visjs = true;
 
           $modules['heroes']['hero_combo_graph'] .= "<div id=\"hero-combos-graph\" class=\"graph\"></div><script type=\"text/javascript\">";
 
           $nodes = "";
-          foreach($meta['heroes'] as $hid => $hero) {
-            if(!has_pair($hid, $report['hero_combos_graph'])) continue;
+          $counter = 0; $endp = sizeof($report['pickban'])*0.25;
+          foreach($report['pickban'] as $hid => $hero) {
+            if($counter++ >= $endp && !has_pair($hid, $report['hero_combos_graph'])) {
+              //if($counter < $endp) $counter++;
+              //else
+              //if($hero['matches_picked'] < $report['settings']['limiter_combograph']*2)
+                continue;
+            }
             //if(!isset($report['pickban'][$hid])) continue;
-            $nodes .= "{id: $hid, value: ".$report['pickban'][$hid]['matches_picked'].
-              ", label: '".addslashes($hero['name'])."'".
-              ", shape:'circularImage', image: 'res/heroes/".$hero['tag'].".png'".
+            $nodes .= "{id: $hid, value: ".$hero['matches_picked'].
+              ", label: '".addslashes($meta['heroes'][$hid]['name'])."'".
+              ", shape:'circularImage', image: 'res/heroes/".$meta['heroes'][$hid]['tag'].".png'".
               "},";
           }
           $modules['heroes']['hero_combo_graph'] .= "var nodes = [".$nodes."];";
@@ -2700,14 +2715,16 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
          ?>
         <div class="share-links">
           <?php
-            echo '<div class="share-link reddit"><a href="http://www.reddit.com/submit?url='.htmlspecialchars('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].
+            echo '<div class="share-link reddit"><a href="https://www.reddit.com/submit?url='.htmlspecialchars('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].
               (empty($_SERVER['QUERY_STRING']) ? "" : '?'.$_SERVER['QUERY_STRING'])
             ).'" target="_blank" rel="noopener">Share on Reddit</a></div>';
-            echo '<div class="share-link twitter"><a href="http://twitter.com/share?text=League+Report:+'.$leaguetag.'" target="_blank" rel="noopener">Share on Twitter</a></div>';
-            echo '<div class="share-link vk"><a href="https://vk.com/share.php?url='.htmlspecialchars('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].
+            echo '<div class="share-link twitter"><a href="https://twitter.com/share?text=League+Report:+'.$leaguetag.'+'.htmlspecialchars('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].
+              (empty($_SERVER['QUERY_STRING']) ? "" : '?'.$_SERVER['QUERY_STRING'])
+            ).'" target="_blank" rel="noopener">Share on Twitter</a></div>';
+            echo '<div class="share-link vk"><a href="https://vk.com/share.php?url='.htmlspecialchars('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].
               (empty($_SERVER['QUERY_STRING']) ? "" : '?'.$_SERVER['QUERY_STRING'])
             ).'" target="_blank" rel="noopener">Share on VK</a></div>';
-            echo '<div class="share-link fb"><a href="https://www.facebook.com/sharer/sharer.php?u='.htmlspecialchars('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].
+            echo '<div class="share-link fb"><a href="https://www.facebook.com/sharer/sharer.php?u='.htmlspecialchars('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].
               (empty($_SERVER['QUERY_STRING']) ? "" : '?'.$_SERVER['QUERY_STRING'])
             ).'" target="_blank" rel="noopener">Share on Facebook</a></div>';
           ?>

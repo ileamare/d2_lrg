@@ -13,7 +13,7 @@ $visjs_settings = "physics:{
     springConstant:0.005,
     gravitationalConstant:-600
   },
-  timestep: 0.2,
+  timestep: 0.15,
 }, nodes: {
    borderWidth:3,
    shape: 'dot',
@@ -2534,7 +2534,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                     (
                       (compare_ver($report['ana_version'], array(1,1,1,-4,1)) < 0) ?
                         "" :
-                        "<td>".number_format($team['averages']['diversity']*100,2)."%</td>"
+                        "<td>".number_format($team['averages']['diversity'],2)."</td>"
                       ).
                     "<td>".number_format($team['averages']['kills'],1)."</td>".
                     "<td>".number_format($team['averages']['deaths'],1)."</td>".

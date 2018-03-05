@@ -1306,7 +1306,7 @@ include_once("modules/mod.migrate_params.php");
 
         # diversity
         # (COUNT(DISTINCT heroid)/mhpt.mhp) * (COUNT(DISTINCT heroid)/COUNT(DISTINCT matchid))
-        $sql .= "SELECT \"diversity\", (COUNT(DISTINCT matchlines.heroid)/mhpt.mhp)*(COUNT(DISTINCT matchlines.heroid)/COUNT(DISTINCT matchlines.matchid))/5
+        $sql .= "SELECT \"diversity\", (COUNT(DISTINCT matchlines.heroid)/mhpt.mhp)*(COUNT(DISTINCT matchlines.heroid)/COUNT(DISTINCT matchlines.matchid))
                   FROM matchlines JOIN teams_matches JOIN (
                     select max(heropool) mhp from (
                       select COUNT(DISTINCT matchlines.heroid) heropool

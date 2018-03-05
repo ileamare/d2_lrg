@@ -1732,7 +1732,7 @@ include_once("modules/mod.migrate_params.php");
               FROM matchlines m1 JOIN matchlines m2
                 ON m1.matchid = m2.matchid and m1.isRadiant = m2.isRadiant and m1.playerid < m2.playerid
                 JOIN matches ON m1.matchid = matches.matchid
-              GROUP BY m1.playerid, m2.playerid HAVING match_count > $limiter;";
+              GROUP BY m1.playerid, m2.playerid HAVING match_count > $limiter_graph;";
       # only wis makes more sense for players combo graph
 
       if ($conn->multi_query($sql) === TRUE) echo "[S] Requested data for PLAYER PAIRS.\n";
@@ -1744,6 +1744,7 @@ include_once("modules/mod.migrate_params.php");
         $result["players_combo_graph"][] = array (
           "playerid1" => $row[0],
           "playerid2" => $row[1],
+          "matches" => $row[3],
           "wins" => $row[2]
         );
       }

@@ -1667,6 +1667,8 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           $modules['heroes']['hvh']['hid'.$hid."id"] = "";
           if(!check_module($parent."hvh-hid".$hid."id")) continue;
 
+          $modules['heroes']['hvh']['hid'.$hid."id"] .= "<div class=\"content-text\">".locale_string("desc_heroes_hvh")."</div>";
+
           $modules['heroes']['hvh']['hid'.$hid."id"] = "<table id=\"hero-hvh-$hid\" class=\"list\">";
 
           $modules['heroes']['hvh']['hid'.$hid."id"] .= "<tr class=\"thead\">
@@ -1695,8 +1697,6 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           }
 
           $modules['heroes']['hvh']['hid'.$hid."id"] .= "</table>";
-
-          $modules['heroes']['hvh']['hid'.$hid."id"] .= "<div class=\"content-text\">".locale_string("desc_heroes_hvh")."</div>";
         }
 
         unset($hvh);
@@ -1955,7 +1955,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           $modules['players']['players_combo_graph'] .= "var nodes = [".$nodes."];";
 
           $nodes = "";
-          foreach($report['hero_combos_graph'] as $combo) {
+          foreach($report['players_combo_graph'] as $combo) {
             $nodes .= "{from: ".$combo['playerid1'].", to: ".$combo['playerid2'].", value:".$combo['matches'].", title:\"".$combo['matches']."\", color:{color:'rgba(".
               number_format(255-255*$combo['wins']/$combo['matches'], 0).",124,".
               number_format(255*$combo['wins']/$combo['matches'],0).",1)'}},";
@@ -2276,20 +2276,20 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
 
             $modules['teams']["team_".$tid."_stats"]['draft'] .= "<table id=\"heroes-draft-team-$tid\" class=\"list wide\"><tr class=\"thead overhead\"><th width=\"15%\"></th><th colspan=\"5\">".locale_string("total")."</th>";
             $heroline = "<tr class=\"thead\">".
-                          "<th onclick=\"sortTable(0,'heroes-draft');\">".locale_string("hero")."</th>".
-                          "<th onclick=\"sortTableNum(1,'heroes-draft');\">".locale_string("matches")."</th>".
-                          "<th onclick=\"sortTableNum(2,'heroes-draft');\">".locale_string("picks")."</th>".
-                          "<th onclick=\"sortTableNum(3,'heroes-draft');\">".locale_string("winrate")."</th>".
-                          "<th onclick=\"sortTableNum(4,'heroes-draft');\">".locale_string("bans")."</th>".
-                          "<th onclick=\"sortTableNum(5,'heroes-draft');\">".locale_string("winrate")."</th>";
+                          "<th onclick=\"sortTable(0,'heroes-draft-team-$tid');\">".locale_string("hero")."</th>".
+                          "<th onclick=\"sortTableNum(1,'heroes-draft-team-$tid');\">".locale_string("matches")."</th>".
+                          "<th onclick=\"sortTableNum(2,'heroes-draft-team-$tid');\">".locale_string("picks")."</th>".
+                          "<th onclick=\"sortTableNum(3,'heroes-draft-team-$tid');\">".locale_string("winrate")."</th>".
+                          "<th onclick=\"sortTableNum(4,'heroes-draft-team-$tid');\">".locale_string("bans")."</th>".
+                          "<th onclick=\"sortTableNum(5,'heroes-draft-team-$tid');\">".locale_string("winrate")."</th>";
 
             if($max_stage > 1)
               for($i=1; $i<=$max_stage; $i++) {
                 $modules['teams']["team_".$tid."_stats"]['draft'] .= "<th class=\"separator\" colspan=\"4\">".locale_string("stage")." $i</th>";
-                $heroline .= "<th onclick=\"sortTableNum(".(1+4*$i+1).",'heroes-draft');\" class=\"separator\">".locale_string("picks")."</th>".
-                            "<th onclick=\"sortTableNum(".(1+4*$i+2).",'heroes-draft');\">".locale_string("winrate")."</th>".
-                            "<th onclick=\"sortTableNum(".(1+4*$i+3).",'heroes-draft');\">".locale_string("bans")."</th>".
-                            "<th onclick=\"sortTableNum(".(1+4*$i+4).",'heroes-draft');\">".locale_string("winrate")."</th>";
+                $heroline .= "<th onclick=\"sortTableNum(".(1+4*$i+1).",'heroes-draft-team-$tid');\" class=\"separator\">".locale_string("picks")."</th>".
+                            "<th onclick=\"sortTableNum(".(1+4*$i+2).",'heroes-draft-team-$tid');\">".locale_string("winrate")."</th>".
+                            "<th onclick=\"sortTableNum(".(1+4*$i+3).",'heroes-draft-team-$tid');\">".locale_string("bans")."</th>".
+                            "<th onclick=\"sortTableNum(".(1+4*$i+4).",'heroes-draft-team-$tid');\">".locale_string("winrate")."</th>";
               }
             $modules['teams']["team_".$tid."_stats"]['draft'] .= "</tr>".$heroline."</tr>";
 

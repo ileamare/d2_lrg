@@ -896,8 +896,6 @@ include_once("modules/mod.migrate_params.php");
             GROUP BY m1.heroid, m2.heroid
             HAVING match_count > $limiter_graph
             ORDER BY match_count DESC, winrate DESC;";
-    # wins data is available, altho it's more like "just in case"
-    # with graph we care only about popularity
     # WARNING: big amount of matches may send client browser to a long trip
 
     if ($conn->multi_query($sql) === TRUE) echo "[S] Requested data for FULL HERO PAIRS.\n";
@@ -937,11 +935,22 @@ include_once("modules/mod.migrate_params.php");
     $query_res = $conn->store_result();
 
     for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
+      //$result['random']['matches_total']
+      //$result['pickban'][]['matches_picked']
+      $hero1_pickrate = $result['pickban'][$row[0]]['matches_picked'] / $result['random']['matches_total'];
+      $hero2_pickrate = $result['pickban'][$row[1]]['matches_picked'] / $result['random']['matches_total'];
+      $expected_pair  = $hero1_pickrate * $hero2_pickrate * ($result['random']['matches_total']/2);
+      $pair_percentage = $row[2] / $expected_pair;
+
+      //if($pair_percentage < 0.05) continue;
+
       $result["hero_pairs"][] = array (
         "heroid1" => $row[0],
         "heroid2" => $row[1],
         "matches" => $row[2],
-        "winrate" => $row[3]
+        "winrate" => $row[3],
+        "percentage" => $pair_percentage,
+        "expectation" => $expected_pair
       );
     }
 

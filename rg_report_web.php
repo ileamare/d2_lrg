@@ -1008,7 +1008,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                                    "</td><td>".($pair['heroid2'] ? hero_full($pair['heroid2'])  : "").
                                    "</td>
                                    <td>".$pair['matches']."</td>
-                                   <td>".number_format($pair['winrate']*100,2)."</td>
+                                   <td>".number_format($pair['winrate']*100,2)."%</td>
                                   </tr>";
           $counter--;
         }
@@ -1585,8 +1585,10 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                                                   <th onclick=\"sortTable(0,'hero-pairs');\">".locale_string("hero")." 1</th>
                                                   <th onclick=\"sortTable(1,'hero-pairs');\">".locale_string("hero")." 2</th>
                                                   <th onclick=\"sortTableNum(2,'hero-pairs');\">".locale_string("matches")."</th>
-                                                  <th onclick=\"sortTableNum(3,'hero-pairs');\">".locale_string("winrate")."</th>
-                                                </tr>";
+                                                  <th onclick=\"sortTableNum(3,'hero-pairs');\">".locale_string("winrate")."</th>".
+                                                  /*<th onclick=\"sortTableNum(4,'hero-pairs');\">".locale_string("pair_percentage")."</th>
+                                                  <th onclick=\"sortTableNum(5,'hero-pairs');\">".locale_string("expectation")."</th>*/
+                                                "</tr>";
           foreach($report['hero_pairs'] as $pair) {
             $modules['heroes']['hero_combos'] .= "<tr".(isset($report['hero_pairs_matches']) ?
                                                 " onclick=\"showModal('".htmlspecialchars(join_matches($report['hero_pairs_matches'][$pair['heroid1'].'-'.$pair['heroid2']])).
@@ -1595,8 +1597,10 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                                                  "</td><td>".($pair['heroid2'] ? hero_full($pair['heroid2'])  : "").
                                                  "</td>
                                                  <td>".$pair['matches']."</td>
-                                                 <td>".number_format($pair['winrate']*100,2)."</td>
-                                                </tr>";
+                                                 <td>".number_format($pair['winrate']*100,2)."%</td>".
+                                                 /*<td>".$pair['percentage']."</td>
+                                                 <td>".$pair['expectation']."</td>*/
+                                                "</tr>";
           }
           $modules['heroes']['hero_combos'] .= "</table>";
         }
@@ -2836,7 +2840,7 @@ echo $output;
         <footer>
           <a href="https://dota2.com" target="_blank" rel="noopener">Dota 2</a> is a registered trademark of <a href="https://valvesoftware.com" target="_blank" rel="noopener">Valve Corporation.</a>
           Match replay data analyzed by <a href="https://opendota.com" target="_blank" rel="noopener">OpenDota</a>.<br />
-          Graphs are made with <a href="https://visjs.org" target="_blank" rel="noopener">vis.js</a> and <a href="https://chartjs.org" target="_blank" rel="noopener">chart.js</a>.<br />
+          Graphs are made with <a href="https://visjs.org" target="_blank" rel="noopener">vis.js</a> and <a href="http://www.chartjs.org/" target="_blank" rel="noopener">chart.js</a>.<br />
           Made by <a href="https://spectralalliance.ru" target="_blank" rel="noopener">Spectral Alliance</a>
           with support of <a href="https://vk.com/thecybersport" target="_blank" rel="noopener">TheCyberSport</a>. Klozi is a registered trademark of Grafensky.<br />
           <?php if (!empty($custom_footer)) echo $custom_footer."<br />";

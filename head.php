@@ -10,25 +10,6 @@ if(!function_exists("readline")) {
     }
 }
 
-# global settings
-  $lrg_version = array(1, 1, 1, -4, 1);
-
-# SQL Connection information
-  $lrg_sql_host  = "localhost";
-  $lrg_sql_user  = "root";
-  $lrg_sql_pass  = "";
-  $lrg_db_prefix = "d2_league";
-
-  if (file_exists(".steamapikey"))
-    $steamapikey  = trim(file_get_contents(".steamapikey"));
-  else {
-    touch(".steamapikey");
-    die("[F] Missing Steam API Key.\n".
-        "    Place your Steam API Key to `.steamapikey` file in LRG's working directory.\n".
-        "    If you don't have your Steam API Key, you can get one here:\n".
-        "    https://steamcommunity.com/dev/apikey \n");
-  }
-
 if(isset($argv)) {
     $options = getopt("l:m:d:f");
 
@@ -37,15 +18,27 @@ if(isset($argv)) {
     }
   }
 
+# global settings
 
-  if(!isset($init)) {
+  $lrg_version = array(1, 1, 1, -4, 1);
+
+  $settings = json_decode(file_get_contents("rg_settings.json"), true);
+  
+  $lrg_sql_host  = $settings['mysql_host'];
+  $lrg_sql_user  = $settings['mysql_user'];
+  $lrg_sql_pass  = $settings['mysql_pass'];
+  $lrg_db_prefix = $settings['mysql_prefix'];
+  $stemapikey   = $settings['steamapikey'];
+  
+  unset($settings);
+
+  if(isset($lrg_league_tag)) {
     $lrg_sql_db   = $lrg_db_prefix."_".$lrg_league_tag;
 
     $lg_settings = file_get_contents("leagues/".$lrg_league_tag.".json");
     $lg_settings = json_decode($lg_settings, true);
-
-    $lrg_use_cache = true;
   }
+  $lrg_use_cache = true;
 
   # module-wide functions
   require_once("modules/mod.versions.php");

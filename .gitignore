@@ -1,14 +1,20 @@
-.steamapikey
+# Working directories
+backups/
+cache/
+leagues/
+matchlists/
+reports/
+libs/
 
+# Settings container
+rg_settings.json
 
-output
-report.html
-test.html
-test*.php
-list.php
+# Temporary files
 tmp*
+
+# Testing files
+test/
+test*.php
+output
 gi_*
-test/*
-rg_report_out_settings_.php
-_.htaccess
-query.sql
+.htaccess

@@ -56,7 +56,11 @@ LRG is made of these modules:
 * `rg_analyzer.php` - Generates precached report file based on matchdata.
 * `rg_report` - Generates fancy (or not so fancy) report page for rg_analyzer output. Can be used on your webserver as well.
 
-Beforehand you should use `setup.php` to initialise settings (like database credentials or Steam API key) file and download dependencies.
+Beforehand you should use `setup.php` to initialise settings (like database credentials or Steam API key) file and download dependencies. Just run it and follow instructions.
+
+You can also use `setup.php` to update dependencies or settings. It has special parameters to skip unnecessary parts:
+* `-l` - skip downloading/updating libraries
+* `-s` - skip updating settings
 
 ### rg_init
 

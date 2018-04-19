@@ -1,6 +1,5 @@
 #!/bin/php
 <?php
-
 ini_set('memory_limit', '4000M');
 
 include_once("head.php");
@@ -16,6 +15,8 @@ $meta = json_decode(file_get_contents('res/metadata.json'), true);
 
 $stratz_old_api_endpoint = 3707179408;
 
+$opendota = new odota_api();
+
 if ($conn->connect_error) die("[F] Connection to SQL server failed: ".$conn->connect_error."\n");
 
 $lrg_input  = "matchlists/".$lrg_league_tag.".list";
@@ -29,9 +30,6 @@ $input_cont = str_replace("\r\n", "\n", $input_cont);
 $matches    = explode("\n", trim($input_cont));
 
 $matches = array_unique($matches);
-
-
-# https://api.opendota.com/api/matches/{match_id}
 
 $json = "";
 $t_matches = array ();
@@ -73,7 +71,7 @@ foreach ($matches as $match) {
     if (empty($match) || $match[0] == "#") continue;
 
     $query = $conn->query("SELECT matchid FROM matches WHERE matchid = ".$match.";");
-
+    
     if ($query->num_rows) {
         echo("[E] Match $match: Already have it in database, skipping\n");
         continue;
@@ -85,43 +83,47 @@ foreach ($matches as $match) {
       $matchdata = json_decode($json, true);
     } else {
       echo("[_] Match $match: Requesting OpenDota API\n");
-      $json = file_get_contents('https://api.opendota.com/api/matches/'.$match);
-      $matchdata = json_decode($json, true);
-      if ($matchdata == null) {
+      $matchdata = $opendota->match($match);
+      echo("[S] Match $match: Request OK\n");
+      if ($matchdata == null || !isset($matchdata['duration'])) {
           echo("[E] Match $match: Can't parse JSON from OpenDota, skipping\n");
+          //if (!isset($matchdata['duration'])) var_dump($matchdata);
           $failed_matches[sizeof($failed_matches)] = $match;
           continue;
       } else {
-        if($matchdata['duration'] < 300) {
-            echo("[ ] Match duration is less than 5 minutes, skipping...\n");
-            continue;
-        }
-        if($matchdata['radiant_score'] < 5 && $matchdata['dire_score'] < 5) {
-            echo("[ ] Match score is less than 5 - 5, skipping...\n");
-            continue;
-        }
-
-        $abandon = false;
-        for($i=0; $i<10; $i++) {
-            if($matchdata['players'][$i]['abandons']) {
-                $abandon = true;
-                break;
-            }
-        }
-
-        if($abandon) {
-            echo("[ ] Abandon detected, skipping...\n");
-            continue;
-        }
-
         if ($matchdata['players'][0]['lh_t'] == null) {
             echo("[E] Match $match: Replay is not parsed, skipping\n");
             $failed_matches[sizeof($failed_matches)] = $match;
             continue;
         }
       }
-      echo("[S] Match $match: Request OK\n");
+    }
 
+    if($matchdata['duration'] < 600) {
+        echo("[ ] Match duration is less than 10 minutes, skipping...\n");
+        // Initially it used to be 5 minutes, but sice a lot of stuff is hardly
+        // binded with 10 min mark, it's better to use 10 min as a benchmark.
+        continue;
+    }
+    if($matchdata['radiant_score'] < 5 && $matchdata['dire_score'] < 5) {
+        echo("[ ] Match score is less than 5 - 5, skipping...\n");
+        continue;
+    }
+
+    $abandon = false;
+    for($i=0; $i<10; $i++) {
+        if($matchdata['players'][$i]['abandons']) {
+            $abandon = true;
+            break;
+        }
+    }
+    
+    if($abandon) {
+        echo("[ ] Abandon detected, skipping...\n");
+        continue;
+    }
+    
+    if(!file_exists("cache/".$match.".json")) {
       if($matchdata['lobby_type'] != 1 && $matchdata['lobby_type'] != 2) {
         echo("[ ] Requesting Stratz for additional match data.\n");
 
@@ -177,8 +179,7 @@ foreach ($matches as $match) {
         for($i=0; $i<10; $i++) {
           if(!isset($matchdata['players'][$i]['account_id']) || $matchdata['players'][$i]['account_id'] === null) {
             $matchdata['players'][$i]['account_id'] = $stratz['results'][0]['players'][$i]['steamId'];
-            $json = file_get_contents("https://api.opendota.com/api/players/".$matchdata['players'][$i]['account_id']);
-            $tmp = json_decode($json, true);
+            $tmp = $opendota->player($matchdata['players'][$i]['account_id']);
 
             $matchdata['players'][$i]["name"] = $stratz['results'][0]['players'][$i]['name'];
             if(isset($tmp['profile']['personaname']))
@@ -192,19 +193,49 @@ foreach ($matches as $match) {
         unset($full_request);
       }
 
-      if($matchdata['human_players'] < 10 && ( !isset($matchdata['radiant_team']['team_id']) || !isset($matchdata['dire_team']['team_id']) )) {
+      if($lg_settings['main']['teams'] && (!isset($matchdata['radiant_team']['team_id']) || !isset($matchdata['dire_team']['team_id'])) ) {
           $json = file_get_contents("https://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/V001/?match_id=$match&key=$steamapikey");
           $tmp = json_decode($json, true);
           unset($json);
           if(!isset($matchdata['radiant_team']['team_id'])) {
-              $matchdata['radiant_team']['team_id'] = $tmp['result']['radiant_team_id'];
-              $matchdata['radiant_team']['name'] = $tmp['result']['radiant_name'];
-              $matchdata['radiant_team']['tag'] = generate_tag($tmp['result']['radiant_name']);
+            if(isset($tmp['result']['radiant_team_id'])) {
+              if(isset($t_teams[$tmp['result']['radiant_team_id']]) ) {
+                $matchdata['radiant_team']['team_id'] = $tmp['result']['radiant_team_id'];
+                $matchdata['radiant_team']['name'] = $t_teams[$tmp['result']['radiant_team_id']]['name'];
+                $matchdata['radiant_team']['tag'] = $t_teams[$tmp['result']['radiant_team_id']]['tag'];
+              } else {
+                $matchdata['radiant_team']['team_id'] = $tmp['result']['radiant_team_id'];
+                $matchdata['radiant_team']['name'] = $tmp['result']['radiant_name'];
+
+                $json = file_get_contents('https://api.steampowered.com/IDOTA2Match_570/GetTeamInfoByTeamID/v001/?key='.$steamapikey.'&teams_requested=1&start_at_team_id='.$matchdata['radiant_team']['team_id']);
+                $team = json_decode($json, true);
+
+                if( !isset($team['result']['teams'][0]['tag']) || $team['result']['teams'][0]['tag'] == null )
+                    $matchdata['radiant_team']['tag'] = generate_tag($tmp['result']['radiant_name']);
+                else
+                    $matchdata['radiant_team']['tag'] = $team['result']['teams'][0]['tag'];
+              }
+            }
           }
           if(!isset($matchdata['dire_team']['team_id'])) {
-              $matchdata['dire_team']['team_id'] = $tmp['result']['dire_team_id'];
-              $matchdata['dire_team']['name'] = $tmp['result']['dire_name'];
-              $matchdata['dire_team']['tag'] = generate_tag($tmp['result']['dire_name']);
+            if(isset($tmp['result']['dire_team_id'])) {
+              if(isset($t_teams[$tmp['result']['dire_team_id']]) ) {
+                $matchdata['dire_team']['team_id'] = $tmp['result']['dire_team_id'];
+                $matchdata['dire_team']['name'] = $t_teams[$tmp['result']['dire_team_id']]['name'];
+                $matchdata['dire_team']['tag'] = $t_teams[$tmp['result']['dire_team_id']]['tag'];
+              } else {
+                $matchdata['dire_team']['team_id'] = $tmp['result']['dire_team_id'];
+                $matchdata['dire_team']['name'] = $tmp['result']['dire_name'];
+
+                $json = file_get_contents('https://api.steampowered.com/IDOTA2Match_570/GetTeamInfoByTeamID/v001/?key='.$steamapikey.'&teams_requested=1&start_at_team_id='.$matchdata['dire_team']['team_id']);
+                $team = json_decode($json, true);
+
+                if( !isset($team['result']['teams'][0]['tag']) || $team['result']['teams'][0]['tag'] == null )
+                    $matchdata['dire_team']['tag'] = generate_tag($tmp['result']['radiant_name']);
+                else
+                    $matchdata['dire_team']['tag'] = $team['result']['teams'][0]['tag'];
+              }
+            }
           }
       }
 
@@ -239,9 +270,11 @@ foreach ($matches as $match) {
          $t_matches[$i]['comeback'] = $matchdata['comeback'];
     else $t_matches[$i]['comeback'] = $matchdata['throw'];
 
-    if ($lg_settings['main']['teams'] && isset($matchdata['radiant_team']) && isset($matchdata['dire_team'])) {
+    if ($lg_settings['main']['teams'] && (isset($matchdata['radiant_team']) || isset($matchdata['dire_team']))) {
       for($i=0; $i<2; $i++) {
         $tag = !$i ? 'dire_team' : 'radiant_team';
+        if(!isset($matchdata[$tag])) continue;
+
         $t_team_matches[] = array(
           "matchid" => $match,
           "teamid"  => $matchdata[$tag]['team_id'],

@@ -61,6 +61,7 @@ Beforehand you should use `setup.php` to initialise settings (like database cred
 You can also use `setup.php` to update dependencies or settings. It has special parameters to skip unnecessary parts:
 * `-l` - skip downloading/updating libraries
 * `-s` - skip updating settings
+* `-d` - skip directories check
 
 ### rg_init
 

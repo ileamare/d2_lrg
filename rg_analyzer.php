@@ -1956,9 +1956,10 @@ include_once("modules/mod.migrate_params.php");
       for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
         if(!isset($result["match_participants_teams"]))
           $result["match_participants_teams"][$row[0]] = array();
-        if($row[2] == true)
+        if($row[2])
           $result["match_participants_teams"][$row[0]]["radiant"] = $row[1];
-        else $result["match_participants_teams"][$row[0]]["dire"] = $row[1];
+        else
+          $result["match_participants_teams"][$row[0]]["dire"] = $row[1];
       }
 
       $query_res->free_result();

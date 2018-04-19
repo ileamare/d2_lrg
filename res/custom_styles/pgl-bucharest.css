@@ -1,0 +1,56 @@
+/* background-color: #192023;*/
+
+#header-image {
+  background-image: url('header_pgl_bucharest.jpg');
+}
+
+table.list td, table.pvp td {
+    background-color: #1e2927;
+}
+
+table.list .thead {
+    background-color: #286543 !important;
+}
+
+table.pvp tr td:first-child {
+  background-color: #26412a !important;
+}
+table.pvp .thead th  {
+  background-color: #286543 !important;
+}
+
+.section-header h2 {
+	color: #55e888;
+}
+
+.section-header h3 {
+	color: #72937d;
+}
+
+.content-section .content-header {
+	background-color: #286c3d;
+}
+
+
+.modal-content {
+    background-color: #286543;
+}
+.modal-text {
+    color: #fff;
+}
+.modal-sublevel {
+    color: #fff;
+    background-color: #729375;
+}
+.modal-header {
+    color: #fff;
+    background-color: #26412a;
+}
+
+.team-card .team-name, .player-card .player-name {
+  background-color: #286c3d;
+}
+
+.player-card .player-team {
+  background-color: #286543;
+}

@@ -1,0 +1,99 @@
+#header-image {
+  background-image: url('pics/header_wesg.jpg');
+}
+
+.content-section {
+    background-image: none;
+    background-color: #090d16;
+}
+
+.select-selectors {
+    background: #232d39;
+    color: #fff;
+}
+
+.selector-modules , .selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4 {
+    color: #00A2E4;
+    line-height: 32px;
+}
+.selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4 {
+    border-top-color: #00A2E4;
+}
+.content-cards .match-card, .content-cards .player-card {
+  border-bottom-color: #00A2E4;
+}
+
+table.list td, table.pvp td {
+    background-color: #232d39;
+}
+
+table.list .thead {
+    background-color: #005685 !important;
+}
+
+table.pvp tr td:first-child {
+  background-color: #233654 !important;
+}
+table.pvp .thead th  {
+  background-color: #1f3359 !important;
+}
+
+.section-header h2 {
+	color: #20aff2;
+}
+
+.section-header h3 {
+	color: #0c85ea;
+}
+
+.content-section .content-header {
+	background-color: #005685;
+}
+
+
+.modal-content {
+    background-color: #005685;
+}
+.modal-text {
+    color: #fff;
+}
+.modal-sublevel {
+    color: #fff;
+    background-color: #476194;
+}
+.modal-header {
+    color: #fff;
+    background-color: #232d39;
+}
+
+table.list, table.pvp {
+    border: 1px solid transparent;
+}
+table.list td, table.pvp td {
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    opacity: 0.6;
+}
+table.list tr:hover td, table.pvp tr:hover td {
+    background-color: #193c5c;
+}
+
+.team-card .team-name, .player-card .player-name {
+  background-color: #005685;
+}
+
+.player-card .player-team {
+  background-color: #1f3359;
+}
+
+.selector.active {
+    text-decoration: none;
+    border-bottom: 3px solid #00A2E4;
+    padding-bottom: 5px;
+}
+.selector {
+  padding: 0;
+  padding-bottom: 8px;
+  padding-top: 5px;
+  margin: 0 10px;
+}

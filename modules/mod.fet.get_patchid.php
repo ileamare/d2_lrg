@@ -107,6 +107,9 @@
         else if ($date < 1513641600) return 2602;
         else return 2603;
         break;
+      case 32:
+        if ($date < 1523672343) return 3200
+        else return 3201
       default:
         return $patch*100;
     }

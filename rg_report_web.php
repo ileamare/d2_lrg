@@ -271,14 +271,16 @@ if (!function_exists('locale_string')) {
 
     }
     if(isset($report['teams']) && isset($report['match_participants_teams'][$mid])) {
-      if(isset($report['teams'][ $report['match_participants_teams'][$mid]['radiant'] ]['name']))
+      if(isset($report['match_participants_teams'][$mid]['radiant']) &&
+         isset($report['teams'][ $report['match_participants_teams'][$mid]['radiant'] ]['name']))
         $team_radiant = "<a href=\"?league=".$leaguetag."&mod=teams-team_".$report['match_participants_teams'][$mid]['radiant']."_stats".
           (empty($linkvars) ? "" : "&$linkvars")
           ."\" title=\"".$report['teams'][ $report['match_participants_teams'][$mid]['radiant'] ]['name']."\">".
           $report['teams'][ $report['match_participants_teams'][$mid]['radiant'] ]['name'].
           " (".$report['teams'][ $report['match_participants_teams'][$mid]['radiant'] ]['tag'].")</a>";
       else $team_radiant = "Radiant";
-      if(isset($report['teams'][ $report['match_participants_teams'][$mid]['dire'] ]['name']))
+      if(isset($report['match_participants_teams'][$mid]['dire']) &&
+         isset($report['teams'][ $report['match_participants_teams'][$mid]['dire'] ]['name']))
         $team_dire = "<a href=\"?league=".$leaguetag."&mod=teams-team_".$report['match_participants_teams'][$mid]['dire']."_stats".
           (empty($linkvars) ? "" : "&$linkvars")
           ."\" title=\"".$report['teams'][ $report['match_participants_teams'][$mid]['dire'] ]['name']."\">".
@@ -529,6 +531,28 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
 
     $h3 = array_rand($report['random']);
 
+    if(isset($report['versions'])) {
+        foreach($report['versions'] as $k => $v) {
+            $mode = (int)($k/100);
+            if(!isset($meta['versions'][$mode])) {
+                for($i = $mode; $i > 0; $i--) {
+                    if(isset($meta['versions'][$i])) {
+                        break;
+                    }
+                }
+                $diff = $mode - $i;
+                $parent_patch = explode(".", $meta['versions'][$i]);
+                $parent_patch[1] = (int)$parent_patch[1] + $diff;
+                if ($parent_patch[1] < 10)
+                    $parent_patch[1] = "0".$parent_patch[1];
+                $meta['versions'][$mode] = implode(".", $parent_patch);
+            
+                unset($diff);
+                unset($parent_patch);
+            }
+        }
+    }
+    
   # overview
   if ( check_module("overview") ) {
     $modules['overview'] .= "<div class=\"content-text overview overview-head\">";
@@ -605,11 +629,15 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       $modules['overview'] .= "<div class=\"block-content\">";
 
       if( $report['matches_additional'][ $report['last_match']['mid'] ]['radiant_win'] ) {
-        if(isset($report['teams']) && isset($report['teams'][ $report['match_participants_teams'][ $report['last_match']['mid'] ]['radiant'] ]['name']))
+        if(isset($report['teams']) &&
+           isset($report['match_participants_teams'][ $report['last_match']['mid'] ]['radiant']) &&
+           isset($report['teams'][ $report['match_participants_teams'][ $report['last_match']['mid'] ]['radiant'] ]['name']))
           $mode = $report['teams'][ $report['match_participants_teams'][ $report['last_match']['mid'] ]['radiant'] ]['name'];
         else $mode = locale_string("radiant");
       } else {
-        if(isset($report['teams']) && isset($report['teams'][ $report['match_participants_teams'][ $report['last_match']['mid'] ]['dire'] ]['name']))
+        if(isset($report['teams']) &&
+           isset($report['match_participants_teams'][ $report['last_match']['mid'] ]['dire']) &&
+           isset($report['teams'][ $report['match_participants_teams'][ $report['last_match']['mid'] ]['dire'] ]['name']))
           $mode = $report['teams'][ $report['match_participants_teams'][ $report['last_match']['mid'] ]['dire'] ]['name'];
         else $mode = locale_string("dire");
       }
@@ -759,13 +787,19 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       $modules['overview'] .= "<div class=\"content-cards\">";
 
       if (isset($report['teams']) && $report['settings']['overview_last_match_winners']) {
-        $modules['overview'] .= "<h1>".locale_string("np_winner")."</h1>";
         if($report['matches_additional'][ $report['last_match']['mid'] ]['radiant_win']) {
-            $tid = $report['match_participants_teams'][ $report['last_match']['mid'] ]['radiant'];
+            if (isset( $report['match_participants_teams'][ $report['last_match']['mid'] ]['radiant'] ))
+                $tid = $report['match_participants_teams'][ $report['last_match']['mid'] ]['radiant'];
+            else $tid = 0;
         } else {
-            $tid = $report['match_participants_teams'][ $report['last_match']['mid'] ]['dire'];
+            if (isset($report['match_participants_teams'][ $report['last_match']['mid'] ]['dire']) )
+                $tid = $report['match_participants_teams'][ $report['last_match']['mid'] ]['dire'];
+            else $tid = 0;
         }
-        $modules['overview'] .= team_card($tid);
+        if ($tid) {
+            $modules['overview'] .= "<h1>".locale_string("np_winner")."</h1>";
+            $modules['overview'] .= team_card($tid);
+        }
         unset($tid);
       }
 
@@ -1540,7 +1574,14 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           $modules['heroes']['hero_combo_graph'] .= "<div id=\"hero-combos-graph\" class=\"graph\"></div><script type=\"text/javascript\">";
 
           $nodes = "";
+
           $counter = 0; $endp = sizeof($report['pickban'])*0.25;
+
+          uasort($report['pickban'], function($a, $b) {
+            if($a['matches_total'] == $b['matches_total']) return 0;
+            else return ($a['matches_total'] < $b['matches_total']) ? 1 : -1;
+          });
+
           foreach($report['pickban'] as $hid => $hero) {
             if($counter++ >= $endp && !has_pair($hid, $report['hero_combos_graph'])) {
               //if($counter < $endp) $counter++;
@@ -2695,7 +2736,11 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
          if(file_exists("favicon.ico")) echo "<link rel=\"shortcut icon\" href=\"favicon.ico\" />";
       ?>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-      <title>LRG<?php if (!empty($leaguetag)) echo " - ".$report['league_name']; ?></title>
+      <title><?php
+        echo $instance_title;
+        if (!empty($leaguetag))
+            echo " - ".$report['league_name'];
+        ?></title>
       <link href="res/valve_mimic.css" rel="stylesheet" type="text/css" />
       <link href="res/reports.css" rel="stylesheet" type="text/css" />
       <?php
@@ -2768,7 +2813,7 @@ echo $output;
           </div>
       <?php } else { ?>
         <div id="header-image" class="section-header">
-          <h1>League Report Generator</h1>
+          <h1><?php echo  $instance_name; ?></h1>
         </div>
         <div id="main-section" class="content-section">
           <?php

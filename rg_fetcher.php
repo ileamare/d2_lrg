@@ -7,15 +7,20 @@ include_once("modules/fetcher/get_patchid.php");
 include_once("modules/functions/migrate_params.php");
 include_once("modules/functions/generate_tag.php");
 
+require_once("libs/simple-opendota-php/simple_opendota.php");
+
 echo("\nInitialising...\n");
 
 #$file_query = "";
 $conn = new mysqli($lrg_sql_host, $lrg_sql_user, $lrg_sql_pass, $lrg_sql_db);
 $meta = json_decode(file_get_contents('res/metadata.json'), true);
 
-$stratz_old_api_endpoint = 3707179408;
+//$stratz_old_api_endpoint = 3707179408;
 
-$opendota = new odota_api();
+if(!empty($odapikey))
+  $opendota = new odota_api(false, "", 0, $odapikey);
+else
+  $opendota = new odota_api();
 
 if ($conn->connect_error) die("[F] Connection to SQL server failed: ".$conn->connect_error."\n");
 

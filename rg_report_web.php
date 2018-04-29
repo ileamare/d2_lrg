@@ -2730,7 +2730,9 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
               echo "<script type=\"text/javascript\" src=\"res/dependencies/Chart.bundle.min.js\"></script>";
             }
             if($use_visjs) {
-              echo "<script type=\"text/javascript\" src=\"res/dependencies/vis.js\"></script>";
+              echo "<script type=\"text/javascript\" src=\"res/dependencies/vis.min.js\"></script>";
+              echo "<script type=\"text/javascript\" src=\"res/dependencies/vis-network.min.js\"></script>";
+              echo "<link href=\"res/dependencies/vis.min.css\" rel=\"stylesheet\" type=\"text/css\" />";
               echo "<link href=\"res/dependencies/vis-network.min.css\" rel=\"stylesheet\" type=\"text/css\" />";
             }
 

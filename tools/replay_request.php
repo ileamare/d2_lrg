@@ -9,7 +9,11 @@ if(isset($options['f'])) {
 
 $input_cont = file_get_contents($filename) or die("[F] Error while opening file.\n");
 $input_cont = str_replace("\r\n", "\n", $input_cont);
-$opendota = new odota_api(true);
+
+if(!empty($odapikey))
+  $opendota = new odota_api(true, "", 0, $odapikey);
+else
+  $opendota = new odota_api(true);
 
 $matches    = explode("\n", trim($input_cont));
 
@@ -17,7 +21,7 @@ $matches = array_unique($matches);
 
 foreach ($matches as $match) {
     if ($match[0] == "#") continue;
-    
+
     $opendota->request_match($match);
 }
 

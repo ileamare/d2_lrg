@@ -1,17 +1,6 @@
 <?php
 require_once("modules/functions/versions.php");
-require_once("libs/simple-opendota-php/simple_opendota.php");
-
-if(!function_exists("readline")) {
-    function readline($prompt = null){
-        if($prompt){
-            echo $prompt;
-        }
-        $fp = fopen("php://stdin","r");
-        $line = rtrim(fgets($fp, 1024));
-        return $line;
-    }
-}
+require_once("modules/functions/readline.php");
 
 if(isset($argv)) {
     $options = getopt("l:m:d:f");
@@ -45,6 +34,7 @@ if(isset($argv)) {
   $lrg_sql_pass  = $settings['mysql_pass'];
   $lrg_db_prefix = $settings['mysql_prefix'];
   $steamapikey   = $settings['steamapikey'];
+  $odapikey      = $settings['odapikey'];
 
   unset($settings);
 

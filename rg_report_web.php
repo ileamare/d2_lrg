@@ -1,7 +1,8 @@
 <?php
 require_once("rg_report_out_settings.php");
-require_once("modules/mod.versions.php");
-require_once("modules/mod.locale_strings.php");
+require_once("modules/functions/versions.php");
+require_once("modules/functions/locale_strings.php");
+require_once("modules/functions/get_language_code_iso6391.php");
 
 $lg_version = array( 1, 1, 2, 0, 0 );
 
@@ -29,36 +30,6 @@ $visjs_settings = "physics:{
  }";
 
 /* FUNCTIONS */  {
-function GetLanguageCodeISO6391() {
-    $hi_code = "";
-    $hi_quof = 0;
-    $langs = explode(",",$_SERVER['HTTP_ACCEPT_LANGUAGE']);
-    foreach($langs as $lang) {
-        if(strpos($lang, ";"))
-            list($codelang, $quoficient) = explode(";",$lang);
-        else
-            list($codelang, $quoficient) = [ $lang, NULL ];
-
-        if($quoficient == NULL) $quoficient = 1;
-        if($quoficient > $hi_quof) {
-            $hi_code = substr($codelang,0,2);
-            $hi_quof = $quoficient;
-        }
-    }
-    return $hi_code;
-}
-
-if (!function_exists('locale_string')) {
-    function locale_string($string_id, $vars=array()) {
-      global $strings;
-      global $locale;
-
-      if(isset($locale) && isset($strings[$locale][$string_id]))
-        return $strings[$locale][$string_id];
-      return $strings['en'][$string_id];
-    }
-  }
-
   function has_pair($hid, $pairs) {
     foreach($pairs as $pair) {
       if(!isset($keys)) $keys = array_keys($pair);
@@ -546,13 +517,13 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                 if ($parent_patch[1] < 10)
                     $parent_patch[1] = "0".$parent_patch[1];
                 $meta['versions'][$mode] = implode(".", $parent_patch);
-            
+
                 unset($diff);
                 unset($parent_patch);
             }
         }
     }
-    
+
   # overview
   if ( check_module("overview") ) {
     $modules['overview'] .= "<div class=\"content-text overview overview-head\">";

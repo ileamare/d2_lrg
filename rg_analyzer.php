@@ -3,8 +3,8 @@ ini_set('memory_limit', '4000M');
 
 include_once("head.php");
 
-include_once("modules/mod.utf8ize.php");
-include_once("modules/mod.migrate_params.php");
+include_once("modules/functions/utf8ize.php");
+include_once("modules/functions/migrate_params.php");
 
 
   echo("\nConnecting to database...\n");

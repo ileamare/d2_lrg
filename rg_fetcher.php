@@ -3,9 +3,9 @@
 ini_set('memory_limit', '4000M');
 
 include_once("head.php");
-include_once("modules/mod.fet.get_patchid.php");
-include_once("modules/mod.migrate_params.php");
-include_once("modules/mod.generate_tag.php");
+include_once("modules/fetcher/get_patchid.php");
+include_once("modules/functions/migrate_params.php");
+include_once("modules/functions/generate_tag.php");
 
 echo("\nInitialising...\n");
 
@@ -71,7 +71,7 @@ foreach ($matches as $match) {
     if (empty($match) || $match[0] == "#") continue;
 
     $query = $conn->query("SELECT matchid FROM matches WHERE matchid = ".$match.";");
-    
+
     if ($query->num_rows) {
         echo("[E] Match $match: Already have it in database, skipping\n");
         continue;
@@ -117,12 +117,12 @@ foreach ($matches as $match) {
             break;
         }
     }
-    
+
     if($abandon) {
         echo("[ ] Abandon detected, skipping...\n");
         continue;
     }
-    
+
     if(!file_exists("cache/".$match.".json")) {
       if($matchdata['lobby_type'] != 1 && $matchdata['lobby_type'] != 2) {
         echo("[ ] Requesting Stratz for additional match data.\n");

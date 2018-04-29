@@ -1,5 +1,5 @@
 <?php
-require_once("modules/mod.versions.php");
+require_once("modules/functions/versions.php");
 require_once("libs/simple-opendota-php/simple_opendota.php");
 
 if(!function_exists("readline")) {
@@ -18,7 +18,7 @@ if(isset($argv)) {
 
     if(isset($options['l'])) {
       $lrg_league_tag = $options['l'];
-      
+
       if( is_array($lrg_league_tag) ) {
         $tmp_len = 0;
         foreach ($lrg_league_tag as $val) {
@@ -39,15 +39,15 @@ if(isset($argv)) {
   $lrg_version = array(1, 1, 1, -4, 1);
 
   $settings = json_decode(file_get_contents("rg_settings.json"), true);
-  
+
   $lrg_sql_host  = $settings['mysql_host'];
   $lrg_sql_user  = $settings['mysql_user'];
   $lrg_sql_pass  = $settings['mysql_pass'];
   $lrg_db_prefix = $settings['mysql_prefix'];
   $steamapikey   = $settings['steamapikey'];
-  
+
   unset($settings);
-  
+
   if(isset($lrg_league_tag) && file_exists("leagues/".$lrg_league_tag.".json")) {
     $lrg_sql_db   = $lrg_db_prefix."_".$lrg_league_tag;
 

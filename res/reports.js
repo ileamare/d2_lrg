@@ -26,7 +26,7 @@ function sortTable(n, table_id) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById(table_id);
   switching = true;
-  dir = "asc";
+  dir = "desc";
   while (switching) {
     switching = false;
     rows = table.getElementsByTagName("TR");
@@ -52,8 +52,8 @@ function sortTable(n, table_id) {
       switching = true;
       switchcount ++;
     } else {
-      if (switchcount == 0 && dir == "asc") {
-        dir = "desc";
+      if (switchcount == 0 && dir == "desc") {
+        dir = "asc";
         switching = true;
       }
     }
@@ -64,7 +64,7 @@ function sortTableNum(n, table_id) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById(table_id);
   switching = true;
-  dir = "asc";
+  dir = "desc";
   while (switching) {
     switching = false;
     rows = table.getElementsByTagName("TR");
@@ -94,8 +94,8 @@ function sortTableNum(n, table_id) {
       switching = true;
       switchcount ++;
     } else {
-      if (switchcount == 0 && dir == "asc") {
-        dir = "desc";
+      if (switchcount == 0 && dir == "desc") {
+        dir = "asc";
         switching = true;
       }
     }
@@ -106,7 +106,7 @@ function sortTableValue(n, table_id) {
   var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   table = document.getElementById(table_id);
   switching = true;
-  dir = "asc";
+  dir = "desc";
   while (switching) {
     switching = false;
     rows = table.getElementsByTagName("TR");
@@ -132,8 +132,8 @@ function sortTableValue(n, table_id) {
       switching = true;
       switchcount ++;
     } else {
-      if (switchcount == 0 && dir == "asc") {
-        dir = "desc";
+      if (switchcount == 0 && dir == "desc") {
+        dir = "asc";
         switching = true;
       }
     }

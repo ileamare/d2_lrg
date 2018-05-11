@@ -1529,7 +1529,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
             (compare_ver($report['ana_version'], array(1,1,0,-3,5)) >= 0 ?
                 $report['settings']['limiter_combograph']+1
                 : $report['settings']['limiter']+1),
-            "per" => "25%"
+            "per" => "35%"
         ];
 
         $modules['heroes']['hero_combo_graph'] .= "<div class=\"content-text\">".locale_string("desc_meta_graph", $locale_settings)."</div>";
@@ -1546,7 +1546,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
 
           $nodes = "";
 
-          $counter = 0; $endp = sizeof($report['pickban'])*0.25;
+          $counter = 0; $endp = sizeof($report['pickban'])*0.35;
 
           uasort($report['pickban'], function($a, $b) {
             if($a['matches_total'] == $b['matches_total']) return 0;
@@ -1561,10 +1561,15 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                 continue;
             }
             //if(!isset($report['pickban'][$hid])) continue;
-            $nodes .= "{id: $hid, value: ".$hero['matches_picked'].
+            $nodes .= "{id: $hid, value: ".$hero['matches_total'].
               ", label: '".addslashes($meta['heroes'][$hid]['name'])."'".
+              ", title: '".addslashes($meta['heroes'][$hid]['name']).", ".
+              $hero['matches_total']." ".locale_string("total").", ".
+              $hero['matches_picked']." ".locale_string("matches_picked").", ".
+              number_format($hero['winrate_picked']*100, 1)." ".locale_string("winrate_picked")."'".
               ", shape:'circularImage', image: 'res/heroes/".$meta['heroes'][$hid]['tag'].".png'".
-              "},";
+              ", color:{ border:'rgba(".number_format(255-255*$hero['winrate_picked'], 0).",124,".
+              number_format(255*$hero['winrate_picked'], 0).")' }},";
           }
           $modules['heroes']['hero_combo_graph'] .= "var nodes = [".$nodes."];";
 
@@ -1953,7 +1958,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         unset($pvp);
       }
     }
-    if (isset($report['players_combo_graph']) && $report['settings']['players_combo_graph']) {
+    if (isset($report['players_combo_graph']) && $report['settings']['players_combo_graph'] && isset($report)) {
       $modules['players']['players_combo_graph'] = "";
 
       if (check_module($parent."players_combo_graph")) {
@@ -1966,7 +1971,11 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           $nodes = "";
           foreach($report['players'] as $pid => $player) {
             if (!has_pair($pid, $report['players_combo_graph'])) continue;
-            $nodes .= "{id: $pid, value: ".$report['players_additional'][$pid]['matches'].", label: '".addslashes($player)."'},";
+            $wr = $report['players_additional'][$pid]['won'] / $report['players_additional'][$pid]['matches'];
+            $wr = 0.5;
+            $nodes .= "{id: $pid, value: ".$report['players_additional'][$pid]['matches'].", label: '".addslashes($player)."'".
+              ", color:{ border:'rgba(".number_format(255-255*$wr, 0).",124,".
+              number_format(255*$wr, 0).")' }},";
           }
           $modules['players']['players_combo_graph'] .= "var nodes = [".$nodes."];";
 
@@ -2398,10 +2407,19 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
             foreach($meta['heroes'] as $hid => $hero) {
               if(!has_pair($hid, $report['teams'][$tid]['hero_graph'])) continue;
               if(!isset($report['teams'][$tid]['pickban'][$hid])) continue;
-              $nodes .= "{id: $hid, value: ".$report['teams'][$tid]['pickban'][$hid]['matches_picked'].
+              if($report['teams'][$tid]['pickban'][$hid]['matches_picked'])
+                $wr = $report['teams'][$tid]['pickban'][$hid]['wins_picked'] / $report['teams'][$tid]['pickban'][$hid]['matches_picked'];
+              else
+                $wr = 0;
+              $nodes .= "{id: $hid, value: ".$report['teams'][$tid]['pickban'][$hid]['matches_total'].
                 ", label: '".addslashes($hero['name'])."'".
-                ", shape:'circularImage', image: 'res/heroes/".$hero['tag'].".png'".
-                "},";
+                ", title: '".addslashes($hero['name']).", ".
+                $report['teams'][$tid]['pickban'][$hid]['matches_total']." ".locale_string("total").", ".
+                $report['teams'][$tid]['pickban'][$hid]['matches_picked']." ".locale_string("matches_picked").", ".
+                number_format($wr*100, 1)." ".locale_string("winrate_picked")."'".
+                ", shape:'circularImage', image: 'res/heroes/".$meta['heroes'][$hid]['tag'].".png'".
+                ", color:{ border:'rgba(".number_format(255-255*$wr, 0).",124,".
+                number_format(255*$wr, 0).")' }},";
             }
             $modules['teams']["team_".$tid."_stats"]['hero_combo_graph'] .= "var nodes = [".$nodes."];";
 

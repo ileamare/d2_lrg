@@ -81,6 +81,7 @@ Fetches data for matches in matchlist.
 
 Parameters:
 * `-l / --league=` - required, the tag of your database, league and report file
+* `-K` - ignore OpenDota API key
 
 ### rg_analyzer
 
@@ -88,6 +89,7 @@ Analyzes and requests data, forms report file.
 
 Parameters:
 * `-l / --league=` - required, the tag of your database, league and report file
+* `-K` - ignore OpenDota API key
 
 ### rg_report_web
 

@@ -3,7 +3,7 @@ require_once("modules/functions/versions.php");
 require_once("modules/functions/readline.php");
 
 if(isset($argv)) {
-    $options = getopt("l:m:d:f");
+    $options = getopt("l:m:d:fK");
 
     if(isset($options['l'])) {
       $lrg_league_tag = $options['l'];
@@ -20,6 +20,9 @@ if(isset($argv)) {
         $lrg_league_tag = $tmp_val;
         unset($tmp_val);
       }
+    }
+    if(isset($options['K'])) {
+        $ignore_api_key = true;
     }
   }
 

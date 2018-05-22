@@ -17,7 +17,7 @@ $meta = json_decode(file_get_contents('res/metadata.json'), true);
 
 //$stratz_old_api_endpoint = 3707179408;
 
-if(!empty($odapikey))
+if(!empty($odapikey) && !isset($ignore_api_key))
   $opendota = new odota_api(false, "", 0, $odapikey);
 else
   $opendota = new odota_api();

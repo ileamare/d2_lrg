@@ -6,7 +6,8 @@
     "records":false,
     "players":false,
     "matchlist":false,
-    "avg_limit": 10
+    "avg_limit": 10,
+    "hero_positions_matches" : false
   },
   "web": {
     "custom_style": "bots",

@@ -7,13 +7,17 @@ if(isset($options['f'])) {
   $filename = $options['f'];
 } else die();
 
+$settings = json_decode(file_get_contents("rg_settings.json"), true);
+
 $input_cont = file_get_contents($filename) or die("[F] Error while opening file.\n");
 $input_cont = str_replace("\r\n", "\n", $input_cont);
 
-if(!empty($odapikey))
-  $opendota = new odota_api(true, "", 0, $odapikey);
+if(!empty($settings['odapikey']))
+  $opendota = new odota_api(true, "", 0, $settings['odapikey']);
 else
   $opendota = new odota_api(true);
+
+unset($settings);
 
 $matches    = explode("\n", trim($input_cont));
 

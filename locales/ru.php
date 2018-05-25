@@ -68,6 +68,7 @@
     "stage_num_1" => "Стадия",
     "stage_num_2" => "",
     "draft" => "Драфт",
+    "vsdraft" => "Драфт против",
     "hero_positions" => "Статистика позиций",
     "hero_sides" => "Стороны",
     "hero_pairs" => "Пары",
@@ -177,6 +178,9 @@
     "outcome_impact" => "Влияние на исход",
     "outcome_impact_s" => "ВНИ",
     "contest_rate" => "Востребованность",
+
+    "pair_expectation" => "Ожидание матчей",
+    "pair_deviation" => "Отклонение",
 
     "matches_s" => "Мтч",
     "winrate_s" => "Пбд",

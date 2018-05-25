@@ -67,6 +67,7 @@
     "stage_num_1" => "Stage",
     "stage_num_2" => "of",
     "draft" => "Draft",
+    "vsdraft" => "Draft against",
     "hero_positions" => "Positions stats",
     "hero_sides" => "Factions",
     "hero_pairs" => "Pairs",
@@ -175,6 +176,9 @@
     "contest_rate" => "Contest Rate",
     "outcome_impact" => "Outcome Impact",
     "outcome_impact_s" => "OI",
+
+    "pair_expectation" => "Expected matches",
+    "pair_deviation" => "Deviation",
 
     "matches_s" => "Mtchs",
     "winrate_s" => "WR",

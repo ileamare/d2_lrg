@@ -60,6 +60,8 @@
     "pickban" => "Picks and bans",
     "picks" => "Picks",
     "bans" => "Bans",
+    "picks_s" => "Picks",
+    "bans_s" => "Bans",
     "pick_stages" => "Pick stages",
     "ban_stages" => "Ban stages",
     "stage_num_1" => "Stage",
@@ -168,9 +170,11 @@
     "matches" => "Matches",
     "matches_total" => "Matches",
     "matches_picked" => "Picked",
-    "winrate_picked" => "Winrate (picked)",
     "matches_banned" => "Banned",
-    "winrate_banned" => "Winrate (banned)",
+
+    "contest_rate" => "Contest Rate",
+    "outcome_impact" => "Outcome Impact",
+    "outcome_impact_s" => "OI",
 
     "matches_s" => "Mtchs",
     "winrate_s" => "WR",

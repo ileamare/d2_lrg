@@ -1157,14 +1157,16 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         unset($oi);
         $modules['heroes']['pickban'] .= "</table>";
 
-        $modules['heroes']['pickban'] .= "<div class=\"content-text\"><h1>".locale_string("heroes_uncontested").": ".sizeof($heroes)."</h1><div class=\"hero-list\">";
+        if(sizeof($heroes)) {
+          $modules['heroes']['pickban'] .= "<div class=\"content-text\"><h1>".locale_string("heroes_uncontested").": ".sizeof($heroes)."</h1><div class=\"hero-list\">";
 
-        foreach($heroes as $hero) {
-          $modules['heroes']['pickban'] .= "<div class=\"hero\"><img src=\"res/heroes/".$hero['tag'].
-              ".png\" alt=\"".$hero['tag']."\" /><span class=\"hero_name\">".
-              $hero['name']."</span></div>";
+          foreach($heroes as $hero) {
+            $modules['heroes']['pickban'] .= "<div class=\"hero\"><img src=\"res/heroes/".$hero['tag'].
+                ".png\" alt=\"".$hero['tag']."\" /><span class=\"hero_name\">".
+                $hero['name']."</span></div>";
+          }
+          $modules['heroes']['pickban'] .= "</div></div>";
         }
-        $modules['heroes']['pickban'] .= "</div></div>";
         $modules['heroes']['pickban'] .= "<div class=\"content-text\">".locale_string("desc_heroes_pickban")."</div>";
       }
     }
@@ -1256,18 +1258,18 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                       "<th onclick=\"sortTable(0,'heroes-draft');\">".locale_string("hero")."</th>".
                       "<th onclick=\"sortTableNum(1,'heroes-draft');\">".locale_string("matches_s")."</th>".
                       "<th onclick=\"sortTableNum(2,'heroes-draft');\">".locale_string("outcome_impact_s")."</th>".
-                      "<th onclick=\"sortTableNum(3,'heroes-draft');\">".locale_string("picks")."</th>".
+                      "<th onclick=\"sortTableNum(3,'heroes-draft');\">".locale_string("picks_s")."</th>".
                       "<th onclick=\"sortTableNum(4,'heroes-draft');\">".locale_string("winrate_s")."</th>".
-                      "<th onclick=\"sortTableNum(5,'heroes-draft');\">".locale_string("bans")."</th>".
+                      "<th onclick=\"sortTableNum(5,'heroes-draft');\">".locale_string("bans_s")."</th>".
                       "<th onclick=\"sortTableNum(6,'heroes-draft');\">".locale_string("winrate_s")."</th>";
 
         if($max_stage > 1)
           for($i=1; $i<=$max_stage; $i++) {
             $modules['heroes']['draft'] .= "<th class=\"separator\" colspan=\"5\">".locale_string("stage")." $i</th>";
             $heroline .= "<th onclick=\"sortTableNum(".(1+5*$i+1).",'heroes-draft');\" class=\"separator\">".locale_string("outcome_impact_s")."</th>".
-                        "<th onclick=\"sortTableNum(".(1+5*$i+2).",'heroes-draft');\">".locale_string("picks")."</th>".
+                        "<th onclick=\"sortTableNum(".(1+5*$i+2).",'heroes-draft');\">".locale_string("picks_s")."</th>".
                         "<th onclick=\"sortTableNum(".(1+5*$i+3).",'heroes-draft');\">".locale_string("winrate_s")."</th>".
-                        "<th onclick=\"sortTableNum(".(1+5*$i+4).",'heroes-draft');\">".locale_string("bans")."</th>".
+                        "<th onclick=\"sortTableNum(".(1+5*$i+4).",'heroes-draft');\">".locale_string("bans_s")."</th>".
                         "<th onclick=\"sortTableNum(".(1+5*$i+5).",'heroes-draft');\">".locale_string("winrate_s")."</th>";
           }
         $modules['heroes']['draft'] .= "</tr>".$heroline."</tr>";

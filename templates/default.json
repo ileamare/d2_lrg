@@ -61,6 +61,7 @@
       "avg" : true,
       "pickbans" : true,
       "draft": true,
+      "draft_against": true,
       "heropos" : true,
       "hero_graph" : true,
       "pairs": true,

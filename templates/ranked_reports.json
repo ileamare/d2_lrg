@@ -7,7 +7,9 @@
     "players":false,
     "matchlist":false,
     "avg_limit": 10,
-    "hero_positions_matches" : false
+    "hero_positions_matches" : false,
+    "hero_pairs_matches":false,
+    "hero_triplets_matches":false
   },
   "web": {
     "custom_style": "bots",

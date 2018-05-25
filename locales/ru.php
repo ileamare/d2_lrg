@@ -175,6 +175,9 @@
     "matches_picked" => "Выбран",
     "matches_banned" => "Запрещён",
 
+    "winrate_picked" => "Побед в пике",
+    "winrate_banned" => "Побед в бане",
+
     "outcome_impact" => "Влияние на исход",
     "outcome_impact_s" => "ВНИ",
     "contest_rate" => "Востребованность",

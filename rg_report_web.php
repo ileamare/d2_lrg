@@ -856,9 +856,9 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                                                 <th>".locale_string("hero")."</th>
                                                 <th>".locale_string("matches_total")."</th>
                                                 <th>".locale_string("matches_picked")."</th>
-                                                <th>".locale_string("winrate_picked")."</th>
+                                                <th>".locale_string("winrate")."</th>
                                                 <th>".locale_string("matches_banned")."</th>
-                                                <th>".locale_string("winrate_banned")."</th>
+                                                <th>".locale_string("winrate")."</th>
                                               </tr>";
 
         $workspace = $report['pickban'];
@@ -2550,7 +2550,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                 ", title: '".addslashes($hero['name']).", ".
                 $report['teams'][$tid]['pickban'][$hid]['matches_total']." ".locale_string("total").", ".
                 $report['teams'][$tid]['pickban'][$hid]['matches_picked']." ".locale_string("matches_picked").", ".
-                number_format($wr*100, 1)." ".locale_string("winrate_picked")."'".
+                number_format($wr*100, 1)." ".locale_string("winrate")."'".
                 ", shape:'circularImage', image: 'res/heroes/".$meta['heroes'][$hid]['tag'].".png'".
                 ", color:{ border:'rgba(".number_format(255-255*$wr, 0).",124,".
                 number_format(255*$wr, 0).")' }},";

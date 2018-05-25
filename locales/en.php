@@ -173,6 +173,9 @@
     "matches_picked" => "Picked",
     "matches_banned" => "Banned",
 
+    "winrate_picked" => "Winrate picked",
+    "winrate_banned" => "Winrate banned",
+
     "contest_rate" => "Contest Rate",
     "outcome_impact" => "Outcome Impact",
     "outcome_impact_s" => "OI",

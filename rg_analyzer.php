@@ -1,11 +1,9 @@
 <?php
-ini_set('memory_limit', '4000M');
-
 include_once("head.php");
 
 include_once("modules/functions/utf8ize.php");
 include_once("modules/functions/migrate_params.php");
-
+include_once("modules/functions/calc_median.php");
 
   echo("\nConnecting to database...\n");
 
@@ -106,16 +104,84 @@ include_once("modules/functions/migrate_params.php");
       $query_res->free_result();
     } while($conn->next_result());
 
+  }
+
+  //if ($lg_settings['ana']['pickban']) {
+    # pick/ban heroes stats
+
+    $sql = "SELECT draft.hero_id hero_id, SUM(1) matches, SUM(NOT matches.radiantWin XOR draft.is_radiant)/SUM(1) winrate
+    	   FROM draft JOIN matches ON draft.matchid = matches.matchid
+    	   WHERE is_pick = true
+    	   GROUP BY draft.hero_id;";
+
+    $result["pickban"] = array();
+
+    if ($conn->multi_query($sql) === TRUE);
+    else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
+
+    $query_res = $conn->store_result();
+
+    for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
+      $result["pickban"][$row[0]] = array (
+        "matches_total"   => $row[1],
+        "matches_picked"  => $row[1],
+        "winrate_picked"  => $row[2],
+        "matches_banned"  => 0,
+        "winrate_banned"  => 0
+      );
+    }
+
+    $query_res->free_result();
+
+    $sql = "SELECT draft.hero_id hero_id, SUM(1) matches, SUM(NOT matches.radiantWin XOR draft.is_radiant)/SUM(1) winrate
+    	   FROM draft JOIN matches ON draft.matchid = matches.matchid
+    	   WHERE is_pick = false
+    	   GROUP BY draft.hero_id
+    ORDER BY winrate DESC, matches DESC;";
+
+    if ($conn->multi_query($sql) === TRUE);
+    else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
+
+    $query_res = $conn->store_result();
+
+    for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
+      if(isset($result["pickban"][$row[0]])) {
+        $result["pickban"][$row[0]] = array (
+          "matches_total"   => ($result["pickban"][$row[0]]["matches_total"]+$row[1]),
+          "matches_picked"  => $result["pickban"][$row[0]]["matches_picked"],
+          "winrate_picked"  => $result["pickban"][$row[0]]["winrate_picked"],
+          "matches_banned"  => $row[1],
+          "winrate_banned"  => $row[2]
+        );
+      } else
+        $result["pickban"][$row[0]] = array (
+          "matches_total"   => $row[1],
+          "matches_picked"  => 0,
+          "winrate_picked"  => 0,
+          "matches_banned"  => $row[1],
+          "winrate_banned"  => $row[2]
+        );
+    }
+
+    $query_res->free_result();
+
+    $picks = [];
+    foreach($result["pickban"] as $hero)
+      $picks[] = $result["pickban"]["matches_total"];
+    $median = calculate_median($picks);
+    unset($picks);
     # sometimes getting all the pairs will be too much
     # using 3.5% to 10% of total matches as limiter
     # 10% would be too much, while 3% can be not enough
-    $limiter = (int)($result['random']['matches_total']*0.028);
-    $limiter_lower = (int)($result['random']['matches_total']*0.005);
-    $limiter_graph = (int)ceil($result['random']['matches_total']*0.037);
+    $limiter = (int)ceil($median/4);
+    $limiter_lower = (int)ceil($median/16);
+    $limiter_graph = (int)ceil($median/2.5);
+
+    unset($median);
 
     $limiter = $limiter>1 ? $limiter : 1;
     $limiter_lower = $limiter_lower>1 ? $limiter_lower : 1;
-  }
+  //}
 
   if ($lg_settings['ana']['records']) {
     # records
@@ -654,67 +720,6 @@ include_once("modules/functions/migrate_params.php");
     }
   }
 
-  //if ($lg_settings['ana']['pickban']) {
-    # pick/ban heroes stats
-
-    $sql = "SELECT draft.hero_id hero_id, SUM(1) matches, SUM(NOT matches.radiantWin XOR draft.is_radiant)/SUM(1) winrate
-    	   FROM draft JOIN matches ON draft.matchid = matches.matchid
-    	   WHERE is_pick = true
-    	   GROUP BY draft.hero_id;";
-
-    $result["pickban"] = array();
-
-    if ($conn->multi_query($sql) === TRUE);
-    else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
-
-    $query_res = $conn->store_result();
-
-    for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
-      $result["pickban"][$row[0]] = array (
-        "matches_total"   => $row[1],
-        "matches_picked"  => $row[1],
-        "winrate_picked"  => $row[2],
-        "matches_banned"  => 0,
-        "winrate_banned"  => 0
-      );
-    }
-
-    $query_res->free_result();
-
-    $sql = "SELECT draft.hero_id hero_id, SUM(1) matches, SUM(NOT matches.radiantWin XOR draft.is_radiant)/SUM(1) winrate
-    	   FROM draft JOIN matches ON draft.matchid = matches.matchid
-    	   WHERE is_pick = false
-    	   GROUP BY draft.hero_id
-    ORDER BY winrate DESC, matches DESC;";
-
-    if ($conn->multi_query($sql) === TRUE);
-    else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
-
-    $query_res = $conn->store_result();
-
-    for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
-      if(isset($result["pickban"][$row[0]])) {
-        $result["pickban"][$row[0]] = array (
-          "matches_total"   => ($result["pickban"][$row[0]]["matches_total"]+$row[1]),
-          "matches_picked"  => $result["pickban"][$row[0]]["matches_picked"],
-          "winrate_picked"  => $result["pickban"][$row[0]]["winrate_picked"],
-          "matches_banned"  => $row[1],
-          "winrate_banned"  => $row[2]
-        );
-      } else
-        $result["pickban"][$row[0]] = array (
-          "matches_total"   => $row[1],
-          "matches_picked"  => 0,
-          "winrate_picked"  => 0,
-          "matches_banned"  => $row[1],
-          "winrate_banned"  => $row[2]
-        );
-    }
-
-    $query_res->free_result();
-
-    // TODO Sort
-  //}
 
   if ($lg_settings['ana']['draft_stages']) {
     # pick/ban draft stages stats

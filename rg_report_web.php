@@ -4,17 +4,17 @@ require_once("modules/functions/versions.php");
 require_once("modules/functions/locale_strings.php");
 require_once("modules/functions/get_language_code_iso6391.php");
 
-$lg_version = array( 1, 1, 2, 0, 0 );
+$lg_version = array( 1, 3, 0, 0, 0 );
 
 $visjs_settings = "physics:{
   barnesHut:{
     avoidOverlap:1,
-    centralGravity:0.2,
+    centralGravity:0.3,
     springLength:95,
     springConstant:0.005,
-    gravitationalConstant:-600
+    gravitationalConstant:-900
   },
-  timestep: 0.15,
+  timestep: 0.1,
 }, nodes: {
    borderWidth:3,
    shape: 'dot',
@@ -77,10 +77,6 @@ $visjs_settings = "physics:{
     if($pid)
         return $report['players'][$pid];
     return "null";
-  }
-
-  function player_card_link() {
-
   }
 
   function player_card($player_id) {
@@ -1137,23 +1133,28 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                                               <tr class=\"thead\">
                                                 <th onclick=\"sortTable(0,'heroes-pickban');\">".locale_string("hero")."</th>
                                                 <th onclick=\"sortTableNum(1,'heroes-pickban');\">".locale_string("matches_total")."</th>
-                                                <th onclick=\"sortTableNum(2,'heroes-pickban');\">".locale_string("matches_picked")."</th>
-                                                <th onclick=\"sortTableNum(3,'heroes-pickban');\">".locale_string("winrate_picked")."</th>
-                                                <th onclick=\"sortTableNum(4,'heroes-pickban');\">".locale_string("matches_banned")."</th>
-                                                <th onclick=\"sortTableNum(5,'heroes-pickban');\">".locale_string("winrate_banned")."</th>
+                                                <th  class=\"separator\"onclick=\"sortTableNum(2,'heroes-pickban');\">".locale_string("contest_rate")."</th>
+                                                <th onclick=\"sortTableNum(3,'heroes-pickban');\">".locale_string("outcome_impact")."</th>
+                                                <th class=\"separator\" onclick=\"sortTableNum(4,'heroes-pickban');\">".locale_string("matches_picked")."</th>
+                                                <th onclick=\"sortTableNum(5,'heroes-pickban');\">".locale_string("winrate")."</th>
+                                                <th class=\"separator\" onclick=\"sortTableNum(6,'heroes-pickban');\">".locale_string("matches_banned")."</th>
+                                                <th onclick=\"sortTableNum(7,'heroes-pickban');\">".locale_string("winrate")."</th>
                                               </tr>";
         foreach($report['pickban'] as $hid => $hero) {
           unset($heroes[$hid]);
+          $oi = ($hero['matches_picked']*$hero['winrate_picked'] + $hero['matches_banned']*$hero['winrate_banned'])/$report["random"]["matches_total"];
           $modules['heroes']['pickban'] .=  "<tr>
-                                                <td>".($hid ? hero_full($hid) : "").
-                                               "</td>
+                                                <td>".($hid ? hero_full($hid) : "")."</td>
                                                 <td>".$hero['matches_total']."</td>
-                                                <td>".$hero['matches_picked']."</td>
+                                                <td class=\"separator\">".number_format($hero['matches_total']/$report["random"]["matches_total"]*100,2)."%</td>
+                                                <td>".number_format($oi*100,2)."%</td>
+                                                <td class=\"separator\">".$hero['matches_picked']."</td>
                                                 <td>".number_format($hero['winrate_picked']*100,2)."%</td>
-                                                <td>".$hero['matches_banned']."</td>
+                                                <td class=\"separator\">".$hero['matches_banned']."</td>
                                                 <td>".number_format($hero['winrate_banned']*100,2)."%</td>
                                               </tr>";
         }
+        unset($oi);
         $modules['heroes']['pickban'] .= "</table>";
 
         $modules['heroes']['pickban'] .= "<div class=\"content-text\"><h1>".locale_string("heroes_uncontested").": ".sizeof($heroes)."</h1><div class=\"hero-list\">";
@@ -1202,10 +1203,11 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           $stages_passed = 0;
           foreach($stages as $stage) {
             if($max_stage > 1) {
+              $heroline .= "<td class=\"separator\">".number_format(($stage['pick']*$stage['pick_wr']+$stage['ban']*$stage['ban_wr'])/$report['random']['matches_total']*100,2)."%</td>";
               if($stage['pick'])
-                $heroline .= "<td class=\"separator\">".$stage['pick']."</td><td>".number_format($stage['pick_wr']*100, 2)."%</td>";
+                $heroline .= "<td>".$stage['pick']."</td><td>".number_format($stage['pick_wr']*100, 2)."%</td>";
               else
-                $heroline .= "<td class=\"separator\">-</td><td>-</td>";
+                $heroline .= "<td>-</td><td>-</td>";
 
               if($stage['ban'])
                 $heroline .= "<td>".$stage['ban']."</td><td>".number_format($stage['ban_wr']*100, 2)."%</td>";
@@ -1218,13 +1220,17 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
 
           if($stages_passed < $max_stage) {
             for ($i=$stages_passed; $i<$max_stage; $i++)
-              $heroline .= "<td class=\"separator\">-</td><td>-</td><td>-</td><td>-</td>";
+              $heroline .= "<td class=\"separator\">-</td><td>-</td><td>-</td><td>-</td><td>-</td>";
           }
 
           $draft[$hid] = array ("out" => "", "matches" => $report['pickban'][$hid]['matches_total']);
           $draft[$hid]['out'] .= "<td>".hero_full($hid)."</td>";
 
           $draft[$hid]['out'] .= "<td>".$report['pickban'][$hid]['matches_total']."</td>";
+          $draft[$hid]['out'] .= "<td>".number_format(
+            ($report['pickban'][$hid]['matches_picked']*$report['pickban'][$hid]['winrate_picked'] +
+              $report['pickban'][$hid]['matches_banned']*$report['pickban'][$hid]['winrate_banned'])
+              /$report['random']['matches_total']*100, 2)."%</td>";
 
           if($report['pickban'][$hid]['matches_picked'])
             $draft[$hid]['out'] .= "<td>".$report['pickban'][$hid]['matches_picked']."</td><td>".number_format($report['pickban'][$hid]['winrate_picked']*100, 2)."%</td>";
@@ -1245,22 +1251,24 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           else return ($a['matches'] < $b['matches']) ? 1 : -1;
         });
 
-        $modules['heroes']['draft'] .= "<table id=\"heroes-draft\" class=\"list wide\"><tr class=\"thead overhead\"><th width=\"15%\"></th><th colspan=\"5\">".locale_string("total")."</th>";
+        $modules['heroes']['draft'] .= "<table id=\"heroes-draft\" class=\"list wide\"><tr class=\"thead overhead\"><th width=\"15%\"></th><th colspan=\"6\">".locale_string("total")."</th>";
         $heroline = "<tr class=\"thead\">".
                       "<th onclick=\"sortTable(0,'heroes-draft');\">".locale_string("hero")."</th>".
-                      "<th onclick=\"sortTableNum(1,'heroes-draft');\">".locale_string("matches")."</th>".
-                      "<th onclick=\"sortTableNum(2,'heroes-draft');\">".locale_string("picks")."</th>".
-                      "<th onclick=\"sortTableNum(3,'heroes-draft');\">".locale_string("winrate")."</th>".
-                      "<th onclick=\"sortTableNum(4,'heroes-draft');\">".locale_string("bans")."</th>".
-                      "<th onclick=\"sortTableNum(5,'heroes-draft');\">".locale_string("winrate")."</th>";
+                      "<th onclick=\"sortTableNum(1,'heroes-draft');\">".locale_string("matches_s")."</th>".
+                      "<th onclick=\"sortTableNum(2,'heroes-draft');\">".locale_string("outcome_impact_s")."</th>".
+                      "<th onclick=\"sortTableNum(3,'heroes-draft');\">".locale_string("picks")."</th>".
+                      "<th onclick=\"sortTableNum(4,'heroes-draft');\">".locale_string("winrate_s")."</th>".
+                      "<th onclick=\"sortTableNum(5,'heroes-draft');\">".locale_string("bans")."</th>".
+                      "<th onclick=\"sortTableNum(6,'heroes-draft');\">".locale_string("winrate_s")."</th>";
 
         if($max_stage > 1)
           for($i=1; $i<=$max_stage; $i++) {
-            $modules['heroes']['draft'] .= "<th class=\"separator\" colspan=\"4\">".locale_string("stage")." $i</th>";
-            $heroline .= "<th onclick=\"sortTableNum(".(1+4*$i+1).",'heroes-draft');\" class=\"separator\">".locale_string("picks")."</th>".
-                        "<th onclick=\"sortTableNum(".(1+4*$i+2).",'heroes-draft');\">".locale_string("winrate")."</th>".
-                        "<th onclick=\"sortTableNum(".(1+4*$i+3).",'heroes-draft');\">".locale_string("bans")."</th>".
-                        "<th onclick=\"sortTableNum(".(1+4*$i+4).",'heroes-draft');\">".locale_string("winrate")."</th>";
+            $modules['heroes']['draft'] .= "<th class=\"separator\" colspan=\"5\">".locale_string("stage")." $i</th>";
+            $heroline .= "<th onclick=\"sortTableNum(".(1+5*$i+1).",'heroes-draft');\" class=\"separator\">".locale_string("outcome_impact_s")."</th>".
+                        "<th onclick=\"sortTableNum(".(1+5*$i+2).",'heroes-draft');\">".locale_string("picks")."</th>".
+                        "<th onclick=\"sortTableNum(".(1+5*$i+3).",'heroes-draft');\">".locale_string("winrate_s")."</th>".
+                        "<th onclick=\"sortTableNum(".(1+5*$i+4).",'heroes-draft');\">".locale_string("bans")."</th>".
+                        "<th onclick=\"sortTableNum(".(1+5*$i+5).",'heroes-draft');\">".locale_string("winrate_s")."</th>";
           }
         $modules['heroes']['draft'] .= "</tr>".$heroline."</tr>";
 
@@ -2838,7 +2846,7 @@ echo $output;
                 $name = str_replace(".json", "", $name);
 
                 $f = fopen("reports/report_".$name.".json","r");
-                $file = fread($f, 700);
+                $file = fread($f, 400);
 
                 $reports[] = array(
                   "name" => $name,

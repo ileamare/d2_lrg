@@ -11,6 +11,7 @@ rg_settings.json
 
 # Temporary files
 tmp*
+__*
 
 # Testing files
 test/

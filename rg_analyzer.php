@@ -165,17 +165,25 @@ include_once("modules/functions/calc_median.php");
 
     $query_res->free_result();
 
-    $picks = [];
-    foreach($result["pickban"] as $hero)
-      $picks[] = $hero["matches_total"];
-    $median = calculate_median($picks);
     unset($picks);
     # sometimes getting all the pairs will be too much
     # using 3.5% to 10% of total matches as limiter
     # 10% would be too much, while 3% can be not enough
-    $limiter = (int)ceil($median/4);
-    $limiter_lower = (int)ceil($median/16);
-    $limiter_graph = (int)ceil($median/2.5);
+    
+        $picks = [];
+        foreach($result["pickban"] as $hero)
+            $picks[] = $hero["matches_total"];
+        $median = calculate_median($picks);
+    
+    $limiter = (int)ceil($median/6);
+    $limiter_graph = (int)ceil($median/4);
+    if($lg_settings['main']['teams']) {
+        //$report['random']['teams_on_event'];
+        //$limiter = (int)ceil($result['random']['matches_total']/($result['random']['teams_on_event']*2));
+        $limiter_lower = (int)ceil($result['random']['matches_total']/($result['random']['teams_on_event']*4));
+    } else {
+        $limiter_lower = (int)ceil($median/16);
+    }
 
     unset($median);
 
@@ -452,51 +460,51 @@ include_once("modules/functions/calc_median.php");
     # average for heroes
 
     # kills
-    $sql  = "SELECT \"kills\", heroid, SUM(kills)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql  = "SELECT \"kills\", heroid, SUM(kills)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # least deaths
-    $sql .= "SELECT \"least_deaths\", heroid, SUM(deaths)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value ASC;";
+    $sql .= "SELECT \"least_deaths\", heroid, SUM(deaths)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value ASC;";
     # most deaths
-    $sql .= "SELECT \"most_deaths\", heroid, SUM(deaths)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"most_deaths\", heroid, SUM(deaths)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # assists
-    $sql .= "SELECT \"assists\", heroid, SUM(assists)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"assists\", heroid, SUM(assists)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # kda
-    $sql .= "SELECT \"kda\", heroid, (SUM(kills)+SUM(assists))/SUM(deaths) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"kda\", heroid, (SUM(kills)+SUM(assists))/SUM(deaths) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
 
     # gpm
-    $sql .= "SELECT \"gpm\", heroid, SUM(gpm)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"gpm\", heroid, SUM(gpm)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # xpm
-    $sql .= "SELECT \"xpm\", heroid, SUM(xpm)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"xpm\", heroid, SUM(xpm)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # last hits per min
     $sql .= "SELECT \"lasthits_per_min\", matchlines.heroid heroid, SUM(matchlines.lastHits/(matches.duration/60))/SUM(1)
-               value, SUM(1) mtch  FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+               value, SUM(1) mtch  FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # denies
-    $sql .= "SELECT \"denies\", heroid, SUM(denies)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"denies\", heroid, SUM(denies)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
 
 
     # stuns
-    $sql .= "SELECT \"stuns\", heroid, SUM(stuns)/SUM(1) value, SUM(1) mtch  FROM adv_matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"stuns\", heroid, SUM(stuns)/SUM(1) value, SUM(1) mtch  FROM adv_matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # stacks
-    $sql .= "SELECT \"stacks\", heroid, SUM(stacks)/SUM(1) value, SUM(1) mtch  FROM adv_matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"stacks\", heroid, SUM(stacks)/SUM(1) value, SUM(1) mtch  FROM adv_matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # courier kills
     $sql .= "SELECT \"courier_kills\", heroid, SUM(couriers_killed)/SUM(1) value, SUM(1) mtch FROM adv_matchlines
-              GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+              GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # roshan kills by hero's team
     $sql .= "SELECT \"roshan_kills_with_team\", heroid, SUM(rs.rshs)/SUM(1) value, SUM(1) mtch FROM matchlines JOIN (
       SELECT matchid, SUM(roshans_killed) rshs FROM adv_matchlines GROUP BY matchid
-    ) rs ON matchlines.matchid = rs.matchid GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    ) rs ON matchlines.matchid = rs.matchid GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
 
     # hero damage / minute
     $sql .= "SELECT \"hero_damage_per_min\", matchlines.heroid heroid, SUM(matchlines.heroDamage/(matches.duration/60))/SUM(1) value, SUM(1) mtch
-              FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+              FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # tower damage / minute
     $sql .= "SELECT \"tower_damage_per_min\", matchlines.heroid heroid, SUM(matchlines.towerDamage/(matches.duration/60))/SUM(1) value, SUM(1) mtch
-              FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+              FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # taken damage / minute
     $sql .= "SELECT \"taken_damage_per_min\", adv_matchlines.heroid heroid, SUM(adv_matchlines.damage_taken/(matches.duration/60))/SUM(1) value, SUM(1) mtch
-                FROM adv_matchlines JOIN matches ON adv_matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+                FROM adv_matchlines JOIN matches ON adv_matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # heal / minute
     $sql .= "SELECT \"heal_per_min\", matchlines.heroid heroid, SUM(matchlines.heal/(matches.duration/60))/SUM(1) value, SUM(1) mtch
-                FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+                FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
 
 
 
@@ -527,64 +535,64 @@ include_once("modules/functions/calc_median.php");
     # average for players
 
     # kills
-    $sql  = "SELECT \"kills\", playerid, SUM(kills)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql  = "SELECT \"kills\", playerid, SUM(kills)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # least deaths
-    $sql .= "SELECT \"least_deaths\", playerid, SUM(deaths)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value ASC;";
+    $sql .= "SELECT \"least_deaths\", playerid, SUM(deaths)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value ASC;";
     # most deaths
-    $sql .= "SELECT \"most_deaths\", playerid, SUM(deaths)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"most_deaths\", playerid, SUM(deaths)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # assists
-    $sql .= "SELECT \"assists\", playerid, SUM(assists)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"assists\", playerid, SUM(assists)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # kda
-    $sql .= "SELECT \"kda\", playerid, (SUM(kills)+SUM(assists))/SUM(deaths) value, SUM(1) mtch  FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"kda\", playerid, (SUM(kills)+SUM(assists))/SUM(deaths) value, SUM(1) mtch  FROM matchlines GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
 
     # gpm
-    $sql .= "SELECT \"gpm\", playerid, SUM(gpm)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"gpm\", playerid, SUM(gpm)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # xpm
-    $sql .= "SELECT \"xpm\", playerid, SUM(xpm)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"xpm\", playerid, SUM(xpm)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # lane efficiency
     $sql .= "SELECT \"lane_efficiency\", playerid, SUM(efficiency_at10)/SUM(1) value, SUM(1) mtch
-              FROM adv_matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+              FROM adv_matchlines GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # denies
-    $sql .= "SELECT \"denies\", playerid, SUM(denies)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"denies\", playerid, SUM(denies)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
 
     # hero damage / minute
     $sql .= "SELECT \"hero_damage_per_min\", matchlines.playerid playerid, SUM(matchlines.heroDamage/(matches.duration/60))/SUM(1)
-               value, SUM(1) mtch FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+               value, SUM(1) mtch FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # tower damage / minute
     $sql .= "SELECT \"tower_damage_per_min\", matchlines.playerid playerid, SUM(matchlines.towerDamage/(matches.duration/60))/SUM(1)
-               value, SUM(1) mtch FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+               value, SUM(1) mtch FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # taken damage / minute
     $sql .= "SELECT \"taken_damage_per_min\", adv_matchlines.playerid playerid, SUM(adv_matchlines.damage_taken/(matches.duration/60))/SUM(1)
                value, SUM(1) mtch FROM adv_matchlines JOIN matches ON adv_matchlines.matchid = matches.matchid
-               GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+               GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # heal / minute
     $sql .= "SELECT \"heal_per_min\", matchlines.playerid playerid, SUM(matchlines.heal/(matches.duration/60))/SUM(1)
-               value, SUM(1) mtch FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+               value, SUM(1) mtch FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
 
     # stuns
-    $sql .= "SELECT \"stuns\", playerid, SUM(stuns)/SUM(1) value, SUM(1) mtch FROM adv_matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"stuns\", playerid, SUM(stuns)/SUM(1) value, SUM(1) mtch FROM adv_matchlines GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # courier kills
     $sql .= "SELECT \"courier_kills\", playerid, SUM(couriers_killed)/SUM(1) value, SUM(1) mtch FROM adv_matchlines
-              GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+              GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # roshan kills by hero's team
     if ($lg_settings['main']['teams'])
       $sql .= "SELECT \"roshan_kills_by_team\", teams_matches.teamid, SUM(rs.rshs)/SUM(1) value, SUM(1) mtch FROM matchlines JOIN (
         SELECT matchid, SUM(roshans_killed) rshs FROM adv_matchlines GROUP BY matchid
       ) rs ON matchlines.matchid = rs.matchid
       JOIN teams_matches ON matchlines.matchid = teams_matches.matchid and matchlines.isradiant = teams_matches.is_radiant
-      GROUP BY teams_matches.teamid HAVING $limiter < mtch ORDER BY value DESC;";
+      GROUP BY teams_matches.teamid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     else
       $sql .= "SELECT \"roshan_kills_with_team\", playerid, SUM(rs.rshs)/SUM(1) value, SUM(1) mtch FROM matchlines JOIN (
         SELECT matchid, SUM(roshans_killed) rshs FROM adv_matchlines GROUP BY matchid
       ) rs ON matchlines.matchid = rs.matchid
-      GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+      GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # wards destroyed
     $sql .= "SELECT \"wards_destroyed\", playerid, SUM(wards_destroyed)/SUM(1) value, SUM(1) mtch FROM adv_matchlines
-            GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+            GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
 
     # longest killstreak
     $sql .= "SELECT \"longest_killstreak_in_match\", playerid, SUM(streak)/SUM(1) value, SUM(1) mtch FROM adv_matchlines
-              GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+              GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # stacks
     $sql .= "SELECT \"stacks\", playerid, SUM(stacks)/SUM(1) value, SUM(1) mtch FROM adv_matchlines GROUP BY playerid ORDER BY value DESC;";
     # wards
@@ -592,7 +600,7 @@ include_once("modules/functions/calc_median.php");
     # pings per minute
     $sql .= "SELECT \"pings\", adv_matchlines.playerid playerid, SUM(adv_matchlines.pings/(matches.duration/60))/SUM(1)
                value, SUM(1) mtch FROM adv_matchlines JOIN matches ON adv_matchlines.matchid = matches.matchid
-               GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+               GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # hero pool size
     $sql .= "SELECT \"hero_pool\", playerid, COUNT(DISTINCT heroid) value, SUM(1) mtch FROM matchlines GROUP BY playerid ORDER BY value DESC;";
     # plyer diversity
@@ -600,7 +608,7 @@ include_once("modules/functions/calc_median.php");
               FROM matchlines join ( select max(heropool) mhp from
                 	( select COUNT(DISTINCT heroid) heropool, playerid from matchlines group by playerid ) _hp
                 ) mhpt
-              GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+              GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
 
    $result["averages_players"] = array();
 

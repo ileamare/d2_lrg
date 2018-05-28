@@ -1,7 +1,7 @@
 <?php
 
 function calculate_median($arr) {
-    asort($arr);
+    rsort($arr);
 
     $count = count($arr);
     $middleval = floor(($count-1)/2);

@@ -240,7 +240,7 @@
     "desc_meta_graph_add" => "Meta graph includes only hero pairs with amount of matches higher than %lim% treshhold, also including top %per% of contested heroes, with or without a pair. For more detailed hero picks overview, look over \"Picks and Bans\" or \"Draft\" tab. Team specific meta graphs can be found in teams' profiles.",
     "desc_heroes_combos" => "This section contains stats for most common hero pairs and triplets. Minimum amount of matches for pairs and triplets is set to %limh% and %liml% respectively.",
     "desc_heroes_hvh" => "Choose a hero to see his performance against other heroes.",
-    "desc_players_avg" => "This section contains highest average values among players. Minimum amount of matches is set to higher limiter.<br /><br />* Player Diversity priortises players with higher hero pool and same percentage of unique heroes picked.",
+    "desc_players_avg" => "This section contains highest average values among players. Minimum amount of matches is set to limiter.",
     "desc_players_summary" => "This table contains players' average stats and their most common positions.",
     "desc_players_positions" => "This section contains stats for players' performance on various positions. Positions are determined based on players performance (core or support) and lane. Supports across all lanes (including roamers) are considered as one role. Lanes and positions may not be accurate.",
     "desc_players_pvp" => "Choose a player to see his performance against other league participants.",

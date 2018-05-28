@@ -1,0 +1,52 @@
+{
+  "ana": {
+    "records": false,
+    "avg_limit" : 10,
+    "pvp" : false,
+    "pvp_matches" : false,
+
+    "player_pairs" : false,
+    "player_pairs_matches": false,
+
+    "player_triplets" : false,
+    "player_triplets_matches" : false,
+
+    "players_combo_graph" : false,
+    "teams": {
+      "rosters": true,
+      "avg" : true,
+      "pickbans" : true,
+      "draft": true,
+      "heropos" : true,
+      "hero_graph" : true,
+      "pairs": true,
+      "triplets": true,
+      "matches": true,
+      "team_vs_team" : true
+    }
+  },
+  "web": {
+    "players_combo_graph" : false,
+
+    "overview_versions" : false,
+    "overview_versions_chart" : true,
+    "overview_last_match_winners" : false,
+    "overview_charts" : true,
+    "overview_regions" : false,
+    "overview_modes" : false,
+    "overview_sides_graph" : false,
+    "overview_time_limits" : false,
+    "overview_heroes_contested_graph" : false,
+    "overview_days_graph" : false,
+
+    "overview_include_records": false,
+    "overview_teams_summary_short": false,
+
+    "overview_matches" : false,
+    "overview_first_match" : false,
+    "overview_last_match" : false,
+    "overview_records_duration" : false,
+    "overview_records_stomp" : false,
+    "overview_records_comeback" : false
+  }
+}

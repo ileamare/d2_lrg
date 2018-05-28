@@ -1,0 +1,16 @@
+{
+  "web": {
+    "pvp_grid" : true,
+
+    "overview_versions" : false,
+    "overview_versions_chart" : false,
+    "overview_last_match_winners" : false,
+    "overview_charts" : false,
+    "overview_regions" : false,
+    "overview_modes" : false,
+    "overview_sides_graph" : false,
+    "overview_time_limits" : true,
+    "overview_heroes_contested_graph" : false,
+    "overview_days_graph" : true
+  }
+}

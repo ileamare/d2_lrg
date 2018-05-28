@@ -4,7 +4,7 @@ require_once("modules/functions/versions.php");
 require_once("modules/functions/locale_strings.php");
 require_once("modules/functions/get_language_code_iso6391.php");
 
-$lg_version = array( 1, 3, 0, 0, 0 );
+$lg_version = array( 1, 3, 1, 0, 0 );
 
 $visjs_settings = "physics:{
   barnesHut:{
@@ -75,7 +75,7 @@ $visjs_settings = "physics:{
   function player_name($pid) {
     global $report;
     if($pid)
-        return $report['players'][$pid];
+        return htmlspecialchars($report['players'][$pid]);
     return "null";
   }
 
@@ -83,7 +83,7 @@ $visjs_settings = "physics:{
     global $report;
     global $meta;
     global $strings;
-    $pname = $report['players'][$player_id];
+    $pname = player_name($player_id);
     $pinfo = $report['players_additional'][$player_id];
 
     $output = "<div class=\"player-card\"><div class=\"player-name\"><a href=\"http://opendota.com/players/$player_id\" target=\"_blank\" rel=\"noopener\">".$pname." (".$player_id.")</a></div>";
@@ -121,7 +121,7 @@ $visjs_settings = "physics:{
   function team_name($tid) {
     global $report;
     if($tid && isset($report['teams'][ $tid ]['name']))
-      return $report['teams'][ $tid ]['name'];
+      return htmlspecialchars($report['teams'][ $tid ]['name']);
     return "(no team)";
   }
 
@@ -229,10 +229,10 @@ $visjs_settings = "physics:{
 
     for($i=0; $i<10; $i++) {
       if($report['matches'][$mid][$i]['radiant']) {
-        $players_radi .= "<div class=\"match-player\">".$report['players'][ $report['matches'][$mid][$i]['player'] ]."</div>";
+        $players_radi .= "<div class=\"match-player\">".player_name($report['matches'][$mid][$i]['player'])."</div>";
         $heroes_radi .= "<div class=\"match-hero\">".hero_portrait($report['matches'][$mid][$i]['hero'])."</div>";
       } else {
-        $players_dire .= "<div class=\"match-player\">".$report['players'][ $report['matches'][$mid][$i]['player'] ]."</div>";
+        $players_dire .= "<div class=\"match-player\">".player_name($report['matches'][$mid][$i]['player'])."</div>";
         $heroes_dire .= "<div class=\"match-hero\">".hero_portrait($report['matches'][$mid][$i]['hero'])."</div>";
       }
 
@@ -1115,7 +1115,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
           $modules['heroes']['averages_heroes'] .= "</table>";
         }
         $modules['heroes']['averages_heroes'] .= "</div>";
-        $modules['heroes']['averages_heroes'] .= "<div class=\"content-text\">".locale_string("desc_heroes_avg", ["lim" => $report['settings']['limiter']+1 ])."</div>";
+        $modules['heroes']['averages_heroes'] .= "<div class=\"content-text\">".locale_string("desc_heroes_avg", ["lim" => $report['settings']['limiter_triplets']+1 ])."</div>";
       }
     }
     if (isset($report['pickban'])) {

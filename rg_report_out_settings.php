@@ -28,4 +28,7 @@ $main_path = "/";
 $default_style = "";
 $noleague_style = "";
 
+$instance_title = "LRG";
+$instance_name = "League Report Generator Instance";
+
 ?>

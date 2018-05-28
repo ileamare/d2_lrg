@@ -1,7 +1,7 @@
 <?php
 $init = true;
-require_once("settings.php");
-require_once("modules/mod.migrate_params.php");
+require_once("head.php");
+require_once("modules/functions/migrate_params.php");
 
 if (!file_exists("templates/default.json")) die("[F] No default league template found, exitting.");
 $lg_settings = json_decode(file_get_contents("templates/default.json"), true);
@@ -35,7 +35,7 @@ if(isset($argv)) {
   if(isset($options['S'])) {
     echo "[ ] Enter parameters below in format \"Parameter = value\".\n    Divide parameters subcategories by a \".\", empty line to exit.\n";
     while (!empty($st = readline(" >  "))) {
-      $st = explode("=", $st);
+      $st = explode("=", trim($st));
       $val = &$lg_settings;
       $st[0] = explode(".", $st[0]);
 

@@ -1,12 +1,21 @@
-output
-report.html
-test.html
-test*.php
-list.php
+# Working directories
+backups/
+cache/
+leagues/
+matchlists/
+reports/
+libs/
+
+# Settings container
+rg_settings.json
+
+# Temporary files
 tmp*
+__*
+
+# Testing files
+test/
+test*.php
+output
 gi_*
-!.gitignore
-test/*
-rg_report_out_settings_.php
-_.htaccess
-query.sql
+.htaccess

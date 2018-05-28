@@ -6,15 +6,23 @@
     "records":false,
     "players":false,
     "matchlist":false,
-    "avg_limit": 10
+    "avg_limit": 10,
+    "hero_positions_matches" : false,
+    "hero_pairs_matches":false,
+    "hero_triplets_matches":false
   },
   "web": {
-    "custom_style": "ranked",
+    "custom_style": "bots",
     "overview_last_match_winners" : false,
     "overview_matches": false,
     "overview_first_match" : false,
     "overview_last_match" : false,
     "overview_records_stomp" : false,
-    "overview_records_comeback": false
+    "overview_records_comeback": false,
+    "overview_draft_1_3" : true,
+    "overview_draft_1_3_count" : 5,
+    "overview_draft_0_1" : false,
+
+    "overview_heroes_contested_graph" : false
   }
 }

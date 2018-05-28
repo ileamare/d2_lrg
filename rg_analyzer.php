@@ -1,11 +1,9 @@
 <?php
-ini_set('memory_limit', '4000M');
+include_once("head.php");
 
-include_once("settings.php");
-
-include_once("modules/mod.utf8ize.php");
-include_once("modules/mod.migrate_params.php");
-
+include_once("modules/functions/utf8ize.php");
+include_once("modules/functions/migrate_params.php");
+include_once("modules/functions/calc_median.php");
 
   echo("\nConnecting to database...\n");
 
@@ -19,7 +17,7 @@ include_once("modules/mod.migrate_params.php");
   $result['league_id'] = $lg_settings['league_id'];
   $result["league_tag"] = $lrg_league_tag;
 
-  if(compare_ver($lg_settings['version'], $lrg_version) == -1) {
+  if(compare_ver($lg_settings['version'], $lrg_version) < 0) {
     if (!file_exists("templates/default.json")) die("[F] No default league template found, exitting.");
     $tmp = json_decode(file_get_contents("templates/default.json"), true);
     migrate_params($tmp, $lg_settings);
@@ -88,7 +86,9 @@ include_once("modules/mod.migrate_params.php");
     # buybacks total
     $sql .= "SELECT \"buybacks_total\", SUM(buybacks) FROM adv_matchlines;";
     # summary time dead
-    $sql .= "SELECT \"total_time_dead\", SUM(time_dead)/60 FROM adv_matchlines;";
+    # $sql .= "SELECT \"total_time_dead\", SUM(time_dead)/60 FROM adv_matchlines;";
+    # average match length
+    $sql .= "SELECT \"avg_match_len\", SUM(duration)/(60*COUNT(DISTINCT matchid)) FROM matches;";
 
 
     if ($conn->multi_query($sql) === TRUE) echo "[S] Requested data for RANDOM STATS.\n";
@@ -104,16 +104,92 @@ include_once("modules/mod.migrate_params.php");
       $query_res->free_result();
     } while($conn->next_result());
 
+  }
+
+  //if ($lg_settings['ana']['pickban']) {
+    # pick/ban heroes stats
+
+    $sql = "SELECT draft.hero_id hero_id, SUM(1) matches, SUM(NOT matches.radiantWin XOR draft.is_radiant)/SUM(1) winrate
+    	   FROM draft JOIN matches ON draft.matchid = matches.matchid
+    	   WHERE is_pick = true
+    	   GROUP BY draft.hero_id;";
+
+    $result["pickban"] = array();
+
+    if ($conn->multi_query($sql) === TRUE);
+    else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
+
+    $query_res = $conn->store_result();
+
+    for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
+      $result["pickban"][$row[0]] = array (
+        "matches_total"   => $row[1],
+        "matches_picked"  => $row[1],
+        "winrate_picked"  => $row[2],
+        "matches_banned"  => 0,
+        "winrate_banned"  => 0
+      );
+    }
+
+    $query_res->free_result();
+
+    $sql = "SELECT draft.hero_id hero_id, SUM(1) matches, SUM(NOT matches.radiantWin XOR draft.is_radiant)/SUM(1) winrate
+    	   FROM draft JOIN matches ON draft.matchid = matches.matchid
+    	   WHERE is_pick = false
+    	   GROUP BY draft.hero_id
+    ORDER BY winrate DESC, matches DESC;";
+
+    if ($conn->multi_query($sql) === TRUE);
+    else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
+
+    $query_res = $conn->store_result();
+
+    for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
+      if(isset($result["pickban"][$row[0]])) {
+        $result["pickban"][$row[0]] = array (
+          "matches_total"   => ($result["pickban"][$row[0]]["matches_total"]+$row[1]),
+          "matches_picked"  => $result["pickban"][$row[0]]["matches_picked"],
+          "winrate_picked"  => $result["pickban"][$row[0]]["winrate_picked"],
+          "matches_banned"  => $row[1],
+          "winrate_banned"  => $row[2]
+        );
+      } else
+        $result["pickban"][$row[0]] = array (
+          "matches_total"   => $row[1],
+          "matches_picked"  => 0,
+          "winrate_picked"  => 0,
+          "matches_banned"  => $row[1],
+          "winrate_banned"  => $row[2]
+        );
+    }
+
+    $query_res->free_result();
+
+    unset($picks);
     # sometimes getting all the pairs will be too much
     # using 3.5% to 10% of total matches as limiter
     # 10% would be too much, while 3% can be not enough
-    $limiter = (int)($result['random']['matches_total']*0.028);
-    $limiter_lower = (int)($result['random']['matches_total']*0.005);
-    $limiter_graph = (int)ceil($result['random']['matches_total']*0.037);
+    
+        $picks = [];
+        foreach($result["pickban"] as $hero)
+            $picks[] = $hero["matches_total"];
+        $median = calculate_median($picks);
+    
+    $limiter = (int)ceil($median/6);
+    $limiter_graph = (int)ceil($median/4);
+    if($lg_settings['main']['teams']) {
+        //$report['random']['teams_on_event'];
+        //$limiter = (int)ceil($result['random']['matches_total']/($result['random']['teams_on_event']*2));
+        $limiter_lower = (int)ceil($result['random']['matches_total']/($result['random']['teams_on_event']*4));
+    } else {
+        $limiter_lower = (int)ceil($median/16);
+    }
+
+    unset($median);
 
     $limiter = $limiter>1 ? $limiter : 1;
     $limiter_lower = $limiter_lower>1 ? $limiter_lower : 1;
-  }
+  //}
 
   if ($lg_settings['ana']['records']) {
     # records
@@ -384,51 +460,51 @@ include_once("modules/mod.migrate_params.php");
     # average for heroes
 
     # kills
-    $sql  = "SELECT \"kills\", heroid, SUM(kills)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql  = "SELECT \"kills\", heroid, SUM(kills)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # least deaths
-    $sql .= "SELECT \"least_deaths\", heroid, SUM(deaths)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value ASC;";
+    $sql .= "SELECT \"least_deaths\", heroid, SUM(deaths)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value ASC;";
     # most deaths
-    $sql .= "SELECT \"most_deaths\", heroid, SUM(deaths)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"most_deaths\", heroid, SUM(deaths)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # assists
-    $sql .= "SELECT \"assists\", heroid, SUM(assists)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"assists\", heroid, SUM(assists)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # kda
-    $sql .= "SELECT \"kda\", heroid, (SUM(kills)+SUM(assists))/SUM(deaths) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"kda\", heroid, (SUM(kills)+SUM(assists))/SUM(deaths) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
 
     # gpm
-    $sql .= "SELECT \"gpm\", heroid, SUM(gpm)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"gpm\", heroid, SUM(gpm)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # xpm
-    $sql .= "SELECT \"xpm\", heroid, SUM(xpm)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"xpm\", heroid, SUM(xpm)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # last hits per min
     $sql .= "SELECT \"lasthits_per_min\", matchlines.heroid heroid, SUM(matchlines.lastHits/(matches.duration/60))/SUM(1)
-               value, SUM(1) mtch  FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+               value, SUM(1) mtch  FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # denies
-    $sql .= "SELECT \"denies\", heroid, SUM(denies)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"denies\", heroid, SUM(denies)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
 
 
     # stuns
-    $sql .= "SELECT \"stuns\", heroid, SUM(stuns)/SUM(1) value, SUM(1) mtch  FROM adv_matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"stuns\", heroid, SUM(stuns)/SUM(1) value, SUM(1) mtch  FROM adv_matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # stacks
-    $sql .= "SELECT \"stacks\", heroid, SUM(stacks)/SUM(1) value, SUM(1) mtch  FROM adv_matchlines GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"stacks\", heroid, SUM(stacks)/SUM(1) value, SUM(1) mtch  FROM adv_matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # courier kills
     $sql .= "SELECT \"courier_kills\", heroid, SUM(couriers_killed)/SUM(1) value, SUM(1) mtch FROM adv_matchlines
-              GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+              GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # roshan kills by hero's team
     $sql .= "SELECT \"roshan_kills_with_team\", heroid, SUM(rs.rshs)/SUM(1) value, SUM(1) mtch FROM matchlines JOIN (
       SELECT matchid, SUM(roshans_killed) rshs FROM adv_matchlines GROUP BY matchid
-    ) rs ON matchlines.matchid = rs.matchid GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+    ) rs ON matchlines.matchid = rs.matchid GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
 
     # hero damage / minute
     $sql .= "SELECT \"hero_damage_per_min\", matchlines.heroid heroid, SUM(matchlines.heroDamage/(matches.duration/60))/SUM(1) value, SUM(1) mtch
-              FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+              FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # tower damage / minute
     $sql .= "SELECT \"tower_damage_per_min\", matchlines.heroid heroid, SUM(matchlines.towerDamage/(matches.duration/60))/SUM(1) value, SUM(1) mtch
-              FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+              FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # taken damage / minute
     $sql .= "SELECT \"taken_damage_per_min\", adv_matchlines.heroid heroid, SUM(adv_matchlines.damage_taken/(matches.duration/60))/SUM(1) value, SUM(1) mtch
-                FROM adv_matchlines JOIN matches ON adv_matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+                FROM adv_matchlines JOIN matches ON adv_matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # heal / minute
     $sql .= "SELECT \"heal_per_min\", matchlines.heroid heroid, SUM(matchlines.heal/(matches.duration/60))/SUM(1) value, SUM(1) mtch
-                FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter < mtch ORDER BY value DESC;";
+                FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
 
 
 
@@ -459,64 +535,64 @@ include_once("modules/mod.migrate_params.php");
     # average for players
 
     # kills
-    $sql  = "SELECT \"kills\", playerid, SUM(kills)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql  = "SELECT \"kills\", playerid, SUM(kills)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # least deaths
-    $sql .= "SELECT \"least_deaths\", playerid, SUM(deaths)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value ASC;";
+    $sql .= "SELECT \"least_deaths\", playerid, SUM(deaths)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value ASC;";
     # most deaths
-    $sql .= "SELECT \"most_deaths\", playerid, SUM(deaths)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"most_deaths\", playerid, SUM(deaths)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # assists
-    $sql .= "SELECT \"assists\", playerid, SUM(assists)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"assists\", playerid, SUM(assists)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # kda
-    $sql .= "SELECT \"kda\", playerid, (SUM(kills)+SUM(assists))/SUM(deaths) value, SUM(1) mtch  FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"kda\", playerid, (SUM(kills)+SUM(assists))/SUM(deaths) value, SUM(1) mtch  FROM matchlines GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
 
     # gpm
-    $sql .= "SELECT \"gpm\", playerid, SUM(gpm)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"gpm\", playerid, SUM(gpm)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # xpm
-    $sql .= "SELECT \"xpm\", playerid, SUM(xpm)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"xpm\", playerid, SUM(xpm)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # lane efficiency
     $sql .= "SELECT \"lane_efficiency\", playerid, SUM(efficiency_at10)/SUM(1) value, SUM(1) mtch
-              FROM adv_matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+              FROM adv_matchlines GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # denies
-    $sql .= "SELECT \"denies\", playerid, SUM(denies)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"denies\", playerid, SUM(denies)/SUM(1) value, SUM(1) mtch FROM matchlines GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
 
     # hero damage / minute
     $sql .= "SELECT \"hero_damage_per_min\", matchlines.playerid playerid, SUM(matchlines.heroDamage/(matches.duration/60))/SUM(1)
-               value, SUM(1) mtch FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+               value, SUM(1) mtch FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # tower damage / minute
     $sql .= "SELECT \"tower_damage_per_min\", matchlines.playerid playerid, SUM(matchlines.towerDamage/(matches.duration/60))/SUM(1)
-               value, SUM(1) mtch FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+               value, SUM(1) mtch FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # taken damage / minute
     $sql .= "SELECT \"taken_damage_per_min\", adv_matchlines.playerid playerid, SUM(adv_matchlines.damage_taken/(matches.duration/60))/SUM(1)
                value, SUM(1) mtch FROM adv_matchlines JOIN matches ON adv_matchlines.matchid = matches.matchid
-               GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+               GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # heal / minute
     $sql .= "SELECT \"heal_per_min\", matchlines.playerid playerid, SUM(matchlines.heal/(matches.duration/60))/SUM(1)
-               value, SUM(1) mtch FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+               value, SUM(1) mtch FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
 
     # stuns
-    $sql .= "SELECT \"stuns\", playerid, SUM(stuns)/SUM(1) value, SUM(1) mtch FROM adv_matchlines GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+    $sql .= "SELECT \"stuns\", playerid, SUM(stuns)/SUM(1) value, SUM(1) mtch FROM adv_matchlines GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # courier kills
     $sql .= "SELECT \"courier_kills\", playerid, SUM(couriers_killed)/SUM(1) value, SUM(1) mtch FROM adv_matchlines
-              GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+              GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # roshan kills by hero's team
     if ($lg_settings['main']['teams'])
       $sql .= "SELECT \"roshan_kills_by_team\", teams_matches.teamid, SUM(rs.rshs)/SUM(1) value, SUM(1) mtch FROM matchlines JOIN (
         SELECT matchid, SUM(roshans_killed) rshs FROM adv_matchlines GROUP BY matchid
       ) rs ON matchlines.matchid = rs.matchid
       JOIN teams_matches ON matchlines.matchid = teams_matches.matchid and matchlines.isradiant = teams_matches.is_radiant
-      GROUP BY teams_matches.teamid HAVING $limiter < mtch ORDER BY value DESC;";
+      GROUP BY teams_matches.teamid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     else
       $sql .= "SELECT \"roshan_kills_with_team\", playerid, SUM(rs.rshs)/SUM(1) value, SUM(1) mtch FROM matchlines JOIN (
         SELECT matchid, SUM(roshans_killed) rshs FROM adv_matchlines GROUP BY matchid
       ) rs ON matchlines.matchid = rs.matchid
-      GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+      GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # wards destroyed
     $sql .= "SELECT \"wards_destroyed\", playerid, SUM(wards_destroyed)/SUM(1) value, SUM(1) mtch FROM adv_matchlines
-            GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+            GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
 
     # longest killstreak
     $sql .= "SELECT \"longest_killstreak_in_match\", playerid, SUM(streak)/SUM(1) value, SUM(1) mtch FROM adv_matchlines
-              GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+              GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # stacks
     $sql .= "SELECT \"stacks\", playerid, SUM(stacks)/SUM(1) value, SUM(1) mtch FROM adv_matchlines GROUP BY playerid ORDER BY value DESC;";
     # wards
@@ -524,7 +600,7 @@ include_once("modules/mod.migrate_params.php");
     # pings per minute
     $sql .= "SELECT \"pings\", adv_matchlines.playerid playerid, SUM(adv_matchlines.pings/(matches.duration/60))/SUM(1)
                value, SUM(1) mtch FROM adv_matchlines JOIN matches ON adv_matchlines.matchid = matches.matchid
-               GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+               GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
     # hero pool size
     $sql .= "SELECT \"hero_pool\", playerid, COUNT(DISTINCT heroid) value, SUM(1) mtch FROM matchlines GROUP BY playerid ORDER BY value DESC;";
     # plyer diversity
@@ -532,7 +608,7 @@ include_once("modules/mod.migrate_params.php");
               FROM matchlines join ( select max(heropool) mhp from
                 	( select COUNT(DISTINCT heroid) heropool, playerid from matchlines group by playerid ) _hp
                 ) mhpt
-              GROUP BY playerid HAVING $limiter < mtch ORDER BY value DESC;";
+              GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
 
    $result["averages_players"] = array();
 
@@ -582,7 +658,7 @@ include_once("modules/mod.migrate_params.php");
                   (SUM(ml.kills)+SUM(ml.assists))/(SUM(ml.deaths)) kills,
                   COUNT(DISTINCT ml.heroid) heropool,
                   (COUNT(DISTINCT ml.heroid)/mhpt.mhp)*(COUNT(DISTINCT ml.heroid)/SUM(1)) diversity,
-                  SUM(ml.lasthits)/SUM(m.duration)/(SUM(1)*60) lh
+                  SUM(ml.lasthits)/(SUM(m.duration)/60) lh
                 FROM adv_matchlines am JOIN
                   matchlines ml
                       ON am.matchid = ml.matchid AND am.playerid = ml.playerid
@@ -652,67 +728,6 @@ include_once("modules/mod.migrate_params.php");
     }
   }
 
-  //if ($lg_settings['ana']['pickban']) {
-    # pick/ban heroes stats
-
-    $sql = "SELECT draft.hero_id hero_id, SUM(1) matches, SUM(NOT matches.radiantWin XOR draft.is_radiant)/SUM(1) winrate
-    	   FROM draft JOIN matches ON draft.matchid = matches.matchid
-    	   WHERE is_pick = true
-    	   GROUP BY draft.hero_id;";
-
-    $result["pickban"] = array();
-
-    if ($conn->multi_query($sql) === TRUE);
-    else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
-
-    $query_res = $conn->store_result();
-
-    for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
-      $result["pickban"][$row[0]] = array (
-        "matches_total"   => $row[1],
-        "matches_picked"  => $row[1],
-        "winrate_picked"  => $row[2],
-        "matches_banned"  => 0,
-        "winrate_banned"  => 0
-      );
-    }
-
-    $query_res->free_result();
-
-    $sql = "SELECT draft.hero_id hero_id, SUM(1) matches, SUM(NOT matches.radiantWin XOR draft.is_radiant)/SUM(1) winrate
-    	   FROM draft JOIN matches ON draft.matchid = matches.matchid
-    	   WHERE is_pick = false
-    	   GROUP BY draft.hero_id
-    ORDER BY winrate DESC, matches DESC;";
-
-    if ($conn->multi_query($sql) === TRUE);
-    else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
-
-    $query_res = $conn->store_result();
-
-    for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
-      if(isset($result["pickban"][$row[0]])) {
-        $result["pickban"][$row[0]] = array (
-          "matches_total"   => ($result["pickban"][$row[0]]["matches_total"]+$row[1]),
-          "matches_picked"  => $result["pickban"][$row[0]]["matches_picked"],
-          "winrate_picked"  => $result["pickban"][$row[0]]["winrate_picked"],
-          "matches_banned"  => $row[1],
-          "winrate_banned"  => $row[2]
-        );
-      } else
-        $result["pickban"][$row[0]] = array (
-          "matches_total"   => $row[1],
-          "matches_picked"  => 0,
-          "winrate_picked"  => 0,
-          "matches_banned"  => $row[1],
-          "winrate_banned"  => $row[2]
-        );
-    }
-
-    $query_res->free_result();
-
-    // TODO Sort
-  //}
 
   if ($lg_settings['ana']['draft_stages']) {
     # pick/ban draft stages stats
@@ -772,7 +787,7 @@ include_once("modules/mod.migrate_params.php");
                   SUM(am.stuns)/SUM(1) stuns,
                   SUM(am.lh_at10)/SUM(1) lh_10,
                   SUM(m.duration)/(SUM(1)*60) avg_duration,
-                  SUM(ml.lasthits)/(SUM(m.duration)/(SUM(1)*60)) lh
+                  SUM(ml.lasthits)/(SUM(m.duration)/60) lh
                 FROM adv_matchlines am JOIN
                 	matchlines ml
                     	ON am.matchid = ml.matchid AND am.heroid = ml.heroid
@@ -894,8 +909,6 @@ include_once("modules/mod.migrate_params.php");
             GROUP BY m1.heroid, m2.heroid
             HAVING match_count > $limiter_graph
             ORDER BY match_count DESC, winrate DESC;";
-    # wins data is available, altho it's more like "just in case"
-    # with graph we care only about popularity
     # WARNING: big amount of matches may send client browser to a long trip
 
     if ($conn->multi_query($sql) === TRUE) echo "[S] Requested data for FULL HERO PAIRS.\n";
@@ -935,11 +948,21 @@ include_once("modules/mod.migrate_params.php");
     $query_res = $conn->store_result();
 
     for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
+      //$result['random']['matches_total']
+      //$result['pickban'][]['matches_picked']
+      $hero1_pickrate = $result['pickban'][$row[0]]['matches_picked'] / $result['random']['matches_total'];
+      $hero2_pickrate = $result['pickban'][$row[1]]['matches_picked'] / $result['random']['matches_total'];
+      $expected_pair  = $hero1_pickrate * $hero2_pickrate * ($result['random']['matches_total']/2);
+      $pair_percentage = $row[2] / $expected_pair;
+
+      //if($pair_percentage < 0.05) continue;
+
       $result["hero_pairs"][] = array (
         "heroid1" => $row[0],
         "heroid2" => $row[1],
         "matches" => $row[2],
-        "winrate" => $row[3]
+        "winrate" => $row[3],
+        "expectation" => $expected_pair
       );
     }
 
@@ -1302,25 +1325,41 @@ include_once("modules/mod.migrate_params.php");
                   AND matchlines.isRadiant = teams_matches.is_radiant
                   WHERE teams_matches.teamid = ".$id.";";
 
+        # diversity
+        # (COUNT(DISTINCT heroid)/mhpt.mhp) * (COUNT(DISTINCT heroid)/COUNT(DISTINCT matchid))
+        $sql .= "SELECT \"diversity\", (COUNT(DISTINCT matchlines.heroid)/mhpt.mhp)*(COUNT(DISTINCT matchlines.heroid)/COUNT(DISTINCT matchlines.matchid))
+                  FROM matchlines JOIN teams_matches JOIN (
+                    select max(heropool) mhp from (
+                      select COUNT(DISTINCT matchlines.heroid) heropool
+                      FROM matchlines JOIN teams_matches
+                      ON matchlines.matchid = teams_matches.matchid
+                      AND matchlines.isRadiant = teams_matches.is_radiant
+                      GROUP BY teams_matches.teamid
+                    ) _hp
+                  ) mhpt
+                  ON matchlines.matchid = teams_matches.matchid
+                  AND matchlines.isRadiant = teams_matches.is_radiant
+                  WHERE teams_matches.teamid = ".$id.";";
+
         # radiant ratio
         $sql .= "SELECT \"rad_ratio\", SUM(is_radiant)/COUNT(DISTINCT matchid)
                   FROM teams_matches
                   WHERE teamid = ".$id.";";
 
         # radiant wr
-        $sql .= "SELECT \"rad_wr\", SUM(matches.radiantWin)/COUNT(DISTINCT matches.matchid) FROM matches JOIN teams_matches
+        $sql .= "SELECT \"radiant_wr\", SUM(matches.radiantWin)/COUNT(DISTINCT matches.matchid) FROM matches JOIN teams_matches
                   ON matches.matchid = teams_matches.matchid
                   AND teams_matches.is_radiant = 1
                   WHERE teams_matches.teamid = ".$id.";";
 
         # dire wr
-        $sql .= "SELECT \"dire_wr\", SUM(matches.radiantWin)/COUNT(DISTINCT matches.matchid) FROM matches JOIN teams_matches
+        $sql .= "SELECT \"dire_wr\", 1-(SUM(matches.radiantWin)/COUNT(DISTINCT matches.matchid)) FROM matches JOIN teams_matches
                   ON matches.matchid = teams_matches.matchid
                   AND teams_matches.is_radiant = 0
                   WHERE teams_matches.teamid = ".$id.";";
 
         # duration
-        $sql .= "SELECT \"duration\", (SUM(matches.duration)/60)/COUNT(DISTINCT matches.matchid) FROM matches JOIN teams_matches
+        $sql .= "SELECT \"avg_match_len\", (SUM(matches.duration)/60)/COUNT(DISTINCT matches.matchid) FROM matches JOIN teams_matches
                   ON matches.matchid = teams_matches.matchid WHERE teams_matches.teamid = ".$id.";";
 
         if ($conn->multi_query($sql) === TRUE) echo "[S] Requested data for TEAM $id AVERAGES.\n";
@@ -1429,6 +1468,91 @@ include_once("modules/mod.migrate_params.php");
         # types: 2 (pick and ban)
         # total of 10 requests
       }
+
+      if ($lg_settings['ana']['teams']['draft_against']) {
+          $result['teams'][$id]["pickban_vs"] = array();
+
+          $sql = "SELECT draft.hero_id, count(distinct draft.matchid), SUM(NOT matches.radiantWin XOR draft.is_radiant) FROM
+          teams_matches JOIN draft ON draft.matchid = teams_matches.matchid AND draft.is_radiant <> teams_matches.is_radiant
+          JOIN matches ON draft.matchid = matches.matchid
+          WHERE draft.is_pick = true AND teams_matches.teamid = ".$id."
+          GROUP BY draft.hero_id;".
+          "SELECT draft.hero_id, count(distinct draft.matchid), SUM(NOT matches.radiantWin XOR draft.is_radiant) FROM
+          teams_matches JOIN draft ON draft.matchid = teams_matches.matchid AND draft.is_radiant <> teams_matches.is_radiant
+          JOIN matches ON draft.matchid = matches.matchid
+          WHERE draft.is_pick = false AND teams_matches.teamid = ".$id."
+          GROUP BY draft.hero_id;";
+
+          if ($conn->multi_query($sql) === TRUE) echo "[S] Requested data for PICKS AND BANS VS team $id.\n";
+          else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
+
+          $query_res = $conn->store_result();
+
+          for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
+            if(!isset($result['teams'][$id]["pickban_vs"][$row[0]])) {
+              $result['teams'][$id]["pickban_vs"][$row[0]] = array(
+                "matches_banned" => 0,
+                "wins_banned" => 0
+              );
+            }
+            $result['teams'][$id]["pickban_vs"][$row[0]]['matches_picked'] = $row[1];
+            $result['teams'][$id]["pickban_vs"][$row[0]]['wins_picked'] = $row[2];
+            $result['teams'][$id]["pickban_vs"][$row[0]]['matches_total'] = $row[1];
+          }
+
+          $query_res->free_result();
+          $conn->next_result();
+          $query_res = $conn->store_result();
+
+          for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
+            if(!isset($result['teams'][$id]["pickban_vs"][$row[0]])) {
+              $result['teams'][$id]["pickban_vs"][$row[0]] = array(
+                "matches_picked" => 0,
+                "wins_picked" => 0
+              );
+            }
+            $result['teams'][$id]["pickban_vs"][$row[0]]['matches_banned'] = $row[1];
+            $result['teams'][$id]["pickban_vs"][$row[0]]['wins_banned'] = $row[2];
+            if(isset($result['teams'][$id]["pickban_vs"][$row[0]]['matches_total']))
+              $result['teams'][$id]["pickban_vs"][$row[0]]['matches_total'] += $row[1];
+            else $result['teams'][$id]["pickban_vs"][$row[0]]['matches_total'] = $row[1];
+          }
+
+          $query_res->free_result();
+
+          $result["teams"][$id]["draft_vs"] = array (
+            "picks" => array(),
+            "bans"  => array()
+          );
+
+          for ($pick = 0; $pick < 2; $pick++) {
+            $result["teams"][$id]["draft_vs"][$pick] = array();
+            for ($stage = 1; $stage < 4; $stage++) {
+              $sql = "SELECT draft.hero_id hero_id, SUM(1) matches, SUM(NOT matches.radiantWin XOR draft.is_radiant)/SUM(1) winrate
+                      FROM draft JOIN matches ON draft.matchid = matches.matchid
+                                 JOIN teams_matches ON teams_matches.matchid = draft.matchid AND draft.is_radiant <> teams_matches.is_radiant
+                      WHERE is_pick = ".($pick ? "true" : "false")." AND stage = ".$stage." AND teams_matches.teamid = ".$id."
+                      GROUP BY draft.hero_id";
+              if ($conn->multi_query($sql) === TRUE);
+              else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
+
+              $query_res = $conn->store_result();
+
+              $result["teams"][$id]["draft_vs"][$pick][$stage] = array();
+
+              for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
+                $result["teams"][$id]["draft_vs"][$pick][$stage][] = array (
+                  "heroid" => $row[0],
+                  "matches"=> $row[1],
+                  "winrate"=> $row[2]
+                );
+              }
+
+              $query_res->free_result();
+            }
+          }
+      }
+
 
       if ($lg_settings['ana']['teams']['heropos']) {
         $result["teams"][$id]["hero_positions"] = array ();
@@ -1714,7 +1838,7 @@ include_once("modules/mod.migrate_params.php");
               FROM matchlines m1 JOIN matchlines m2
                 ON m1.matchid = m2.matchid and m1.isRadiant = m2.isRadiant and m1.playerid < m2.playerid
                 JOIN matches ON m1.matchid = matches.matchid
-              GROUP BY m1.playerid, m2.playerid HAVING match_count > $limiter;";
+              GROUP BY m1.playerid, m2.playerid HAVING match_count > $limiter_graph;";
       # only wis makes more sense for players combo graph
 
       if ($conn->multi_query($sql) === TRUE) echo "[S] Requested data for PLAYER PAIRS.\n";
@@ -1726,6 +1850,7 @@ include_once("modules/mod.migrate_params.php");
         $result["players_combo_graph"][] = array (
           "playerid1" => $row[0],
           "playerid2" => $row[1],
+          "matches" => $row[3],
           "wins" => $row[2]
         );
       }
@@ -1928,9 +2053,10 @@ include_once("modules/mod.migrate_params.php");
       for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
         if(!isset($result["match_participants_teams"]))
           $result["match_participants_teams"][$row[0]] = array();
-        if($row[2] == true)
+        if($row[2])
           $result["match_participants_teams"][$row[0]]["radiant"] = $row[1];
-        else $result["match_participants_teams"][$row[0]]["dire"] = $row[1];
+        else
+          $result["match_participants_teams"][$row[0]]["dire"] = $row[1];
       }
 
       $query_res->free_result();

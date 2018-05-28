@@ -1,4 +1,7 @@
 <?php
+
+ # 1.0.0-{alpha/beta/rc1/rc2/release}-rN
+
 function compare_ver($v1, $v2) {
   if(!isset($v1[4])) $v1[4] = 0;
   if(!isset($v2[4])) $v2[4] = 0;

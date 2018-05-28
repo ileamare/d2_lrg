@@ -4,7 +4,7 @@ body {
 
 table.list , table.pvp {
   border: 1px solid black;
-  width: 70%;
+  width: 82%;
   border-spacing: 0px;
   text-align: left;
   margin-top: 30px;
@@ -17,7 +17,7 @@ table.list-fixed {
   table-layout: fixed;
 }
 table.list-small {
-  width: 39%;
+  width: 40%;
   float: left;
   /* min-width: 250px; */
 }
@@ -88,7 +88,7 @@ table.list-small tr th:first-child {
   width: 55%;
 }
 table.wide {
-  width: 90%;
+  width: 98%;
 }
 table.wide td, table.wide th {
     padding-left: 15px;
@@ -445,8 +445,8 @@ table .hero_portrait {
 }
 
 .graph {
-  width: 1100px;
-  height: 1000px;
+  width: 1200px;
+  height: 900px;
   margin: 0 auto;
 }
 
@@ -472,7 +472,7 @@ table .hero_portrait {
 }
 
 .chart-pie {
-  width: 30%;
+  width: 40%;
   margin: 0%;
   height: auto;
   display: inline-block;

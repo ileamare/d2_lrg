@@ -1,5 +1,5 @@
 <?php
-require_once("settings.php");
+require_once("head.php");
 require_once("modules/mod.migrate_params.php");
 
 $reports = scandir("leagues");

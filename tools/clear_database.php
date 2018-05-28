@@ -1,6 +1,6 @@
 <?php
 
-require_once('settings.php');
+require_once('head.php');
 
 $conn = new mysqli($lrg_sql_host, $lrg_sql_user, $lrg_sql_pass, $lrg_sql_db);
 

@@ -1,42 +1,34 @@
 #!/bin/php
 <?php
+require_once("libs/simple-opendota-php/simple_opendota.php");
 
 $options = getopt("f:");
 if(isset($options['f'])) {
   $filename = $options['f'];
 } else die();
 
-$input_cont = file_get_contents($filename);
+$settings = json_decode(file_get_contents("rg_settings.json"), true);
+
+$input_cont = file_get_contents($filename) or die("[F] Error while opening file.\n");
 $input_cont = str_replace("\r\n", "\n", $input_cont);
+
+if(!empty($settings['odapikey']))
+  $opendota = new odota_api(true, "", 0, $settings['odapikey']);
+else
+  $opendota = new odota_api(true);
+
+unset($settings);
 
 $matches    = explode("\n", trim($input_cont));
 
 $matches = array_unique($matches);
 
-
-# https://api.opendota.com/api/matches/{match_id}
-
 foreach ($matches as $match) {
     if ($match[0] == "#") continue;
 
-      $fields = array(
-        //'match_id' => $match,
-        );
-        /*$postvars = http_build_query($fields);
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, "https://api.opendota.com/api/request/$match");
-        curl_setopt($ch, CURLOPT_POST, count($fields));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postvars);
-
-        $result = curl_exec($ch);
-
-        curl_close($ch);
-        */
-        $result = `curl -i -X POST https://api.opendota.com/api/request/$match`;
-        //var_dump($result);
+    $opendota->request_match($match);
 }
 
-echo "[S] Fetch complete.\n";
+echo "[S] All matches were requested.\n";
 
 ?>

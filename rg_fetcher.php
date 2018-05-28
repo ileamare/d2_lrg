@@ -236,7 +236,7 @@ foreach ($matches as $match) {
                 $team = json_decode($json, true);
 
                 if( !isset($team['result']['teams'][0]['tag']) || $team['result']['teams'][0]['tag'] == null )
-                    $matchdata['dire_team']['tag'] = generate_tag($tmp['result']['radiant_name']);
+                    $matchdata['dire_team']['tag'] = generate_tag($tmp['result']['dire_name']);
                 else
                     $matchdata['dire_team']['tag'] = $team['result']['teams'][0]['tag'];
               }
@@ -298,6 +298,7 @@ foreach ($matches as $match) {
     $i = sizeof($t_matchlines);
     for ($j = 0; $j < 10; $j++, $i++) {
         $t_matchlines[$i]['matchid'] = $match;
+
         # support for botmatches
         if ($matchdata['players'][$j]['account_id'] != null)
           $t_matchlines[$i]['playerid'] = $matchdata['players'][$j]['account_id'];

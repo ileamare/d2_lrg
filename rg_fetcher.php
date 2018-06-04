@@ -74,30 +74,31 @@ if ($conn->multi_query($sql)) {
 
 foreach ($matches as $match) {
     if (empty($match) || $match[0] == "#") continue;
+    echo("[M] Match $match: ");
 
     $query = $conn->query("SELECT matchid FROM matches WHERE matchid = ".$match.";");
 
     if ($query->num_rows) {
-        echo("[E] Match $match: Already have it in database, skipping\n");
+        echo("Already in database, skipping\n");
         continue;
     }
 
     if($lrg_use_cache && file_exists("cache/".$match.".json")) {
-      echo("[_] Match $match: Found local cached version, reusing it\n");
+      echo("Reusing cache.");
       $json = file_get_contents("cache/".$match.".json");
       $matchdata = json_decode($json, true);
     } else {
-      echo("[_] Match $match: Requesting OpenDota API\n");
+      echo("Requesting OpenDota.");
       $matchdata = $opendota->match($match);
-      echo("[S] Match $match: Request OK\n");
+      echo("..OK.");
       if ($matchdata == null || !isset($matchdata['duration'])) {
-          echo("[E] Match $match: Can't parse JSON from OpenDota, skipping\n");
+          echo("..ERROR: Unable to read JSON skipping.\n");
           //if (!isset($matchdata['duration'])) var_dump($matchdata);
           $failed_matches[sizeof($failed_matches)] = $match;
           continue;
       } else {
         if ($matchdata['players'][0]['lh_t'] == null) {
-            echo("[E] Match $match: Replay is not parsed, skipping\n");
+            echo("..ERROR: Replay isn't parsed.\n");
             $failed_matches[sizeof($failed_matches)] = $match;
             continue;
         }
@@ -111,7 +112,7 @@ foreach ($matches as $match) {
         continue;
     }
     if($matchdata['radiant_score'] < 5 && $matchdata['dire_score'] < 5) {
-        echo("[ ] Match score is less than 5 - 5, skipping...\n");
+        echo("..Low score, skipping.\n");
         continue;
     }
 
@@ -124,13 +125,13 @@ foreach ($matches as $match) {
     }
 
     if($abandon) {
-        echo("[ ] Abandon detected, skipping...\n");
+        echo("..Abandon detected, skipping.\n");
         continue;
     }
 
     if(!file_exists("cache/".$match.".json")) {
       if($matchdata['lobby_type'] != 1 && $matchdata['lobby_type'] != 2) {
-        echo("[ ] Requesting Stratz for additional match data.\n");
+        echo("..Requesting STRATZ.");
 
         // Not all matches in Stratz database have PickBan support for /match? endpoint
         // so there will be kind of workaround for it.
@@ -140,7 +141,7 @@ foreach ($matches as $match) {
         $json = file_get_contents($request);
 
         if(empty($json)) {
-            echo("[E] Match $match: Missing Stratz report, skipping\n");
+            echo("..ERROR: Missing STRATZ analysis, skipping.\n");
           $failed_matches[sizeof($failed_matches)] = $match;
           continue;
         }
@@ -148,7 +149,7 @@ foreach ($matches as $match) {
         $stratz = json_decode($json, true);
 
         if(!isset($stratz['results'][0]['parsedDate'])) {
-          echo("[E] Match $match: Missing Stratz analysis, skipping\n");
+          echo("..ERROR: Missing STRATZ analysis, skipping.\n");
           $failed_matches[sizeof($failed_matches)] = $match;
           continue;
         }
@@ -156,8 +157,9 @@ foreach ($matches as $match) {
         $full_request = false;
         if($matchdata['game_mode'] == 22 || $matchdata['game_mode'] == 3) {
           while(!isset($stratz['results'][0]['pickBans']) || $stratz['results'][0]['pickBans'] === NULL) {
-            echo "[E] $match: Stratz draft data error. Retrying request in 5 seconds...\n";
+            echo "..STRATZ ERROR";
             `sleep 5`;
+            echo ", retrying.";
 
             if (!isset($stratz['results'][0]['pickBans'])) {
                 $request = "https://api.stratz.com/api/v1/match/$match";
@@ -171,7 +173,7 @@ foreach ($matches as $match) {
             else $stratz = json_decode($json, true);
 
             if($full_request && strlen($json) < 6500) {
-                echo("[E] Match $match: Missing Stratz analysis, try again later\n");
+                echo("..ERROR: Missing STRATZ analysis, skipping.\n");
                 $failed_matches[sizeof($failed_matches)] = $match;
                 break;
             }
@@ -184,15 +186,15 @@ foreach ($matches as $match) {
         for($i=0; $i<10; $i++) {
           if(!isset($matchdata['players'][$i]['account_id']) || $matchdata['players'][$i]['account_id'] === null) {
             $matchdata['players'][$i]['account_id'] = $stratz['results'][0]['players'][$i]['steamId'];
-            $tmp = $opendota->player($matchdata['players'][$i]['account_id']);
+            //$tmp = $opendota->player($matchdata['players'][$i]['account_id']);
 
             $matchdata['players'][$i]["name"] = $stratz['results'][0]['players'][$i]['name'];
-            if(isset($tmp['profile']['personaname']))
-              $matchdata['players'][$i]["personaname"] = $tmp['profile']['personaname'];
+            if(isset($stratz['results'][0]['players'][$i]['proPlayerName']))
+              $matchdata['players'][$i]["personaname"] = $stratz['results'][0]['players'][$i]['proPlayerName'];
           }
         }
 
-        echo("[ ] Stratz data merged.\n");
+        echo("..Stratz data merged.");
 
         unset($stratz);
         unset($full_request);
@@ -253,7 +255,7 @@ foreach ($matches as $match) {
         fwrite($f, $json);
         fclose($f);
 
-        echo("[S] Match $match: Saved cached version\n");
+        echo("..Saved to cache.");
       }
     }
 
@@ -357,8 +359,10 @@ foreach ($matches as $match) {
         if ($matchdata['players'][$j]['lh_t'][5] <= 6) $support_indicators++;
         if ($matchdata['players'][$j]['lh_t'][3] <= 2) $support_indicators++;
         if ($matchdata['players'][$j]['obs_placed'] > 1) $support_indicators++;
-        if ($matchdata['players'][$j]['obs_placed'] > 5) $support_indicators++;
-        if ($matchdata['players'][$j]['obs_placed'] > 10) $support_indicators++;
+        if ($matchdata['players'][$j]['obs_placed'] > 4) $support_indicators++;
+        if ($matchdata['players'][$j]['obs_placed'] > 8) $support_indicators++;
+        if ($matchdata['players'][$j]['obs_placed'] > 12) $support_indicators++;
+        if ($matchdata['players'][$j]['sen_placed'] > 6) $support_indicators++;
         if ($matchdata['players'][$j]['gold_per_min'] < 355) $support_indicators++;
         if ($matchdata['players'][$j]['gold_per_min'] < 290) $support_indicators++;
         if ($matchdata['players'][$j]['lane_efficiency'] < 0.45) $support_indicators++;
@@ -510,8 +514,7 @@ foreach ($matches as $match) {
             $i++;
         }
     }
-
-
+    echo "..OK.\n";
 }
 
 # recording to database
@@ -604,11 +607,9 @@ if(!empty($t_draft)) {
 }
 
 if (sizeof($failed_matches)) {
-  echo "\nUnparsed matches: \n";
-  foreach ($failed_matches as $fm)
-      echo "\t$fm\n";
+  echo "[R] Unparsed matches: \t".sizeof($failed_matches)."\n";
 
-  echo "\n[_] Recording failed matches to file...\n";
+  echo "[_] Recording failed matches to file...\n";
 
   $output = implode("\n", $failed_matches);
   $filename = "tmp_fm".time();

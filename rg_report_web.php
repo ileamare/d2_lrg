@@ -2878,6 +2878,8 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
               else if(!empty($default_style))
                 echo "<link href=\"res/custom_styles/".$default_style.".css\" rel=\"stylesheet\" type=\"text/css\" />";
             }
+            if(isset($report['settings']['custom_logo']) && file_exists("res/custom_styles/logos/".$report['settings']['custom_logo'].".css"))
+                echo "<link href=\"res/custom_styles/logos/".$report['settings']['custom_logo'].".css\" rel=\"stylesheet\" type=\"text/css\" />";
             if($use_graphjs) {
               echo "<script type=\"text/javascript\" src=\"res/dependencies/Chart.bundle.min.js\"></script>";
             }
@@ -2921,9 +2923,13 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       <div id="content-wrapper">
       <?php if (!empty($leaguetag)) { ?>
         <div id="header-image" class="section-header">
+        <?php if(empty($report['settings']['custom_logo'])) {?>
           <h1><?php echo $report['league_name']; ?></h1>
           <h2><?php echo $report['league_desc']; ?></h2>
           <h3><?php echo locale_string($h3).": ".$report['random'][$h3]; ?></h3>
+        <?php } else { ?>
+          <div id="image-logo"></div>
+        <?php } ?>
         </div>
         <div id="main-section" class="content-section">
 <?php

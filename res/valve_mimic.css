@@ -57,6 +57,12 @@ a:hover {
   background-size: cover;
 }
 
+#image-logo {
+  height: 438px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .section-header h1 {
 	width: 100%;
 	text-align: center;

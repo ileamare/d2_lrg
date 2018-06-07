@@ -72,6 +72,7 @@
   },
   "web": {
     "custom_style" : "",
+    "custom_logo" : "",
 
     "pvp_grid" : false,
 

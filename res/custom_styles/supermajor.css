@@ -7,7 +7,7 @@
 body {
   background-color: #282a2b;
 }
-header.navBar a.header.navBar a:hover, header.navBar a:visited {
+header.navBar a, header.navBar a:hover, header.navBar a:visited, header.navBar a:focus {
   color: #eee !important;
 }
 
@@ -26,7 +26,7 @@ header.navBar a.header.navBar a:hover, header.navBar a:visited {
   color: #444;
 }
 
-a, a:hover, a:visited {
+a, a:hover, a:visited, a:focus {
   color: #000;
 }
 table.list, table.pvp {
@@ -106,12 +106,13 @@ table.pvp .thead th  {
 }
 
 .content-section .content-header {
-	background-color: #ddd;
-  color: #000;
+	background-color: #279d91;
+  color: #fff;
   text-shadow: none;
   font-size: 26px;
   font-weight: bold;
   font-family: inherit;
+  text-shadow: 2px 2px 6px black;
 }
 
 
@@ -119,15 +120,15 @@ table.pvp .thead th  {
     background-color: #ddd;
 }
 .modal-text {
-    color: #fff;
+    color: #000;
 }
 .modal-sublevel {
-    color: #fff;
+    color: #000;
     background-color: #aaa;
 }
 .modal-header {
     color: #fff;
-    background-color: #999;
+    background-color: #279d91;
 }
 
 table.list, table.pvp {
@@ -147,11 +148,18 @@ table.list tr:hover td, table.pvp tr:hover td {
 }
 
 .team-card .team-name, .player-card .player-name {
-  background-color: #eee;
+  background-color: #67c6bc;
 }
 
 .player-card .player-team {
   background-color: #ddd;
+  color: #333;
+}
+.section-caption {
+  color: #000;
+}
+.match-id {
+  color: #000;
 }
 
 footer {
@@ -160,7 +168,7 @@ footer {
   display:block;
   text-align: center;
 }
-footer a, footer a:hover, footer a:visited {
+footer a, footer a:hover, footer a:visited, footer a:focus {
   color: #eee;
 }
 
@@ -169,4 +177,8 @@ table.pvp tr td.low-wr {
 }
 table.pvp tr td.high-wr {
   background-color: #49cf53 !important;
+}
+
+.hero .hero_name {
+  color: #aaa
 }

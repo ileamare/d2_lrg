@@ -97,36 +97,36 @@ foreach ($matches as $match) {
           $failed_matches[sizeof($failed_matches)] = $match;
           continue;
       } else {
+        if($matchdata['duration'] < 600) {
+            echo("[ ] Match duration is less than 10 minutes, skipping...\n");
+            // Initially it used to be 5 minutes, but sice a lot of stuff is hardly
+            // binded with 10 min mark, it's better to use 10 min as a benchmark.
+            continue;
+        }
+        if($matchdata['radiant_score'] < 5 && $matchdata['dire_score'] < 5) {
+            echo("..Low score, skipping.\n");
+            continue;
+        }
+
+        $abandon = false;
+        for($i=0; $i<10; $i++) {
+            if($matchdata['players'][$i]['abandons']) {
+                $abandon = true;
+                break;
+            }
+        }
+
+        if($abandon) {
+            echo("..Abandon detected, skipping.\n");
+            continue;
+        }
+      
         if ($matchdata['players'][0]['lh_t'] == null) {
             echo("..ERROR: Replay isn't parsed.\n");
             $failed_matches[sizeof($failed_matches)] = $match;
             continue;
         }
       }
-    }
-
-    if($matchdata['duration'] < 600) {
-        echo("[ ] Match duration is less than 10 minutes, skipping...\n");
-        // Initially it used to be 5 minutes, but sice a lot of stuff is hardly
-        // binded with 10 min mark, it's better to use 10 min as a benchmark.
-        continue;
-    }
-    if($matchdata['radiant_score'] < 5 && $matchdata['dire_score'] < 5) {
-        echo("..Low score, skipping.\n");
-        continue;
-    }
-
-    $abandon = false;
-    for($i=0; $i<10; $i++) {
-        if($matchdata['players'][$i]['abandons']) {
-            $abandon = true;
-            break;
-        }
-    }
-
-    if($abandon) {
-        echo("..Abandon detected, skipping.\n");
-        continue;
     }
 
     if(!file_exists("cache/".$match.".json")) {

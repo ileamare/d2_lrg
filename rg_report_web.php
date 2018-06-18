@@ -1488,11 +1488,11 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
             $modules['heroes']['hero_sides']['overview'] .= "<tr>
                                                 <td>".($hid ? hero_full($hid) : "")."</td>".
                                                 "<td>".$hero['matches']."</td>".
-                                                "<td>".number_format($hero["side0matches"]*100/$hero["matches"],2)."%</td>".
-                                                "<td class=\"separator\">".$hero["side0matches"]."</td>".
-                                                "<td>".number_format($hero["side0winrate"]*100,2)."%</td>".
+                                                "<td>".number_format($hero["side1matches"]*100/$hero["matches"],2)."%</td>".
                                                 "<td class=\"separator\">".$hero["side1matches"]."</td>".
                                                 "<td>".number_format($hero["side1winrate"]*100,2)."%</td>".
+                                                "<td class=\"separator\">".$hero["side0matches"]."</td>".
+                                                "<td>".number_format($hero["side0winrate"]*100,2)."%</td>".
                                               "</tr>";
           }
           $modules['heroes']['hero_sides']['overview'] .= "</table>";
@@ -1502,31 +1502,32 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
         }
 
         for ($side = 0; $side < 2; $side++) {
-          $modules['heroes']['hero_sides'][$side ? 'dire' : 'radiant'] = "";
-          if(!check_module($parent."hero_sides-".($side ? 'dire' : 'radiant'))) continue;
+          $side_tag = $side ? 'radiant' : 'dire';
+          $modules['heroes']['hero_sides'][$side_tag] = "";
+          if(!check_module($parent."hero_sides-".$side_tag)) continue;
 
-          $modules['heroes']['hero_sides'][$side ? 'dire' : 'radiant'] .= "<table id=\"hero-sides-".$side."\" class=\"list\">
+          $modules['heroes']['hero_sides'][$side_tag] .= "<table id=\"hero-sides-".$side_tag."\" class=\"list\">
                                         <tr class=\"thead\">
-                                          <th onclick=\"sortTable(0,'hero-sides-$side');\">".locale_string("hero")."</th>";
+                                          <th onclick=\"sortTable(0,'hero-sides-$side_tag');\">".locale_string("hero")."</th>";
           for($k=1, $end=sizeof($keys); $k < $end; $k++) {
-            $modules['heroes']['hero_sides'][$side ? 'dire' : 'radiant'] .= "<th onclick=\"sortTableNum($k,'hero-sides-$side');\">".locale_string($keys[$k])."</th>";
+            $modules['heroes']['hero_sides'][$side_tag] .= "<th onclick=\"sortTableNum($k,'hero-sides-$side_tag');\">".locale_string($keys[$k])."</th>";
           }
-          $modules['heroes']['hero_sides'][$side ? 'dire' : 'radiant'] .= "</tr>";
+          $modules['heroes']['hero_sides'][$side_tag] .= "</tr>";
 
           foreach($report['hero_sides'][$side] as $hero) {
-            $modules['heroes']['hero_sides'][$side ? 'dire' : 'radiant'] .= "<tr>
+            $modules['heroes']['hero_sides'][$side_tag] .= "<tr>
                                                 <td>".($hero['heroid'] ? hero_full($hero['heroid']) : "").
                                                "</td>".
                                                "<td>".$hero['matches']."</td>".
                                                "<td>".number_format($hero['winrate']*100,2)."%</td>";
             for($k=3, $end=sizeof($keys); $k < $end; $k++) {
-              $modules['heroes']['hero_sides'][$side ? 'dire' : 'radiant'] .= "<td>".number_format($hero[$keys[$k]],2)."</td>";
+              $modules['heroes']['hero_sides'][$side_tag] .= "<td>".number_format($hero[$keys[$k]],2)."</td>";
             }
-            $modules['heroes']['hero_sides'][$side ? 'dire' : 'radiant'] .= "</tr>";
+            $modules['heroes']['hero_sides'][$side_tag] .= "</tr>";
           }
-          $modules['heroes']['hero_sides'][$side ? 'dire' : 'radiant'] .= "</table>";
+          $modules['heroes']['hero_sides'][$side_tag] .= "</table>";
 
-          $modules['heroes']['hero_sides'][$side ? 'dire' : 'radiant'] .= "<div class=\"content-text\">".locale_string("desc_heroes_sides")."</div>";
+          $modules['heroes']['hero_sides'][$side_tag] .= "<div class=\"content-text\">".locale_string("desc_heroes_sides")."</div>";
         }
         unset($keys);
       }

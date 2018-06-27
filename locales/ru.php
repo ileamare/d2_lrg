@@ -18,6 +18,8 @@
     "heroes_contested"=> "Востребованные герои",
     "heroes_uncontested"=> "Невостребованные герои",
     "heroes_picked"=> "Выбранные герои",
+    "heroes_pickbanned"=> "Выбранные и запрещённые герои",
+    "heroes_banned"=>"Запрещённые герои",
     "buybacks_total_game" => "Матч с наибольшим количеством выкупов",
     "obs_total" => "Всего установлено вардов",
     "obs_killed_total" => "Всего разрушено вардов",

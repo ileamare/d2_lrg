@@ -68,6 +68,13 @@
       "triplets": true,
       "matches": true,
       "team_vs_team" : true
+    },
+    "regions": {
+      "pickbans": true,
+      "draft": true,
+      "pairs": true,
+      "hero_graph": true,
+      "hero_pos": true
     }
   },
   "web": {

@@ -18,6 +18,8 @@
     "heroes_contested"=> "Heroes contested",
     "heroes_uncontested"=> "Heroes uncontested",
     "heroes_picked"=> "Heroes picked",
+    "heroes_pickbanned"=> "Heroes picked and banned",
+    "heroes_banned"=>"Heroes banned",
     "buybacks_total_game" => "Match with most buybacks",
     "obs_total" => "Total observer wards planted",
     "obs_killed_total" => "Total observer wards destroyed",

@@ -12,7 +12,7 @@
     "hero_triplets_matches":false
   },
   "web": {
-    "custom_style": "bots",
+    "custom_style": "ranked",
     "overview_last_match_winners" : false,
     "overview_matches": false,
     "overview_first_match" : false,

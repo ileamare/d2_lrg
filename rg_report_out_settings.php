@@ -4,7 +4,7 @@
 $lrg_use_get = true;
 $lrg_get_depth = 3;
 $locale = "en";
-$max_tabs = 10;
+$max_tabs = 12;
 
 $mod = "";
 

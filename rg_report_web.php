@@ -398,7 +398,7 @@ $level_codes = array(
   2 => array ( "level-3", "level-3" ),
   3 => array ( "level-4", "level-4" )
 );
-$charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f","#2f6","#6f2","#f22","#ff6","#6ff","#f6f","#666" );
+$charts_colors = array( "#6af","#f66","#fa6","#66f","#62f","#a6f","#6ff","#6fa","#2f6","#6f2","#ff6","#f22","#f6f","#666" );
 
 /* INITIALISATION */
 
@@ -492,6 +492,8 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
     if (isset($report['matches'])) $modules['matches'] = "";
 
     if (isset($report['players'])) $modules['participants'] = array();
+
+    if (isset($report['regions_data'])) $modules['regions'] = array();
 
     if(empty($mod)) $unset_module = true;
     else $unset_module = false;
@@ -618,7 +620,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
     if($report['settings']['overview_charts']) {
       $use_graphjs = true;
 
-      $modules['overview'] .= "<div class=\"content-text overview overview-graphs\">";
+      $modules['overview'] .= "<div class=\"content-text overview overview-charts\">";
 
       $mode = reset($report['versions']);
       if ($report['settings']['overview_versions'] && $mode/$report['random']['matches_total'] < 0.99) {
@@ -688,6 +690,7 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       unset($regions_matches);
 
       if ($report['settings']['overview_sides_graph']) {
+        $colors = array_slice($charts_colors, 0, 2);
         $modules['overview'] .= "<div class=\"chart-pie\"><canvas id=\"overview-sides\" width=\"undefined\" height=\"undefined\"></canvas><script>".
                               "var modes_chart_el = document.getElementById('overview-sides'); ".
                               "var modes_chart = new Chart(modes_chart_el, {
@@ -696,21 +699,28 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
                                   labels: [ '".locale_string("radiant")."','".locale_string("dire")."' ],
                                   datasets: [{data: [ ".$report['random']['radiant_wr'].",".$report['random']['dire_wr']." ],
                                   borderWidth: 0,
-                                  backgroundColor:['#6af','#f66']}]
+                                  backgroundColor:['".implode($colors,"','")."']}]
                                 }
                               });</script></div>";
       }
 
       if ($report['settings']['overview_heroes_contested_graph']) {
+        $colors = array_slice($charts_colors, 0, 4);
         $modules['overview'] .= "<div class=\"chart-pie\"><canvas id=\"overview-heroes\" width=\"undefined\" height=\"undefined\"></canvas><script>".
                               "var modes_chart_el = document.getElementById('overview-heroes'); ".
                               "var modes_chart = new Chart(modes_chart_el, {
                                 type: 'pie',
                                 data: {
-                                  labels: [ '".locale_string("heroes_contested")."','".locale_string("heroes_uncontested")."' ],
-                                  datasets: [{data: [ ".$report['random']['heroes_contested'].",".(sizeof($meta['heroes'])-$report['random']['heroes_contested'])." ],
+                                  labels: [ '".locale_string("heroes_pickbanned")."','".
+                                               locale_string("heroes_picked")."', '".
+                                               locale_string("heroes_banned")."','".
+                                               locale_string("heroes_uncontested")."' ],
+                                  datasets: [{data: [ ".($report['random']['heroes_banned']-$report['random']['heroes_contested']+$report['random']['heroes_picked']).",".
+                                                        ($report['random']['heroes_contested']-$report['random']['heroes_banned']).", ".
+                                                        ($report['random']['heroes_contested']-$report['random']['heroes_picked']).",".
+                                                        (sizeof($meta['heroes'])-$report['random']['heroes_contested'])." ],
                                   borderWidth: 0,
-                                  backgroundColor:['#6af','#f66']}]
+                                  backgroundColor:['".implode($colors,"','")."']}]
                                 }
                               });</script></div>";
       }
@@ -2807,6 +2817,73 @@ $charts_colors = array( "#6af","#f66","#fa6","#6f6","#66f","#6fa","#a6f","#62f",
       $modules['tvt'] .= "<div class=\"content-text\">".locale_string("desc_tvt")."</div>";
 
       unset($tvt);
+  }
+
+  if (isset($modules['regions']) && check_module("regions")) {
+    if($mod == "regions") $unset_module = true;
+    $parent = "regions-";
+
+    foreach ($report['regions_data'] as $region => $reg_report) {
+      $modules['regions']["reg_".$region."_rep"] = [];
+      $strings['en']["reg_".$region."_rep"] = $meta['regions'][$region];
+
+      if(check_module($parent."reg_".$region."_rep")) {
+        if($mod == $parent."reg_".$region."_rep") $unset_module = true;
+
+        if(isset($reg_report["pickban"])) {
+          $modules['regions']["reg_".$region."_rep"]["pickban"] = "";
+
+          if(check_module($parent."reg_".$region."_rep"."-pickban")) {
+            $heroes = $meta['heroes'];
+
+            uasort($reg_report['pickban'], function($a, $b) {
+              if($a['matches_total'] == $b['matches_total']) return 0;
+              else return ($a['matches_total'] < $b['matches_total']) ? 1 : -1;
+            });
+
+            $modules['regions']["reg_".$region."_rep"]["pickban"] .=  "<table id=\"region$region-heroes-pickban\" class=\"list\">
+                                                  <tr class=\"thead\">
+                                                    <th onclick=\"sortTable(0,'region$region-heroes-pickban');\">".locale_string("hero")."</th>
+                                                    <th onclick=\"sortTableNum(1,'region$region-heroes-pickban');\">".locale_string("matches_total")."</th>
+                                                    <th  class=\"separator\"onclick=\"sortTableNum(2,'region$region-heroes-pickban');\">".locale_string("contest_rate")."</th>
+                                                    <th onclick=\"sortTableNum(3,'region$region-heroes-pickban');\">".locale_string("outcome_impact")."</th>
+                                                    <th class=\"separator\" onclick=\"sortTableNum(4,'region$region-heroes-pickban');\">".locale_string("matches_picked")."</th>
+                                                    <th onclick=\"sortTableNum(5,'region$region-heroes-pickban');\">".locale_string("winrate")."</th>
+                                                    <th class=\"separator\" onclick=\"sortTableNum(6,'region$region-heroes-pickban');\">".locale_string("matches_banned")."</th>
+                                                    <th onclick=\"sortTableNum(7,'region$region-heroes-pickban');\">".locale_string("winrate")."</th>
+                                                  </tr>";
+            foreach($reg_report['pickban'] as $hid => $hero) {
+              unset($heroes[$hid]);
+              $oi = ($hero['matches_picked']*$hero['winrate_picked'] + $hero['matches_banned']*$hero['winrate_banned'])/$reg_report["main"]["matches"];
+              $modules['regions']["reg_".$region."_rep"]["pickban"] .=  "<tr>
+                                                    <td>".($hid ? hero_full($hid) : "")."</td>
+                                                    <td>".$hero['matches_total']."</td>
+                                                    <td class=\"separator\">".number_format($hero['matches_total']/$reg_report["main"]["matches"]*100,2)."%</td>
+                                                    <td>".number_format($oi*100,2)."%</td>
+                                                    <td class=\"separator\">".$hero['matches_picked']."</td>
+                                                    <td>".number_format($hero['winrate_picked']*100,2)."%</td>
+                                                    <td class=\"separator\">".$hero['matches_banned']."</td>
+                                                    <td>".number_format($hero['winrate_banned']*100,2)."%</td>
+                                                  </tr>";
+            }
+            unset($oi);
+            $modules['regions']["reg_".$region."_rep"]["pickban"] .= "</table>";
+
+            if(sizeof($heroes)) {
+              $modules['regions']["reg_".$region."_rep"]["pickban"] .= "<div class=\"content-text\"><h1>".locale_string("heroes_uncontested").": ".sizeof($heroes)."</h1><div class=\"hero-list\">";
+
+              foreach($heroes as $hero) {
+                $modules['regions']["reg_".$region."_rep"]["pickban"] .= "<div class=\"hero\"><img src=\"res/heroes/".$hero['tag'].
+                    ".png\" alt=\"".$hero['tag']."\" /><span class=\"hero_name\">".
+                    $hero['name']."</span></div>";
+              }
+              $modules['regions']["reg_".$region."_rep"]["pickban"] .= "</div></div>";
+            }
+            $modules['regions']["reg_".$region."_rep"]["pickban"] .= "<div class=\"content-text\">".locale_string("desc_heroes_pickban")."</div>";
+          }
+        }
+      }
+    }
   }
 
   # matches

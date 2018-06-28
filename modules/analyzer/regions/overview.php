@@ -9,7 +9,7 @@ die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
 
 $query_res = $conn->store_result();
 $row = $query_res->fetch_row();
-if (!$row[1]) {
+if (!$row[1] || ( $row[1] < $limiter && isset($lg_settings['ana']['regions']['use_limiter']) && $lg_settings['ana']['regions']['use_limiter']) ) {
   $query_res->free_result();
   return 1;
 } else {

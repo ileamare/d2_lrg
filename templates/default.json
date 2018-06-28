@@ -70,6 +70,7 @@
       "team_vs_team" : true
     },
     "regions": {
+      "use_limiter": true,
       "pickbans": true,
       "draft": true,
       "pairs": true,

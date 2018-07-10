@@ -29,12 +29,8 @@ $sql .= "SELECT \"obs_killed_total\", SUM(wards_destroyed) FROM adv_matchlines;"
 $sql .= "SELECT \"couriers_killed_total\", SUM(couriers_killed) FROM adv_matchlines;";
 # roshans killed
 $sql .= "SELECT \"roshans_killed_total\", SUM(roshans_killed) FROM adv_matchlines;";
-# game with most buybacks
-$sql .= "SELECT \"buybacks_total_game\", matchid, SUM(buybacks) bbs FROM adv_matchlines GROUP BY matchid ORDER BY bbs DESC;";
 # buybacks total
 $sql .= "SELECT \"buybacks_total\", SUM(buybacks) FROM adv_matchlines;";
-# summary time dead
-# $sql .= "SELECT \"total_time_dead\", SUM(time_dead)/60 FROM adv_matchlines;";
 # average match length
 $sql .= "SELECT \"avg_match_len\", SUM(duration)/(60*COUNT(DISTINCT matchid)) FROM matches;";
 

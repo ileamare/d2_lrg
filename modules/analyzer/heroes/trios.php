@@ -22,12 +22,18 @@ else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n"
 $query_res = $conn->store_result();
 
 for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
+  $hero1_pickrate = $result['pickban'][$row[0]]['matches_picked'] / $result['random']['matches_total'];
+  $hero2_pickrate = $result['pickban'][$row[1]]['matches_picked'] / $result['random']['matches_total'];
+  $hero3_pickrate = $result['pickban'][$row[2]]['matches_picked'] / $result['random']['matches_total'];
+  $expected_pair  = $hero1_pickrate * $hero2_pickrate * $hero3_pickrate * ($result['random']['matches_total']/2);
+
   $result["hero_triplets"][] = array (
     "heroid1" => $row[0],
     "heroid2" => $row[1],
     "heroid3" => $row[2],
     "matches" => $row[3],
-    "winrate" => $row[4]
+    "winrate" => $row[4],
+    "expectation" => $expected_pair
   );
 }
 

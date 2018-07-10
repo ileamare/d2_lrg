@@ -1,7 +1,7 @@
 <?php
 $init = true;
-require_once("head.php");
-require_once("modules/functions/migrate_params.php");
+include_once("head.php");
+include_once("modules/functions/migrate_params.php");
 
 if (!file_exists("templates/default.json")) die("[F] No default league template found, exitting.");
 $lg_settings = json_decode(file_get_contents("templates/default.json"), true);

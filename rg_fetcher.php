@@ -7,7 +7,7 @@ include_once("modules/fetcher/get_patchid.php");
 include_once("modules/functions/migrate_params.php");
 include_once("modules/functions/generate_tag.php");
 
-require_once("libs/simple-opendota-php/simple_opendota.php");
+include_once("libs/simple-opendota-php/simple_opendota.php");
 
 echo("\nInitialising...\n");
 
@@ -120,7 +120,7 @@ foreach ($matches as $match) {
             echo("..Abandon detected, skipping.\n");
             continue;
         }
-      
+
         if ($matchdata['players'][0]['lh_t'] == null) {
             echo("..ERROR: Replay isn't parsed.\n");
             $failed_matches[sizeof($failed_matches)] = $match;
@@ -138,7 +138,7 @@ foreach ($matches as $match) {
 
         $request = "https://api.stratz.com/api/v1/match?include=Player,PickBan&matchid=$match";
 
-        $json = file_get_contents($request);
+        $json = @file_get_contents($request);
 
         if(empty($json)) {
             echo("..ERROR: Missing STRATZ analysis, skipping.\n");
@@ -391,9 +391,17 @@ foreach ($matches as $match) {
         $t_adv_matchlines[$i]['roshans_killed'] = $matchdata['players'][$j]['roshan_kills'];
         $t_adv_matchlines[$i]['wards_destroyed'] = $matchdata['players'][$j]['observer_kills'];
         if (count($matchdata['players'][$j]['multi_kills']) == 0) $t_adv_matchlines[$i]['max_multikill'] = 0;
-        else $t_adv_matchlines[$i]['max_multikill'] = end(array_keys($matchdata['players'][$j]['multi_kills']));
+        else {
+            $tmp = array_keys($matchdata['players'][$j]['multi_kills']);
+            $t_adv_matchlines[$i]['max_multikill'] = end($tmp);
+            unset($tmp);
+        }
         if (count($matchdata['players'][$j]['kill_streaks']) == 0) $t_adv_matchlines[$i]['max_streak'] = 0;
-        else $t_adv_matchlines[$i]['max_streak'] = end(array_keys($matchdata['players'][$j]['kill_streaks']));
+        else {
+            $tmp = array_keys($matchdata['players'][$j]['kill_streaks']);
+            $t_adv_matchlines[$i]['max_streak'] = end($tmp);
+            unset($tmp);
+        }
         $t_adv_matchlines[$i]['stacks'] = $matchdata['players'][$j]['camps_stacked'];
         $t_adv_matchlines[$i]['time_dead'] = $matchdata['players'][$j]['life_state_dead'];
         $t_adv_matchlines[$i]['buybacks'] = $matchdata['players'][$j]['buyback_count'];

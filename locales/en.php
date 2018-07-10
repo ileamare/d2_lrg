@@ -98,6 +98,7 @@
     "heroes" => "Heroes",
     "records" => "Records",
     "players" => "Players",
+    "regions" => "Regions",
     "roster"  => "Active players",
 
     "team_name" => "Team Name",

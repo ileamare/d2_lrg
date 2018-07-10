@@ -1,7 +1,10 @@
 <?php
 $modules['records'] = "";
 
-function rg_view_generate_records($report) {
+function rg_view_generate_records() {
+  global $report;
+  global $meta;
+
   $res = "<table id=\"records-module-table\" class=\"list\">
                             <tr class=\"thead\">
                               <th onclick=\"sortTable(0,'records-module-table');\">".locale_string("record")."</th>".

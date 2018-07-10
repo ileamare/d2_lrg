@@ -46,28 +46,28 @@ class lrg_view_element {
   private $id = null;
   private $caption = null;
 
-  public set_type($type) {
+  public function set_type($type) {
     if ($type >= 0 && $type <= 5 || $type == null ) {
       $this->type = $type;
       return true;
     }
     return false;
   }
-  public set_caption($caption) {
+  public function set_caption($caption) {
     $this->caption = $caption;
   }
-  public set_class($class) {
+  public function set_class($class) {
     $this->class = $class;
   }
-  public set_ID($id) {
+  public function set_ID($id) {
     $this->id = $id;
   }
 
 
-  public get_type() {
+  public function get_type() {
     return $this->type;
   }
-  public get_type_str() {
+  public function get_type_str() {
     switch ($this->type) {
       case LRG_EL_TYPE_NULL:
         return "null";
@@ -88,20 +88,20 @@ class lrg_view_element {
         return "image";
         break;
       case LRG_EL_TYPE_CONTAINER:
-        return "container"
+        return "container";
         break;
     };
   }
-  public get_caption() {
+  public function get_caption() {
     return $this->caption;
   }
-  public get_class() {
+  public function get_class() {
     return $this->class;
   }
-  public get_id() {
+  public function get_id() {
     return $this->id;
   }
-  public get_content_raw() {
+  public function get_content_raw() {
     return $this->content;
   }
 }

@@ -1,0 +1,77 @@
+<?php
+
+function team_card($tid) {
+  global $report;
+  global $meta;
+  global $strings;
+  global $leaguetag;
+  global $linkvars;
+
+  if(!isset($report['teams'])) return null;
+
+  $output = "<div class=\"team-card\"><div class=\"team-name\">".
+            "<a href=\"?league=".$leaguetag."&mod=teams-team_".$tid."_stats".
+            (empty($linkvars) ? "" : "&$linkvars")
+            ."\" title=\"".team_name($tid)."\">".team_name($tid)." (".$tid.")</a></div>";
+
+  $output .= "<div class=\"team-info-block\">".
+                "<div class=\"section-caption\">".locale_string("summary").":</div>".
+                "<div class=\"team-info-line\"><span class=\"caption\">".locale_string("matches").":</span> ".$report['teams'][$tid]['matches_total']."</div>".
+                "<div class=\"team-info-line\"><span class=\"caption\">".locale_string("winrate").":</span> ".
+                    number_format($report['teams'][$tid]['wins']*100/$report['teams'][$tid]['matches_total'])."%</div>".
+                "<div class=\"team-info-line\"><span class=\"caption\">".locale_string("gpm").":</span> ".number_format($report['teams'][$tid]['averages']['gpm'])."</div>".
+                "<div class=\"team-info-line\"><span class=\"caption\">".locale_string("xpm").":</span> ".number_format($report['teams'][$tid]['averages']['xpm'])."</div>".
+                "<div class=\"team-info-line\"><span class=\"caption\">".locale_string("kda").":</span> ".number_format($report['teams'][$tid]['averages']['kills']).
+                  "/".number_format($report['teams'][$tid]['averages']['deaths'])."/".number_format($report['teams'][$tid]['averages']['assists'])."</div></div>";
+
+  $output .= "<div class=\"team-info-block\">".
+                "<div class=\"section-caption\">".locale_string("active_roster").":</div>";
+  foreach($report['teams'][$tid]['active_roster'] as $player) {
+    if (!isset($report['players'][$player])) continue;
+    $position = reset($report['players_additional'][$player]['positions']);
+    $output .= "<div class=\"team-info-line\">".player_name($player)." (".($position['core'] ? locale_string("core")." " : locale_string("support")).
+                  $meta['lanes'][ $position['lane'] ].")</div>";
+  }
+  $output .= "</div>";
+
+  if (isset($report['teams'][$tid]['pickban'])) {
+    $heroes = $report['teams'][$tid]['pickban'];
+    uasort($heroes, function($a, $b) {
+      if($a['matches_picked'] == $b['matches_picked']) return 0;
+      else return ($a['matches_picked'] < $b['matches_picked']) ? 1 : -1;
+    });
+
+    $output .= "<div class=\"team-info-block\">".
+                  "<div class=\"section-caption\">".locale_string("top_pick_heroes").":</div>";
+    $counter = 0;
+    foreach($heroes as $hid => $stats) {
+      if($counter > 3) break;
+      $output .= "<div class=\"team-info-line\"><span class=\"caption\">".hero_full($hid).":</span> ";
+      $output .= $stats['matches_picked']." - ".number_format($stats['wins_picked']*100/$stats['matches_picked'], 2)."%</div>";
+      $counter++;
+    }
+    $output .= "</div>";
+  }
+
+  if (isset($report['teams'][$tid]['hero_pairs'])) {
+    $heroes = $report['teams'][$tid]['hero_pairs'];
+
+    $output .= "<div class=\"team-info-block\">".
+                  "<div class=\"section-caption\">".locale_string("top_pick_pairs").":</div>";
+    $counter = 0;
+    foreach($heroes as $stats) {
+      if($counter > 2) break;
+      $output .= "<div class=\"team-info-line\"><span class=\"caption\">".hero_full($stats['heroid1'])." + ".hero_full($stats['heroid2']).":</span> ";
+      $output .= $stats['matches']." - ".number_format($stats['winrate']*100, 2)."%</div>";
+      $counter++;
+    }
+    if (!$counter) $output .= "<div class=\"team-info-line\"><span class=\"caption\">".locale_string("none")."</span></div>";
+    $output .= "</div>";
+
+  }
+
+  return $output."</div>";
+
+}
+
+?>

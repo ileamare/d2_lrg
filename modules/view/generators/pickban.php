@@ -66,7 +66,7 @@ function rg_generator_uncontested($context, $contested, $heroes_flag = true) {
       locale_string($heroes_flag ? "heroes_uncontested" : "players_uncontested").
       ": ".sizeof($context)."</h1><div class=\"hero-list\">";
 
-    if ($heroes_tag)
+    if ($heroes_flag)
       foreach($context as $el) {
         $res .= "<div class=\"hero\"><img src=\"res/heroes/".$el['tag'].".png\" alt=\"".$el['tag']."\" />".
                 "<span class=\"hero_name\">".$el['name']."</span></div>";

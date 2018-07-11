@@ -168,26 +168,8 @@ $root = dirname(__FILE__);
     $parent = "heroes-";
 
     if (isset($report['averages_heroes']) ) {
-      $modules['heroes']['averages_heroes'] = "";
-
-      if (check_module($parent."averages_heroes")) {
-        $modules['heroes']['averages_heroes'] .= "<div class=\"small-list-wrapper\">";
-        foreach($report['averages_heroes'] as $key => $avg) {
-          $modules['heroes']['averages_heroes'] .= "<table id=\"avgs-heroes-".$key."\" class=\"list list-fixed list-small\">
-                                                      <caption>".locale_string($key)."</caption>
-                                                      <tr class=\"thead\">
-                                                        <th>".locale_string("hero")."</th>
-                                                        <th>".locale_string("value")."</th>
-                                                      </tr>";
-          foreach($avg as $hero) {
-            $modules['heroes']['averages_heroes'] .= "<tr>
-                                                        <td>".($hero['heroid'] ? hero_full($hero['heroid']) : "").
-                                                       "</td><td>".number_format($hero['value'],2)."</td></tr>";
-          }
-          $modules['heroes']['averages_heroes'] .= "</table>";
-        }
-        $modules['heroes']['averages_heroes'] .= "</div>";
-        $modules['heroes']['averages_heroes'] .= "<div class=\"content-text\">".locale_string("desc_heroes_avg", ["lim" => $report['settings']['limiter_triplets']+1 ])."</div>";
+      if (check_module($parent."haverages")) {
+        $modules['heroes']['haverages'] = rg_view_generate_heroes_haverages();
       }
     }
     if (isset($report['pickban'])) {

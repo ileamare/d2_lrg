@@ -84,9 +84,6 @@ table.list-small caption {
   margin-top: auto;
   margin-bottom: auto;
 }
-table.list-small tr th:first-child {
-  width: 55%;
-}
 table.wide {
   width: 98%;
 }

@@ -57,8 +57,7 @@
 
     "record" => "Record",
     "value" => "Value",
-    "averages_heroes" => "Highest average values",
-    "averages_players" => "Highest average values",
+    "haverages" => "Highest average values",
     "pickban" => "Picks and bans",
     "picks" => "Picks",
     "bans" => "Bans",
@@ -182,6 +181,7 @@
     "contest_rate" => "Contest Rate",
     "outcome_impact" => "Outcome Impact",
     "outcome_impact_s" => "OI",
+    "rank" => "Rank",
 
     "pair_expectation" => "Expected matches",
     "pair_deviation" => "Deviation",

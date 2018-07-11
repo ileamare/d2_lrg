@@ -123,12 +123,13 @@ include_once("modules/view/__preset.php");
 
     $modules = array();
     # module => array or ""
-    require_once("modules/view/overview.php");
+    include_once("modules/view/overview.php");
     if (isset($report['records']))
-      require_once("modules/view/records.php");
+      include_once("modules/view/records.php");
+
     if (isset($report['averages_heroes']) || isset($report['pickban']) || isset($report['draft']) || isset($report['hero_positions']) ||
         isset($report['hero_sides']) || isset($report['hero_pairs']) || isset($report['hero_triplets']))
-          $modules['heroes'] = array();
+          include_once("modules/view/heroes.php");
 
     if (isset($report['averages_players']) || isset($report['pvp']) || isset($report['player_positions']) || isset($report['player_pairs']))
       $modules['players'] = array();
@@ -191,52 +192,7 @@ include_once("modules/view/__preset.php");
       $modules['heroes']['pickban'] = "";
 
       if (check_module($parent."pickban")) {
-        $heroes = $meta['heroes'];
-
-        uasort($report['pickban'], function($a, $b) {
-          if($a['matches_total'] == $b['matches_total']) return 0;
-          else return ($a['matches_total'] < $b['matches_total']) ? 1 : -1;
-        });
-
-        $modules['heroes']['pickban'] .=  "<table id=\"heroes-pickban\" class=\"list\">
-                                              <tr class=\"thead\">
-                                                <th onclick=\"sortTable(0,'heroes-pickban');\">".locale_string("hero")."</th>
-                                                <th onclick=\"sortTableNum(1,'heroes-pickban');\">".locale_string("matches_total")."</th>
-                                                <th  class=\"separator\"onclick=\"sortTableNum(2,'heroes-pickban');\">".locale_string("contest_rate")."</th>
-                                                <th onclick=\"sortTableNum(3,'heroes-pickban');\">".locale_string("outcome_impact")."</th>
-                                                <th class=\"separator\" onclick=\"sortTableNum(4,'heroes-pickban');\">".locale_string("matches_picked")."</th>
-                                                <th onclick=\"sortTableNum(5,'heroes-pickban');\">".locale_string("winrate")."</th>
-                                                <th class=\"separator\" onclick=\"sortTableNum(6,'heroes-pickban');\">".locale_string("matches_banned")."</th>
-                                                <th onclick=\"sortTableNum(7,'heroes-pickban');\">".locale_string("winrate")."</th>
-                                              </tr>";
-        foreach($report['pickban'] as $hid => $hero) {
-          unset($heroes[$hid]);
-          $oi = ($hero['matches_picked']*$hero['winrate_picked'] + $hero['matches_banned']*$hero['winrate_banned'])/$report["random"]["matches_total"];
-          $modules['heroes']['pickban'] .=  "<tr>
-                                                <td>".($hid ? hero_full($hid) : "")."</td>
-                                                <td>".$hero['matches_total']."</td>
-                                                <td class=\"separator\">".number_format($hero['matches_total']/$report["random"]["matches_total"]*100,2)."%</td>
-                                                <td>".number_format($oi*100,2)."%</td>
-                                                <td class=\"separator\">".$hero['matches_picked']."</td>
-                                                <td>".number_format($hero['winrate_picked']*100,2)."%</td>
-                                                <td class=\"separator\">".$hero['matches_banned']."</td>
-                                                <td>".number_format($hero['winrate_banned']*100,2)."%</td>
-                                              </tr>";
-        }
-        unset($oi);
-        $modules['heroes']['pickban'] .= "</table>";
-
-        if(sizeof($heroes)) {
-          $modules['heroes']['pickban'] .= "<div class=\"content-text\"><h1>".locale_string("heroes_uncontested").": ".sizeof($heroes)."</h1><div class=\"hero-list\">";
-
-          foreach($heroes as $hero) {
-            $modules['heroes']['pickban'] .= "<div class=\"hero\"><img src=\"res/heroes/".$hero['tag'].
-                ".png\" alt=\"".$hero['tag']."\" /><span class=\"hero_name\">".
-                $hero['name']."</span></div>";
-          }
-          $modules['heroes']['pickban'] .= "</div></div>";
-        }
-        $modules['heroes']['pickban'] .= "<div class=\"content-text\">".locale_string("desc_heroes_pickban")."</div>";
+        $modules['heroes']['pickban'] = rg_view_generate_heroes_pickban();
       }
     }
     if (isset($report['draft'])) {

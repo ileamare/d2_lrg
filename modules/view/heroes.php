@@ -29,5 +29,8 @@ if (isset($report['hvh']))
 if (isset($report['hero_summary']))
   include("heroes/summary.php");
 
+function rg_view_generate_heroes() {
+  
+}
 
 ?>

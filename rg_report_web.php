@@ -28,6 +28,8 @@ include_once("modules/view/__preset.php");
 
 /* INITIALISATION */
 
+$root = dirname(__FILE__);
+
   $linkvars = array();
 
   if(isset($argv)) {
@@ -189,123 +191,13 @@ include_once("modules/view/__preset.php");
       }
     }
     if (isset($report['pickban'])) {
-      $modules['heroes']['pickban'] = "";
-
-      if (check_module($parent."pickban")) {
+      if (check_module($parent."pickban")) { // FUNCTION SET
         $modules['heroes']['pickban'] = rg_view_generate_heroes_pickban();
       }
     }
     if (isset($report['draft'])) {
-      $modules['heroes']['draft'] = "";
-
       if (check_module($parent."draft")) {
-        $draft = array();
-
-        for ($i=0; $i<2; $i++) {
-          $type = $i ? "pick" : "ban";
-          $max_stage = 1;
-          if(!isset($report['draft'][$i])) continue;
-          foreach($report['draft'][$i] as $stage_num => $stage) {
-            if ($stage_num > $max_stage) $max_stage = $stage_num;
-            foreach($stage as $hero) {
-              if(!isset($draft[ $hero['heroid'] ])) {
-                if($stage_num > 1) {
-                  for($j=1; $j<$stage_num; $j++) {
-                    $draft[ $hero['heroid'] ][$j] = array ("pick" => 0, "pick_wr" => 0, "ban" => 0, "ban_wr" => 0 );
-                  }
-                }
-              }
-
-              if(!isset($draft[ $hero['heroid'] ][$stage_num]))
-                $draft[ $hero['heroid'] ][$stage_num] = array ("pick" => 0, "pick_wr" => 0, "ban" => 0, "ban_wr" => 0 );
-              $draft[ $hero['heroid'] ][$stage_num][$type] = $hero['matches'];
-              $draft[ $hero['heroid'] ][$stage_num][$type."_wr"] = $hero['winrate'];
-            }
-          }
-        }
-
-        foreach ($draft as $hid => $stages) {
-          $heroline = "";
-
-          $stages_passed = 0;
-          foreach($stages as $stage) {
-            if($max_stage > 1) {
-              $heroline .= "<td class=\"separator\">".number_format(($stage['pick']*$stage['pick_wr']+$stage['ban']*$stage['ban_wr'])/$report['random']['matches_total']*100,2)."%</td>";
-              if($stage['pick'])
-                $heroline .= "<td>".$stage['pick']."</td><td>".number_format($stage['pick_wr']*100, 2)."%</td>";
-              else
-                $heroline .= "<td>-</td><td>-</td>";
-
-              if($stage['ban'])
-                $heroline .= "<td>".$stage['ban']."</td><td>".number_format($stage['ban_wr']*100, 2)."%</td>";
-              else
-                $heroline .= "<td>-</td><td>-</td>";
-            }
-
-            $stages_passed++;
-          }
-
-          if($stages_passed < $max_stage) {
-            for ($i=$stages_passed; $i<$max_stage; $i++)
-              $heroline .= "<td class=\"separator\">-</td><td>-</td><td>-</td><td>-</td><td>-</td>";
-          }
-
-          $draft[$hid] = array ("out" => "", "matches" => $report['pickban'][$hid]['matches_total']);
-          $draft[$hid]['out'] .= "<td>".hero_full($hid)."</td>";
-
-          $draft[$hid]['out'] .= "<td>".$report['pickban'][$hid]['matches_total']."</td>";
-          $draft[$hid]['out'] .= "<td>".number_format(
-            ($report['pickban'][$hid]['matches_picked']*$report['pickban'][$hid]['winrate_picked'] +
-              $report['pickban'][$hid]['matches_banned']*$report['pickban'][$hid]['winrate_banned'])
-              /$report['random']['matches_total']*100, 2)."%</td>";
-
-          if($report['pickban'][$hid]['matches_picked'])
-            $draft[$hid]['out'] .= "<td>".$report['pickban'][$hid]['matches_picked']."</td><td>".number_format($report['pickban'][$hid]['winrate_picked']*100, 2)."%</td>";
-          else
-            $draft[$hid]['out'] .= "<td>-</td><td>-</td>";
-
-          if($report['pickban'][$hid]['matches_banned'])
-            $draft[$hid]['out'] .= "<td>".$report['pickban'][$hid]['matches_banned']."</td><td>".number_format($report['pickban'][$hid]['winrate_banned']*100, 2)."%</td>";
-          else
-            $draft[$hid]['out'] .= "<td>-</td><td>-</td>";
-
-          $draft[$hid]['out'] .= $heroline."</tr>";
-        }
-
-
-        uasort($draft, function($a, $b) {
-          if($a['matches'] == $b['matches']) return 0;
-          else return ($a['matches'] < $b['matches']) ? 1 : -1;
-        });
-
-        $modules['heroes']['draft'] .= "<table id=\"heroes-draft\" class=\"list wide\"><tr class=\"thead overhead\"><th width=\"15%\"></th><th colspan=\"6\">".locale_string("total")."</th>";
-        $heroline = "<tr class=\"thead\">".
-                      "<th onclick=\"sortTable(0,'heroes-draft');\">".locale_string("hero")."</th>".
-                      "<th onclick=\"sortTableNum(1,'heroes-draft');\">".locale_string("matches_s")."</th>".
-                      "<th onclick=\"sortTableNum(2,'heroes-draft');\">".locale_string("outcome_impact_s")."</th>".
-                      "<th onclick=\"sortTableNum(3,'heroes-draft');\">".locale_string("picks_s")."</th>".
-                      "<th onclick=\"sortTableNum(4,'heroes-draft');\">".locale_string("winrate_s")."</th>".
-                      "<th onclick=\"sortTableNum(5,'heroes-draft');\">".locale_string("bans_s")."</th>".
-                      "<th onclick=\"sortTableNum(6,'heroes-draft');\">".locale_string("winrate_s")."</th>";
-
-        if($max_stage > 1)
-          for($i=1; $i<=$max_stage; $i++) {
-            $modules['heroes']['draft'] .= "<th class=\"separator\" colspan=\"5\">".locale_string("stage")." $i</th>";
-            $heroline .= "<th onclick=\"sortTableNum(".(1+5*$i+1).",'heroes-draft');\" class=\"separator\">".locale_string("outcome_impact_s")."</th>".
-                        "<th onclick=\"sortTableNum(".(1+5*$i+2).",'heroes-draft');\">".locale_string("picks_s")."</th>".
-                        "<th onclick=\"sortTableNum(".(1+5*$i+3).",'heroes-draft');\">".locale_string("winrate_s")."</th>".
-                        "<th onclick=\"sortTableNum(".(1+5*$i+4).",'heroes-draft');\">".locale_string("bans_s")."</th>".
-                        "<th onclick=\"sortTableNum(".(1+5*$i+5).",'heroes-draft');\">".locale_string("winrate_s")."</th>";
-          }
-        $modules['heroes']['draft'] .= "</tr>".$heroline."</tr>";
-
-        unset($heroline);
-
-        foreach($draft as $hero)
-          $modules['heroes']['draft'] .= $hero['out'];
-
-        $modules['heroes']['draft'] .= "</table>";
-        unset($draft);
+        $modules['heroes']['draft'] = rg_view_generate_heroes_draft();
       }
     }
     if (isset($report['hero_positions'])) {

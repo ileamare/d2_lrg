@@ -1,6 +1,6 @@
 <?php
 //echo dirname(__FILE__);
-include_once(dirname(__FILE__)."/../generators/pickban.php");
+include_once($root."/modules/view/generators/pickban.php");
 
 $modules['heroes']['pickban'] = "";
 
@@ -9,8 +9,6 @@ function rg_view_generate_heroes_pickban() {
   global $meta;
 
   $res = "";
-
-  $heroes = $meta['heroes'];
 
   $res .= rg_generator_pickban("heroes-pickban", $report['pickban'], $report["random"]["matches_total"]);
 

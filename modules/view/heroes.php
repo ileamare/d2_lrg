@@ -3,7 +3,7 @@
 $modules['heroes'] = array();
 
 if (isset($report['averages_heroes']) )
-  include("heroes/averages.php");
+  include("heroes/haverages.php");
 
 if (isset($report['pickban']))
   include("heroes/pickban.php");
@@ -30,7 +30,7 @@ if (isset($report['hero_summary']))
   include("heroes/summary.php");
 
 function rg_view_generate_heroes() {
-  
+
 }
 
 ?>

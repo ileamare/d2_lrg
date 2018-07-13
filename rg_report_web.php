@@ -109,7 +109,7 @@ $root = dirname(__FILE__);
           include_once("modules/view/heroes.php");
 
     if (isset($report['averages_players']) || isset($report['pvp']) || isset($report['player_positions']) || isset($report['player_pairs']))
-      $modules['players'] = array();
+      include_once("modules/view/players.php");
 
     if (isset($report['teams'])) { $modules['teams'] = array(); $modules['summary_teams'] = ""; }
     if (isset($report['teams'])) $modules['tvt'] = "";
@@ -165,115 +165,8 @@ $root = dirname(__FILE__);
       }
     }
     if (isset($report['hero_sides'])) {
-      $modules['heroes']['hero_sides'] = array();
-
-      if(check_module($parent."hero_sides")) {
-        if($mod == $parent."hero_sides") $unset_module = true;
-
-        for ($i=0; $i<2 && !isset($keys); $i++) {
-            if(isset($report['hero_sides'][$i][0])) {
-              $keys = array_keys($report['hero_sides'][$i][0]);
-              break;
-            }
-        }
-
-        $modules['heroes']['hero_sides']['overview'] = "";
-        if(check_module($parent."hero_sides-overview")) {
-          $heroes = array();
-
-          for ($side = 0; $side < 2; $side++) {
-            foreach($report['hero_sides'][$side] as $hero) {
-              if (!isset($heroes[$hero['heroid']])) {
-                $heroes[$hero['heroid']] = array(
-                  "matches" => $hero['matches'],
-                  "side".$side."matches" => $hero['matches'],
-                  "side".$side."winrate" => $hero['winrate']
-                );
-              } else {
-                $heroes[$hero['heroid']]["matches"] += $hero['matches'];
-                $heroes[$hero['heroid']]["side".$side."matches"] = $hero['matches'];
-                $heroes[$hero['heroid']]["side".$side."winrate"] = $hero['winrate'];
-              }
-            }
-          }
-
-          uasort($heroes, function($a, $b) {
-            if($a['matches'] == $b['matches']) return 0;
-            else return ($a['matches'] < $b['matches']) ? 1 : -1;
-          });
-
-          $modules['heroes']['hero_sides']['overview'] .= "<table id=\"hero-sides-overview\" class=\"list\">
-                                <tr class=\"thead overhead\">
-                                  <th width=\"25%\"></th>
-                                  <th width=\"10%\"></th>
-                                  <th width=\"15%\"></th>
-                                  <th class=\"separator\" colspan=\"2\">".locale_string("radiant")."</th>
-                                  <th class=\"separator\" colspan=\"2\">".locale_string("dire")."</th>
-                                </tr>
-                                <tr class=\"thead\">
-                                  <th onclick=\"sortTable(0,'hero-sides-overview');\">".locale_string("hero")."</th>
-                                  <th onclick=\"sortTableNum(1,'hero-sides-overview');\">".locale_string("matches")."</th>
-                                  <th onclick=\"sortTableNum(2,'hero-sides-overview');\">".locale_string("rad_ratio")."</th>
-                                  <th class=\"separator\" onclick=\"sortTableNum(3,'hero-sides-overview');\">".locale_string("matches")."</th>
-                                  <th onclick=\"sortTableNum(4,'hero-sides-overview');\">".locale_string("winrate")."</th>
-                                  <th class=\"separator\" onclick=\"sortTableNum(5,'hero-sides-overview');\">".locale_string("matches")."</th>
-                                  <th onclick=\"sortTableNum(6,'hero-sides-overview');\">".locale_string("winrate")."</th>
-                                </tr>";
-          foreach ($heroes as $hid => $hero) {
-            if(!isset($hero["side0matches"])) {
-              $hero["side0matches"] = 0;
-              $hero["side0winrate"] = 0;
-            }
-            if(!isset($hero["side1matches"])) {
-              $hero["side1matches"] = 0;
-              $hero["side1winrate"] = 0;
-            }
-
-            $modules['heroes']['hero_sides']['overview'] .= "<tr>
-                                                <td>".($hid ? hero_full($hid) : "")."</td>".
-                                                "<td>".$hero['matches']."</td>".
-                                                "<td>".number_format($hero["side1matches"]*100/$hero["matches"],2)."%</td>".
-                                                "<td class=\"separator\">".$hero["side1matches"]."</td>".
-                                                "<td>".number_format($hero["side1winrate"]*100,2)."%</td>".
-                                                "<td class=\"separator\">".$hero["side0matches"]."</td>".
-                                                "<td>".number_format($hero["side0winrate"]*100,2)."%</td>".
-                                              "</tr>";
-          }
-          $modules['heroes']['hero_sides']['overview'] .= "</table>";
-
-          $modules['heroes']['hero_sides']["overview"] .= "<div class=\"content-text\">".locale_string("desc_heroes_sides")."</div>";
-          unset($heroes);
-        }
-
-        for ($side = 0; $side < 2; $side++) {
-          $side_tag = $side ? 'radiant' : 'dire';
-          $modules['heroes']['hero_sides'][$side_tag] = "";
-          if(!check_module($parent."hero_sides-".$side_tag)) continue;
-
-          $modules['heroes']['hero_sides'][$side_tag] .= "<table id=\"hero-sides-".$side_tag."\" class=\"list\">
-                                        <tr class=\"thead\">
-                                          <th onclick=\"sortTable(0,'hero-sides-$side_tag');\">".locale_string("hero")."</th>";
-          for($k=1, $end=sizeof($keys); $k < $end; $k++) {
-            $modules['heroes']['hero_sides'][$side_tag] .= "<th onclick=\"sortTableNum($k,'hero-sides-$side_tag');\">".locale_string($keys[$k])."</th>";
-          }
-          $modules['heroes']['hero_sides'][$side_tag] .= "</tr>";
-
-          foreach($report['hero_sides'][$side] as $hero) {
-            $modules['heroes']['hero_sides'][$side_tag] .= "<tr>
-                                                <td>".($hero['heroid'] ? hero_full($hero['heroid']) : "").
-                                               "</td>".
-                                               "<td>".$hero['matches']."</td>".
-                                               "<td>".number_format($hero['winrate']*100,2)."%</td>";
-            for($k=3, $end=sizeof($keys); $k < $end; $k++) {
-              $modules['heroes']['hero_sides'][$side_tag] .= "<td>".number_format($hero[$keys[$k]],2)."</td>";
-            }
-            $modules['heroes']['hero_sides'][$side_tag] .= "</tr>";
-          }
-          $modules['heroes']['hero_sides'][$side_tag] .= "</table>";
-
-          $modules['heroes']['hero_sides'][$side_tag] .= "<div class=\"content-text\">".locale_string("desc_heroes_sides")."</div>";
-        }
-        unset($keys);
+      if(check_module($parent."sides")) {
+        $modules['heroes']['sides'] = rg_view_generate_heroes_sides();
       }
     }
     if (isset($report['hero_combos_graph']) && $report['settings']['heroes_combo_graph']) {
@@ -499,29 +392,8 @@ $root = dirname(__FILE__);
     $parent = "players-";
 
     if (isset($report['averages_players'])) {
-      $modules['players']['averages_players'] = "";
-
-      if(check_module($parent."averages_players")) {
-        $modules['players']['averages_players'] .= "<div class=\"small-list-wrapper\">";
-        foreach($report['averages_players'] as $key => $avg) {
-          $modules['players']['averages_players'] .= "<table id=\"avgs-players-".$key."\" class=\"list list-fixed list-small\">
-                                                      <caption>".locale_string($key)."</caption>
-                                                      <tr class=\"thead\">
-                                                        <th>".locale_string("player")."</th>
-                                                        <th>".locale_string("value")."</th>
-                                                      </tr>";
-          foreach($avg as $player) {
-            if(strrpos($key, "by_team") === FALSE) {
-              $modules['players']['averages_players'] .= "<tr><td>".player_name($player['playerid']);
-            } else {
-              $modules['players']['averages_players'] .= "<tr><td>".team_name($player['playerid']);
-            }
-            $modules['players']['averages_players'] .= "</td><td>".number_format($player['value'],2)."</td></tr>";
-          }
-          $modules['players']['averages_players'] .= "</table>";
-        }
-        $modules['players']['averages_players'] .= "</div>";
-        $modules['players']['averages_players'] .= "<div class=\"content-text\">".locale_string("desc_players_avg")."</div>";
+      if (check_module($parent."haverages")) {
+        $modules['players']['haverages'] = rg_view_generate_players_haverages();
       }
     }
     if (isset($report['players_summary'])) {

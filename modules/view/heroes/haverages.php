@@ -1,6 +1,6 @@
 <?php
 //echo dirname(__FILE__);
-include_once($root."/modules/view/generators/averages.php");
+include_once($root."/modules/view/generators/haverages.php");
 
 $modules['heroes']['haverages'] = "";
 

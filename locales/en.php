@@ -69,8 +69,8 @@
     "stage_num_2" => "of",
     "draft" => "Draft",
     "vsdraft" => "Draft against",
-    "hero_positions" => "Positions stats",
-    "hero_sides" => "Factions",
+    "positions" => "Positions",
+    "sides" => "Factions",
     "hero_pairs" => "Pairs",
     "hero_triplets" => "Trios",
     "hero_combos" => "Pairs and Trios",
@@ -78,7 +78,6 @@
     "pvp" => "Player versus player",
     "hvh" => "Hero vs Hero",
     "tvt" => "Team versus team",
-    "player_positions" => "Player positions",
     "player_pairs" => "Player pairs",
     "player_triplets" => "Player triplets",
     "player_combos" => "Player combos",
@@ -268,7 +267,14 @@
     "full_draft" => "Full draft stats",
     "full_hero_combos" => "Full hero combinations stats",
     "full_player_combos" => "Full player combinations stats",
-    "full_matches" => "All matches"
+    "full_matches" => "All matches",
+
+    "lane_0" => "",
+    "lane_1" => "Safelane",
+    "lane_2" => "Midlane",
+    "lane_3" => "Offlane",
+    "lane_4" => "Jungle",
+    "lane_5" => "Roaming"
   );
 
  ?>

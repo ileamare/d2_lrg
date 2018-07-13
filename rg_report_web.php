@@ -96,32 +96,7 @@ $root = dirname(__FILE__);
     $meta = file_get_contents("res/metadata.json") or die("[F] Can't open metadata\n");
     $meta = json_decode($meta, true);
 
-    # legacy name for Radiant Winrate
-    if (compare_ver($report['ana_version'], array(1,1,1,-4,0)) < 0) {
-        $strings[$locale]['rad_wr'] = $strings[$locale]['radiant_wr'];
-    }
-
-    if(isset($report['versions'])) {
-        foreach($report['versions'] as $k => $v) {
-            $mode = (int)($k/100);
-            if(!isset($meta['versions'][$mode])) {
-                for($i = $mode; $i > 0; $i--) {
-                    if(isset($meta['versions'][$i])) {
-                        break;
-                    }
-                }
-                $diff = $mode - $i;
-                $parent_patch = explode(".", $meta['versions'][$i]);
-                $parent_patch[1] = (int)$parent_patch[1] + $diff;
-                if ($parent_patch[1] < 10)
-                    $parent_patch[1] = "0".$parent_patch[1];
-                $meta['versions'][$mode] = implode(".", $parent_patch);
-
-                unset($diff);
-                unset($parent_patch);
-            }
-        }
-    }
+    include_once("modules/view/__post_load.php");
 
     $modules = array();
     # module => array or ""
@@ -183,140 +158,10 @@ $root = dirname(__FILE__);
       }
     }
     if (isset($report['hero_positions'])) {
-      $modules['heroes']['hero_positions'] = array();
+      if(check_module($parent."positions")) {
+        if($mod == $parent."positions") $unset_module = true;
 
-      if(check_module($parent."hero_positions")) {
-        if($mod == $parent."hero_positions") $unset_module = true;
-
-        $position_overview_template = array("total" => 0);
-        for ($i=1; $i>=0 && !isset($keys); $i--) {
-          for ($j=1; $j<6 && $j>0; $j++) {
-            if (!$i) { $j = 0; }
-            if(isset($report['hero_positions'][$i][$j][0])) {
-              $keys = array_keys($report['hero_positions'][$i][$j][0]);
-              break;
-            }
-            if (!$i) { break; }
-          }
-        }
-
-        for ($i=1; $i>=0; $i--) {
-          for ($j=1; $j<6 && $j>0; $j++) {
-            if (!$i) { $j = 0; }
-            if(sizeof($report['hero_positions'][$i][$j]))
-              $position_overview_template["$i.$j"] = array("matches" => 0, "wr" => 0);
-
-            if(!isset($strings['en']["positions_$i.$j"]))
-              $strings['en']["positions_$i.$j"] = ($i ? locale_string("core") : locale_string("support"))." ".$meta['lanes'][$j];
-
-            if (!$i) { break; }
-          }
-        }
-
-        $modules['heroes']['hero_positions']['overview'] = "";
-        if (check_module($parent."hero_positions-"."overview")) {
-          $overview = array();
-
-          for ($i=1; $i>=0; $i--) {
-            for ($j=1; $j<6 && $j>0; $j++) {
-              if (!$i) { $j = 0; }
-
-              foreach($report['hero_positions'][$i][$j] as $hero) {
-                if (!isset($overview[ $hero['heroid'] ])) $overview[ $hero['heroid'] ] = $position_overview_template;
-
-                $overview[ $hero['heroid'] ]["$i.$j"]['matches'] = $hero['matches_s'];
-                $overview[ $hero['heroid'] ]["$i.$j"]['wr'] = $hero['winrate_s'];
-                $overview[ $hero['heroid'] ]["total"] += $hero['matches_s'];
-              }
-
-              if (!$i) { break; }
-            }
-          }
-          ksort($overview);
-
-          $modules['heroes']['hero_positions']['overview'] .= "<table id=\"heroes-positions-overview\" class=\"list wide\"><tr class=\"thead overhead\"><th width=\"20%\" colspan=\"2\"></th>";
-
-          $heroline = "<tr class=\"thead\"><th onclick=\"sortTable(0,'heroes-positions-overview');\">".locale_string("hero")."</th>".
-                        "<th onclick=\"sortTableNum(1,'heroes-positions-overview');\">".locale_string("matches_s")."</th>";
-          $i = 2;
-          foreach($position_overview_template as $k => $v) {
-            if ($k == "total") continue;
-
-            $modules['heroes']['hero_positions']['overview'] .= "<th colspan=\"3\" class=\"separator\">".locale_string("positions_$k")."</th>";
-            $heroline .= "<th onclick=\"sortTableNum(".($i++).",'heroes-positions-overview');\"  class=\"separator\">".locale_string("matches_s")."</th>".
-                          "<th onclick=\"sortTableNum(".($i++).",'heroes-positions-overview');\">".locale_string("ratio")."</th>".
-                          "<th onclick=\"sortTableNum(".($i++).",'heroes-positions-overview');\">".locale_string("winrate_s")."</th>";
-          }
-          $modules['heroes']['hero_positions']['overview'] .= "</tr>".$heroline."</tr>";
-
-          foreach ($overview as $hid => $hero) {
-            $modules['heroes']['hero_positions']['overview'] .= "<tr><td>".hero_full($hid)."</td><td>".$hero['total']."</td>";
-            foreach($hero as $v) {
-              if (!is_array($v)) continue;
-
-              if(!$v['matches']) {
-                $modules['heroes']['hero_positions']['overview'] .= "<td class=\"separator\">-</td>".
-                              "<td>-</td>".
-                              "<td>-</th>";
-              } else {
-                $modules['heroes']['hero_positions']['overview'] .= "<td class=\"separator\">".$v['matches']."</td>".
-                            "<td>".number_format($v['matches']*100/$hero['total'],2)."%</td>".
-                            "<td>".number_format($v['wr']*100,2)."%</th>";
-              }
-            }
-            $modules['heroes']['hero_positions']['overview'] .= "</tr>";
-          }
-          $modules['heroes']['hero_positions']['overview'] .= "</table>";
-
-          unset($overview);
-          unset($heroline);
-          unset($position_overview_template);
-        }
-
-        for ($i=1; $i>=0; $i--) {
-          for ($j=1; $j<6 && $j>0; $j++) {
-            if (!$i) { $j = 0; }
-
-            if(sizeof($report['hero_positions'][$i][$j])) {
-              $modules['heroes']['hero_positions']["positions_$i.$j"]  = "";
-              if (!check_module($parent."hero_positions-"."positions_$i.$j")) { if (!$i) { break; } continue; }
-
-              $modules['heroes']['hero_positions']["positions_$i.$j"] .= "<table id=\"heroes-positions-$i-$j\" class=\"list wide\">
-                                                <tr class=\"thead\">
-                                                  <th onclick=\"sortTable(0,'heroes-positions-$i-$j');\">".locale_string("hero")."</th>";
-              for($k=1, $end=sizeof($keys); $k < $end; $k++) {
-                $modules['heroes']['hero_positions']["positions_$i.$j"] .= "<th onclick=\"sortTableNum($k,'heroes-positions-$i-$j');\">".locale_string($keys[$k])."</th>";
-              }
-              $modules['heroes']['hero_positions']["positions_$i.$j"] .= "</tr>";
-
-              uasort($report['hero_positions'][$i][$j], function($a, $b) {
-                if($a['matches_s'] == $b['matches_s']) return 0;
-                else return ($a['matches_s'] < $b['matches_s']) ? 1 : -1;
-              });
-
-              foreach($report['hero_positions'][$i][$j] as $hero) {
-
-                $modules['heroes']['hero_positions']["positions_$i.$j"] .= "<tr".(isset($report['hero_positions_matches']) ?
-                                                                  " onclick=\"showModal('".htmlspecialchars(join_matches($report['hero_positions_matches'][$i][$j][$hero['heroid']])).
-                                                                          "', '".$meta['heroes'][ $hero['heroid'] ]['name']." - ".
-                                                                          locale_string("positions_$i.$j")." - ".locale_string("matches")."');\"" : "").">
-                                                    <td>".($hero['heroid'] ? hero_full($hero['heroid']) : "").
-                                                   "</td>
-                                                    <td>".$hero['matches_s']."</td>
-                                                    <td>".number_format($hero['winrate_s']*100,1)."%</td>";
-                for($k=3, $end=sizeof($keys); $k < $end; $k++) {
-                  $modules['heroes']['hero_positions']["positions_$i.$j"] .= "<td>".number_format($hero[$keys[$k]],1)."</td>";
-                }
-                $modules['heroes']['hero_positions']["positions_$i.$j"] .= "</tr>";
-              }
-              $modules['heroes']['hero_positions']["positions_$i.$j"] .= "</table>";
-
-              $modules['heroes']['hero_positions']["positions_$i.$j"] .= "<div class=\"content-text\">".locale_string("desc_heroes_positions")."</div>";
-            }
-            if (!$i) { break; }
-          }
-        }
-        unset($keys);
+        $modules['heroes']['positions'] = rg_view_generate_heroes_positions();
       }
     }
     if (isset($report['hero_sides'])) {
@@ -642,34 +487,8 @@ $root = dirname(__FILE__);
       }
     }
     if (isset($report['hero_summary'])) {
-      $modules['heroes']['summary']  = "";
       if(check_module($parent."summary")) {
-        $keys = array_keys($report['hero_summary'][0]);
-        $modules['heroes']['summary'] .= "<table id=\"heroes-summary\" class=\"list wide\">
-                                          <tr class=\"thead\">
-                                            <th onclick=\"sortTable(0,'heroes-summary');\">".locale_string("hero")."</th>";
-        for($k=1, $end=sizeof($keys); $k < $end; $k++) {
-          $modules['heroes']['summary'] .= "<th onclick=\"sortTableNum($k,'heroes-summary');\">".locale_string($keys[$k])."</th>";
-        }
-        $modules['heroes']['summary'] .= "</tr>";
-
-        foreach($report['hero_summary'] as $hero) {
-
-          $modules['heroes']['summary'] .= "<tr>
-                                              <td>".hero_full($hero['heroid'])."</td>
-                                              <td>".$hero['matches_s']."</td>
-                                              <td>".number_format($hero['winrate_s']*100,1)."%</td>";
-          for($k=3, $end=sizeof($keys); $k < $end; $k++) {
-            if ($hero[$keys[$k]] > 1)
-              $modules['heroes']['summary'] .= "<td>".number_format($hero[$keys[$k]],1)."</td>";
-            else $modules['heroes']['summary'] .= "<td>".number_format($hero[$keys[$k]],3)."</td>";
-          }
-          $modules['heroes']['summary'] .= "</tr>";
-        }
-        $modules['heroes']['summary'] .= "</table>";
-
-        $modules['heroes']['summary'] .= "<div class=\"content-text\">".locale_string("desc_heroes_summary")."</div>";
-        unset($keys);
+        $modules['heroes']['summary'] = rg_view_generate_heroes_summary();
       }
     }
   }

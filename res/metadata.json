@@ -732,14 +732,6 @@
       "1019":"winter_greevil_garbage",
       "1020":"winter_greevil_chewy"
    },
-   "lanes":[
-      "",
-      "Safelane",
-      "Midlane",
-      "Offlane",
-      "Jungle",
-      "Roaming"
-   ],
    "modes":{
       "0":"Unknown",
       "1":"All Pick",

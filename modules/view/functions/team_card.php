@@ -30,7 +30,7 @@ function team_card($tid) {
     if (!isset($report['players'][$player])) continue;
     $position = reset($report['players_additional'][$player]['positions']);
     $output .= "<div class=\"team-info-line\">".player_name($player)." (".($position['core'] ? locale_string("core")." " : locale_string("support")).
-                  $meta['lanes'][ $position['lane'] ].")</div>";
+                  locale_string( "lane_".$position['lane'] ).")</div>";
   }
   $output .= "</div>";
 

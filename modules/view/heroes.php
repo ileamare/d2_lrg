@@ -18,9 +18,9 @@ if (isset($report['hero_sides']))
   include("heroes/sides.php");
 
 if (isset($report['hero_combos_graph']) && $report['settings']['heroes_combo_graph'])
-  include("heroes/combo_graph.php");
+  include("heroes/meta_graph.php");
 
-if (isset($report['hero_pairs']) || isset($report['hero_triplets']))
+if (isset($report['hero_pairs']) || isset($report['hero_triplets']) || isset($report['hero_lane_combos']))
   include("heroes/combos.php");
 
 if (isset($report['hvh']))

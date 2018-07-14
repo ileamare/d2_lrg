@@ -1,7 +1,7 @@
 <?php
 include_once("rg_report_out_settings.php");
 include_once("modules/functions/versions.php");
-$lg_version = array( 1, 3, 3, 0, 0 );
+$lg_version = array( 1, 4, 0, -4, 1 );
 
 include_once("modules/functions/locale_strings.php");
 include_once("modules/functions/get_language_code_iso6391.php");
@@ -170,142 +170,15 @@ $root = dirname(__FILE__);
       }
     }
     if (isset($report['hero_combos_graph']) && $report['settings']['heroes_combo_graph']) {
-      $modules['heroes']['hero_combo_graph'] = "";
-
-      if (check_module($parent."hero_combo_graph") && isset($report['pickban'])) {
-        $locale_settings = ["lim" =>
-            (compare_ver($report['ana_version'], array(1,1,0,-3,5)) >= 0 ?
-                $report['settings']['limiter_combograph']+1
-                : $report['settings']['limiter']+1),
-            "per" => "35%"
-        ];
-
-        $modules['heroes']['hero_combo_graph'] .= "<div class=\"content-text\">".locale_string("desc_meta_graph", $locale_settings)."</div>";
-
-        $modules['heroes']['hero_combo_graph'] .= "<div class=\"content-text\">".
-          locale_string("desc_meta_graph_add", $locale_settings)."</div>";
-
-        unset($locale_settings);
-
-        if(isset($report['hero_combos_graph'])) {
-          $use_visjs = true;
-
-          $modules['heroes']['hero_combo_graph'] .= "<div id=\"hero-combos-graph\" class=\"graph\"></div><script type=\"text/javascript\">";
-
-          $nodes = "";
-
-          $counter = 0; $endp = sizeof($report['pickban'])*0.35;
-
-          uasort($report['pickban'], function($a, $b) {
-            if($a['matches_total'] == $b['matches_total']) return 0;
-            else return ($a['matches_total'] < $b['matches_total']) ? 1 : -1;
-          });
-
-          foreach($report['pickban'] as $hid => $hero) {
-            if($counter++ >= $endp && !has_pair($hid, $report['hero_combos_graph'])) {
-              //if($counter < $endp) $counter++;
-              //else
-              //if($hero['matches_picked'] < $report['settings']['limiter_combograph']*2)
-                continue;
-            }
-            //if(!isset($report['pickban'][$hid])) continue;
-            $nodes .= "{id: $hid, value: ".$hero['matches_total'].
-              ", label: '".addslashes($meta['heroes'][$hid]['name'])."'".
-              ", title: '".addslashes($meta['heroes'][$hid]['name']).", ".
-              $hero['matches_total']." ".locale_string("total").", ".
-              $hero['matches_picked']." ".locale_string("matches_picked").", ".
-              number_format($hero['winrate_picked']*100, 1)." ".locale_string("winrate_picked")."'".
-              ", shape:'circularImage', image: 'res/heroes/".$meta['heroes'][$hid]['tag'].".png'".
-              ", color:{ border:'rgba(".number_format(255-255*$hero['winrate_picked'], 0).",124,".
-              number_format(255*$hero['winrate_picked'], 0).")' }},";
-          }
-          $modules['heroes']['hero_combo_graph'] .= "var nodes = [".$nodes."];";
-
-          $nodes = "";
-          foreach($report['hero_combos_graph'] as $combo) {
-            $nodes .= "{from: ".$combo['heroid1'].", to: ".$combo['heroid2'].", value:".$combo['matches'].", title:\"".$combo['matches']."\", color:{color:'rgba(".
-              number_format(255-255*$combo['wins']/$combo['matches'], 0).",124,".
-              number_format(255*$combo['wins']/$combo['matches'],0).",1)'}},";
-          }
-
-          $modules['heroes']['hero_combo_graph'] .= "var edges = [".$nodes."];";
-
-          $modules['heroes']['hero_combo_graph'] .= "var container = document.getElementById('hero-combos-graph');\n".
-                                                      "var data = { nodes: nodes, edges: edges};\n".
-                                                      "var options={
-                                                        $visjs_settings
-                                                       };\n".
-                                                      "var network = new vis.Network(container, data, options);\n".
-                                                      "</script>";
-        }
+      if (check_module($parent."meta_graph")) {
+        $modules['heroes']['meta_graph'] = rg_view_generate_heroes_meta_graph();
       }
     }
-    if (isset($report['hero_pairs']) || isset($report['hero_triplets'])) {
-      $modules['heroes']['hero_combos'] = "";
+    if (isset($report['hero_pairs']) || isset($report['hero_triplets']) || isset($report['hero_lane_combos'])) {
+      if (check_module($parent."combos")) {
+        if($mod == $parent."combos") $unset_module = true;
 
-        if (isset($report['hero_pairs'])) {{
-          $modules['heroes']['hero_combos'] .= "<table id=\"hero-pairs\" class=\"list\">
-                                                <caption>".locale_string("hero_pairs")."</caption>
-                                                <tr class=\"thead\">
-                                                  <th onclick=\"sortTable(0,'hero-pairs');\">".locale_string("hero")." 1</th>
-                                                  <th onclick=\"sortTable(1,'hero-pairs');\">".locale_string("hero")." 2</th>
-                                                  <th onclick=\"sortTableNum(2,'hero-pairs');\">".locale_string("matches")."</th>
-                                                  <th onclick=\"sortTableNum(3,'hero-pairs');\">".locale_string("winrate")."</th>".
-                                                  "<th onclick=\"sortTableNum(4,'hero-pairs');\">".locale_string("pair_expectation")."</th>
-                                                  <th onclick=\"sortTableNum(5,'hero-pairs');\">".locale_string("pair_deviation")."</th>
-                                                  <th onclick=\"sortTableNum(6,'hero-pairs');\">".locale_string("lane_rate")."</th>".
-                                                "</tr>";
-
-
-          foreach($report['hero_pairs'] as $pair) {
-            $modules['heroes']['hero_combos'] .= "<tr".(isset($report['hero_pairs_matches']) ?
-                                                " onclick=\"showModal('".htmlspecialchars(join_matches($report['hero_pairs_matches'][$pair['heroid1'].'-'.$pair['heroid2']])).
-                                                                      "', '".locale_string("matches")."');\"" : "").">
-                                                  <td>".($pair['heroid1'] ? hero_full($pair['heroid1']) : "").
-                                                 "</td><td>".($pair['heroid2'] ? hero_full($pair['heroid2'])  : "").
-                                                 "</td>
-                                                 <td>".$pair['matches']."</td>
-                                                 <td>".number_format($pair['winrate']*100,2)."%</td>".
-                                                 "<td>".number_format($pair['expectation'], 3)."</td>
-                                                 <td>".number_format($pair['matches']-$pair['expectation'], 3)."</td>".
-                                                 "<td>".number_format($pair['lane_rate']*100, 2)."%</td>".
-                                                "</tr>";
-          }
-          $modules['heroes']['hero_combos'] .= "</table>";
-        }
-
-        if (!empty($report['hero_triplets'])) {
-
-          $modules['heroes']['hero_combos'] .= "<table id=\"hero-triplets\" class=\"list\">
-                                                <caption>".locale_string("hero_triplets")."</caption>
-                                                <tr class=\"thead\">
-                                                  <th onclick=\"sortTable(0,'hero-triplets');\">".locale_string("hero")." 1</th>
-                                                  <th onclick=\"sortTable(1,'hero-triplets');\">".locale_string("hero")." 2</th>
-                                                  <th onclick=\"sortTable(2,'hero-triplets');\">".locale_string("hero")." 3</th>
-                                                  <th onclick=\"sortTableNum(3,'hero-triplets');\">".locale_string("matches")."</th>
-                                                  <th onclick=\"sortTableNum(4,'hero-triplets');\">".locale_string("winrate")."</th>
-                                                  <th onclick=\"sortTableNum(5,'hero-triplets');\">".locale_string("pair_expectation")."</th>
-                                                  <th onclick=\"sortTableNum(6,'hero-triplets');\">".locale_string("pair_deviation")."</th>
-                                                </tr>";
-          foreach($report['hero_triplets'] as $pair) {
-            $modules['heroes']['hero_combos'] .= "<tr".(isset($report['hero_pairs_matches']) ?
-                                                " onclick=\"showModal('".
-                                                implode($report['hero_pairs_matches'][$pair['heroid1'].'-'.$pair['heroid2'].'-'.$pair['heroid3']], ", ").
-                                                                      "', '".locale_string("matches")."');\"" : "").">
-                                                  <td>".($pair['heroid1'] ? hero_full($pair['heroid1']) : "").
-                                                 "</td><td>".($pair['heroid2'] ? hero_full($pair['heroid2']) : "").
-                                                 "</td><td>".($pair['heroid3'] ? hero_full($pair['heroid3']) : "").
-                                                 "</td>
-                                                 <td>".$pair['matches']."</td>
-                                                 <td>".number_format($pair['winrate']*100,2)."</td>
-                                                 <td>".number_format($pair['expectation'], 3)."</td>
-                                                 <td>".number_format($pair['matches']-$pair['expectation'], 3)."</td>
-                                                </tr>";
-          }
-          $modules['heroes']['hero_combos'] .= "</table>";
-
-          $modules['heroes']['hero_combos'] .= "<div class=\"content-text\">".locale_string("desc_heroes_combos", [ "limh"=>$report['settings']['limiter']+1, "liml"=>$report['settings']['limiter_triplets']+1 ] )."</div>";
-        }
+        $modules['heroes']['combos'] = rg_view_generate_heroes_combos();
       }
     }
     if (isset($report['hvh'])) {

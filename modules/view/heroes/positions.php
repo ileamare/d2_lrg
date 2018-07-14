@@ -1,7 +1,5 @@
 <?php
 
-include_once($root."/modules/view/generators/summary.php");
-
 $modules['heroes']['positions'] = [];
 
 function rg_view_generate_heroes_positions() {

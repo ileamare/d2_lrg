@@ -1,8 +1,8 @@
 <?php
 
-$modules['heroes']['positions'] = [];
+$modules['players']['positions'] = [];
 
-function rg_view_generate_heroes_positions() {
+function rg_view_generate_players_positions() {
   global $report, $parent, $root, $meta, $strings, $unset_module, $mod;
   if($mod == $parent."positions") $unset_module = true;
   $parent_module = $parent."positions-";
@@ -12,7 +12,7 @@ function rg_view_generate_heroes_positions() {
   for ($i=1; $i>=0; $i--) {
     for ($j=1; $j<6 && $j>0; $j++) {
       if (!$i) { $j = 0; }
-      if(sizeof($report['hero_positions'][$i][$j]))
+      if(sizeof($report['player_positions'][$i][$j]))
         $res["position_$i.$j"]  = "";
 
       if (!$i) { break; }
@@ -21,8 +21,8 @@ function rg_view_generate_heroes_positions() {
 
   if (check_module($parent_module."overview")) {
     include_once($root."/modules/view/generators/positions_overview.php");
-    $res["overview"] = rg_generator_positions_overview("heroes-positions-overview", $report['hero_positions']);
-    $res["overview"] .= "<div class=\"content-text\">".locale_string("desc_heroes_positions")."</div>";
+    $res["overview"] = rg_generator_positions_overview("players-positions-overview", $report['player_positions'], false);
+    $res["overview"] .= "<div class=\"content-text\">".locale_string("desc_players_positions")."</div>";
   } else {
     include_once($root."/modules/view/generators/summary.php");
 
@@ -35,9 +35,9 @@ function rg_view_generate_heroes_positions() {
           continue;
         }
 
-        $res["position_$i.$j"] = rg_generator_summary("heroes-positions-$i-$j", $report['hero_positions'][$i][$j]);
+        $res["position_$i.$j"] = rg_generator_summary("players-positions-$i-$j", $report['player_positions'][$i][$j], false);
 
-        $res["position_$i.$j"] .= "<div class=\"content-text\">".locale_string("desc_heroes_positions")."</div>";
+        $res["position_$i.$j"] .= "<div class=\"content-text\">".locale_string("desc_players_positions")."</div>";
         if (!$i) { break; }
       }
     }

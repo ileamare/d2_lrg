@@ -27,7 +27,7 @@ function rg_generator_positions_overview($table_id, $context, $hero_flag = true)
     }
   }
 
-  $overview = array();
+  $overview = [];
 
   for ($i=1; $i>=0; $i--) {
     for ($j=1; $j<6 && $j>0; $j++) {
@@ -44,7 +44,10 @@ function rg_generator_positions_overview($table_id, $context, $hero_flag = true)
       if (!$i) { break; }
     }
   }
-  ksort($overview);
+  uasort($overview, function($a, $b) {
+    if($a['total'] == $b['total']) return 0;
+    else return ($a['total'] < $b['total']) ? 1 : -1;
+  });
 
   $res = "<table id=\"$table_id\" class=\"list wide\"><tr class=\"thead overhead\"><th width=\"20%\" colspan=\"".(2+$hero_flag)."\"></th>";
 

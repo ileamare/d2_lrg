@@ -145,39 +145,7 @@ $root = dirname(__FILE__);
 
   # players
   if (isset($modules['players']) && check_module("players")) {
-    if($mod == "players") $unset_module = true;
-    $parent = "players-";
-
-    if (isset($report['averages_players'])) {
-      if (check_module($parent."haverages")) {
-        $modules['players']['haverages'] = rg_view_generate_players_haverages();
-      }
-    }
-    if (isset($report['players_summary'])) {
-      if(check_module($parent."summary")) {
-        $modules['players']['summary'] = rg_view_generate_players_summary();
-      }
-    }
-    if (isset($report['pvp'])) {
-      if (check_module($parent."pvp")) {
-        $modules['players']['pvp'] = rg_view_generate_players_pvp();
-      }
-    }
-    if (isset($report['players_combo_graph']) && $report['settings']['players_combo_graph'] && isset($report['players_additional'])) {
-      if (check_module($parent."party_graph")) {
-        $modules['players']['party_graph'] = rg_view_generate_players_party_graph();
-      }
-    }
-    if (isset($report['player_pairs']) || isset($report['player_triplets']) || isset($report['player_lane_combos'])) {
-      if (check_module($parent."combos")) {
-        $modules['players']['combos'] = rg_view_generate_players_combos();
-      }
-    }
-    if (isset($report['player_positions'])) {
-      if(check_module($parent."positions")) {
-        $modules['players']['positions'] = rg_view_generate_players_positions();
-      }
-    }
+    merge_mods($modules['players'], rg_view_generate_players());
   }
 
   # teams

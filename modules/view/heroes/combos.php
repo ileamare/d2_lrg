@@ -8,6 +8,8 @@ function rg_view_generate_heroes_combos() {
   $parent_module = $parent."combos-";
   $res = [];
 
+  var_dump($report['hero_triplets_matches']);
+
   if(isset($report['hero_pairs'])) {
     $res['pairs'] = "";
     if (check_module($parent_module."pairs")) {
@@ -27,7 +29,7 @@ function rg_view_generate_heroes_combos() {
       $res['trios'] =  "<div class=\"content-text\">".locale_string("desc_heroes_trios", [ "liml"=>$report['settings']['limiter_triplets']+1 ] )."</div>";
       $res['trios'] .= rg_generator_trios("hero-trios",
                                          $report['hero_triplets'],
-                                         (isset($report['hero_pairs_matches']) ? $report['hero_pairs_matches'] : [])
+                                         (isset($report['hero_triplets_matches']) ? $report['hero_triplets_matches'] : [])
                                        );
     }
   }

@@ -17,4 +17,6 @@ if (isset($report['player_positions']) )
 if (isset($report['players_combo_graph']) && $report['settings']['players_combo_graph'] && isset($report['players_additional']))
   include("players/party_graph.php");
 
+if (isset($report['player_pairs']) || isset($report['player_triplets']) || isset($report['player_lane_combos']))
+  include("players/combos.php");
 ?>

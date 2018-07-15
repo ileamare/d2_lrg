@@ -41,7 +41,7 @@ $query_res->free_result();
 
 
 if ($lg_settings['ana']['hero_triplets_matches']) {
-  $result["hero_triplets_matches"] = array ();
+  $result["hero_triplets_matches"] = [];
 
   foreach($result['hero_triplets'] as $pair) {
     $sql = "SELECT m1.matchid
@@ -52,7 +52,7 @@ if ($lg_settings['ana']['hero_triplets_matches']) {
                   ON m1.matchid = m3.matchid and m1.isRadiant = m3.isRadiant and m2.heroid < m3.heroid
             WHERE m1.heroid = ".$pair['heroid1']." AND m2.heroid = ".$pair['heroid2']." AND m3.heroid = ".$pair['heroid3'].";";
 
-    $result["hero_pairs_matches"][$pair['heroid1']."-".$pair['heroid2']."-".$pair['heroid3']] = array();
+    $result["hero_triplets_matches"][$pair['heroid1']."-".$pair['heroid2']."-".$pair['heroid3']] = [];
 
     if ($conn->multi_query($sql) === TRUE) ;#echo "[S] Requested data for HERO TRIPLETS MATCHES.\n";
     else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
@@ -60,7 +60,7 @@ if ($lg_settings['ana']['hero_triplets_matches']) {
     $query_res = $conn->store_result();
 
     for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
-      $result["hero_pairs_matches"][$pair['heroid1']."-".$pair['heroid2']."-".$pair['heroid3']][] = $row[0];
+      $result["hero_triplets_matches"][$pair['heroid1']."-".$pair['heroid2']."-".$pair['heroid3']][] = $row[0];
     }
 
     $query_res->free_result();

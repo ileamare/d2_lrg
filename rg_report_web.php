@@ -168,57 +168,9 @@ $root = dirname(__FILE__);
         $modules['players']['party_graph'] = rg_view_generate_players_party_graph();
       }
     }
-    if (isset($report['player_pairs']) || isset($report['player_triplets'])) {
-      $modules['players']['player_combos'] = "";
-
-      if(check_module($parent."player_combos")) {
-        if(isset($report['player_pairs'])) {
-          $modules['players']['player_combos'] .= "<table id=\"player-pairs\" class=\"list\">
-                                                <caption>".locale_string("player_pairs")."</caption>
-                                                <tr class=\"thead\">
-                                                  <th onclick=\"sortTable(0,'player-pairs');\">".locale_string("player")." 1</th>
-                                                  <th onclick=\"sortTable(1,'player-pairs');\">".locale_string("player")." 2</th>
-                                                  <th onclick=\"sortTableNum(2,'player-pairs');\">".locale_string("matches")."</th>
-                                                  <th onclick=\"sortTableNum(3,'player-pairs');\">".locale_string("winrate")."</th>
-                                                </tr>";
-          foreach($report['player_pairs'] as $pair) {
-            $modules['players']['player_combos'] .= "<tr".(isset($report['player_pairs_matches']) ?
-                            " onclick=\"showModal('".implode($report['player_pairs_matches'][$pair['playerid1'].'-'.$pair['playerid2']], ", ").
-                                  "', '".locale_string("matches")."');\"" : "").">
-                                                  <td>".$report['players'][ $pair['playerid1'] ]."</td>
-                                                  <td>".$report['players'][ $pair['playerid2'] ]."</td>
-                                                 <td>".$pair['matches']."</td>
-                                                 <td>".number_format($pair['winrate']*100,2)."</td>
-                                                </tr>";
-          }
-          $modules['players']['player_combos'] .= "</table>";
-        }
-
-        if (isset($report['player_triplets'])) {
-          $modules['players']['player_combos'] .= "<table id=\"player-triplets\" class=\"list\">
-                                                <caption>".locale_string("player_triplets")."</caption>
-                                                <tr class=\"thead\">
-                                                  <th onclick=\"sortTable(0,'player-triplets');\">".locale_string("player")." 1</th>
-                                                  <th onclick=\"sortTable(1,'player-triplets');\">".locale_string("player")." 2</th>
-                                                  <th onclick=\"sortTable(2,'player-triplets');\">".locale_string("player")." 3</th>
-                                                  <th onclick=\"sortTableNum(3,'player-triplets');\">".locale_string("matches")."</th>
-                                                  <th onclick=\"sortTableNum(4,'player-triplets');\">".locale_string("winrate")."</th>
-                                                </tr>";
-          foreach($report['player_triplets'] as $pair) {
-            $modules['players']['player_combos'] .= "<tr".(isset($report['player_triplets_matches']) ?
-                            " onclick=\"showModal('".implode($report['player_triplets_matches'][$pair['playerid1'].'-'.$pair['playerid2'].'-'.$pair['playerid3']], ", ").
-                                  "', '".locale_string("matches")."');\"" : "").">
-                                                  <td>".$report['players'][ $pair['playerid1'] ]."</td>
-                                                  <td>".$report['players'][ $pair['playerid2'] ]."</td>
-                                                  <td>".$report['players'][ $pair['playerid3'] ]."</td>
-                                                 <td>".$pair['matches']."</td>
-                                                 <td>".number_format($pair['winrate']*100,2)."</td>
-                                                </tr>";
-          }
-          $modules['players']['player_combos'] .= "</table>";
-
-          $modules['players']['player_combos'] .= "<div class=\"content-text\">".locale_string("desc_players_combos")."</div>";
-        }
+    if (isset($report['player_pairs']) || isset($report['player_triplets']) || isset($report['player_lane_combos'])) {
+      if (check_module($parent."combos")) {
+        $modules['players']['combos'] = rg_view_generate_players_combos();
       }
     }
     if (isset($report['player_positions'])) {

@@ -13,6 +13,11 @@ function rg_generator_pairs($table_id, $context, $context_matches, $heroes_flag 
       else
         $lane_rate = false;
 
+      if(isset($pair['expectation']))
+        $expectation = true;
+      else
+        $expectation = false;
+
       break;
   }
 
@@ -23,9 +28,9 @@ function rg_generator_pairs($table_id, $context, $context_matches, $heroes_flag 
          "<th onclick=\"sortTable(".($i++).",'$table_id');\">".locale_string($heroes_flag ? "hero" : "player")." 2</th>".
          "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("matches")."</th>".
          "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("winrate")."</th>".
-         "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("pair_expectation")."</th>".
-         "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("pair_deviation")."</th>".
-         "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("percentage")."</th>".
+         ($expectation ? "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("pair_expectation")."</th>".
+                         "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("pair_deviation")."</th>".
+                         "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("percentage")."</th>" : "").
          ($lane_rate ? "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("lane_rate")."</th>" : "").
          "</tr>";
 
@@ -40,9 +45,9 @@ function rg_generator_pairs($table_id, $context, $context_matches, $heroes_flag 
                 "<td>".($heroes_flag ? hero_name($pair[$id.'2']) : player_name($pair[$id.'2']))."</td>".
                 "<td>".$pair['matches']."</td>".
                 "<td>".number_format($pair['winrate']*100,2)."%</td>".
-                "<td>".number_format($pair['expectation'], 3)."</td>".
-                "<td>".number_format($pair['matches']-$pair['expectation'], 3)."</td>".
-                "<td>".number_format(($pair['matches']-$pair['expectation'])*100/$pair['matches'], 2)."%</td>".
+                ($expectation ? "<td>".number_format($pair['expectation'], 3)."</td>".
+                                "<td>".number_format($pair['matches']-$pair['expectation'], 3)."</td>".
+                                "<td>".number_format(($pair['matches']-$pair['expectation'])*100/$pair['matches'], 2)."%</td>" : "").
                 ($lane_rate ? "<td>".number_format($pair['lane_rate']*100, 2)."%</td>" : "").
             "</tr>";
   }

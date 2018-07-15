@@ -1,11 +1,11 @@
 <?php
 include_once("rg_report_out_settings.php");
 include_once("modules/functions/versions.php");
-$lg_version = array( 1, 4, 0, -4, 1 );
+$lg_version = array( 1, 4, 0, -4, 3 );
 
 include_once("modules/functions/locale_strings.php");
 include_once("modules/functions/get_language_code_iso6391.php");
-include_once("modules/functions/merge_arrays.php");
+include_once("modules/functions/merge_mods.php");
 
 # FUNCTIONS
 include_once("modules/view/functions/modules.php");
@@ -130,17 +130,17 @@ $root = dirname(__FILE__);
 
   # overview
   if (check_module("overview")) {
-    $modules['overview'] .= rg_view_generate_overview();
+    merge_mods($modules['overview'], rg_view_generate_overview());
   }
 
   # records
   if (isset($modules['records']) && check_module("records")) {
-    $modules['records'] .= rg_view_generate_records();
+    merge_mods($modules['records'], rg_view_generate_records());
   }
 
   # heroes
   if (isset($modules['heroes']) && check_module("heroes")) {
-    merge_arrays($modules['heroes'], rg_view_generate_heroes());
+    merge_mods($modules['heroes'], rg_view_generate_heroes());
   }
 
   # players

@@ -163,45 +163,9 @@ $root = dirname(__FILE__);
         $modules['players']['pvp'] = rg_view_generate_players_pvp();
       }
     }
-    if (isset($report['players_combo_graph']) && $report['settings']['players_combo_graph'] && isset($report)) {
-      $modules['players']['players_combo_graph'] = "";
-
-      if (check_module($parent."players_combo_graph")) {
-        $modules['players']['players_combo_graph'] .= "<div class=\"content-text\">".locale_string("desc_players_combo_graph")."</div>";
-        if(isset($report['players_combo_graph'])) {
-          $use_visjs = true;
-
-          $modules['players']['players_combo_graph'] .= "<div id=\"players-combos-graph\" class=\"graph\"></div><script type=\"text/javascript\">";
-
-          $nodes = "";
-          foreach($report['players'] as $pid => $player) {
-            if (!has_pair($pid, $report['players_combo_graph'])) continue;
-            $wr = $report['players_additional'][$pid]['won'] / $report['players_additional'][$pid]['matches'];
-            $wr = 0.5;
-            $nodes .= "{id: $pid, value: ".$report['players_additional'][$pid]['matches'].", label: '".addslashes($player)."'".
-              ", color:{ border:'rgba(".number_format(255-255*$wr, 0).",124,".
-              number_format(255*$wr, 0).")' }},";
-          }
-          $modules['players']['players_combo_graph'] .= "var nodes = [".$nodes."];";
-
-          $nodes = "";
-          foreach($report['players_combo_graph'] as $combo) {
-            $nodes .= "{from: ".$combo['playerid1'].", to: ".$combo['playerid2'].", value:".$combo['matches'].", title:\"".$combo['matches']."\", color:{color:'rgba(".
-              number_format(255-255*$combo['wins']/$combo['matches'], 0).",124,".
-              number_format(255*$combo['wins']/$combo['matches'],0).",1)'}},";
-          }
-
-          $modules['players']['players_combo_graph'] .= "var edges = [".$nodes."];";
-
-          $modules['players']['players_combo_graph'] .= "var container = document.getElementById('players-combos-graph');\n".
-                                                      "var data = { nodes: nodes, edges: edges};\n".
-                                                      "var data = { nodes: nodes, edges: edges};\n".
-                                                      "var options={
-                                                        $visjs_settings
-                                                       };\n".
-                                                      "var network = new vis.Network(container, data, options);\n".
-                                                      "</script>";
-        }
+    if (isset($report['players_combo_graph']) && $report['settings']['players_combo_graph'] && isset($report['players_additional'])) {
+      if (check_module($parent."party_graph")) {
+        $modules['players']['party_graph'] = rg_view_generate_players_party_graph();
       }
     }
     if (isset($report['player_pairs']) || isset($report['player_triplets'])) {
@@ -709,6 +673,7 @@ $root = dirname(__FILE__);
           $modules['teams']["team_".$tid."_stats"]['roster'] = "";
 
           if(check_module($parent."team_".$tid."_stats-roster")) {
+            generate_positions_strings();
             $modules['teams']["team_".$tid."_stats"]['roster'] = "<div class=\"content-text\">".locale_string("desc_roster")."</div>";
             $modules['teams']["team_".$tid."_stats"]['roster'] .= "<div class=\"content-cards\">";
             foreach($report['teams'][$tid]['active_roster'] as $player) {

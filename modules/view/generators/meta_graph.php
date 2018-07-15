@@ -13,27 +13,41 @@ function rg_generator_meta_graph($div_id, $context, $context_pickban, $heroes_fl
 
   $nodes = "";
 
-  $counter = 0; $endp = sizeof($context_pickban)*0.35;
+  if($heroes_flag) {
+    $counter = 0; $endp = sizeof($context_pickban)*0.35;
 
-  uasort($context_pickban, function($a, $b) {
-    if($a['matches_total'] == $b['matches_total']) return 0;
-    else return ($a['matches_total'] < $b['matches_total']) ? 1 : -1;
-  });
+    uasort($context_pickban, function($a, $b) {
+      if($a['matches_total'] == $b['matches_total']) return 0;
+      else return ($a['matches_total'] < $b['matches_total']) ? 1 : -1;
+    });
 
-  foreach($context_pickban as $elid => $el) {
-    if($counter++ >= $endp && !has_pair($elid, $context)) {
-        continue;
+    foreach($context_pickban as $elid => $el) {
+      if($counter++ >= $endp && !has_pair($elid, $context)) {
+          continue;
+      }
+      $nodes .= "{id: $elid, value: ".$el['matches_total'].
+        ", label: '".addslashes(hero_name($elid))."'".
+        ", title: '".addslashes(hero_name($elid)).", ".
+        $el['matches_total']." ".locale_string("total").", ".
+        $el['matches_picked']." ".locale_string("matches_picked").", ".
+        number_format($el['winrate_picked']*100, 1)." ".locale_string("winrate_picked")."'".
+        ", shape:'circularImage', ".
+        "image: 'res/heroes/".$meta['heroes'][$elid]['tag'].".png', ".
+        "color:{ border:'rgba(".number_format(255-255*$el['winrate_picked'], 0).",124,".
+        number_format(255*$el['winrate_picked'], 0).")' }},";
     }
-    $nodes .= "{id: $elid, value: ".$el['matches_total'].
-      ", label: '".($heroes_flag ? hero_name($elid) : player_name($elid))."'".
-      ", title: '".($heroes_flag ? hero_name($elid) : player_name($elid)).", ".
-      $el['matches_total']." ".locale_string("total").", ".
-      $el['matches_picked']." ".locale_string("matches_picked").", ".
-      number_format($el['winrate_picked']*100, 1)." ".locale_string("winrate_picked")."'".
-      ", shape:'circularImage', ".
-      ($heroes_flag ? "image: 'res/heroes/".$meta['heroes'][$elid]['tag'].".png', " : "").
-      "color:{ border:'rgba(".number_format(255-255*$el['winrate_picked'], 0).",124,".
-      number_format(255*$el['winrate_picked'], 0).")' }},";
+  } else {
+    foreach($context_pickban as $elid => $el) {
+      if (!has_pair($elid, $context)) continue;
+      $wr = $el['won'] / $el['matches'];
+      $nodes .= "{id: $elid, value: ".$el['matches'].
+        ", label: '".addslashes(player_name($elid))."'".
+        ", title: '".addslashes(player_name($elid)).", ".
+        $el['matches']." ".locale_string("total").", ".
+        number_format($wr*100, 1)." ".locale_string("winrate")."', ".
+        "color:{ border:'rgba(".number_format(255-255*$wr, 0).",124,".
+        number_format(255*$wr, 0).")' }},";
+    }
   }
   $res .= "var nodes = [".$nodes."];";
 

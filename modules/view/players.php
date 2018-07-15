@@ -14,4 +14,7 @@ if (isset($report['pvp']) )
 if (isset($report['player_positions']) )
   include("players/positions.php");
 
+if (isset($report['players_combo_graph']) && $report['settings']['players_combo_graph'] && isset($report['players_additional']))
+  include("players/party_graph.php");
+
 ?>

@@ -2,7 +2,7 @@
 /* SETTINGS */
 
 $lrg_use_get = true;
-$lrg_get_depth = 3;
+$lrg_get_depth = 5;
 $locale = "en";
 $max_tabs = 12;
 

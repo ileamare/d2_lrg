@@ -4,8 +4,8 @@ if (isset($get_positions_strings) || stripos($mod, "positions") !== FALSE) {
   for ($i=1; $i>=0; $i--) {
     for ($j=1; $j<6 && $j>0; $j++) {
       if (!$i) { $j = 0; }
-      if(!isset($strings['en']["positions_$i.$j"]))
-        $strings['en']["positions_$i.$j"] = ($i ? locale_string("core") : locale_string("support"))." ".locale_string("lane_$j");
+      if(!isset($strings['en']["position_$i.$j"]))
+        $strings['en']["position_$i.$j"] = ($i ? locale_string("core") : locale_string("support"))." ".locale_string("lane_$j");
 
       if (!$i) { break; }
     }

@@ -9,7 +9,16 @@ function check_module($module) {
     $mod = $module;
   }
 
-  return ($lrg_use_get && stripos($mod, $module) === 0) || !$lrg_use_get || !$lrg_get_depth || $lrg_get_depth <= substr_count($module, "-");
+  return $lrg_use_get &&
+          (
+            (stripos($mod, $module) === 0) && (
+              (strlen($mod) == strlen($module)) ||
+              (strlen($mod) > strlen($module) && $mod[strlen($module)] === '-' )
+            )
+          ) ||
+          !$lrg_use_get ||
+          !$lrg_get_depth ||
+          $lrg_get_depth <= substr_count($module, "-");
 }
 
 function unset_module() {

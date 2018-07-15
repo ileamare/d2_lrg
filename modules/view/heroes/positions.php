@@ -12,7 +12,7 @@ function rg_view_generate_heroes_positions() {
     for ($j=1; $j<6 && $j>0; $j++) {
       if (!$i) { $j = 0; }
       if(sizeof($report['hero_positions'][$i][$j]))
-        $res["positions_$i.$j"]  = "";
+        $res["position_$i.$j"]  = "";
 
       if (!$i) { break; }
     }
@@ -34,9 +34,9 @@ function rg_view_generate_heroes_positions() {
           continue;
         }
 
-        $res["positions_$i.$j"] = rg_generator_summary("heroes-positions-$i-$j", $report['hero_positions'][$i][$j]);
+        $res["position_$i.$j"] = rg_generator_summary("heroes-positions-$i-$j", $report['hero_positions'][$i][$j]);
 
-        $res["positions_$i.$j"] .= "<div class=\"content-text\">".locale_string("desc_heroes_positions")."</div>";
+        $res["position_$i.$j"] .= "<div class=\"content-text\">".locale_string("desc_heroes_positions")."</div>";
         if (!$i) { break; }
       }
     }

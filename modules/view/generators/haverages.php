@@ -13,7 +13,13 @@ function rg_generator_haverages($table_id, $context, $hero_flag = true) {
             "<th>".locale_string("value")."</th></tr>";
     foreach($avg as $el) {
       $res .= "<tr>".($hero_flag ? "<td>".hero_portrait($el[$id])."</td>" : "").
-              "<td>".($hero_flag ? hero_name($el[$id]) : player_name($el[$id])).
+              "<td>".($hero_flag ?
+                      hero_name($el[$id]) :
+                      ( stripos($key, "team") !== FALSE ?
+                        team_name($el[$id]) :
+                        player_name($el[$id])
+                      )
+                    ).
               "</td><td>".number_format($el['value'],2)."</td></tr>";
     }
     $res .= "</table>";

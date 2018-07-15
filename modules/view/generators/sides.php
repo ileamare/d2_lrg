@@ -50,8 +50,8 @@ function rg_generator_sides($table_id, $context, $heroes_flag = true) {
             ($heroes_flag ? "<th width=\"1%\"></th>" : "").
             "<th onclick=\"sortTable(".($i++).",'$table_id');\">".locale_string($heroes_flag ? "hero" : "player")."</th>".
             "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("matches")."</th>".
-            "<th onclick=\"sortTableNum(".($i++).",'$table_id');\" class=\"separator\">".locale_string("rad_ratio")."</th>".
-            "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("rad_diff")."</th>";
+            "<th onclick=\"sortTableNum(".($i++).",'$table_id');\" class=\"separator\">".locale_string("ratio")."</th>".
+            "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("diff")."</th>";
 
   for ($side = 1; $side >= 0; $side--) {
     for($k=1, $end=sizeof($keys); $k < $end; $k++) {

@@ -24,7 +24,7 @@ if (isset($report['hero_pairs']) || isset($report['hero_triplets']) || isset($re
   include("heroes/combos.php");
 
 if (isset($report['hvh']))
-  include("heroes/hvh.php");
+  include("heroes/hero_vs_hero.php");
 
 if (isset($report['hero_summary']))
   include("heroes/summary.php");

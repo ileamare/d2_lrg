@@ -81,10 +81,9 @@
     "tvt" => "Team versus team",
     "players_combo_graph" => "Player Parties Graph",
     "position" => "Position",
-    "rad_ratio" => "Ratio",
     "rad_wr_s" => "Radiant WR",
     "dire_wr_s" => "Dire WR",
-    "rad_diff" => "Advantage",
+    "diff" => "Advantage",
     "rad_view" => "Radiant Overview",
 
     "averages" => "Average values",

@@ -58,7 +58,7 @@ function rg_generator_positions_overview($table_id, $context, $hero_flag = true)
   foreach($position_overview_template as $k => $v) {
     if ($k == "total") continue;
 
-    $res .= "<th colspan=\"3\" class=\"separator\">".locale_string("positions_$k")."</th>";
+    $res .= "<th colspan=\"3\" class=\"separator\">".locale_string("position_$k")."</th>";
     $heroline .= "<th onclick=\"sortTableNum(".($hero_flag+$i++).",'$table_id');\"  class=\"separator\">".locale_string("matches_s")."</th>".
                   "<th onclick=\"sortTableNum(".($hero_flag+$i++).",'$table_id');\">".locale_string("ratio")."</th>".
                   "<th onclick=\"sortTableNum(".($hero_flag+$i++).",'$table_id');\">".locale_string("winrate_s")."</th>";

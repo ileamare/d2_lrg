@@ -6,7 +6,8 @@ include_once($root."/modules/view/generators/pvp_profile.php");
 $modules['heroes']['hvh'] = [];
 
 function rg_view_generate_heroes_hvh() {
-  global $report, $mod, $parent, $strings, $meta;
+  global $report, $mod, $parent, $strings, $meta, $unset_module;
+  if($mod == $parent."hvh") $unset_module = true;
   $parent_module = $parent."hvh-";
 
   $hvh = rg_generator_pvp_unwrap_data($report['hvh'], $report['pickban']);

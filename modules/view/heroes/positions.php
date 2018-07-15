@@ -3,7 +3,8 @@
 $modules['heroes']['positions'] = [];
 
 function rg_view_generate_heroes_positions() {
-  global $report, $parent, $root, $meta, $strings;
+  global $report, $parent, $root, $meta, $strings, $unset_module;
+  if($mod == $parent."positions") $unset_module = true;
   $parent_module = $parent."positions-";
 
   $res = [];

@@ -5,6 +5,7 @@ $lg_version = array( 1, 4, 0, -4, 1 );
 
 include_once("modules/functions/locale_strings.php");
 include_once("modules/functions/get_language_code_iso6391.php");
+include_once("modules/functions/merge_arrays.php");
 
 # FUNCTIONS
 include_once("modules/view/functions/modules.php");
@@ -139,60 +140,7 @@ $root = dirname(__FILE__);
 
   # heroes
   if (isset($modules['heroes']) && check_module("heroes")) {
-    if($mod == "heroes") $unset_module = true;
-    $parent = "heroes-";
-
-    if (isset($report['averages_heroes']) ) {
-      if (check_module($parent."haverages")) {
-        $modules['heroes']['haverages'] = rg_view_generate_heroes_haverages();
-      }
-    }
-    if (isset($report['pickban'])) {
-      if (check_module($parent."pickban")) { // FUNCTION SET
-        $modules['heroes']['pickban'] = rg_view_generate_heroes_pickban();
-      }
-    }
-    if (isset($report['draft'])) {
-      if (check_module($parent."draft")) {
-        $modules['heroes']['draft'] = rg_view_generate_heroes_draft();
-      }
-    }
-    if (isset($report['hero_positions'])) {
-      if(check_module($parent."positions")) {
-        if($mod == $parent."positions") $unset_module = true;
-
-        $modules['heroes']['positions'] = rg_view_generate_heroes_positions();
-      }
-    }
-    if (isset($report['hero_sides'])) {
-      if(check_module($parent."sides")) {
-        $modules['heroes']['sides'] = rg_view_generate_heroes_sides();
-      }
-    }
-    if (isset($report['hero_combos_graph']) && $report['settings']['heroes_combo_graph']) {
-      if (check_module($parent."meta_graph")) {
-        $modules['heroes']['meta_graph'] = rg_view_generate_heroes_meta_graph();
-      }
-    }
-    if (isset($report['hero_pairs']) || isset($report['hero_triplets']) || isset($report['hero_lane_combos'])) {
-      if (check_module($parent."combos")) {
-        if($mod == $parent."combos") $unset_module = true;
-
-        $modules['heroes']['combos'] = rg_view_generate_heroes_combos();
-      }
-    }
-    if (isset($report['hvh'])) {
-      if (check_module($parent."hvh")) {
-        if($mod == $parent."hvh") $unset_module = true;
-
-        $modules['heroes']['hvh'] = rg_view_generate_heroes_hvh();
-      }
-    }
-    if (isset($report['hero_summary'])) {
-      if(check_module($parent."summary")) {
-        $modules['heroes']['summary'] = rg_view_generate_heroes_summary();
-      }
-    }
+    merge_arrays($modules['heroes'], rg_view_generate_heroes());
   }
 
   # players

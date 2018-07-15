@@ -3,7 +3,8 @@
 $modules['heroes']['combos'] = [];
 
 function rg_view_generate_heroes_combos() {
-  global $report, $parent, $root;
+  global $report, $parent, $root, $unset_module, $mod;
+  if($mod == $parent."combos") $unset_module = true;
   $parent_module = $parent."combos-";
   $res = [];
 

@@ -27,13 +27,14 @@ function join_selectors($modules, $level, $parent="") {
 
   foreach($modules as $modname => $module) {
     $mn = (empty($parent) ? "" : $parent."-" ).$modname;
+    $startline_check_res = stripos($mod, $mn) === 0 && (
+          (strlen($mod) == strlen($mn)) ||
+          (strlen($mod) > strlen($mn) && $mod[strlen($mn)] == '-')
+        );
 
     if ($selectors_num < $max_tabs) {
       if($lrg_use_get && $lrg_get_depth > $level) {
-        if (stripos($mod, $mn) === 0 && (
-              (strlen($mod) == strlen($mn)) ||
-              (strlen($mod) > strlen($mn) && $mod[strlen($mn)] == '-')
-            ) )
+        if ( $startline_check_res )
           $selectors[] = "<span class=\"selector active\">".locale_string($modname)."</span>";
         else
           $selectors[] = "<span class=\"selector".($unset_selector ? " active" : "").
@@ -61,10 +62,7 @@ function join_selectors($modules, $level, $parent="") {
         $selectors[] = "<option value=\"module-".$mn."\">".locale_string($modname)."</option>";
       }
     }
-    if((stripos($mod, $mn) === 0 && (
-          (strlen($mod) == strlen($mn)) ||
-          (strlen($mod) > strlen($mn) && $mod[strlen($mn)] == '-')
-        ) ) || !$lrg_use_get || $lrg_get_depth < $level+1 || $unset_selector) {
+    if($startline_check_res || !$lrg_use_get || $lrg_get_depth < $level+1 || $unset_selector) {
       if(is_array($module)) {
         $module = join_selectors($module, $level+1, $mn);
       }

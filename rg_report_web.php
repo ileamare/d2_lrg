@@ -154,174 +154,13 @@ $root = dirname(__FILE__);
       }
     }
     if (isset($report['players_summary'])) {
-
-      $modules['players']['summary']  = "";
       if(check_module($parent."summary")) {
-        $keys = array_keys($report['players_summary'][0]);
-        $modules['players']['summary'] .= "<table id=\"players-summary\" class=\"list wide\">
-                                          <tr class=\"thead\">
-                                            <th onclick=\"sortTable(0,'players-summary');\">".locale_string("player")."</th>";
-        for($k=1, $end=sizeof($keys); $k < $end; $k++) {
-          $modules['players']['summary'] .= "<th onclick=\"sortTableNum($k,'players-summary');\">".locale_string($keys[$k])."</th>";
-        }
-        $modules['players']['summary'] .= "<th onclick=\"sortTableNum($k,'players-summary');\">".locale_string("common_position")."</th>";
-        $modules['players']['summary'] .= "</tr>";
-
-        foreach($report['players_summary'] as $player) {
-
-          $modules['players']['summary'] .= "<tr>
-                                              <td>".player_name($player['playerid'])."</td>
-                                              <td>".$player['matches_s']."</td>
-                                              <td>".number_format($player['winrate_s']*100,1)."%</td>";
-          for($k=3, $end=sizeof($keys); $k < $end; $k++) {
-            if ($player[$keys[$k]] > 1)
-              $modules['players']['summary'] .= "<td>".number_format($player[$keys[$k]],1)."</td>";
-            else $modules['players']['summary'] .= "<td>".number_format($player[$keys[$k]],3)."</td>";
-          }
-          $position = reset($report['players_additional'][$player['playerid']]['positions']);
-          $modules['players']['summary'] .= "<td>".($position['core'] ? locale_string("core")." " : locale_string("support")).
-                        $meta['lanes'][ $position['lane'] ]."</td>";
-          $modules['players']['summary'] .= "</tr>";
-        }
-        $modules['players']['summary'] .= "</table>";
-
-        $modules['players']['summary'] .= "<div class=\"content-text\">".locale_string("desc_players_summary")."</div>";
-        unset($keys);
+        $modules['players']['summary'] = rg_view_generate_players_summary();
       }
     }
     if (isset($report['pvp'])) {
-      $pvp = array();
-      $modules['players']['pvp'] = array();
-
       if (check_module($parent."pvp")) {
-        if($mod == $parent."pvp") $unset_module = true;
-
-        foreach($report['players'] as $pid => $pname) {
-          $pvp[$pid] = array();
-        }
-        $player_ids = array_keys($report['players']);
-
-        if($report['settings']['pvp_grid']) {
-          $modules['players']['pvp']['grid'] = "";
-        }
-
-        foreach($pvp as $player_id => $playerline) {
-          foreach($player_ids as $pid) {
-            $pvp[$player_id][$pid] = array(
-              "winrate" => 0,
-              "matches" => 0,
-              "won" => 0,
-              "lost" => 0
-            );
-          }
-        }
-
-        foreach($player_ids as $pid) {
-          for($i=0, $end = sizeof($report['pvp']); $i<$end; $i++) {
-            if($report['pvp'][$i]['playerid1'] == $pid) {
-              $pvp[$pid][$report['pvp'][$i]['playerid2']] = array(
-                "winrate" => $report['pvp'][$i]['p1winrate'],
-                "matches" => $report['pvp'][$i]['matches'],
-                "won" => $report['pvp'][$i]['p1won'],
-                "lost" => $report['pvp'][$i]['matches'] - $report['pvp'][$i]['p1won'],
-                "matchids" => $report['pvp'][$i]['matchids']
-              );
-            }
-            if($report['pvp'][$i]['playerid2'] == $pid) {
-              $pvp[$pid][$report['pvp'][$i]['playerid1']] = array(
-                "winrate" => 1-$report['pvp'][$i]['p1winrate'],
-                "matches" => $report['pvp'][$i]['matches'],
-                "won" => $report['pvp'][$i]['matches'] - $report['pvp'][$i]['p1won'],
-                "lost" => $report['pvp'][$i]['p1won']
-              );
-            }
-            if(isset($report['pvp'][$i]['matchids'])) {
-              if($report['pvp'][$i]['playerid1'] == $pid)
-                $pvp[$pid][$report['pvp'][$i]['playerid2']]['matchids'] = $report['pvp'][$i]['matchids'];
-              if($report['pvp'][$i]['playerid2'] == $pid)
-                $pvp[$pid][$report['pvp'][$i]['playerid1']]['matchids'] = $report['pvp'][$i]['matchids'];
-            }
-          }
-        }
-
-        if($report['settings']['pvp_grid'] && check_module($parent."pvp-grid")) {
-          $modules['players']['pvp']['grid'] .= "<table  class=\"pvp wide\">";
-
-          $modules['players']['pvp']['grid'] .= "<tr class=\"thead\"><th></th>";
-          foreach($report['players'] as $pid => $pname) {
-            $modules['players']['pvp']['grid'] .= "<th><span>".$pname."</span></th>";
-          }
-          $modules['players']['pvp']['grid'] .= "</tr>";
-
-
-          foreach($pvp as $pid => $playerline) {
-            $modules['players']['pvp']['grid'] .= "<tr><td>".$report['players'][$pid]."</td>";
-            for($i=0, $end = sizeof($player_ids); $i<$end; $i++) {
-              if($pid == $player_ids[$i]) {
-                $modules['players']['pvp']['grid'] .= "<td class=\"transparent\"></td>";
-              } else if($playerline[$player_ids[$i]]['matches'] == 0) {
-                $modules['players']['pvp']['grid'] .= "<td>-</td>";
-              } else {
-                $modules['players']['pvp']['grid'] .= "<td".
-                        ($playerline[$player_ids[$i]]['winrate'] > 0.55 ? " class=\"high-wr\"" : (
-                              $playerline[$player_ids[$i]]['winrate'] < 0.45 ? " class=\"low-wr\"" : ""
-                            )
-                          )." onclick=\"showModal('".locale_string("matches").": ".$pvp[$pid][$player_ids[$i]]['matches']
-                                ."<br />".locale_string("winrate").": ".number_format($pvp[$pid][$player_ids[$i]]['winrate']*100,2)
-                                ."%<br />".locale_string("won")." ".$pvp[$pid][$player_ids[$i]]['won']." - "
-                                         .locale_string("lost")." ".$pvp[$pid][$player_ids[$i]]['lost'].(
-                                           isset($pvp[$pid][$player_ids[$i]]['matchids']) ?
-                                            "<br />MatchIDs: ".implode($pvp[$pid][$player_ids[$i]]['matchids'], ", ")
-                                            : "").
-                                "','".$report['players'][$pid]." vs ".$report['players'][$player_ids[$i]]."')\">".
-                            number_format($playerline[$player_ids[$i]]['winrate']*100,0)."</td>";
-              }
-            }
-            $modules['players']['pvp']['grid'] .= "</tr>";
-          }
-
-          $modules['players']['pvp']['grid'] .= "</table>";
-
-          $modules['players']['pvp']['grid'] .= "<div class=\"content-text\">".locale_string("desc_players_pvp_grid")."</div>";
-        }
-
-
-
-        foreach($pvp as $pid => $playerline) {
-          $strings['en']['pid'.$pid."id"] = $report['players'][$pid];
-
-          $modules['players']['pvp']['pid'.$pid."id"] = "";
-          if(!check_module($parent."pvp-pid".$pid."id")) continue;
-
-          $modules['players']['pvp']['pid'.$pid."id"] = "<table id=\"player-pvp-$pid\" class=\"list\">";
-
-          $modules['players']['pvp']['pid'.$pid."id"] .= "<tr class=\"thead\">
-                                                        <th onclick=\"sortTable(0,'player-pvp-$pid');\">".locale_string("opponent")."</th>
-                                                        <th onclick=\"sortTableNum(1,'player-pvp-$pid');\">".locale_string("winrate")."</th>
-                                                        <th onclick=\"sortTableNum(2,'player-pvp-$pid');\">".locale_string("matches")."</th>
-                                                        <th onclick=\"sortTableNum(3,'player-pvp-$pid');\">".locale_string("won")."</th>
-                                                        <th onclick=\"sortTableNum(4,'player-pvp-$pid');\">".locale_string("lost")."</th>
-                                                     </tr>";
-          for($i=0, $end = sizeof($player_ids); $i<$end; $i++) {
-            if($player_ids[$i] == $pid || $pvp[$pid][$player_ids[$i]]['matches'] == 0) {
-              continue;
-            } else {
-              $modules['players']['pvp']['pid'.$pid."id"] .= "<tr ".(isset($pvp[$pid][$player_ids[$i]]['matchids']) ?
-                                                                "onclick=\"showModal('".implode($pvp[$pid][$player_ids[$i]]['matchids'], ", ")."','".locale_string("matches")."')\"" :
-                                                                "").">
-                                                            <td>".$report['players'][$player_ids[$i]]."</th>
-                                                            <td>".number_format($pvp[$pid][$player_ids[$i]]['winrate']*100,2)."</th>
-                                                            <td>".$pvp[$pid][$player_ids[$i]]['matches']."</th>
-                                                            <td>".$pvp[$pid][$player_ids[$i]]['won']."</th>
-                                                            <td>".$pvp[$pid][$player_ids[$i]]['lost']."</th>
-                                                         </tr>";
-            }
-          }
-          $modules['players']['pvp']['pid'.$pid."id"] .= "</table>";
-
-          $modules['players']['pvp']['pid'.$pid."id"] .= "<div class=\"content-text\">".locale_string("desc_players_pvp")."</div>";
-        }
-        unset($pvp);
+        $modules['players']['pvp'] = rg_view_generate_players_pvp();
       }
     }
     if (isset($report['players_combo_graph']) && $report['settings']['players_combo_graph'] && isset($report)) {
@@ -1183,6 +1022,7 @@ $root = dirname(__FILE__);
   if(isset($modules['participants']) && check_module("participants")) {
     if($mod == "participants") $unset_module = true;
     $parent = "participants-";
+    generate_positions_strings();
 
     if(isset($report['teams'])) {
       $modules['participants']['teams'] = "";

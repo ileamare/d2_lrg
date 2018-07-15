@@ -1,6 +1,7 @@
 <?php
-
-if (isset($get_positions_strings) || stripos($mod, "positions") !== FALSE) {
+function generate_positions_strings() {
+  global $strings;
+  
   for ($i=1; $i>=0; $i--) {
     for ($j=1; $j<6 && $j>0; $j++) {
       if (!$i) { $j = 0; }
@@ -10,6 +11,10 @@ if (isset($get_positions_strings) || stripos($mod, "positions") !== FALSE) {
       if (!$i) { break; }
     }
   }
+}
+
+if (stripos($mod, "positions") !== FALSE) {
+  generate_positions_strings();
 }
 
 # legacy name for Radiant Winrate

@@ -28,8 +28,7 @@ function player_card($player_id) {
   # positions
   $output .= "<div class=\"player-positions\"><div class=\"section-caption\">".locale_string("player_positions")."</div><div class=\"section-lines\">";
   foreach($pinfo['positions'] as $position) {
-    $output .= "<div class=\"player-info-line\"><span class=\"caption\">".($position['core'] ? locale_string("core")." " : locale_string("support")).
-                  $meta['lanes'][ $position['lane'] ].":</span> ";
+    $output .= "<div class=\"player-info-line\"><span class=\"caption\">".locale_string("position_".$position["core"].".".$position["lane"]).":</span> ";
     $output .= $position['matches']." - ".number_format($position['wins']*100/$position['matches'], 2)."%</div>";
   }
   $output .= "</div></div>";

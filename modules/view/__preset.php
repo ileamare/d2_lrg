@@ -28,7 +28,10 @@ $level_codes = array(
   0 => array ( "", "higher-level" ),
   1 => array ( "sublevel", "lower-level" ),
   2 => array ( "level-3", "level-3" ),
-  3 => array ( "level-4", "level-4" )
+  3 => array ( "level-4", "level-4" ),
+  4 => array ( "level-5", "level-5" ),
+  5 => array ( "level-6", "level-6" ),
+  6 => array ( "level-7", "level-7" ),
 );
 
 $charts_colors = array( "#6af","#f66","#fa6","#66f","#62f","#a6f","#6ff","#6fa","#2f6","#6f2","#ff6","#f22","#f6f","#666" );

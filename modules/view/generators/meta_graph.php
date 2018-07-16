@@ -14,6 +14,20 @@ function rg_generator_meta_graph($div_id, $context, $context_pickban, $heroes_fl
   $nodes = "";
 
   if($heroes_flag) {
+    foreach($context_pickban as $k => $v) {
+      if(isset($v['winrate_picked'])) break;
+
+      if($context_pickban[$k]['matches_picked'])
+        $context_pickban[$k]['winrate_picked'] = $context_pickban[$k]['wins_picked'] / $context_pickban[$k]['matches_picked'];
+      else
+        $context_pickban[$k]['winrate_picked'] = 0;
+
+      if($context_pickban[$k]['matches_banned'])
+        $context_pickban[$k]['winrate_banned'] = $context_pickban[$k]['wins_banned'] / $context_pickban[$k]['matches_banned'];
+      else
+        $context_pickban[$k]['winrate_banned'] = 0;
+    }
+
     $counter = 0; $endp = sizeof($context_pickban)*0.35;
 
     uasort($context_pickban, function($a, $b) {
@@ -53,9 +67,11 @@ function rg_generator_meta_graph($div_id, $context, $context_pickban, $heroes_fl
 
   $nodes = "";
   foreach($context as $combo) {
+    if(!isset($combo['winrate']))
+      $combo['winrate'] = $combo['wins']/$combo['matches'];
     $nodes .= "{from: ".$combo[$id.'1'].", to: ".$combo[$id.'2'].", value:".$combo['matches'].", title:\"".$combo['matches']."\", color:{color:'rgba(".
-      number_format(255-255*$combo['wins']/$combo['matches'], 0).",124,".
-      number_format(255*$combo['wins']/$combo['matches'],0).",1)'}},";
+      number_format(255-255*$combo['winrate'], 0).",124,".
+      number_format(255*$combo['winrate'],0).",1)'}},";
   }
 
   $res .= "var edges = [".$nodes."];";

@@ -8,8 +8,6 @@ function rg_view_generate_heroes_combos() {
   $parent_module = $parent."combos-";
   $res = [];
 
-  var_dump($report['hero_triplets_matches']);
-
   if(isset($report['hero_pairs'])) {
     $res['pairs'] = "";
     if (check_module($parent_module."pairs")) {

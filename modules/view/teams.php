@@ -21,6 +21,10 @@ function rg_view_generate_teams() {
   }
 
   $res['profiles'] = [];
+  if (check_module($parent."profiles")) {
+    include_once("teams/profiles.php");
+    $res['profiles'] = rg_view_generate_teams_profiles($report['teams'], $parent."profiles-");
+  }
 
   return $res;
 }

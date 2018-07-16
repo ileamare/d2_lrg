@@ -204,7 +204,7 @@ a:hover {
 
   font-size: 18px;
 }
-.selector-modules-level-4 {
+.selector-modules-level-4, .selector-modules-level-5, .selector-modules-level-6, .selector-modules-level-7 {
 	text-align: center;
 
   border-top: 1px solid #464646;

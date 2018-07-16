@@ -27,6 +27,20 @@ function rg_generator_draft($table_id, $context_pickban, $context_draft, $contex
     }
   }
 
+  foreach($context_pickban as $k => $v) {
+    if(isset($v['winrate_picked'])) break;
+
+    if($context_pickban[$k]['matches_picked'])
+      $context_pickban[$k]['winrate_picked'] = $context_pickban[$k]['wins_picked'] / $context_pickban[$k]['matches_picked'];
+    else
+      $context_pickban[$k]['winrate_picked'] = 0;
+
+    if($context_pickban[$k]['matches_banned'])
+      $context_pickban[$k]['winrate_banned'] = $context_pickban[$k]['wins_banned'] / $context_pickban[$k]['matches_banned'];
+    else
+      $context_pickban[$k]['winrate_banned'] = 0;
+  }
+
   $ranks = [];
   uasort($context_pickban, function($a, $b) use ($context_total_matches) {
     $a_oi_rank = ($a['matches_picked']*$a['winrate_picked'] + $a['matches_banned']*$a['winrate_banned'])

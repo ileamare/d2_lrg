@@ -47,6 +47,7 @@
     "support" => "Support",
     "ratio" => "Ratio",
     "none" => "None",
+    "vs" => "vs",
 
     "radiant" => "Radiant",
     "radiant_wr" => "Radiant Winrate",
@@ -98,6 +99,7 @@
     "players" => "Players",
     "regions" => "Regions",
     "roster"  => "Active players",
+    "profiles" => "Profiles",
 
     "team_name" => "Team Name",
     "team_tag" => "Tag",
@@ -255,7 +257,7 @@
     "desc_players_combo_graph" => "This graph represents how often players were matched together. Bolder line means more matches were won in pair, bigger node means more matches were played by player. Color of a node or an edge represents winrate, red being closer to 0%, blue being closer to 100% and grey being around 50%. Minimum match count for a pair is set to %limh%. Players without pairs aren't shown.",
     "desc_teams" => "Choose a team to see its detailed stats.",
     "desc_teams_summary" => "This table contains teams' average stats across the tournament.",
-    "desc_tvt" => "This grid represents team's winrate against another team.",
+    "desc_tvt" => "This grid represents team's winrate against another team. Click on a cell for more info.",
     "desc_participants" => "This page contains all basic data about league participants (players or teams) as cards. To find match with specific player or team use document inner search (usually Ctrl+F).",
     "desc_matches" => "All basic data about matches in this league is available as match cards on this page. To find match with specific team, player, hero or region use document inner search (usually Ctrl+F).",
     "desc_roster" => "This page contains basic information about the team's active roster.",

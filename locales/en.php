@@ -54,6 +54,7 @@
     "dire" => "Dire",
     "dire_wr" => "Dire Winrate",
     "dire_matches" => "Dire Matches",
+    "rad_ratio" => "Radiant Ratio",
 
     "record" => "Record",
     "value" => "Value",

@@ -10,7 +10,7 @@ function team_card($tid) {
   if(!isset($report['teams'])) return null;
 
   $output = "<div class=\"team-card\"><div class=\"team-name\">".
-            "<a href=\"?league=".$leaguetag."&mod=teams-team_".$tid."_stats".
+            "<a href=\"?league=".$leaguetag."&mod=teams-profiles-team".$tid.
             (empty($linkvars) ? "" : "&$linkvars")
             ."\" title=\"".team_name($tid)."\">".team_name($tid)." (".$tid.")</a></div>";
 

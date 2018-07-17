@@ -1,5 +1,5 @@
 <?php
-$result["hero_pairs"] = array();
+$result["hero_pairs"] = [];
 
 $sql = "SELECT fm1.heroid, fm2.heroid,
           COUNT(distinct fm1.matchid) match_count,
@@ -32,21 +32,21 @@ for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row(
   $hero2_pickrate = $result['pickban'][$row[1]]['matches_picked'] / $result['random']['matches_total'];
   $expected_pair  = $hero1_pickrate * $hero2_pickrate * ($result['random']['matches_total']/2);
 
-  $result["hero_pairs"][] = array (
+  $result["hero_pairs"][] = [
     "heroid1" => $row[0],
     "heroid2" => $row[1],
     "matches" => $row[2],
     "winrate" => $row[3],
     "expectation" => $expected_pair,
     "lane_rate" => $row[4]
-  );
+  ];
 }
 
 $query_res->free_result();
 
 
 if ($lg_settings['ana']['hero_pairs_matches']) {
-  $result["hero_pairs_matches"] = array ();
+  $result["hero_pairs_matches"] = [];
 
   foreach($result['hero_pairs'] as $pair) {
     $sql = "SELECT m1.matchid
@@ -54,7 +54,7 @@ if ($lg_settings['ana']['hero_pairs_matches']) {
               ON m1.matchid = m2.matchid and m1.isRadiant = m2.isRadiant and m1.heroid < m2.heroid
             WHERE m1.heroid = ".$pair['heroid1']." AND m2.heroid = ".$pair['heroid2'].";";
 
-    $result["hero_pairs_matches"][$pair['heroid1']."-".$pair['heroid2']] = array();
+    $result["hero_pairs_matches"][$pair['heroid1']."-".$pair['heroid2']] = [];
 
     if ($conn->multi_query($sql) === TRUE) ;#echo "[S] Requested data for HERO PAIRS MATCHES.\n";
     else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");

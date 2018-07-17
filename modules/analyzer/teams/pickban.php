@@ -1,5 +1,5 @@
 <?php
-$result['teams'][$id]["pickban"] = array();
+$result['teams'][$id]["pickban"] = [];
 
 $sql = "SELECT draft.hero_id, count(distinct draft.matchid), SUM(NOT matches.radiantWin XOR draft.is_radiant) FROM
 teams_matches JOIN draft ON draft.matchid = teams_matches.matchid AND draft.is_radiant = teams_matches.is_radiant

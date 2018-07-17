@@ -33,27 +33,7 @@ $root = dirname(__FILE__);
 
   $linkvars = array();
 
-  if(isset($argv)) {
-    $options = getopt("l:m:d:f:S");
-
-    if(isset($options['l'])) {
-      $leaguetag = $options['l'];
-    }
-    if(isset($options['m'])) {
-      $lrg_use_get = true;
-      $mod = $options['m'];
-    }
-    if(isset($options['f'])) {
-      $lrg_get_depth = 0;
-    }
-    if(isset($options['d'])) {
-      $lrg_get_depth = (int)$options['d'];
-    }
-    if(isset($options['S'])) {
-      $override_style = $options['S'];
-      $linkvars[] = array("stow", $options['S']);
-    }
-  } else if ($lrg_use_get) {
+  if ($lrg_use_get) {
     $locale = GetLanguageCodeISO6391();
 
     if(isset($_GET['league']) && !empty($_GET['league'])) {
@@ -118,7 +98,8 @@ $root = dirname(__FILE__);
 
     if (isset($report['matches'])) $modules['matches'] = "";
 
-    if (isset($report['players'])) $modules['participants'] = array();
+    if (isset($report['players']))
+      include_once("modules/view/participants.php");
 
     if (isset($report['regions_data']))
       include("modules/view/regions.php");
@@ -155,10 +136,7 @@ $root = dirname(__FILE__);
   }
 
   if (isset($modules['regions']) && check_module("regions")) {
-    if($mod == "regions") $unset_module = true;
-    $parent = "regions-";
-
-    $modules['regions'] = rg_view_generate_regions();
+    merge_mods($modules['regions'], rg_view_generate_regions());
   }
 
   # matches
@@ -173,31 +151,7 @@ $root = dirname(__FILE__);
 
   # participants
   if(isset($modules['participants']) && check_module("participants")) {
-    if($mod == "participants") $unset_module = true;
-    $parent = "participants-";
-    generate_positions_strings();
-
-    if(isset($report['teams'])) {
-      $modules['participants']['teams'] = "";
-      if(check_module($parent."teams")) {
-        $modules['participants']['teams'] .= "<div class=\"content-text\">".locale_string("desc_participants")."</div>";
-        $modules['participants']['teams'] .= "<div class=\"content-cards\">";
-        foreach($report['teams'] as $team_id => $team) {
-          $modules['participants']['teams'] .= team_card($team_id);
-        }
-        $modules['participants']['teams'] .= "</div>";
-      }
-    }
-
-    $modules['participants']['players'] = "";
-    if(check_module($parent."players")) {
-      $modules['participants']['players'] .= "<div class=\"content-text\">".locale_string("desc_participants")."</div>";
-      $modules['participants']['players'] .= "<div class=\"content-cards\">";
-      foreach($report['players'] as $player_id => $player) {
-        $modules['participants']['players'] .= player_card($player_id);
-      }
-      $modules['participants']['players'] .= "</div>";
-    }
+    merge_mods($modules['participants'], rg_view_generate_participants());
   }
 }
   ?>

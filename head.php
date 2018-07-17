@@ -1,5 +1,5 @@
 <?php
-ini_set('memory_limit', '1024M');
+//ini_set('memory_limit', '1024M');
 require_once("modules/functions/versions.php");
 require_once("modules/functions/readline.php");
 
@@ -29,7 +29,7 @@ if(isset($argv)) {
 
 # global settings
 
-  $lrg_version = array(1, 3, 3, -4, 1);
+  $lrg_version = array(1, 4, 0, -4, 7);
 
   $settings = json_decode(file_get_contents("rg_settings.json"), true);
 

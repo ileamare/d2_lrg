@@ -37,6 +37,7 @@
     "ban"   => "Ban",
     "total" => "Total",
     "grid" => "Grid",
+    "card" => "Card",
     "summary" => "Summary",
     "winrate" => "Winrate",
     "won" => "Won",
@@ -87,6 +88,7 @@
     "dire_wr_s" => "Dire WR",
     "diff" => "Advantage",
     "rad_view" => "Radiant Overview",
+    "cards" => "Cards",
 
     "averages" => "Average values",
     "participants" => "Participants",

@@ -1,6 +1,6 @@
 <?php
 # team competitions placeholder
-$result['teams'] = array();
+$result['teams'] = [];
 
 $sql = "SELECT teamid, name, tag FROM teams;";
 

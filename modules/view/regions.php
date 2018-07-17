@@ -5,33 +5,31 @@ $modules['regions'] = [];
 include_once("regions/overview.php");
 
 function rg_view_generate_regions() {
-  global $mod;
-  global $parent;
-  global $unset_module;
-  global $report;
-  global $meta;
-  global $strings;
-  global $root;
+  global $mod, $parent, $unset_module, $report, $meta, $strings, $root;
+
+  if($mod == "regions") $unset_module = true;
+  $parent = "regions-";
 
   foreach ($report['regions_data'] as $region => $reg_report) {
-    $res["reg_".$region."_rep"] = [];
-    $strings['en']["reg_".$region."_rep"] = $meta['regions'][$region];
+    $modstr = $parent."region".$region;
+    $res["region".$region] = [];
+    $strings['en']["region".$region] = $meta['regions'][$region];
 
-    if(check_module($parent."reg_".$region."_rep")) {
-      if($mod == $parent."reg_".$region."_rep") $unset_module = true;
+    if(check_module($modstr)) {
+      if($mod == $modstr) $unset_module = true;
 
-      if(check_module($parent."reg_".$region."_rep"."-overview")) {
-        $res["reg_".$region."_rep"]["overview"] = rg_view_generate_regions_heroes_overview($region, $reg_report);
+      if(check_module($modstr."-overview")) {
+        $res["region".$region]["overview"] = rg_view_generate_regions_overview($region, $reg_report);
       } else {
-        $res["reg_".$region."_rep"]["overview"] = "";
+        $res["region".$region]["overview"] = "";
       }
 
       if(isset($reg_report["pickban"])) {
-        $res["reg_".$region."_rep"]["pickban"] = "";
+        $res["region".$region]["pickban"] = "";
         include_once("regions/heroes/pickban.php");
 
-        if(check_module($parent."reg_".$region."_rep"."-pickban")) {
-          $res["reg_".$region."_rep"]["pickban"] = rg_view_generate_regions_heroes_pickban($region, $reg_report);
+        if(check_module($modstr."-pickban")) {
+          $res["region".$region]["pickban"] = rg_view_generate_regions_heroes_pickban($region, $reg_report);
         }
       }
     }

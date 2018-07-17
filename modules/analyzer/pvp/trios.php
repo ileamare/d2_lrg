@@ -21,12 +21,18 @@ else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n"
 $query_res = $conn->store_result();
 
 for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
+  $p1_matchrate = $result['players_summary'][$row[0]]['matches_s'] / $result['random']['matches_total'];
+  $p2_matchrate = $result['players_summary'][$row[1]]['matches_s'] / $result['random']['matches_total'];
+  $p3_matchrate = $result['players_summary'][$row[2]]['matches_s'] / $result['random']['matches_total'];
+  $expected_pair  = $p1_matchrate * $p2_matchrate * $p3_matchrate * ($result['random']['matches_total']/3);
+
   $result["player_triplets"][] = array (
     "playerid1" => $row[0],
     "playerid2" => $row[1],
     "playerid3" => $row[2],
     "matches" => $row[3],
-    "winrate" => $row[4]
+    "winrate" => $row[4],
+    "expectation" => $expected_pair
   );
 }
 

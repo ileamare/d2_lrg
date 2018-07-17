@@ -106,8 +106,6 @@ function rg_view_generate_teams_profiles($context, $context_mod) {
           (isset($context[$tid]['lane_combos']) && !empty($context[$tid]['lane_combos']))) {
         $res["team".$tid]['heroes']['combos'] = [];
 
-        var_dump();
-
         if(check_module($context_mod."team".$tid."-heroes-combos")) {
           $parent_module = $context_mod."team".$tid."-heroes-combos-";
           if ($mod == $context_mod."team".$tid."-heroes-combos") $unset_module = true;
@@ -116,7 +114,7 @@ function rg_view_generate_teams_profiles($context, $context_mod) {
             $res["team".$tid]['heroes']['combos']['pairs'] = "";
             if (check_module($parent_module."pairs")) {
               include_once($root."/modules/view/generators/pairs.php");
-              $res["team".$tid]['heroes']['combos']['pairs'] =  "<div class=\"content-text\">".locale_string("desc_heroes_pairs", [ "limh"=>$report['settings']['limiter']+1 ] )."</div>";
+              $res["team".$tid]['heroes']['combos']['pairs'] =  "<div class=\"content-text\">".locale_string("desc_heroes_pairs", [ "limh"=>$report['settings']['limiter_triplets']+1 ] )."</div>";
               $res["team".$tid]['heroes']['combos']['pairs'] .=  rg_generator_pairs("hero-pairs",
                                                  $context[$tid]['hero_pairs'],
                                                  (isset($context[$tid]['hero_pairs_matches']) ? $context[$tid]['hero_pairs_matches'] : [])

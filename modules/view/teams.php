@@ -26,6 +26,13 @@ function rg_view_generate_teams() {
     $res['profiles'] = rg_view_generate_teams_profiles($report['teams'], $parent."profiles-");
   }
 
+  $res['cards'] = "";
+  if (check_module($parent."cards")) {
+    include_once("$root/modules/view/generators/participants_teams.php");
+    $res['cards'] .= "<div class=\"content-text\">".locale_string("desc_participants")."</div>";
+    $res['cards'] .= rg_generator_participants_teams($report['teams']);
+  }
+
   return $res;
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
 
-function rg_view_generate_regions_heroes_overview($region, $report) {
+function rg_view_generate_regions_overview($region, $report) {
   global $meta;
   global $modules;
 

@@ -102,8 +102,7 @@ function rg_view_generate_teams_profiles($context, $context_mod) {
         }
       }
       if ((isset($context[$tid]['hero_pairs']) && !empty($context[$tid]['hero_pairs'])) ||
-          (isset($context[$tid]['hero_triplets']) && !empty($context[$tid]['hero_triplets'])) ||
-          (isset($context[$tid]['lane_combos']) && !empty($context[$tid]['lane_combos']))) {
+          (isset($context[$tid]['hero_triplets']) && !empty($context[$tid]['hero_triplets']))) {
         $res["team".$tid]['heroes']['combos'] = [];
 
         if(check_module($context_mod."team".$tid."-heroes-combos")) {

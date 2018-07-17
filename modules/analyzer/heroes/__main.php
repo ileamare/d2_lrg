@@ -35,6 +35,11 @@ if ($lg_settings['ana']['hero_triplets']) {
   require_once("modules/analyzer/heroes/trios.php");
 }
 
+if ($lg_settings['ana']['hero_lane_combos']) {
+  # heroes lane combos
+  require_once("modules/analyzer/heroes/lane_combos.php");
+}
+
 if ($lg_settings['ana']['hero_vs_hero']) {
   # hero vs hero
   require_once("modules/analyzer/heroes/versus_hero.php");

@@ -124,6 +124,11 @@ if ($lg_settings['main']['teams']) {
     # pvp trios
     require_once("modules/analyzer/pvp/trios.php");
   }
+
+  if ($lg_settings['ana']['players'] && $lg_settings['ana']['players_lane_combos']) {
+    # pvp lane combos
+    require_once("modules/analyzer/pvp/lane_combos.php");
+  }
 }
 
 if (isset($lg_settings['ana']['regions']) && is_array($lg_settings['ana']['regions'])) {

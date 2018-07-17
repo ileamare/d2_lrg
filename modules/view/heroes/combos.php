@@ -17,7 +17,6 @@ function rg_view_generate_heroes_combos() {
                                          $report['hero_pairs'],
                                          (isset($report['hero_pairs_matches']) ? $report['hero_pairs_matches'] : [])
                                        );
-
     }
   }
   if(isset($report['hero_triplets']) && !empty($report['hero_triplets'])) {
@@ -34,7 +33,9 @@ function rg_view_generate_heroes_combos() {
   if(isset($report['hero_lane_combos'])) {
     $res['lane_combos'] = "";
     if (check_module($parent_module."lane_combos")) {
-      //$res['lane_combos'] = rg_generator_lane_combos();
+      include_once($root."/modules/view/generators/pairs.php");
+      $res['lane_combos'] =  "<div class=\"content-text\">".locale_string("desc_heroes_lane_combos", [ "liml"=>$report['settings']['limiter_triplets']+1 ] )."</div>";
+      $res['lane_combos'] .=  rg_generator_pairs("hero-lanecombos", $report['hero_lane_combos'], []);
     }
   }
 

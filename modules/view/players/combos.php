@@ -36,7 +36,9 @@ function rg_view_generate_players_combos() {
   if(isset($report['player_lane_combos'])) {
     $res['lane_combos'] = "";
     if (check_module($parent_module."lane_combos")) {
-      //$res['lane_combos'] = rg_generator_lane_combos();
+      include_once($root."/modules/view/generators/pairs.php");
+      $res['lane_combos'] =  "<div class=\"content-text\">".locale_string("desc_players_lane_combos", [ "liml"=>$report['settings']['limiter_triplets']+1 ] )."</div>";
+      $res['lane_combos'] .=  rg_generator_pairs("player-lanecombos", $report['player_lane_combos'], [], false);
     }
   }
 

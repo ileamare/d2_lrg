@@ -8,7 +8,7 @@ function team_link($tid) {
   global $leaguetag;
   global $linkvars;
 
-  return "<a href=\"?league=".$leaguetag."&mod=teams-team_".$tid."_stats".(empty($linkvars) ? "" : "&$linkvars")
+  return "<a href=\"?league=".$leaguetag."&mod=teams-profiles-team".$tid.(empty($linkvars) ? "" : "&$linkvars")
     ."\" title=\"".team_name($tid)."\">".team_name($tid)." (".team_tag($tid).")</a>";
 }
 

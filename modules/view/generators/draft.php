@@ -62,7 +62,7 @@ function rg_generator_draft($table_id, $context_pickban, $context_draft, $contex
     $ranks_stages[$i] = [];
     $oi = [];
     foreach ($draft as $id => $stages) {
-      if(isset($stages[$i]))
+      if(isset($stages[$i]) && ($stages[$i]['pick']+$stages[$i]['ban']))
         $oi[$id] = ($stages[$i]['pick']*$stages[$i]['pick_wr']+$stages[$i]['ban']*$stages[$i]['ban_wr'])/$context_total_matches*100;
     }
     uasort($oi, function($a, $b) {
@@ -84,7 +84,7 @@ function rg_generator_draft($table_id, $context_pickban, $context_draft, $contex
 
     foreach($stages as $stage_num => $stage) {
       if($max_stage > 1) {
-        $draftline .= "<td class=\"separator\">".(isset($ranks_stages[$stage_num][$id]) ? number_format($ranks_stages[$stage_num][$id],2) : "")."</td>";
+        $draftline .= "<td class=\"separator\">".(isset($ranks_stages[$stage_num][$id]) ? number_format($ranks_stages[$stage_num][$id],2) : "-")."</td>";
         if($stage['pick'])
           $draftline .= "<td>".$stage['pick']."</td><td>".number_format($stage['pick_wr']*100, 2)."%</td>";
         else

@@ -5,14 +5,17 @@ $modules['players'] = [];
 if (isset($report['averages_players']) )
   include("players/haverages.php");
 
+if (isset($report['players_draft']))
+  include("players/draft.php");
+
 if (isset($report['player_positions']) )
   include("players/positions.php");
 
 if (isset($report['pvp']) )
   include("players/pvp.php");
 
-  if (isset($report['player_pairs']) || isset($report['player_triplets']) || isset($report['player_lane_combos']))
-    include("players/combos.php");
+if (isset($report['player_pairs']) || isset($report['player_triplets']) || isset($report['player_lane_combos']))
+  include("players/combos.php");
 
 if (isset($report['players_combo_graph']) && $report['settings']['players_combo_graph'] && isset($report['players_additional']))
   include("players/party_graph.php");
@@ -31,6 +34,11 @@ if (isset($report['players_summary']) )
     if (isset($report['averages_players'])) {
       if (check_module($parent."haverages")) {
         $res['haverages'] = rg_view_generate_players_haverages();
+      }
+    }
+    if (isset($report['players_draft'])) {
+      if (check_module($parent."draft")) {
+        $res['draft'] = rg_view_generate_players_draft();
       }
     }
     if (isset($report['player_positions'])) {

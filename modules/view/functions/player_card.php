@@ -7,8 +7,8 @@ function player_card($player_id) {
   $pinfo = $report['players_additional'][$player_id];
 
   $output = "<div class=\"player-card\"><div class=\"player-name\"><a href=\"http://opendota.com/players/$player_id\" target=\"_blank\" rel=\"noopener\">".$pname." (".$player_id.")</a></div>";
-  if(isset($report['teams']))
-    $output .= "<div class=\"player-team\">".team_name($pinfo['team'])." (".$pinfo['team'].")</div>";
+  if(isset($report['teams']) && isset($report['teams'][ $pinfo['team'] ]))
+    $output .= "<div class=\"player-team\">".team_link($pinfo['team'])."</div>";
   $output .= "<div class=\"player-add-info\">".
                 "<div class=\"player-info-line\"><span class=\"caption\">".locale_string("matches").":</span> ".$pinfo['matches']." (".
                   $pinfo['won']." - ".($pinfo['matches'] - $pinfo['won']).")</div>".

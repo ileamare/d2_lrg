@@ -96,6 +96,10 @@ if ($lg_settings['ana']['players'] && $lg_settings['ana']['player_positions']) {
   require_once("modules/analyzer/players/positions.php");
 }
 
+if($lg_settings['ana']['players'] && $lg_settings['ana']['players_draft']) {
+  # player draft
+  require_once("modules/analyzer/players/draft.php");
+}
 
 if ($lg_settings['main']['teams']) {
   require_once("modules/analyzer/teams/__main.php");

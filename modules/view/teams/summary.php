@@ -1,4 +1,5 @@
 <?php
+include_once("$root/modules/view/functions/links.php");
 
 function rg_view_generate_teams_summary() {
   global $report;

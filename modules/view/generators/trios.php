@@ -16,7 +16,7 @@ function rg_generator_trios($table_id, $context, $context_matches, $heroes_flag 
       break;
   }
 
-  $res = "<table id=\"$table_id\" class=\"list\"><tr class=\"thead\">".
+  $res = "<table id=\"$table_id\" class=\"list wide\"><tr class=\"thead\">".
           (($heroes_flag && !$i++) ? "<th width=\"1%\"></th>" : "").
           "<th onclick=\"sortTable(".($i++).",'$table_id');\">".locale_string($heroes_flag ? "hero" : "player")." 1</th>".
           (($heroes_flag && $i++) ? "<th width=\"1%\"></th>" : "").

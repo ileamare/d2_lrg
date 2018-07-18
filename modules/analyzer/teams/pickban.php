@@ -21,11 +21,11 @@ for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row(
   if(!isset($result['teams'][$id]["pickban"][$row[0]])) {
     $result['teams'][$id]["pickban"][$row[0]] = array(
       "matches_banned" => 0,
-      "wins_banned" => 0
+      "winrate_banned" => 0
     );
   }
   $result['teams'][$id]["pickban"][$row[0]]['matches_picked'] = $row[1];
-  $result['teams'][$id]["pickban"][$row[0]]['wins_picked'] = $row[2];
+  $result['teams'][$id]["pickban"][$row[0]]['winrate_picked'] = $row[2]/$row[1];
   $result['teams'][$id]["pickban"][$row[0]]['matches_total'] = $row[1];
 }
 
@@ -37,11 +37,11 @@ for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row(
   if(!isset($result['teams'][$id]["pickban"][$row[0]])) {
     $result['teams'][$id]["pickban"][$row[0]] = array(
       "matches_picked" => 0,
-      "wins_picked" => 0
+      "winrate_picked" => 0
     );
   }
   $result['teams'][$id]["pickban"][$row[0]]['matches_banned'] = $row[1];
-  $result['teams'][$id]["pickban"][$row[0]]['wins_banned'] = $row[2];
+  $result['teams'][$id]["pickban"][$row[0]]['winrate_banned'] = $row[2]/$row[1];
   if(isset($result['teams'][$id]["pickban"][$row[0]]['matches_total']))
     $result['teams'][$id]["pickban"][$row[0]]['matches_total'] += $row[1];
   else $result['teams'][$id]["pickban"][$row[0]]['matches_total'] = $row[1];

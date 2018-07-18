@@ -135,6 +135,25 @@ function rg_view_generate_teams_profiles($context, $context_mod) {
         }
       }
 
+      if (isset($context[$tid]['players_draft'])) {
+        $res["team".$tid]['players'] = [];
+        if ($mod == $context_mod."team".$tid."-players") $unset_module = true;
+
+        if (isset($context[$tid]['players_draft'])) {
+            $res["team".$tid]['players']['draft'] = "";
+
+            if(check_module($context_mod."team".$tid."-players-draft")) {
+              $res["team".$tid]['players']['draft'] = rg_generator_draft("team$tid-players-draft",
+                                                                          $context[$tid]['players_draft_pb'],
+                                                                          $context[$tid]['players_draft'],
+                                                                          $context[$tid]['matches_total'],
+                                                                        false);
+            }
+        }
+      }
+
+
+
       if (isset($context[$tid]['matches']) && isset($report['matches'])) {
         $res["team".$tid]['matches'] = "";
 

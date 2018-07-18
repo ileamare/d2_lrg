@@ -56,6 +56,11 @@ foreach($result['teams'] as $id => $team) {
     require("heroes/trios.php");
   }
 
+  if ($lg_settings['ana']['teams']['players_draft']) {
+    # players draft
+    require("players/draft.php");
+  }
+
   if ($lg_settings['ana']['teams']['matches']) {
     # matches
     require("matches.php");

@@ -47,7 +47,11 @@ function team_card($tid) {
     foreach($heroes as $hid => $stats) {
       if($counter > 3) break;
       $output .= "<div class=\"team-info-line\"><span class=\"caption\">".hero_full($hid).":</span> ";
-      $output .= $stats['matches_picked']." - ".number_format($stats['wins_picked']*100/$stats['matches_picked'], 2)."%</div>";
+      $output .= $stats['matches_picked']." - ".
+                  number_format(
+                    (isset($stats['wins_picked']) ?
+                    $stats['wins_picked']/$stats['matches_picked'] :
+                    $stats['winrate_picked'])*100, 2)."%</div>";
       $counter++;
     }
     $output .= "</div>";

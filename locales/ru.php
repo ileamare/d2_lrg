@@ -203,7 +203,7 @@
     "heal_per_min_s" => "Леч/мин",
     "taken_damage_per_min_s" => "ПУГ/мин",
 
-    "noleague_cap" => "Список отчётов лиг",
+    "noleague_cap" => "Список отчётов",
     "noleague_desc" => "На этом сервере доступны следующие отчёты",
     "empty_instance_cap" => "Нет отчётов",
     "empty_instance_desc" => "На этом сервере нет отчётов",

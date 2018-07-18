@@ -54,8 +54,16 @@ function rg_generator_draft($table_id, $context_pickban, $context_draft, $contex
   $increment = 100 / sizeof($context_pickban); $i = 0;
 
   foreach ($context_pickban as $id => $el) {
-    $ranks[$id] = 100 - $increment*$i++;
+    $oi = ($el['matches_picked']*$el['winrate_picked'] + $el['matches_banned']*$el['winrate_banned'])
+      / $context_total_matches * 100;
+    if(isset($last) && $oi == $last) {
+      $i++;
+      $ranks[$id] = $last_rank;
+    } else
+      $ranks[$id] = 100 - $increment*$i++;
+    $last = $oi; $last_rank = $ranks[$id];
   }
+  unset($last);
 
   $ranks_stages = [];
   for ($i = 1; $i <= $max_stage; $i++) {
@@ -73,9 +81,17 @@ function rg_generator_draft($table_id, $context_pickban, $context_draft, $contex
     $increment = 100 / sizeof($oi); $j = 0;
 
     foreach ($oi as $id => $el) {
-      $ranks_stages[$i][$id] = 100 - $increment*$j++;
+      if(isset($last) && $el == $last) {
+        $j++;
+        $ranks_stages[$i][$id] = $last_rank;
+      } else
+        $ranks_stages[$i][$id] = 100 - $increment*$j++;
+      $last = $el;
+      $last_rank = $ranks_stages[$i][$id];
     }
+    unset($last);
   }
+  unset($last_rank);
 
   foreach ($draft as $id => $stages) {
     $draftline = "";

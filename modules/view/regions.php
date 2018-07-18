@@ -24,14 +24,7 @@ function rg_view_generate_regions() {
         $res["region".$region]["overview"] = "";
       }
 
-      if(isset($reg_report["pickban"])) {
-        $res["region".$region]["pickban"] = "";
-        include_once("regions/heroes/pickban.php");
-
-        if(check_module($modstr."-pickban")) {
-          $res["region".$region]["pickban"] = rg_view_generate_regions_heroes_pickban($region, $reg_report);
-        }
-      }
+      include_once("regions/heroes.php");
     }
   }
   return $res;

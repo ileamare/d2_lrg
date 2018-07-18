@@ -20,8 +20,18 @@ foreach ($regions as $region => $clusters) {
 
 
     # records
+    if (isset($lg_settings['ana']['regions']['records'])) {
+
+    }
 
     # heroes
+    if (isset($lg_settings['ana']['regions']['heroes'])) {
+      if (isset($lg_settings['ana']['regions']['heroes']['draft']) && $lg_settings['ana']['regions']['heroes']['draft']) {
+        require("heroes/draft.php");
+      }
+    }
+
+
     if (isset($lg_settings['ana']['regions']['heroes_avg'])) {
 
     }

@@ -44,7 +44,7 @@ for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row(
       "winrate_banned"  => $row[2]
     );
   } else
-    $result["regions_data"][$region][$row[0]] = array (
+    $result["regions_data"][$region]["pickban"][$row[0]] = array (
       "matches_total"   => $row[1],
       "matches_picked"  => 0,
       "winrate_picked"  => 0,

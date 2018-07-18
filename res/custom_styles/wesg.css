@@ -1,5 +1,5 @@
 #header-image {
-  background-image: url('pics/header_wesg.jpg');
+  background-image: url('assets/wesg/header.jpg');
 }
 
 .content-section {
@@ -12,11 +12,13 @@
     color: #fff;
 }
 
-.selector-modules , .selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4 {
+.selector-modules , .selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4,
+.selector-modules-level-5, .selector-modules-level-6, .selector-modules-level-7 {
     color: #00A2E4;
     line-height: 32px;
 }
-.selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4 {
+.selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4,
+.selector-modules-level-5, .selector-modules-level-6, .selector-modules-level-7 {
     border-top-color: #00A2E4;
 }
 .content-cards .match-card, .content-cards .player-card {

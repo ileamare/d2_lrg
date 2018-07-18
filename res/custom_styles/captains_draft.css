@@ -1,7 +1,7 @@
 /* background-color: #192023;*/
 
 #header-image {
-  background-image: url('header_cd.jpg');
+  background-image: url('assets/captains-draft/header.jpg');
   height: 300px;
   background-position: center;
   background-repeat: no-repeat;
@@ -18,7 +18,7 @@
 }
 
 .content-section {
-    background-image: url('moonduck_bg_stars.jpg');
+    background-image: url('assets/captains-draft/bg.jpg');
     background-repeat: repeat;
 }
 
@@ -27,11 +27,13 @@
     color: #fff;
 }
 
-.selector-modules , .selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4 {
+.selector-modules , .selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4,
+.selector-modules-level-5, .selector-modules-level-6, .selector-modules-level-7 {
     color: #00A2E4;
     line-height: 32px;
 }
-.selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4 {
+.selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4, .selector-modules-level-5,
+.selector-modules-level-6, .selector-modules-level-7 {
     border-top-color: #00A2E4;
 }
 .content-cards .match-card, .content-cards .player-card {

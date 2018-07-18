@@ -1,9 +1,9 @@
 #header-image {
-  background-image: url('header_starladder_minor.jpg');
+  background-image: url('assets/starladder/header.jpg');
 }
 
 .content-section {
-    background-image: url('sl_bg.jpg');
+    background-image: url('assets/starladder/bg.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;

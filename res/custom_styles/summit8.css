@@ -1,7 +1,7 @@
 /* background-color: #192023;*/
 
 #header-image {
-  background-image: url('header_summit8.jpg');
+  background-image: url('assets/summit8/header.jpg');
   height: 220px;
   background-position: center;
   background-repeat: no-repeat;
@@ -9,7 +9,7 @@
 }
 
 .content-section {
-    background-image: url('bg_summit8.jpg');
+    background-image: url('assets/summit8/bg.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: 0 200px;
@@ -90,11 +90,13 @@ table.pvp .thead th  {
 }
 
 
-.selector-modules , .selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4 {
+.selector-modules , .selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4,
+.selector-modules-level-5, .selector-modules-level-6, .selector-modules-level-7 {
     color: #484f86;
     line-height: 32px;
 }
-.selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4 {
+.selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4,
+.selector-modules-level-5, .selector-modules-level-6, .selector-modules-level-7 {
     border-top-color: #484f86;
 }
 .content-cards .match-card, .content-cards .player-card {

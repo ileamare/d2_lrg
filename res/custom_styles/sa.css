@@ -1,11 +1,11 @@
 /* background-color: #192023;*/
 
 #header-image {
-  background-image: url('header_sa.jpg');
+  background-image: url('assets/spectral/header.jpg');
 }
 
 .content-section {
-    background-image: url('main_bg_sa.jpg');
+    background-image: url('assets/spectral/bg.jpg');
 }
 
 table.list td, table.pvp td {

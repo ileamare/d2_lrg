@@ -12,11 +12,11 @@ header.navBar a, header.navBar a:hover, header.navBar a:visited, header.navBar a
 }
 
 #header-image {
-  background-image: url('supermajor_assets/header.jpg');
+  background-image: url('assets/supermajor/header.jpg');
 }
 
 .content-section {
-    background-image: url('supermajor_assets/bg.jpg');
+    background-image: url('assets/supermajor/bg.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -60,11 +60,13 @@ table.list, table.pvp {
 .selector a:hover {
   text-decoration: none;
 }
-.selector-modules , .selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4 {
+.selector-modules , .selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4,
+.selector-modules-level-5, .selector-modules-level-6, .selector-modules-level-7 {
     color: #aaa;
     line-height: 32px;
 }
-.selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4 {
+.selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4,
+.selector-modules-level-5, .selector-modules-level-6, .selector-modules-level-7 {
     border-top-color: #000;
 }
 .content-cards .match-card, .content-cards .player-card {

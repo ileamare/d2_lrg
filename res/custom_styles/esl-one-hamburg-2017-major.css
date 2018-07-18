@@ -1,11 +1,11 @@
 /* background-color: #192023;*/
 
 #header-image {
-  background-image: url('header_esl.jpg');
+  background-image: url('assets/esl-one/header.jpg');
 }
 
 .content-section {
-    background-image: url('esl_one_hamburg_bg.jpg');
+    background-image: url('assets/esl-one/bg.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -16,11 +16,13 @@
     color: #fff;
 }
 
-.selector-modules , .selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4 {
+.selector-modules , .selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4,
+.selector-modules-level-5, .selector-modules-level-6, .selector-modules-level-7 {
     color: #ff015b;
     line-height: 32px;
 }
-.selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4 {
+.selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4, .selector-modules-level-5,
+.selector-modules-level-6, .selector-modules-level-7 {
     border-top-color: #ff015b;
 }
 .content-cards .match-card, .content-cards .player-card {

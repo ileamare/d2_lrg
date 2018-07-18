@@ -19,3 +19,6 @@ test*.php
 output
 gi_*
 .htaccess
+
+# Custom Styles
+res/custom_styles/*

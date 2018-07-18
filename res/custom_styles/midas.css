@@ -1,13 +1,13 @@
 /* background-color: #192023;*/
 
 #header-image {
-  background-image: url('header_midas.jpg');
+  background-image: url('assets/midas/header.jpg');
     box-shadow: black 0 0 50px 6px;
     position: relative;
 }
 
 .content-section {
-    background-image: url('bg_midas.png');
+    background-image: url('assets/midas/bg.png');
     background-repeat: repeat;
 }
 .content-text {
@@ -36,11 +36,13 @@ table.pvp .thead th  {
 }
 
 
-.selector-modules , .selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4 {
+.selector-modules , .selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4,
+.selector-modules-level-5, .selector-modules-level-6, .selector-modules-level-7 {
     color: #ffd057;
     line-height: 32px;
 }
-.selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4 {
+.selector-modules-sublevel , .selector-modules-level-3 , .selector-modules-level-4, .selector-modules-level-5,
+.selector-modules-level-6, .selector-modules-level-7 {
     border-top-color: #ffd057;
 }
 .content-cards .match-card, .content-cards .player-card {

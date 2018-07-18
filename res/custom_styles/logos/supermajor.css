@@ -1,4 +1,4 @@
 #image-logo  {
-  background-image: url(supermajor.png);
+  background-image: url("../assets/supermajor/logo.png");
   background-size: contain;
 }

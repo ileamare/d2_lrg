@@ -12,7 +12,7 @@ JOIN matches ON draft.matchid = matches.matchid
 WHERE draft.is_pick = false AND teams_matches.teamid = ".$id."
 GROUP BY draft.hero_id;";
 
-if ($conn->multi_query($sql) === TRUE) echo "[S] Requested data for PICKS AND BANS VS team $id.\n";
+if ($conn->multi_query($sql) === TRUE);# echo "[S] Requested data for PICKS AND BANS VS team $id.\n";
 else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
 
 $query_res = $conn->store_result();

@@ -5,7 +5,7 @@ $sql = "SELECT matchid
         FROM teams_matches
         WHERE teamid = ".$id.";";
 
-if ($conn->multi_query($sql) === TRUE) echo "[S] MATCHES LIST.\n";
+if ($conn->multi_query($sql) === TRUE);# echo "[S] MATCHES LIST.\n";
 else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
 
 $query_res = $conn->store_result();

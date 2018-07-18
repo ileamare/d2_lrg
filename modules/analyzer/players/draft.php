@@ -1,5 +1,6 @@
 <?php
 $result["players_draft"] = [];
+echo "[S] Requested data for PLAYERS DRAFT STAGE.\n";
 
 for ($pick = 0; $pick < 2; $pick++) {
   for ($stage = 1; $stage < 4; $stage++) {
@@ -11,7 +12,7 @@ for ($pick = 0; $pick < 2; $pick++) {
             JOIN matchlines ON matches.matchid = matchlines.matchid AND draft.hero_id = matchlines.heroid
             WHERE is_pick = ".($pick ? "true" : "false")." AND stage = ".$stage."
             GROUP BY player_id ORDER BY winrate DESC, matches DESC";
-    if ($conn->multi_query($sql) === TRUE) echo "[S] Requested data for PLAYERS DRAFT STAGE $pick $stage.\n";
+    if ($conn->multi_query($sql) === TRUE);# echo "[S] Requested data for PLAYERS DRAFT STAGE $pick $stage.\n";
     else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
 
     $query_res = $conn->store_result();

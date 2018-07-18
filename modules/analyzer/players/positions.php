@@ -1,5 +1,6 @@
 <?php
 $result["player_positions"] = array();
+echo "[S] Requested data for PLAYER POSITIONS.\n";
 
 for ($core = 0; $core < 2; $core++) {
   for ($lane = 1; $lane < 6 && $lane > 0; $lane++) {
@@ -36,7 +37,7 @@ for ($core = 0; $core < 2; $core++) {
           :"WHERE am.isCore = 1 AND am.lane = $lane")
           ." GROUP BY am.playerid
             ORDER BY matches DESC, winrate DESC;";
-    if ($conn->multi_query($sql) === TRUE) echo "[S] Requested data for PLAYER POSITIONS $core $lane.\n";
+    if ($conn->multi_query($sql) === TRUE);# echo "[S] Requested data for PLAYER POSITIONS $core $lane.\n";
     else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
 
     $query_res = $conn->store_result();

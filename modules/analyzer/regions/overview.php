@@ -48,7 +48,7 @@ if (!$row[1] || ( $row[1] < $limiter && isset($lg_settings['ana']['regions']['us
   $sql .= "SELECT \"avg_match_len\", SUM(duration)/(60*COUNT(DISTINCT matchid)) FROM matches WHERE matches.cluster IN (".implode(",", $clusters).");";
 
 
-  if ($conn->multi_query($sql) === TRUE) echo "[S] Requested data for RANDOM STATS.\n";
+  if ($conn->multi_query($sql) === TRUE);# echo "[S] Requested data for REGION STATS.\n";
   else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
 
   do {

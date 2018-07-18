@@ -1,6 +1,7 @@
 <?php
 $result["hero_positions"] = array ();
 
+echo "[S] Requested data for HERO POSITIONS\n";
 for ($core = 0; $core < 2; $core++) {
   for ($lane = 1; $lane > 0 && $lane < 6; $lane++) {
     if (!$core) { $lane = 0; }
@@ -33,7 +34,7 @@ for ($core = 0; $core < 2; $core++) {
           ." GROUP BY am.heroid
             ORDER BY matches DESC, winrate DESC;";
 
-    if ($conn->multi_query($sql) === TRUE) echo "[S] Requested data for HERO POSITIONS $core $lane.\n";
+    if ($conn->multi_query($sql) === TRUE);# echo "[S] Requested data for HERO POSITIONS $core $lane.\n";
     else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
 
     $query_res = $conn->store_result();
@@ -74,7 +75,7 @@ if ($lg_settings['ana']['hero_positions_matches']) {
       if (!$core) { $lane = 0; }
       $result["hero_positions_matches"][$core][$lane] = array();
 
-      echo "[S] Requested data for HERO POSITIONS MATCHES $core $lane.\n";
+      #echo "[S] Requested data for HERO POSITIONS MATCHES $core $lane.\n";
 
       foreach ($result["hero_positions"][$core][$lane] as $hero) {
         $result["hero_positions_matches"][$core][$lane][$hero['heroid']] = array();

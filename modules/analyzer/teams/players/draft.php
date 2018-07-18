@@ -13,7 +13,7 @@ for ($pick = 0; $pick < 2; $pick++) {
             WHERE is_pick = ".($pick ? "true" : "false")." AND stage = ".$stage."
                   AND teams_matches.teamid = ".$id."
             GROUP BY player_id ORDER BY winrate DESC, matches DESC";
-    if ($conn->multi_query($sql) === TRUE) echo "[S] Requested data for PLAYERS DRAFT STAGE $pick $stage.\n";
+    if ($conn->multi_query($sql) === TRUE);# echo "[S] Requested data for PLAYERS DRAFT STAGE $pick $stage.\n";
     else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
 
     $query_res = $conn->store_result();

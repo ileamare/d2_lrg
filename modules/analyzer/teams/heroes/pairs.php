@@ -24,7 +24,7 @@ $sql = "SELECT fm1.heroid, fm2.heroid,
 # 1 match = every possible pair
 # 2 matches = may be a coincedence
 
-if ($conn->multi_query($sql) === TRUE) echo "[S] Requested data for HERO PAIRS.\n";
+if ($conn->multi_query($sql) === TRUE);# echo "[S] Requested data for HERO PAIRS.\n";
 else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
 
 $query_res = $conn->store_result();

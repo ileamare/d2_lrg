@@ -14,7 +14,7 @@ $sql = "SELECT m1.heroid, m2.heroid, SUM(1) match_count, SUM(NOT matches.radiant
 # 1 match = every possible pair
 # 2 matches = may be a coincedence
 
-if ($conn->multi_query($sql) === TRUE) echo "[S] Requested data for HERO PAIRS GRAPH.\n";
+if ($conn->multi_query($sql) === TRUE);# echo "[S] Requested data for HERO PAIRS GRAPH.\n";
 else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
 
 $query_res = $conn->store_result();

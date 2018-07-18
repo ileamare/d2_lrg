@@ -35,7 +35,7 @@ for ($core = 0; $core < 2; $core++) {
           ." \nGROUP BY am.heroid
             ORDER BY matches DESC, winrate DESC;";
 
-    if ($conn->multi_query($sql) === TRUE) echo "[S] Requested data for HERO POSITIONS $core $lane.\n";
+    if ($conn->multi_query($sql) === TRUE);# echo "[S] Requested data for HERO POSITIONS $core $lane.\n";
     else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
 
     $query_res = $conn->store_result();

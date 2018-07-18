@@ -1,5 +1,6 @@
 <?php
 $result["hero_sides"] = array ();
+echo "[S] Requested data for HERO SIDES.\n";
 
 for ($side = 0; $side < 2; $side++) {
   $result["hero_sides"][$side] = array();
@@ -13,7 +14,7 @@ for ($side = 0; $side < 2; $side++) {
           WHERE ml.isRadiant = $side
           GROUP BY ml.heroid
           ORDER BY matches DESC;";
-  if ($conn->multi_query($sql) === TRUE) echo "[S] Requested data for HERO SIDES $side.\n";
+  if ($conn->multi_query($sql) === TRUE);# echo "[S] Requested data for HERO SIDES $side.\n";
   else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
 
   $query_res = $conn->store_result();

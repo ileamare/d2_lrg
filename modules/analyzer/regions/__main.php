@@ -70,7 +70,7 @@ foreach ($regions as $region => $clusters) {
     }
 
     # players
-    if (isset($lg_settings['ana']['regions']['players'])) {
+    if (isset($lg_settings['ana']['regions']['players']) && $lg_settings['ana']['players']) {
       require("players/summary.php");
 
       if (isset($lg_settings['ana']['regions']['players']['haverages']) && $lg_settings['ana']['regions']['players']['haverages']) {
@@ -79,16 +79,16 @@ foreach ($regions as $region => $clusters) {
       if (isset($lg_settings['ana']['regions']['players']['draft']) && $lg_settings['ana']['regions']['players']['draft']) {
         require("players/draft.php");
       }
-      if ($lg_settings['ana']['players'] && isset($lg_settings['ana']['regions']['players']['parties_graph']) && $lg_settings['ana']['regions']['players']['parties_graph']) {
+      if (!$lg_settings['main']['teams'] && isset($lg_settings['ana']['regions']['players']['parties_graph']) && $lg_settings['ana']['regions']['players']['parties_graph']) {
         require("players/graph.php");
       }
-      if ($lg_settings['ana']['players'] && isset($lg_settings['ana']['regions']['players']['pairs']) && $lg_settings['ana']['regions']['players']['pairs']) {
+      if (!$lg_settings['main']['teams'] && isset($lg_settings['ana']['regions']['players']['pairs']) && $lg_settings['ana']['regions']['players']['pairs']) {
         require("players/pairs.php");
       }
-      if ($lg_settings['ana']['players'] && isset($lg_settings['ana']['regions']['players']['trios']) && $lg_settings['ana']['regions']['players']['trios']) {
+      if (!$lg_settings['main']['teams'] && isset($lg_settings['ana']['regions']['players']['trios']) && $lg_settings['ana']['regions']['players']['trios']) {
         require("players/trios.php");
       }
-      if ($lg_settings['ana']['players'] && isset($lg_settings['ana']['regions']['players']['lane_combos']) && $lg_settings['ana']['regions']['players']['lane_combos']) {
+      if (!$lg_settings['main']['teams'] && isset($lg_settings['ana']['regions']['players']['lane_combos']) && $lg_settings['ana']['regions']['players']['lane_combos']) {
         require("players/lane_combos.php");
       }
       if (isset($lg_settings['ana']['regions']['players']['positions']) && $lg_settings['ana']['regions']['players']['positions']) {
@@ -122,15 +122,4 @@ foreach ($regions as $region => $clusters) {
     }
 }
 
-
-# pickbans
-# drafts
-# pairs
-# hero_graph
-# hero_pos
-
-# participants / players / teams
-# matches list
-# heroes_avg
-# players_avg
 ?>

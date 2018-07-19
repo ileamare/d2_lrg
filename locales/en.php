@@ -252,7 +252,7 @@
     "desc_heroes_trios" => "This section contains stats for most common hero trios. Minimum amount of matches for trios is set to %liml%.",
     "desc_heroes_lane_combos" => "This section contains stats for most common hero pairs on a same lane. Minimum amount of matches for pairs is set to %liml%.",
     "desc_heroes_hvh" => "Choose a hero to see his performance against other heroes.",
-    "desc_players_avg" => "This section contains highest average values among players. Minimum amount of matches is set to limiter.",
+    "desc_players_avg" => "This section contains highest average values among players. Minimum amount of matches is set to %lim%.",
     "desc_players_summary" => "This table contains players' average stats and their most common positions.",
     "desc_players_positions" => "This section contains stats for players' performance on various positions. Positions are determined based on players performance (core or support) and lane. Supports across all lanes (including roamers) are considered as one role. Lanes and positions may not be accurate.",
     "desc_players_pvp" => "Choose a player to see his performance against other league participants.",

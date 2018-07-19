@@ -89,7 +89,7 @@ $root = dirname(__FILE__);
         isset($report['hero_sides']) || isset($report['hero_pairs']) || isset($report['hero_triplets']))
           include_once("modules/view/heroes.php");
 
-    if (isset($report['averages_players']) || isset($report['pvp']) || isset($report['player_positions']) || isset($report['player_pairs']))
+    if (isset($report['players']))
       include_once("modules/view/players.php");
 
     if (isset($report['teams'])) {

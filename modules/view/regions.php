@@ -26,7 +26,8 @@ function rg_view_generate_regions() {
 
       include_once("regions/heroes.php");
 
-      include_once("regions/players.php");
+      if(isset($report['players']))
+        include_once("regions/players.php");
     }
   }
   return $res;

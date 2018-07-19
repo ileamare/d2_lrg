@@ -156,6 +156,7 @@
     "roshans_killed_in_game" => "Roshan kills in match",
     "roshan_kills_with_team" => "Roshan kills with team",
     "roshan_kills_by_team" => "Roshan kills by team",
+    "roshan_kills" => "Roshan Kills",
     "longest_killstreak_in_match" => "Average longest killstreak in match",
     "hero_pool" => "Hero Pool",
     "widest_hero_pool" => "Player with Widest Hero Pool",

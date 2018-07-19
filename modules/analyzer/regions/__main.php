@@ -13,11 +13,28 @@ foreach($metadata['clusters'] as $cluster => $region) {
 
 foreach ($regions as $region => $clusters) {
     # main stats
-    $err = require("overview.php");
+    $err = include("overview.php");
     if ($err) continue;
-    # pickbans
-    require("heroes/pickban.php");
 
+    # pickbans
+    include("heroes/pickban.php");
+
+    $picks = [];
+    foreach($result["regions_data"][$region]["pickban"] as $hero)
+        $picks[] = $hero["matches_total"];
+    $median = calculate_median($picks);
+    unset($picks);
+
+    $result["regions_data"][$region]['settings'] = [];
+
+    $result["regions_data"][$region]['settings']['limiter_higher'] = (int)ceil($median/6);
+    $result["regions_data"][$region]['settings']['limiter_graph'] = (int)ceil($median/3);
+    if($lg_settings['main']['teams']) {
+        $result["regions_data"][$region]['settings']['limiter_lower'] = (int)ceil($result["regions_data"][$region]['main']['matches']/
+                                                              ($result["regions_data"][$region]['main']['teams_on_event']*4));
+    } else {
+        $result["regions_data"][$region]['settings']['limiter_lower'] = (int)ceil($median/16);
+    }
 
     # records
     if (isset($lg_settings['ana']['regions']['records'])) {
@@ -26,10 +43,26 @@ foreach ($regions as $region => $clusters) {
 
     # heroes
     if (isset($lg_settings['ana']['regions']['heroes'])) {
+      if (isset($lg_settings['ana']['regions']['heroes']['haverages']) && $lg_settings['ana']['regions']['heroes']['haverages']) {
+        require("heroes/haverages.php");
+      }
       if (isset($lg_settings['ana']['regions']['heroes']['draft']) && $lg_settings['ana']['regions']['heroes']['draft']) {
         require("heroes/draft.php");
       }
+      if (isset($lg_settings['ana']['regions']['heroes']['meta_graph']) && $lg_settings['ana']['regions']['heroes']['meta_graph']) {
+        require("heroes/meta_graph.php");
+      }
     }
+
+/*
+  "heroes": {
+    "pairs": true,
+    "trios": true,
+    "lane_combos": true,
+    "positions": true,
+    "summary": true
+  },
+ */
 
 
     if (isset($lg_settings['ana']['regions']['heroes_avg'])) {

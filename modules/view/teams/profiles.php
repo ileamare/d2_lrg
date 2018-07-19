@@ -16,10 +16,19 @@ function rg_view_generate_teams_profiles($context, $context_mod) {
         $res["team".$tid]['overview'] = "";
 
         if(check_module($context_mod."team".$tid."-overview")) {
+          $percentages = [
+            "rad_ratio",
+            "radiant_wr",
+            "dire_wr"
+          ];
+
           $res["team".$tid]['overview'] .= "<div class=\"content-cards\">".team_card($tid)."</div>";
           $res["team".$tid]['overview'] .= "<table id=\"teams-$tid-avg-table\" class=\"list\"> ";
           foreach ($context[$tid]['averages'] as $key => $value) {
-            $res["team".$tid]['overview'] .= "<tr><td>".locale_string( $key )."</td><td>".number_format($value, 2)."</td></tr>";
+            $res["team".$tid]['overview'] .= "<tr><td>".
+                locale_string( $key )."</td><td>".number_format($value*(in_array($key, $percentages) ? 100 : 1), 2).
+                (in_array($key, $percentages) ? "%" : "").
+                "</td></tr>";
           }
           $res["team".$tid]['overview'] .= "</table>";
           $res["team".$tid]['overview'] .= "<div class=\"content-text\">".locale_string("desc_teams")."</div>";

@@ -1,6 +1,8 @@
 <?php
+$sql = "";
+
 # avg kills
-$sql = "SELECT \"kills\", SUM(ans.sum_kills)/SUM(ans.match_count) FROM (
+$sql .= "SELECT \"kills\", SUM(ans.sum_kills)/SUM(ans.match_count) FROM (
           SELECT SUM(kills) sum_kills, COUNT(DISTINCT matchlines.matchid) match_count
           FROM matchlines JOIN teams_matches
           ON matchlines.matchid = teams_matches.matchid
@@ -84,6 +86,20 @@ $sql .= "SELECT \"wards_destroyed\", SUM(ans.sum_wards_destroyed)/SUM(ans.match_
           WHERE teams_matches.teamid = ".$id."
           GROUP BY matchlines.matchid
       ) ans;";
+
+# courier kills
+$sql .= "SELECT \"courier_kills\", SUM(adv_matchlines.couriers_killed)/COUNT(DISTINCT matches.matchid) FROM adv_matchlines
+          JOIN matchlines ON adv_matchlines.playerid = matchlines.playerid AND adv_matchlines.matchid = matchlines.matchid
+          JOIN teams_matches ON teams_matches.matchid = matchlines.matchid AND teams_matches.is_radiant = matchlines.isradiant
+          JOIN matches ON teams_matches.matchid = matches.matchid
+          WHERE teams_matches.teamid = ".$id.";";
+
+# roshan kills by hero's team
+$sql .= "SELECT \"roshan_kills\", SUM(adv_matchlines.roshans_killed)/COUNT(DISTINCT matches.matchid) FROM adv_matchlines
+          JOIN matchlines ON adv_matchlines.playerid = matchlines.playerid AND adv_matchlines.matchid = matchlines.matchid
+          JOIN teams_matches ON teams_matches.matchid = matchlines.matchid AND teams_matches.is_radiant = matchlines.isradiant
+          JOIN matches ON teams_matches.matchid = matches.matchid
+          WHERE teams_matches.teamid = ".$id.";";
 
 # hero pool
 $sql .= "SELECT \"hero_pool\", COUNT(DISTINCT matchlines.heroid) FROM matchlines JOIN teams_matches

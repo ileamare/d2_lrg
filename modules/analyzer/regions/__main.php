@@ -33,12 +33,12 @@ foreach ($regions as $region => $clusters) {
         $result["regions_data"][$region]['settings']['limiter_lower'] = (int)ceil($result["regions_data"][$region]['main']['matches']/
                                                               ($result["regions_data"][$region]['main']['teams_on_event']*4));
     } else {
-        $result["regions_data"][$region]['settings']['limiter_lower'] = (int)ceil($median/16);
+        $result["regions_data"][$region]['settings']['limiter_lower'] = (int)ceil($median/20);
     }
 
     # records
     if (isset($lg_settings['ana']['regions']['records'])) {
-
+      // TODO
     }
 
     # heroes
@@ -52,54 +52,58 @@ foreach ($regions as $region => $clusters) {
       if (isset($lg_settings['ana']['regions']['heroes']['meta_graph']) && $lg_settings['ana']['regions']['heroes']['meta_graph']) {
         require("heroes/meta_graph.php");
       }
-    }
-
-/*
-  "heroes": {
-    "pairs": true,
-    "trios": true,
-    "lane_combos": true,
-    "positions": true,
-    "summary": true
-  },
- */
-
-
-    if (isset($lg_settings['ana']['regions']['heroes_avg'])) {
-
-    }
-    if (isset($lg_settings['ana']['regions']['drafts'])) {
-
-    }
-    if (isset($lg_settings['ana']['regions']['hero_pairs'])) {
-
-    }
-    if (isset($lg_settings['ana']['regions']['hero_graph'])) {
-
-    }
-    if (isset($lg_settings['ana']['regions']['hero_positions'])) {
-
-    }
-    if (isset($lg_settings['ana']['regions']['hero_overview'])) {
-
+      if (isset($lg_settings['ana']['regions']['heroes']['pairs']) && $lg_settings['ana']['regions']['heroes']['pairs']) {
+        require("heroes/pairs.php");
+      }
+      if (isset($lg_settings['ana']['regions']['heroes']['trios']) && $lg_settings['ana']['regions']['heroes']['trios']) {
+        require("heroes/trios.php");
+      }
+      if (isset($lg_settings['ana']['regions']['heroes']['lane_combos']) && $lg_settings['ana']['regions']['heroes']['lane_combos']) {
+        require("heroes/lane_combos.php");
+      }
+      if (isset($lg_settings['ana']['regions']['heroes']['positions']) && $lg_settings['ana']['regions']['heroes']['positions']) {
+        require("heroes/positions.php");
+      }
+      if (isset($lg_settings['ana']['regions']['heroes']['summary']) && $lg_settings['ana']['regions']['heroes']['summary']) {
+        require("heroes/summary.php");
+      }
     }
 
     # players
-    if (isset($lg_settings['ana']['regions']['player_pairs'])) {
+    if (isset($lg_settings['ana']['regions']['players'])) {
+      require("players/summary.php");
 
+      if (isset($lg_settings['ana']['regions']['players']['haverages']) && $lg_settings['ana']['regions']['players']['haverages']) {
+        require("players/haverages.php");
+      }
+      if (isset($lg_settings['ana']['regions']['players']['draft']) && $lg_settings['ana']['regions']['players']['draft']) {
+        require("players/draft.php");
+      }
+      if ($lg_settings['ana']['players'] && isset($lg_settings['ana']['regions']['players']['parties_graph']) && $lg_settings['ana']['regions']['players']['parties_graph']) {
+        require("players/graph.php");
+      }
+      if ($lg_settings['ana']['players'] && isset($lg_settings['ana']['regions']['players']['pairs']) && $lg_settings['ana']['regions']['players']['pairs']) {
+        require("players/pairs.php");
+      }
+      if ($lg_settings['ana']['players'] && isset($lg_settings['ana']['regions']['players']['trios']) && $lg_settings['ana']['regions']['players']['trios']) {
+        require("players/trios.php");
+      }
+      if ($lg_settings['ana']['players'] && isset($lg_settings['ana']['regions']['players']['lane_combos']) && $lg_settings['ana']['regions']['players']['lane_combos']) {
+        require("players/lane_combos.php");
+      }
+      if (isset($lg_settings['ana']['regions']['players']['positions']) && $lg_settings['ana']['regions']['players']['positions']) {
+        require("players/positions.php");
+      }
     }
-    if (isset($lg_settings['ana']['regions']['player_graph'])) {
 
-    }
-    if (isset($lg_settings['ana']['regions']['players_avg'])) {
-
-    }
-    if (isset($lg_settings['ana']['regions']['players_positions'])) {
-
-    }
-    if (isset($lg_settings['ana']['regions']['players_overview'])) {
-
-    }
+/*
+"teams": {
+  "summary": true,
+  "cards": true
+},
+"matches": true,
+"participants": true
+*/
 
     # teams summary
     if (isset($lg_settings['ana']['regions']['teams_summary'])) {

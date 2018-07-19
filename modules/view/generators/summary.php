@@ -3,7 +3,10 @@ include_once($root."/modules/view/functions/hero_name.php");
 include_once($root."/modules/view/functions/player_name.php");
 
 function rg_generator_summary($table_id, $context, $hero_flag = true) {
-  $keys = array_keys($context[0]);
+  foreach($context as $c) {
+    $keys = array_keys($c);
+    break;
+  }
   $id = $hero_flag ? 'heroid' : 'playerid';
   $res = "<table id=\"$table_id\" class=\"list wide\"><tr class=\"thead\">".
           ($hero_flag ? "<th width=\"1%\"></th>" : "").

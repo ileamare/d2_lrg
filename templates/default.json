@@ -96,8 +96,7 @@
         "pairs": true,
         "trios": true,
         "lane_combos": true,
-        "parties_graph": true,
-        "summary": true
+        "parties_graph": true
       },
       "teams": {
         "summary": true,

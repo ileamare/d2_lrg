@@ -39,4 +39,33 @@ if(isset($reg_report['heroes_meta_graph'])) {
   }
 }
 
+if(isset($reg_report['hero_pairs']) ||
+    (isset($reg_report['hero_trios']) && !empty($reg_report['hero_trios'])) ||
+    (isset($reg_report['hero_lane_combos']) && !empty($reg_report['hero_lane_combos'])) ) {
+  $res["region".$region]['heroes']["combos"] = [];
+  include_once("heroes/combos.php");
+
+  if(check_module($parent_mod."combos")) {
+    $res["region".$region]['heroes']['combos'] = rg_view_generate_regions_heroes_combos($region, $reg_report, $parent_mod);
+  }
+}
+
+if(isset($reg_report['hero_positions'])) {
+  $res["region".$region]['heroes']["positions"] = [];
+  include_once("heroes/positions.php");
+
+  if(check_module($parent_mod."positions")) {
+    $res["region".$region]['heroes']['positions'] = rg_view_generate_regions_heroes_positions($region, $reg_report, $parent_mod);
+  }
+}
+
+if(isset($reg_report['hero_summary'])) {
+  $res["region".$region]['heroes']["summary"] = "";
+  include_once("heroes/summary.php");
+
+  if(check_module($parent_mod."summary")) {
+    $res["region".$region]['heroes']['summary'] = rg_view_generate_regions_heroes_summary($region, $reg_report);
+  }
+}
+
 ?>

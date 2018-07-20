@@ -117,13 +117,13 @@ function rg_view_generate_teams_profiles($context, $context_mod) {
         if(check_module($context_mod."team".$tid."-heroes-combos")) {
           $parent_module = $context_mod."team".$tid."-heroes-combos-";
           if ($mod == $context_mod."team".$tid."-heroes-combos") $unset_module = true;
+          include_once($root."/modules/view/generators/combos.php");
 
           if(isset($context[$tid]['hero_pairs'])) {
             $res["team".$tid]['heroes']['combos']['pairs'] = "";
             if (check_module($parent_module."pairs")) {
-              include_once($root."/modules/view/generators/pairs.php");
               $res["team".$tid]['heroes']['combos']['pairs'] =  "<div class=\"content-text\">".locale_string("desc_heroes_pairs", [ "limh"=>$report['settings']['limiter_triplets']+1 ] )."</div>";
-              $res["team".$tid]['heroes']['combos']['pairs'] .=  rg_generator_pairs("hero-pairs",
+              $res["team".$tid]['heroes']['combos']['pairs'] .=  rg_generator_combos("hero-pairs",
                                                  $context[$tid]['hero_pairs'],
                                                  (isset($context[$tid]['hero_pairs_matches']) ? $context[$tid]['hero_pairs_matches'] : [])
                                                );
@@ -135,7 +135,7 @@ function rg_view_generate_teams_profiles($context, $context_mod) {
             if (check_module($parent_module."trios")) {
               include_once($root."/modules/view/generators/trios.php");
               $res["team".$tid]['heroes']['combos']['trios'] =  "<div class=\"content-text\">".locale_string("desc_heroes_trios", [ "liml"=>$report['settings']['limiter_triplets']+1 ] )."</div>";
-              $res["team".$tid]['heroes']['combos']['trios'] .= rg_generator_trios("hero-trios",
+              $res["team".$tid]['heroes']['combos']['trios'] .= rg_generator_combos("hero-trios",
                                                  $context[$tid]['hero_triplets'],
                                                  (isset($context[$tid]['hero_triplets_matches']) ? $context[$tid]['hero_triplets_matches'] : [])
                                                );

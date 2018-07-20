@@ -6,8 +6,8 @@ function rg_view_generate_regions_players_draft($region, $reg_report) {
   global $modules;
 
   $context_pickban = [];
-  foreach($reg_report['players_summary'] as $el) {
-    $context_pickban[ $el['playerid'] ] = [
+  foreach($reg_report['players_summary'] as $id => $el) {
+    $context_pickban[ $id ] = [
       "matches_banned" => 0,
       "winrate_banned" => 0,
       "matches_picked" => $el['matches_s'],

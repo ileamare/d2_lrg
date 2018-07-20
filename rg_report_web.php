@@ -1,7 +1,7 @@
 <?php
 include_once("rg_report_out_settings.php");
 include_once("modules/functions/versions.php");
-$lg_version = array( 1, 4, 0, -4, 12 );
+$lg_version = array( 1, 4, 0, -4, 14 );
 
 include_once("modules/functions/locale_strings.php");
 include_once("modules/functions/get_language_code_iso6391.php");
@@ -31,7 +31,7 @@ include_once("modules/view/__preset.php");
 
 $root = dirname(__FILE__);
 
-  $linkvars = array();
+  $linkvars = [];
 
   if ($lrg_use_get) {
     $locale = GetLanguageCodeISO6391();
@@ -79,7 +79,7 @@ $root = dirname(__FILE__);
 
     include_once("modules/view/__post_load.php");
 
-    $modules = array();
+    $modules = [];
     # module => array or ""
     include_once("modules/view/overview.php");
     if (isset($report['records']))
@@ -153,6 +153,8 @@ $root = dirname(__FILE__);
   if(isset($modules['participants']) && check_module("participants")) {
     merge_mods($modules['participants'], rg_view_generate_participants());
   }
+} else {
+
 }
   ?>
   <!DOCTYPE html>

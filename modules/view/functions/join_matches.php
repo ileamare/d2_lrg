@@ -1,6 +1,6 @@
 <?php
 function join_matches($matches) {
-  $output = array();
+  $output = [];
   foreach($matches as $match) {
     $output[] = match_link($match);
   }

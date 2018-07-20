@@ -32,6 +32,7 @@
     "hero" => "Hero",
     "player" => "Player",
     "match" => "Match",
+    "matchlinks" => "List of matches",
     "stage" => "Draft stage",
     "pick"  => "Pick",
     "ban"   => "Ban",

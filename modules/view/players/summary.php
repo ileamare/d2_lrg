@@ -10,7 +10,7 @@ function rg_view_generate_players_summary() {
     generate_positions_strings();
 
     foreach($report['players_summary'] as $id => $player) {
-      $position = reset($report['players_additional'][$player['playerid']]['positions']);
+      $position = reset($report['players_additional'][$id]['positions']);
       $position = "position_".$position["core"].".".$position["lane"];
       $report['players_summary'][$id]['common_position'] = locale_string($position);
     }

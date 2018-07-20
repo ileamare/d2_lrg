@@ -42,7 +42,6 @@ for ($core = 0; $core < 2; $core++) {
 
     for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
       $result["teams"][$id]["hero_positions"][$core][$lane][] = array (
-        "heroid" => $row[0],
         "matches_s"=> $row[1],
         "winrate_s"=> $row[2],
         "kills"  => $row[3],

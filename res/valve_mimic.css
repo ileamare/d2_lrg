@@ -37,6 +37,7 @@ a, a:active, a:visited, a:focus {
   line-height: inherit;
 	color: #fff;
   text-decoration: none;
+  cursor: pointer;
 }
 
 a:hover {

@@ -43,8 +43,7 @@ for ($core = 0; $core < 2; $core++) {
     $query_res = $conn->store_result();
 
     for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
-      $result["player_positions"][$core][$lane][] = array (
-        "playerid" => $row[0],
+      $result["player_positions"][$core][$lane][$row[0]] = array (
         "matches_s"=> $row[1],
         "winrate_s"=> $row[2],
         "kda" => $row[13],
@@ -69,12 +68,12 @@ for ($core = 0; $core < 2; $core++) {
     if($lg_settings['ana']['player_positions_matches']) {
       $result["player_positions_matches"][$core][$lane] = array();
 
-      foreach($result["player_positions"][$core][$lane] as $playerline) {
-        $result["player_positions_matches"][$core][$lane][$playerline['playerid']] = array();
+      foreach($result["player_positions"][$core][$lane] as $id => $playerline) {
+        $result["player_positions_matches"][$core][$lane][$id] = [];
         $sql = "SELECT matchid
                 FROM adv_matchlines WHERE ".
                ($core == 0 ? "isCore = 0" : "isCore = 1 AND lane = $lane")
-              ." AND playerid = ".$playerline['playerid'].";";
+              ." AND playerid = ".$id.";";
 
         if ($conn->multi_query($sql) === TRUE);
         else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
@@ -82,7 +81,7 @@ for ($core = 0; $core < 2; $core++) {
         $query_res = $conn->store_result();
 
         for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
-          $result["player_positions_matches"][$core][$lane][$playerline['playerid']][] = $row[0];
+          $result["player_positions_matches"][$core][$lane][$id][] = $row[0];
         }
 
         $query_res->free_result();

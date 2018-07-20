@@ -37,7 +37,6 @@ $query_res = $conn->store_result();
 
 for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
   $result["regions_data"][$region]["players_summary"][$row[0]] = [
-    "playerid" => $row[0],
     "matches_s"=> $row[1],
     "winrate_s"=> $row[2],
     "hero_pool" => $row[4],

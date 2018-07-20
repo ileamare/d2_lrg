@@ -4,8 +4,6 @@ include_once($root."/modules/view/functions/hero_name.php");
 include_once($root."/modules/view/functions/player_name.php");
 
 function rg_generator_positions_overview($table_id, $context, $hero_flag = true) {
-  $id = $hero_flag ? "heroid" : "playerid";
-
   $position_overview_template = array("total" => 0);
   for ($i=1; $i>=0 && !isset($keys); $i--) {
     for ($j=1; $j<6 && $j>0; $j++) {
@@ -33,12 +31,12 @@ function rg_generator_positions_overview($table_id, $context, $hero_flag = true)
     for ($j=1; $j<6 && $j>0; $j++) {
       if (!$i) { $j = 0; }
 
-      foreach($context[$i][$j] as $el) {
-        if (!isset($overview[ $el[$id] ])) $overview[ $el[$id] ] = $position_overview_template;
+      foreach($context[$i][$j] as $id => $el) {
+        if (!isset($overview[ $id ])) $overview[ $id ] = $position_overview_template;
 
-        $overview[ $el[$id] ]["$i.$j"]['matches'] = $el['matches_s'];
-        $overview[ $el[$id] ]["$i.$j"]['wr'] = $el['winrate_s'];
-        $overview[ $el[$id] ]["total"] += $el['matches_s'];
+        $overview[ $id ]["$i.$j"]['matches'] = $el['matches_s'];
+        $overview[ $id ]["$i.$j"]['wr'] = $el['winrate_s'];
+        $overview[ $id ]["total"] += $el['matches_s'];
       }
 
       if (!$i) { break; }

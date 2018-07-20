@@ -40,8 +40,7 @@ for ($core = 0; $core < 2; $core++) {
     $query_res = $conn->store_result();
 
     for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
-      $result["hero_positions"][$core][$lane][] = array (
-        "heroid" => $row[0],
+      $result["hero_positions"][$core][$lane][$row[0]] = array (
         "matches_s"=> $row[1],
         "winrate_s"=> $row[2],
         "kills"  => $row[3],
@@ -77,10 +76,10 @@ if ($lg_settings['ana']['hero_positions_matches']) {
 
       #echo "[S] Requested data for HERO POSITIONS MATCHES $core $lane.\n";
 
-      foreach ($result["hero_positions"][$core][$lane] as $hero) {
-        $result["hero_positions_matches"][$core][$lane][$hero['heroid']] = array();
+      foreach ($result["hero_positions"][$core][$lane] as $id => $hero) {
+        $result["hero_positions_matches"][$core][$lane][$id] = [];
 
-        $sql = "SELECT matchid FROM adv_matchlines WHERE heroid = ".$hero['heroid']." AND ".
+        $sql = "SELECT matchid FROM adv_matchlines WHERE heroid = ".$id." AND ".
             ($core == 0 ? "isCore = 0" :"isCore = 1 AND lane = $lane").";";
 
         if ($conn->multi_query($sql) === TRUE);
@@ -89,7 +88,7 @@ if ($lg_settings['ana']['hero_positions_matches']) {
         $query_res = $conn->store_result();
 
         for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
-          $result["hero_positions_matches"][$core][$lane][$hero['heroid']][] = $row[0];
+          $result["hero_positions_matches"][$core][$lane][$id][] = $row[0];
         }
 
         $query_res->free_result();

@@ -32,8 +32,7 @@ else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n"
 $query_res = $conn->store_result();
 
 for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
-  $result["hero_summary"][] = array (
-    "heroid" => $row[0],
+  $result["hero_summary"][$row[0]] = array (
     "matches_s"=> $row[1],
     "winrate_s"=> $row[2],
     "kills" => $row[3],

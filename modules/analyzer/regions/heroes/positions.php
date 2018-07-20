@@ -41,8 +41,7 @@ for ($core = 0; $core < 2; $core++) {
     $query_res = $conn->store_result();
 
     for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
-      $result["regions_data"][$region]["hero_positions"][$core][$lane][] = [
-        "heroid" => $row[0],
+      $result["regions_data"][$region]["hero_positions"][$core][$lane][$row[0]] = [
         "matches_s"=> $row[1],
         "winrate_s"=> $row[2],
         "kills"  => $row[3],

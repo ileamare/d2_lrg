@@ -38,13 +38,12 @@ function rg_generator_pairs($table_id, $context, $context_matches, $heroes_flag 
                          "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("percentage")."</th>" : "").
          ($lane_rate ? "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("lane_rate")."</th>" : "").
          ($lane ? "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("lane")."</th>" : "").
+         ((is_array($context_matches) && !empty($context_matches)) ? "<th>".locale_string("matchlinks")."</th>" : "").
          "</tr>";
 
 
   foreach($context as $pair) {
-    $res .= "<tr".(is_array($context_matches) && !empty($context_matches) ?
-            " onclick=\"showModal('".htmlspecialchars(join_matches($context_matches[$pair[$id.'1'].'-'.$pair[$id.'2']])).
-                "', '".locale_string("matches")."');\"" : "").">".
+    $res .= "<tr>".
                 ($heroes_flag ? "<td>".hero_portrait($pair[$id.'1'])."</td>" : "").
                 "<td>".($heroes_flag ? hero_name($pair[$id.'1']) : player_name($pair[$id.'1']))."</td>".
                 ($heroes_flag ? "<td>".hero_portrait($pair[$id.'2'])."</td>" : "").
@@ -56,6 +55,14 @@ function rg_generator_pairs($table_id, $context, $context_matches, $heroes_flag 
                                 "<td>".number_format(($pair['matches']-$pair['expectation'])*100/$pair['matches'], 2)."%</td>" : "").
                 ($lane_rate ? "<td>".number_format($pair['lane_rate']*100, 2)."%</td>" : "").
                 ($lane ? "<td>".locale_string("lane_".$pair['lane'])."</td>" : "").
+                ((is_array($context_matches) && !empty($context_matches)) ?
+                  "<td><a onclick=\"showModal('".htmlspecialchars(join_matches($context_matches[$pair[$id.'1'].'-'.$pair[$id.'2']])).
+                      "', '".locale_string("matches")." : ".
+                      ($heroes_flag ? hero_name($pair[$id.'1']) : player_name($pair[$id.'1']))." + ".
+                      ($heroes_flag ? hero_name($pair[$id.'2']) : player_name($pair[$id.'2']))
+                      ."');\">".
+                      locale_string("matches")."</a></th>" :
+                  "").
             "</tr>";
   }
   $res .= "</table>";

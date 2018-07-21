@@ -1,6 +1,6 @@
 <?php
 
-function team_card($tid) {
+function team_card($tid, $full = false) {
   global $report;
   global $meta;
   global $strings;
@@ -9,7 +9,7 @@ function team_card($tid) {
 
   if(!isset($report['teams'])) return null;
 
-  $output = "<div class=\"team-card\"><div class=\"team-name\">".
+  $output = "<div class=\"team-card".($full ? " full" : "")."\"><div class=\"team-name\">".
             "<a href=\"?league=".$leaguetag."&mod=teams-profiles-team".$tid.
             (empty($linkvars) ? "" : "&$linkvars")
             ."\" title=\"".team_name($tid)."\">".team_name($tid)." (".$tid.")</a></div>";

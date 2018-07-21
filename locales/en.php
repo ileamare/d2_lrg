@@ -288,7 +288,24 @@
     "lane_2" => "Midlane",
     "lane_3" => "Offlane",
     "lane_4" => "Jungle",
-    "lane_5" => "Roaming"
+    "lane_5" => "Roaming",
+
+    "region1" => "US West",
+    "region2" => "US East",
+    "region3" => "Europe West",
+    "region4" => "South Korea",
+    "region5" => "Southeast Asia",
+    "region6" => "Dubai",
+    "region7" => "Australia",
+    "region8" => "Russia and CIS",
+    "region9" => "Europe East",
+    "region10" => "South America",
+    "region11" => "South Africa",
+    "region12" => "China",
+    "region14" => "Chili",
+    "region15" => "Peru",
+    "region16" => "India",
+    "region19" => "Japan"
   );
 
  ?>

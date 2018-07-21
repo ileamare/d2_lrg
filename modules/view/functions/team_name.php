@@ -9,7 +9,7 @@ function team_name($tid) {
 function team_tag($tid) {
   global $report;
   if($tid && isset($report['teams'][ $tid ]['tag']))
-    return $report['teams'][ $tid ]['tag'];
+    return htmlspecialchars($report['teams'][ $tid ]['tag']);
   return "";
 }
 ?>

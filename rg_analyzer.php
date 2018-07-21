@@ -4,6 +4,7 @@ include_once("head.php");
 include_once("modules/functions/utf8ize.php");
 include_once("modules/functions/migrate_params.php");
 include_once("modules/functions/calc_median.php");
+include_once("modules/functions/generate_tag.php");
 
 echo("\nConnecting to database...\n");
 

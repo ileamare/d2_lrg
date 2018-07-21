@@ -244,6 +244,15 @@ table .hero_portrait {
   max-height: 4000px;
   /* TODO any better ideas? */
 }
+.team-card.full {
+  max-height: none;
+}
+.player-card.full {
+  max-height: none;
+}
+.match-card.full {
+  max-height: none;
+}
 .match-card *, .player-card *, .team-card * {
   font-size: inherit;
   line-height: inherit;

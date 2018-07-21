@@ -3,10 +3,13 @@ include_once($root."/modules/view/functions/hero_name.php");
 include_once($root."/modules/view/functions/player_name.php");
 
 function rg_generator_summary($table_id, $context, $hero_flag = true) {
+  global $report;
+
   foreach($context as $c) {
     $keys = array_keys($c);
     break;
   }
+
   $res = "<table id=\"$table_id\" class=\"list wide\"><tr class=\"thead\">".
           ($hero_flag ? "<th width=\"1%\"></th>" : "").
           "<th onclick=\"sortTable(".(0+$hero_flag).",'$table_id');\">".locale_string($hero_flag ? "hero" : "player")."</th>";

@@ -14,6 +14,9 @@ for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row(
     "name" => $row[1],
     "tag"  => $row[2]
   );
+  if(empty($result['teams'][$row[0]]['tag'])) {
+    $result['teams'][$row[0]]['tag'] = generate_tag($result['teams'][$row[0]]['name']);
+  }
 }
 
 $query_res->free_result();

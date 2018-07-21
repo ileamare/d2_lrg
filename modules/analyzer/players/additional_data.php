@@ -30,8 +30,9 @@ foreach ($result['players'] as $pid => &$name) {
   */
 
   if ($lg_settings['main']['teams']) {
-    # TODO player positions based on team roster
-    $sql = "SELECT teamid FROM teams_rosters WHERE playerid = $pid;";
+    $sql = "SELECT teamid
+            FROM teams_rosters
+            WHERE playerid = $pid;";
 
     if ($conn->multi_query($sql) === TRUE);
     else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
@@ -39,9 +40,25 @@ foreach ($result['players'] as $pid => &$name) {
     $query_res = $conn->store_result();
 
     $row = $query_res->fetch_row();
+
+    if(!$row[0]) {
+      $query_res->free_result();
+
+      $sql = "SELECT teams_matches.teamid, count(distinct matches.matchid) mts
+              FROM teams_matches JOIN matches ON teams_matches.matchid = matches.matchid
+              JOIN matchlines ON matches.matchid = matchlines.matchid AND matchlines.isradiant = teams_matches.is_radiant
+              WHERE matchlines.playerid = $pid
+              GROUP BY teams_matches.teamid
+              ORDER BY mts DESC;";
+
+      if ($conn->multi_query($sql) === TRUE);
+      else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
+
+      $query_res = $conn->store_result();
+      $row = $query_res->fetch_row();
+    }
+
     $result["players_additional"][$pid]['team'] = $row[0];
-    if(isset($result['teams'][$row[0]]['tag']))
-      $name = $result['teams'][$row[0]]['tag'].".".$name;
 
     $query_res->free_result();
   }

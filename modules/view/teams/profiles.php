@@ -22,7 +22,13 @@ function rg_view_generate_teams_profiles($context, $context_mod) {
             "dire_wr"
           ];
 
-          $res["team".$tid]['overview'] .= "<div class=\"content-cards\">".team_card($tid)."</div>";
+          $res["team".$tid]['overview'] .= "<div class=\"content-cards\">".team_card($tid, true)."</div>";
+          $res["team".$tid]['overview'] .= "<div class=\"content-text\">".
+              "<a href=\"https://www.dotabuff.com/esports/teams/$tid\">Dotabuff</a> / ".
+              "<a href=\"https://www.opendota.com/teams/$tid\">OpenDota</a>".
+              //"<a href=\"https://www.opendota.com/teams/$tid\">Stratz</a> / ".
+              "</div>";
+
           $res["team".$tid]['overview'] .= "<table id=\"teams-$tid-avg-table\" class=\"list\"> ";
           foreach ($context[$tid]['averages'] as $key => $value) {
             $res["team".$tid]['overview'] .= "<tr><td>".

@@ -530,7 +530,7 @@ function rg_view_generate_overview() {
   $res .= "<div class=\"content-text\"><a href=\"http://".
       $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."&mod=heroes-draft\">".locale_string("full_draft").
       "</a> / <a href=\"http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."&mod=heroes-hero_combo_graph\">".
-      locale_string("hero_combo_graph")."</a></div>";
+      locale_string("meta_graph")."</a></div>";
 
   if(!isset($report['teams']) && $report['settings']['overview_top_player_pairs'] && isset($report['player_pairs']) && !empty($report['player_pairs'])) {
       $res .= "<div class=\"content-header\">".locale_string("top_player_pairs")."</div>";

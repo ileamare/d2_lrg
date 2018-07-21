@@ -101,9 +101,7 @@
       "teams": {
         "summary": true,
         "cards": true
-      },
-      "matches": true,
-      "participants": true
+      }
     }
   },
   "web": {

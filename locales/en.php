@@ -109,6 +109,7 @@
     "team_tag" => "Tag",
     "player_nickname" => "Nickname",
     "active_roster" => "Active roster",
+    "main_region" => "Main region",
     "top_pick_heroes" => "Favorite heroes",
     "top_contested_heroes" => "Most contested heroes",
     "top_picked_heroes" => "Most picked heroes",

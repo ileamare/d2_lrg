@@ -106,19 +106,13 @@ foreach ($regions as $region => $clusters) {
 */
 
     # teams summary
-    if (isset($lg_settings['ana']['regions']['teams_summary'])) {
-
+    if ($lg_settings['main']['teams']) {
+      require("teams.php");
     }
 
-    # participants and stuff
-    if (isset($lg_settings['ana']['regions']['matches_list'])) {
-
-    }
-    if (isset($lg_settings['ana']['regions']['players'])) {
-
-    }
-    if (isset($lg_settings['ana']['regions']['teams'])) {
-
+    # matches
+    if (isset($lg_settings['ana']['matchlist']) && $lg_settings['ana']['matchlist']) {
+      require("matches.php");
     }
 }
 

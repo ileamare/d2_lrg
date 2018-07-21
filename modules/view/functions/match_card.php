@@ -26,19 +26,11 @@ function match_card($mid) {
   if(isset($report['teams']) && isset($report['match_participants_teams'][$mid])) {
     if(isset($report['match_participants_teams'][$mid]['radiant']) &&
        isset($report['teams'][ $report['match_participants_teams'][$mid]['radiant'] ]['name']))
-      $team_radiant = "<a href=\"?league=".$leaguetag."&mod=teams-team_".$report['match_participants_teams'][$mid]['radiant']."_stats".
-        (empty($linkvars) ? "" : "&$linkvars")
-        ."\" title=\"".$report['teams'][ $report['match_participants_teams'][$mid]['radiant'] ]['name']."\">".
-        $report['teams'][ $report['match_participants_teams'][$mid]['radiant'] ]['name'].
-        " (".$report['teams'][ $report['match_participants_teams'][$mid]['radiant'] ]['tag'].")</a>";
+      $team_radiant = team_link($report['match_participants_teams'][$mid]['radiant']);
     else $team_radiant = "Radiant";
     if(isset($report['match_participants_teams'][$mid]['dire']) &&
        isset($report['teams'][ $report['match_participants_teams'][$mid]['dire'] ]['name']))
-      $team_dire = "<a href=\"?league=".$leaguetag."&mod=teams-team_".$report['match_participants_teams'][$mid]['dire']."_stats".
-        (empty($linkvars) ? "" : "&$linkvars")
-        ."\" title=\"".$report['teams'][ $report['match_participants_teams'][$mid]['dire'] ]['name']."\">".
-        $report['teams'][ $report['match_participants_teams'][$mid]['dire'] ]['name'].
-        " (".$report['teams'][ $report['match_participants_teams'][$mid]['dire'] ]['tag'].")</a>";
+      $team_dire = team_link($report['match_participants_teams'][$mid]['dire']);
     else $team_dire = "Dire";
   } else {
     $team_radiant = "Radiant";

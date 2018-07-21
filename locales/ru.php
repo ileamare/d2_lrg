@@ -112,6 +112,7 @@
     "team_tag" => "Тег",
     "player_nickname" => "Псевдоним",
     "active_roster" => "Действующий состав",
+    "main_region" => "Основной регион",
     "top_pick_heroes" => "Любимые герои",
     "top_contested_heroes" => "Самые востребованные герои",
     "top_picked_heroes" => "Самые выбираемые герои",

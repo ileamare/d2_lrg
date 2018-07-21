@@ -12,7 +12,19 @@ function team_card($tid, $full = false) {
   $output = "<div class=\"team-card".($full ? " full" : "")."\"><div class=\"team-name\">".
             "<a href=\"?league=".$leaguetag."&mod=teams-profiles-team".$tid.
             (empty($linkvars) ? "" : "&$linkvars")
-            ."\" title=\"".team_name($tid)."\">".team_name($tid)." (".$tid.")</a></div>";
+            ."\" title=\"".team_name($tid)."\">".team_name($tid)." (".team_tag($tid).")</a></div>";
+
+  if(isset($report['teams'][$tid]['regions'])) {
+    asort($report['teams'][$tid]['regions']);
+    $region_line = "";
+    foreach($report['teams'][$tid]['regions'] as $region => $m) {
+      //if(!empty($region_line)) $region_line .= ", ";
+      $region_line .= region_link($region);
+      # initially I thought that there will be a list of all team's regions
+      # but I don't think it's good idea for
+      break;
+    }
+  }
 
   $output .= "<div class=\"team-info-block\">".
                 "<div class=\"section-caption\">".locale_string("summary").":</div>".
@@ -22,7 +34,9 @@ function team_card($tid, $full = false) {
                 "<div class=\"team-info-line\"><span class=\"caption\">".locale_string("gpm").":</span> ".number_format($report['teams'][$tid]['averages']['gpm'])."</div>".
                 "<div class=\"team-info-line\"><span class=\"caption\">".locale_string("xpm").":</span> ".number_format($report['teams'][$tid]['averages']['xpm'])."</div>".
                 "<div class=\"team-info-line\"><span class=\"caption\">".locale_string("kda").":</span> ".number_format($report['teams'][$tid]['averages']['kills']).
-                  "/".number_format($report['teams'][$tid]['averages']['deaths'])."/".number_format($report['teams'][$tid]['averages']['assists'])."</div></div>";
+                  "/".number_format($report['teams'][$tid]['averages']['deaths'])."/".number_format($report['teams'][$tid]['averages']['assists'])."</div>".
+                (isset($region_line) ? "<div class=\"team-info-line\"><span class=\"caption\">".locale_string("main_region").":</span> ".$region_line."</div>" : "").
+                  "</div>";
 
   $output .= "<div class=\"team-info-block\">".
                 "<div class=\"section-caption\">".locale_string("active_roster").":</div>";

@@ -96,13 +96,14 @@ $root = dirname(__FILE__);
       include_once("modules/view/teams.php");
     }
 
-    if (isset($report['matches'])) $modules['matches'] = "";
+    if (isset($report['regions_data']))
+      include_once("modules/view/regions.php");
 
     if (isset($report['players']))
       include_once("modules/view/participants.php");
 
-    if (isset($report['regions_data']))
-      include("modules/view/regions.php");
+    if (isset($report['matches'])) $modules['matches'] = "";
+
 
     if(empty($mod)) $unset_module = true;
     else $unset_module = false;

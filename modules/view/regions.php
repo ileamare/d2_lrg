@@ -28,6 +28,12 @@ function rg_view_generate_regions() {
 
       if(isset($report['players']))
         include_once("regions/players.php");
+
+      if(isset($report['players']))
+        include_once("regions/participants.php");
+
+      if(isset($report['matches']))
+        include_once("regions/matches.php");
     }
   }
   return $res;

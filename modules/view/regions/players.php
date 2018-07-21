@@ -53,10 +53,16 @@ if(isset($reg_report['player_positions'])) {
 }
 
 $res["region".$region]['players']["summary"] = "";
-include_once("players/summary.php");
-
 if(check_module($parent_mod."summary")) {
+  include_once("players/summary.php");
   $res["region".$region]['players']['summary'] = rg_view_generate_regions_players_summary($region, $reg_report);
+}
+
+$res["region".$region]['players']["cards"] = "";
+if(check_module($parent_mod."cards")) {
+  include_once("$root/modules/view/generators/participants_players.php");
+  $res["region".$region]['players']["cards"] .= "<div class=\"content-text\">".locale_string("desc_participants")."</div>";
+  $res["region".$region]['players']["cards"] .= rg_generator_participants_players($reg_report['players_summary']);
 }
 
 ?>

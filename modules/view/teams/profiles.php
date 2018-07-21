@@ -29,6 +29,18 @@ function rg_view_generate_teams_profiles($context, $context_mod) {
               //"<a href=\"https://www.opendota.com/teams/$tid\">Stratz</a> / ".
               "</div>";
 
+          if(isset($report['teams'][$tid]['regions'])) {
+            asort($report['teams'][$tid]['regions']);
+            $region_line = "";
+            foreach($report['teams'][$tid]['regions'] as $region => $m) {
+              if(!empty($region_line)) $region_line .= ", ";
+              $region_line .= region_link($region)." (".$m.")";
+            }
+            $res["team".$tid]['overview'] .= "<div class=\"content-text\">".locale_string("regions").": ".
+                $region_line.
+                "</div>";
+          }
+
           $res["team".$tid]['overview'] .= "<table id=\"teams-$tid-avg-table\" class=\"list\"> ";
           foreach ($context[$tid]['averages'] as $key => $value) {
             $res["team".$tid]['overview'] .= "<tr><td>".

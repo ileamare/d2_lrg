@@ -12,7 +12,7 @@ $conn = new mysqli($lrg_sql_host, $lrg_sql_user, $lrg_sql_pass, $lrg_sql_db);
 
 if ($conn->connect_error) die("[F] Connection to SQL server failed: ".$conn->connect_error."\n");
 
-$result = array ();
+$result = [];
 $result["league_name"]  = $lg_settings['league_name'];
 $result["league_desc"] = $lg_settings['league_desc'];
 $result['league_id'] = $lg_settings['league_id'];
@@ -21,6 +21,22 @@ $result["league_tag"] = $lrg_league_tag;
 if(compare_ver($lg_settings['version'], $lrg_version) < 0) {
   if (!file_exists("templates/default.json")) die("[F] No default league template found, exitting.");
   $tmp = json_decode(file_get_contents("templates/default.json"), true);
+
+  if(isset($options['T'])) {
+    if (file_exists("templates/".$options['T'].".json"))
+      $tmpl = json_decode(file_get_contents("templates/".$options['T'].".json"), true);
+
+    migrate_params($tmp, $tmpl);
+    unset($tmpl);
+  }
+
+  migrate_params($tmp, $lg_settings);
+  $lg_settings = $tmp;
+  unset($tmp);
+} else if(isset($options['T'])) {
+  if (file_exists("templates/".$options['T'].".json"))
+    $tmp = json_decode(file_get_contents("templates/".$options['T'].".json"), true);
+
   migrate_params($tmp, $lg_settings);
   $lg_settings = $tmp;
   unset($tmp);

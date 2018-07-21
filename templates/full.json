@@ -76,7 +76,33 @@
       "matches": true,
       "team_vs_team" : true
     },
-    "regions": false
+    "regions": {
+      "use_limiter": true,
+      "records" : true,
+      "heroes": {
+        "haverages": true,
+        "draft": true,
+        "pairs": true,
+        "trios": true,
+        "lane_combos": true,
+        "positions": true,
+        "meta_graph": true,
+        "summary": true
+      },
+      "players": {
+        "haverages": true,
+        "draft": true,
+        "positions": true,
+        "pairs": true,
+        "trios": true,
+        "lane_combos": true,
+        "parties_graph": true
+      },
+      "teams": {
+        "summary": true,
+        "cards": true
+      }
+    }
   },
   "web": {
     "custom_style" : "",

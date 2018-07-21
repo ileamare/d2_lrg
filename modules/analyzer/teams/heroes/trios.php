@@ -10,7 +10,7 @@ $sql = "SELECT m1.heroid, m2.heroid, m3.heroid, SUM(1) match_count, SUM(NOT matc
             JOIN matches
               ON m1.matchid = matches.matchid
             JOIN teams_matches
-              ON m1.matchid = teams_matches.matchid
+              ON m1.matchid = teams_matches.matchid AND teams_matches.is_radiant = m1.isRadiant
         WHERE teams_matches.teamid = ".$id."
         GROUP BY m1.heroid, m2.heroid, m3.heroid
         HAVING match_count > $limiter_lower

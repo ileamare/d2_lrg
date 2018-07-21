@@ -151,7 +151,6 @@ function rg_view_generate_teams_profiles($context, $context_mod) {
           if(isset($context[$tid]['hero_triplets']) && !empty($context[$tid]['hero_triplets'])) {
             $res["team".$tid]['heroes']['combos']['trios'] = "";
             if (check_module($parent_module."trios")) {
-              include_once($root."/modules/view/generators/trios.php");
               $res["team".$tid]['heroes']['combos']['trios'] =  "<div class=\"content-text\">".locale_string("desc_heroes_trios", [ "liml"=>$report['settings']['limiter_triplets']+1 ] )."</div>";
               $res["team".$tid]['heroes']['combos']['trios'] .= rg_generator_combos("hero-trios",
                                                  $context[$tid]['hero_triplets'],

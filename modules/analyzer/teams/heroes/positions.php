@@ -41,7 +41,7 @@ for ($core = 0; $core < 2; $core++) {
     $query_res = $conn->store_result();
 
     for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
-      $result["teams"][$id]["hero_positions"][$core][$lane][] = array (
+      $result["teams"][$id]["hero_positions"][$core][$lane][$row[0]] = array (
         "matches_s"=> $row[1],
         "winrate_s"=> $row[2],
         "kills"  => $row[3],

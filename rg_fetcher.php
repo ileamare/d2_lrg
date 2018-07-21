@@ -93,7 +93,7 @@ foreach ($matches as $match) {
       echo("Requesting OpenDota.");
       $matchdata = $opendota->match($match);
       echo("..OK.");
-      if ($matchdata == null || !isset($matchdata['duration'])) {
+      if ($matchdata === FALSE || !isset($matchdata['duration'])) {
           echo("..ERROR: Unable to read JSON skipping.\n");
           //if (!isset($matchdata['duration'])) var_dump($matchdata);
           $failed_matches[sizeof($failed_matches)] = $match;

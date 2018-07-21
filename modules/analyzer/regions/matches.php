@@ -4,7 +4,8 @@ $result["regions_data"][$region]["matches"] = [];
 
 $sql = "SELECT matchid
         FROM matches
-        WHERE matches.cluster IN (".implode(",", $clusters).");";
+        WHERE matches.cluster IN (".implode(",", $clusters).")
+        ORDER BY matchid ASC;";
 
 if ($conn->multi_query($sql) === TRUE);# echo "[S] MATCHES LIST.\n";
 else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");

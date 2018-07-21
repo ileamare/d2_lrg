@@ -26,6 +26,7 @@ if ($conn->connect_error) die("[F] Connection to SQL server failed: ".$conn->con
 
 $lrg_input  = "matchlists/".$lrg_league_tag.".list";
 
+$rnum = 0;
 $matches = array ();
 $failed_matches = array ();
 
@@ -74,7 +75,8 @@ if ($conn->multi_query($sql)) {
 
 foreach ($matches as $match) {
     if (empty($match) || $match[0] == "#") continue;
-    echo("[M] Match $match: ");
+    echo("[$rnum\t] Match $match: ");
+    $rnum++;
 
     $query = $conn->query("SELECT matchid FROM matches WHERE matchid = ".$match.";");
 
@@ -98,7 +100,7 @@ foreach ($matches as $match) {
           continue;
       } else {
         if($matchdata['duration'] < 600) {
-            echo("[ ] Match duration is less than 10 minutes, skipping...\n");
+            echo("..Duration is less than 10 minutes, skipping...\n");
             // Initially it used to be 5 minutes, but sice a lot of stuff is hardly
             // binded with 10 min mark, it's better to use 10 min as a benchmark.
             continue;

@@ -34,6 +34,8 @@ if (!$row[1] || ( $row[1] < $limiter && isset($lg_settings['ana']['regions']['us
       GROUP BY teams_matches.teamid) clt
     ON clt.teamid = teams.teamid;";
 
+
+
   # heroes contested
   $sql .= "SELECT \"heroes_contested\", count(distinct hero_id) FROM draft JOIN matches on draft.matchid = matches.matchid WHERE matches.cluster IN (".implode(",", $clusters).");";
   # heroes picked
@@ -60,6 +62,12 @@ if (!$row[1] || ( $row[1] < $limiter && isset($lg_settings['ana']['regions']['us
 
     $query_res->free_result();
   } while($conn->next_result());
+
+  require("overview/firstlast.php");
+  require("overview/days.php");
+  require("overview/modes.php");
+  require("overview/versions.php");
+
   return 0;
 }
 ?>

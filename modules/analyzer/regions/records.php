@@ -110,13 +110,13 @@ $sql .= "SELECT \"couriers_killed_by_player\" cap, matches.matchid, ml.couriers_
         ORDER BY ml.couriers_killed DESC;";
 
 # couriers killed in game
-$sql .= "SELECT \"couriers_killed_in_game\" cap, matches.matchid, SUM(ml.couriers_killed) cours, 0 ml.playerid, 0 ml.heroid FROM adv_matchlines ml
+$sql .= "SELECT \"couriers_killed_in_game\" cap, matches.matchid, SUM(ml.couriers_killed) cours, 0 playerid, 0 heroid FROM adv_matchlines ml
         JOIN matches on ml.matchid = matches.matchid
         WHERE matches.cluster IN (".implode(",", $clusters).")
         GROUP BY ml.matchid
         ORDER BY cours DESC;";
 # roshans killed in game
-$sql .= "SELECT \"roshans_killed_in_game\" cap, matches.matchid, SUM(ml.roshans_killed) roshs, 0 ml.playerid, 0 ml.heroid FROM adv_matchlines ml
+$sql .= "SELECT \"roshans_killed_in_game\" cap, matches.matchid, SUM(ml.roshans_killed) roshs, 0 playerid, 0 heroid FROM adv_matchlines ml
         JOIN matches on ml.matchid = matches.matchid
         WHERE matches.cluster IN (".implode(",", $clusters).")
         GROUP BY ml.matchid
@@ -138,23 +138,25 @@ $sql .= "SELECT \"shortest_match\" cap, matchid, duration/60, 0 playerid, 0 hero
 $sql .= "SELECT \"widest_hero_pool\" cap, 0 matchid, COUNT(distinct ml.heroid) val, ml.playerid, 0 heroid FROM matchlines ml
         JOIN matches on ml.matchid = matches.matchid
         WHERE matches.cluster IN (".implode(",", $clusters).")
+        GROUP BY ml.playerid
         ORDER BY val DESC;";
 # smallest hero pool
-$sql .= "SELECT \"widest_hero_pool\" cap, 0 matchid, COUNT(distinct ml.heroid) val, ml.playerid, 0 heroid FROM matchlines ml
+$sql .= "SELECT \"smallest_hero_pool\" cap, 0 matchid, COUNT(distinct ml.heroid) val, ml.playerid, 0 heroid FROM matchlines ml
         JOIN matches on ml.matchid = matches.matchid
         WHERE matches.cluster IN (".implode(",", $clusters).")
+        GROUP BY ml.playerid
         ORDER BY val ASC;";
 
 if ($lg_settings['main']['teams']) {
    # widest hero pool team
    $sql .= "SELECT \"widest_hero_pool_team\" cap, 0 matchid, COUNT(distinct ml.heroid) val, teams_matches.teamid, 0 heroid
-            FROM matchlines ml JOIN teams_matches ON matchlines.matchid = teams_matches.matchid AND teams_matches.is_radiant = matchlines.isRadiant
+            FROM matchlines ml JOIN teams_matches ON ml.matchid = teams_matches.matchid AND teams_matches.is_radiant = ml.isRadiant
             JOIN matches on ml.matchid = matches.matchid
             WHERE matches.cluster IN (".implode(",", $clusters).")
             GROUP BY teams_matches.teamid ORDER BY val DESC;";
    # smallest hero pool team
-   $sql .= "SELECT \"smallest_hero_pool_team\" cap, 0 matchid, COUNT(distinct mlheroid) val, teams_matches.teamid, 0 heroid
-            FROM matchlines JOIN teams_matches ON matchlines.matchid = teams_matches.matchid AND teams_matches.is_radiant = matchlines.isRadiant
+   $sql .= "SELECT \"smallest_hero_pool_team\" cap, 0 matchid, COUNT(distinct ml.heroid) val, teams_matches.teamid, 0 heroid
+            FROM matchlines ml JOIN teams_matches ON ml.matchid = teams_matches.matchid AND teams_matches.is_radiant = ml.isRadiant
             JOIN matches on ml.matchid = matches.matchid
             WHERE matches.cluster IN (".implode(",", $clusters).")
             GROUP BY teams_matches.teamid ORDER BY val ASC;";

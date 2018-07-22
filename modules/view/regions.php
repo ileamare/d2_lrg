@@ -24,6 +24,9 @@ function rg_view_generate_regions() {
         $res["region".$region]["overview"] = "";
       }
 
+      if(isset($reg_report['records']))
+        include_once("regions/records.php");
+
       include_once("regions/heroes.php");
 
       if(isset($report['players']))

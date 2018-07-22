@@ -38,7 +38,7 @@ foreach ($regions as $region => $clusters) {
 
     # records
     if (isset($lg_settings['ana']['regions']['records'])) {
-      // TODO
+      require("records.php");
     }
 
     # heroes

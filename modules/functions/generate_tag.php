@@ -20,7 +20,7 @@ function generate_tag($name) {
     for ($i=0, $sz=strlen($name); $i < $sz; $i++) {
       if (ctype_upper($name[$i])) {
         $tag .= $name[$i];
-        if($name[$i+1] != " " && !ctype_upper($name[$i+1]))
+        if(isset($name[$i+1]) && $name[$i+1] != " " && !ctype_upper($name[$i+1]))
           $tag .= $name[$i+1];
       }
     }
@@ -32,6 +32,8 @@ function generate_tag($name) {
       if (ctype_upper($name[$i]))
         $tag .= $name[$i];
     }
+  } else {
+    $tag = "( )";
   }
 
   return $tag;

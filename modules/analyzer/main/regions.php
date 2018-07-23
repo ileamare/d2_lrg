@@ -12,8 +12,9 @@ else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n"
 $query_res = $conn->store_result();
 
 for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
-  $result["regions"][$row[0]] = $row[1];
+  $result["regions"][$row[0]] = (int)$row[1];
 }
 
 $query_res->free_result();
+
 ?>

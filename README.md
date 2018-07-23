@@ -1,5 +1,5 @@
 # Dota 2 League Stats Fetcher and Report Generator
-## Current version: 1.3.2-dev
+## Current version: 2.0.0-beta-dev
 
 **D2LRG** (for short) is a tool for fetching stats for dota matches and forming fancy stats pages with every data you may need.
 
@@ -13,6 +13,7 @@
 * Individual teams stats
 * Interactive meta graphs
 * Mix-tournaments and leagues support
+* Regions stats
 
 Thanks to custom leagues, it can be used as a tool for teams as well. It is possible to fetch data for enemy teams before tournaments, as well as forming stats reports for your own team to make analysis for that.
 
@@ -51,10 +52,10 @@ After getting D2LRG code to your computer, run `php setup.php`. It will install 
 ## How to use
 
 LRG is made of these modules:
-* `rg_init` - Initialises new league database and other resources.
+* `rg_init.php` - Initialises new league database and other resources.
 * `rg_fetcher.php` - Fetches matchdata from OpenDota, adds it to MySQL database (there's no special reason to use it as well).
 * `rg_analyzer.php` - Generates precached report file based on matchdata.
-* `rg_report` - Generates fancy (or not so fancy) report page for rg_analyzer output. Can be used on your webserver as well.
+* `rg_report.php` - Generates fancy (or not so fancy) report page for rg_analyzer output. Can be used on your webserver as well.
 
 Beforehand you should use `setup.php` to initialise settings (like database credentials or Steam API key) file and download dependencies. Just run it and follow instructions.
 
@@ -90,28 +91,33 @@ Analyzes and requests data, forms report file.
 Parameters:
 * `-l / --league=` - required, the tag of your database, league and report file
 * `-K` - ignore OpenDota API key
+* `-T` - merge settings with a template
 
 ### rg_report_web
 
-This file should be put on your webserver, as well as "reports/" folder with all the reports in it and "res/".
+This file (and rg_report_out_settings.php) should be put on your webserver, as well as "reports/" folder with all the reports in it and "res/", "modules/functions" and "modules/view". You will also need to use .htaccess to disable access to modules and settings files.
 
 Settings you can change in it:
 * `$lrg_use_get` - Use GET parameters for opening league files and generating modules, `true` by default
 * `$lrg_get_depth` - Sets module link depth for GET parameters, `2` by default. Modules deeper than this will be fully generated
-* `$locale` - Translation file you will use for your reportm, `"en"` by default
+* `$locale` - Translation file you will use for your report, `"en"` by default
 
+GET parameters:
+* `loc` - Force use of locale
+* `stow` - Force use of custom style
+* `mod` - Module link
+* `league` - Current league report
 
-It can also be used from command line as "php rg_report_web.php > index.html" with following parameters:
-* `-lVALUE` - Open report for league VALUE
-* `-f` - Generate full report (all-in-one HTML file, equivalent of `$lrg_get_depth = 0`)
-* `-dVALUE` - Force module depth, force-sets `$lrg_get_depth` to VALUE
-* `-mVALUE` - Generate module VALUE, equivalent to `?mod=VALUE` in GET request
+It can use custom styles. To use them you need to put a .css file to "res/custom_styles" directory. You can also get some additional information from custom styles library repository: https://github.com/leamare/D2-LRG-Custom-Styles
 
 ## Tools
 
 Tools are additional scripts that can be used for specific things. All of them should be executed from the main directory with command similar to `php tools/%TOOL%.php %PARAMETERS%`.
 
 * `remove_match` - removes match from a league's database. Uses only `-l%TAG%` and `-m%MATCH%` parameters. Example: `php tools/remove_match.php -ltestleague -m1234567891`
+* `remove_matches` - removes matches from a league's database. Uses only `-l%TAG%` and `-f%FNAME%` parameters. Example: `php tools/remove_match.php -ltestleague -flist`
 * `replay_request` - sends API command to OpenDota, requesting every match from a file. Accepts only one arguement: `-f%FILENAME%`. You can use failed matches dump files (from fetcher) with it
 * `clear_database` - removes all data from a league's database. Args: `-l%LEAGUETAG%`
 * `update_league` - updates league parameters to new D2LRG API/leaguefile format. Accepts only `-l%LEAGUETAG%`
+* `remove_cached` - removes cached matches listed in `-f%FNAME%` file.
+* `update_all_report` - updates all reports

@@ -11,6 +11,24 @@ foreach($metadata['clusters'] as $cluster => $region) {
   $regions[$region][] = $cluster;
 }
 
+if(sizeof($result["regions"]) == 1 ||
+    (sizeof($result["regions"]) == 2 && min($result["regions"]) < $limiter*2) )
+  unset($lg_settings['ana']['regions']);
+
+$reg_matches = [];
+foreach($result["regions"] as $clid => $matches) {
+  if(!isset($reg_matches[ $metadata['clusters'][$clid] ]))
+    $reg_matches[ $metadata['clusters'][$clid] ] = $matches;
+  else
+    $reg_matches[ $metadata['clusters'][$clid] ] += $matches;
+}
+
+if(sizeof($reg_matches) == 1 ||
+    (sizeof($reg_matches) == 2 && min($result["regions"]) <= $limiter_graph) ) {
+  unset($lg_settings['ana']['regions']);
+  return false;
+}
+
 foreach ($regions as $region => $clusters) {
     # main stats
     $err = include("overview.php");
@@ -29,7 +47,7 @@ foreach ($regions as $region => $clusters) {
 
     $result["regions_data"][$region]['settings']['limiter_higher'] = (int)ceil($median/6);
     $result["regions_data"][$region]['settings']['limiter_graph'] = (int)ceil($median/3);
-    if($lg_settings['main']['teams']) {
+    if($lg_settings['main']['teams'] && $result["regions_data"][$region]['main']['teams_on_event']) {
         $result["regions_data"][$region]['settings']['limiter_lower'] = (int)ceil($result["regions_data"][$region]['main']['matches']/
                                                               ($result["regions_data"][$region]['main']['teams_on_event']*4));
     } else {

@@ -15,7 +15,7 @@ function rg_generator_summary($table_id, $context, $hero_flag = true) {
           "<th onclick=\"sortTable(".(0+$hero_flag).",'$table_id');\">".locale_string($hero_flag ? "hero" : "player")."</th>";
 
   for($k=0, $end=sizeof($keys); $k < $end; $k++) {
-    $res .= "<th onclick=\"sortTableNum(".($k+$hero_flag).",'$table_id');\">".locale_string($keys[$k])."</th>";
+    $res .= "<th onclick=\"sortTableNum(".($k+1+$hero_flag).",'$table_id');\">".locale_string($keys[$k])."</th>";
   }
   $res .= "</tr>";
 

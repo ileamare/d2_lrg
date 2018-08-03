@@ -1,6 +1,6 @@
 <?php
-if(!function_exists("readline")) {
-    function readline($prompt = null){
+//if(!function_exists("readline")) {
+    function readline_rg($prompt = null){
         if($prompt){
             echo $prompt;
         }
@@ -8,5 +8,9 @@ if(!function_exists("readline")) {
         $line = rtrim(fgets($fp, 1024));
         return $line;
     }
-}
+//} else {
+//  function readline_rg($prompt = null){
+//      return readline($prompt);
+//  }
+//}
 ?>

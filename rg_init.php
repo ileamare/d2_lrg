@@ -10,22 +10,21 @@ if(isset($argv)) {
   $options = getopt("ST:l:N:D:I:", [ "settings", "template", "league", "name", "desc", "id" ]);
 
   if(isset($options['T'])) {
-    if (file_exists("templates/".$options['T'].".json"))
+    if (file_exists("templates/".$options['T'].".json")) {
       $tmp = json_decode(file_get_contents("templates/".$options['T'].".json"), true);
-
-    migrate_params($lg_settings, $tmp);
-    unset($tmp);
+      migrate_params($lg_settings, $tmp);
+      unset($tmp);
+    }
   }
 
-
   if(isset($options['l'])) $lg_settings['league_tag'] = $options['l'];
-  else $lg_settings['league_tag'] = readline(" >  League tag: ");
+  else $lg_settings['league_tag'] = readline_rg(" >  League tag: ");
 
   if(isset($options['N'])) $lg_settings['league_name'] = $options['N'];
-  else $lg_settings['league_name'] = readline(" >  League name: ");
+  else $lg_settings['league_name'] = readline_rg(" >  League name: ");
 
   if(isset($options['D'])) $lg_settings['league_desc'] = $options['D'];
-  else $lg_settings['league_desc'] = readline(" >  League description: ");
+  else $lg_settings['league_desc'] = readline_rg(" >  League description: ");
 
   if(isset($options['I'])) {
     $lg_settings['league_id'] = (int)$options['I'];
@@ -34,7 +33,7 @@ if(isset($argv)) {
 
   if(isset($options['S'])) {
     echo "[ ] Enter parameters below in format \"Parameter = value\".\n    Divide parameters subcategories by a \".\", empty line to exit.\n";
-    while (!empty($st = readline(" >  "))) {
+    while (!empty($st = readline_rg(" >  "))) {
       $st = explode("=", trim($st));
       $val = &$lg_settings;
       $st[0] = explode(".", $st[0]);

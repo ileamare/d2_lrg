@@ -26,7 +26,7 @@ if ($conn->connect_error) die("[F] Connection to SQL server failed: ".$conn->con
 
 $lrg_input  = "matchlists/".$lrg_league_tag.".list";
 
-$rnum = 0;
+$rnum = 1;
 $matches = array ();
 $failed_matches = array ();
 
@@ -360,21 +360,26 @@ foreach ($matches as $match) {
         //if ($matchdata['players'][$j]['lane_role'] == 4) $support_indicators+=2;
         if ($matchdata['players'][$j]['lh_t'][5] <= 6) $support_indicators++;
         if ($matchdata['players'][$j]['lh_t'][3] <= 2) $support_indicators++;
-        if ($matchdata['players'][$j]['obs_placed'] > 1) $support_indicators++;
-        if ($matchdata['players'][$j]['obs_placed'] > 4) $support_indicators++;
+        if ($matchdata['players'][$j]['obs_placed'] > 0) $support_indicators++;
+        if ($matchdata['players'][$j]['obs_placed'] > 3) $support_indicators++;
         if ($matchdata['players'][$j]['obs_placed'] > 8) $support_indicators++;
         if ($matchdata['players'][$j]['obs_placed'] > 12) $support_indicators++;
         if ($matchdata['players'][$j]['sen_placed'] > 6) $support_indicators++;
+        if ($matchdata['players'][$j]['gold_per_min'] < 420 && $matchdata[$k]['win']) $support_indicators++;
         if ($matchdata['players'][$j]['gold_per_min'] < 355) $support_indicators++;
         if ($matchdata['players'][$j]['gold_per_min'] < 290) $support_indicators++;
-        if ($matchdata['players'][$j]['lane_efficiency'] < 0.45) $support_indicators++;
+        if ($matchdata['players'][$j]['lane_efficiency'] < 0.55 && $matchdata[$k]['win']) $support_indicators++;
+        if ($matchdata['players'][$j]['lane_efficiency'] < 0.50) $support_indicators++;
         if ($matchdata['players'][$j]['lane_efficiency'] < 0.35) $support_indicators++;
-        if ($matchdata['players'][$j]['hero_damage']*60/$matchdata['duration'] < 350) $support_indicators++;
-        if ($matchdata['players'][$j]['last_hits']*60/$matchdata['duration'] < 2.2) $support_indicators++;
+        if ($matchdata['players'][$j]['hero_damage']*60/$matchdata['duration'] < 375 && $matchdata[$k]['win']) $support_indicators++;
+        if ($matchdata['players'][$j]['hero_damage']*60/$matchdata['duration'] < 275 && !$matchdata[$k]['win']) $support_indicators++;
+        if ($matchdata['players'][$j]['last_hits']*60/$matchdata['duration'] < 2.5) $support_indicators++;
 
         if ($matchdata['players'][$j]['is_roaming']) {
             $support_indicators+=3;
         }
+
+        # TODO compare to teammates on the same lane/role
 
         if ($support_indicators > 4) $t_adv_matchlines[$i]['is_core'] = 0;
         else $t_adv_matchlines[$i]['is_core'] = 1;
@@ -524,6 +529,9 @@ foreach ($matches as $match) {
             $i++;
         }
     }
+
+
+
     echo "..OK.\n";
 }
 

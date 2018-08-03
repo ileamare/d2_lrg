@@ -55,7 +55,7 @@ foreach ($regions as $region => $clusters) {
     }
 
     # records
-    if (isset($lg_settings['ana']['regions']['records'])) {
+    if ($lg_settings['ana']['records'] && isset($lg_settings['ana']['regions']['records'])) {
       require("records.php");
     }
 

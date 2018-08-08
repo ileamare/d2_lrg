@@ -160,7 +160,7 @@ if ( $update_settings ) {
     }
 
     echo("[ ] Saving settings to `rg_settings.json`...");
-    file_put_contents("rg_settings.json", json_encode($settings)) or die("ERROR\n");
+    file_put_contents("rg_settings.json", json_encode($settings, JSON_PRETTY_PRINT)) or die("ERROR\n");
     echo("OK\n");
 }
 ?>

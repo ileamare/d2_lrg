@@ -3,7 +3,7 @@
     "teams": false
   },
   "ana": {
-    "records":false,
+    "records":true,
     "players":false,
     "matchlist":false,
     "avg_limit": 10,

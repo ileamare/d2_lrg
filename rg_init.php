@@ -52,7 +52,7 @@ if(isset($argv)) {
 $lg_settings['version'] = $lrg_version;
 
 $f = fopen("leagues/".$lg_settings['league_tag'].".json", "w") or die("[F] Couldn't open file to save results. Check working directory for `reports` folder.\n");
-fwrite($f, json_encode($lg_settings));
+fwrite($f, json_encode($lg_settings, JSON_PRETTY_PRINT));
 fclose($f);
 
 echo "[ ] Opening matchlist file\n";

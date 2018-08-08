@@ -365,14 +365,14 @@ foreach ($matches as $match) {
         if ($matchdata['players'][$j]['obs_placed'] > 8) $support_indicators++;
         if ($matchdata['players'][$j]['obs_placed'] > 12) $support_indicators++;
         if ($matchdata['players'][$j]['sen_placed'] > 6) $support_indicators++;
-        if ($matchdata['players'][$j]['gold_per_min'] < 420 && $matchdata[$k]['win']) $support_indicators++;
+        if ($matchdata['players'][$j]['gold_per_min'] < 420 && $matchdata['players'][$j]['win']) $support_indicators++;
         if ($matchdata['players'][$j]['gold_per_min'] < 355) $support_indicators++;
         if ($matchdata['players'][$j]['gold_per_min'] < 290) $support_indicators++;
-        if ($matchdata['players'][$j]['lane_efficiency'] < 0.55 && $matchdata[$k]['win']) $support_indicators++;
+        if ($matchdata['players'][$j]['lane_efficiency'] < 0.55 && $matchdata['players'][$j]['win']) $support_indicators++;
         if ($matchdata['players'][$j]['lane_efficiency'] < 0.50) $support_indicators++;
         if ($matchdata['players'][$j]['lane_efficiency'] < 0.35) $support_indicators++;
-        if ($matchdata['players'][$j]['hero_damage']*60/$matchdata['duration'] < 375 && $matchdata[$k]['win']) $support_indicators++;
-        if ($matchdata['players'][$j]['hero_damage']*60/$matchdata['duration'] < 275 && !$matchdata[$k]['win']) $support_indicators++;
+        if ($matchdata['players'][$j]['hero_damage']*60/$matchdata['duration'] < 375 && $matchdata['players'][$j]['win']) $support_indicators++;
+        if ($matchdata['players'][$j]['hero_damage']*60/$matchdata['duration'] < 275 && !$matchdata['players'][$j]['win']) $support_indicators++;
         if ($matchdata['players'][$j]['last_hits']*60/$matchdata['duration'] < 2.5) $support_indicators++;
 
         if ($matchdata['players'][$j]['is_roaming']) {

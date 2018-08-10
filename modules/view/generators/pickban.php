@@ -56,13 +56,13 @@ function rg_generator_pickban($table_id, $context, $context_total_matches, $hero
   return $res;
 }
 
-function rg_generator_uncontested($context, $contested, $heroes_flag = true) {
+function rg_generator_uncontested($context, $contested, $small = false, $heroes_flag = true) {
   foreach($contested as $id => $el) {
     unset($context[$id]);
   }
   $res = "";
   if(sizeof($context)) {
-    $res .= "<div class=\"content-text\"><h1>".
+    $res .= "<div class=\"content-text ".($small ? "small-heroes" : "")."\"><h1>".
       locale_string($heroes_flag ? "heroes_uncontested" : "players_uncontested").
       ": ".sizeof($context)."</h1><div class=\"hero-list\">";
 

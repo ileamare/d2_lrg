@@ -472,6 +472,13 @@ table .hero_portrait {
   width: 100%;
   font-size: 14px;
 }
+.small-heroes .hero img {
+  height: 54px;
+  width: 96px;
+}
+.small-heroes .hero .hero_name {
+  font-size: 11px;
+}
 
 .content-text .hero-list {
   line-height: 0px;

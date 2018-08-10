@@ -26,6 +26,12 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
 
   $context_total_matches = isset($context['main']['matches_total']) ? $context['main']['matches_total'] : $context['main']['matches'];
 
+  if (isset($context['overview'])) {
+    foreach($context['overview'] as $k => $v) {
+      $context[$k] = $v;
+    }
+  }
+
   $res = "<div class=\"content-text overview overview-head\">";
   $res .= $foreword;
   $res .= "<div class=\"block-content\">";
@@ -37,6 +43,7 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
     $res .= locale_string("over-players", ["num" => $context['main']['players_on_event'] ] )." ";
 
   $res .= "</div><div class=\"block-content\">";
+
 
   if($report['settings']['overview_versions'] && isset($context['versions'])) {
     $mode = reset($context['versions']);
@@ -371,6 +378,9 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
       unset($workspace);
       $res .= "</table>";
   }
+
+  $res .= rg_generator_uncontested($meta['heroes'], $context['pickban'], true);
+
   $res .= "</div>";
 
   if($report['settings']['overview_top_draft']) {

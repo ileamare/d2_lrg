@@ -34,6 +34,6 @@ $level_codes = array(
   6 => array ( "level-7", "level-7" ),
 );
 
-$charts_colors = array( "#6af","#f66","#fa6","#66f","#62f","#a6f","#6ff","#6fa","#2f6","#6f2","#ff6","#f22","#f6f","#666" );
+$charts_colors = array( "#6af","#f66","#fa6","#66f","#62f","#a6f","#6ff","#6fa","#2f6","#6f2","#ff6","#f22","#f6f","#666", "#46f", "#4f6", "#aa3" );
 
 ?>

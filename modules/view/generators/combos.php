@@ -80,7 +80,7 @@ function rg_generator_combos($table_id, $context, $context_matches, $heroes_flag
                       ($heroes_flag ? hero_name($combo[$id.'2']) : player_name($combo[$id.'2'])).
                       ($trios ? " + ".($heroes_flag ? hero_name($combo[$id.'3']) : player_name($combo[$id.'3'])) : "")
                       ."');\">".
-                      locale_string("matches")."</a></th>" :
+                      locale_string("matches")."</a></td>" :
                   "").
             "</tr>";
   }

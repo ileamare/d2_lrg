@@ -23,7 +23,14 @@ $query_res->free_result();
 
 foreach($result['teams'] as $id => $team) {
   # main information
-  require("overview.php");
+  $err = require("overview.php");
+
+  if ($err) {
+    unset($result['teams'][$id]);
+    continue;
+  }
+  $multiplier = $result["teams"][$id]['matches_total'] / $result["random"]['matches_total'];
+
   # averages
   require("averages.php");
   # heroes pickbans

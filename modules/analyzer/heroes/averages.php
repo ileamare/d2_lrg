@@ -17,6 +17,9 @@ $sql .= "SELECT \"xpm\", heroid, SUM(xpm)/SUM(1) value, SUM(1) mtch  FROM matchl
 # last hits per min
 $sql .= "SELECT \"lasthits_per_min\", matchlines.heroid heroid, SUM(matchlines.lastHits/(matches.duration/60))/SUM(1)
            value, SUM(1) mtch  FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
+# last hits
+$sql .= "SELECT \"lasthits\", matchlines.heroid heroid, SUM(matchlines.lastHits)/SUM(1)
+          value, SUM(1) mtch  FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
 # denies
 $sql .= "SELECT \"denies\", heroid, SUM(denies)/SUM(1) value, SUM(1) mtch  FROM matchlines GROUP BY heroid HAVING $limiter_lower < mtch ORDER BY value DESC;";
 

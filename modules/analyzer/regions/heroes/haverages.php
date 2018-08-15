@@ -40,6 +40,13 @@ $sql .= "SELECT \"lasthits_per_min\", matchlines.heroid heroid, SUM(matchlines.l
            FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid
            WHERE matches.cluster IN (".implode(",", $clusters).")
            GROUP BY heroid HAVING ".$result["regions_data"][$region]['settings']['limiter_lower']." < mtch ORDER BY value DESC;";
+# last hits
+$sql .= "SELECT \"lasthits\", matchlines.heroid heroid, SUM(matchlines.lastHits)/SUM(1)
+          value, SUM(1) mtch
+          FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid
+          WHERE matches.cluster IN (".implode(",", $clusters).")
+          GROUP BY heroid HAVING ".$result["regions_data"][$region]['settings']['limiter_lower']." < mtch ORDER BY value DESC;";
+
 # denies
 $sql .= "SELECT \"denies\", heroid, SUM(denies)/SUM(1) value, SUM(1) mtch  FROM matchlines
           JOIN matches ON matchlines.matchid = matches.matchid

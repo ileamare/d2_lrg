@@ -40,6 +40,19 @@ $sql .= "SELECT \"lane_efficiency\", playerid, SUM(efficiency_at10)/SUM(1) value
           FROM adv_matchlines JOIN matches ON adv_matchlines.matchid = matches.matchid
           WHERE matches.cluster IN (".implode(",", $clusters).")
           GROUP BY playerid HAVING $limiter_lower < mtch ORDER BY value DESC;";
+# last hits per min
+$sql .= "SELECT \"lasthits_per_min\", matchlines.playerid heroid, SUM(matchlines.lastHits/(matches.duration/60))/SUM(1)
+           value, SUM(1) mtch
+           FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid
+           WHERE matches.cluster IN (".implode(",", $clusters).")
+           GROUP BY playerid HAVING ".$result["regions_data"][$region]['settings']['limiter_lower']." < mtch ORDER BY value DESC;";
+# last hits
+$sql .= "SELECT \"lasthits\", matchlines.playerid playerid, SUM(matchlines.lastHits)/SUM(1)
+          value, SUM(1) mtch
+          FROM matchlines JOIN matches ON matchlines.matchid = matches.matchid
+          WHERE matches.cluster IN (".implode(",", $clusters).")
+          GROUP BY playerid HAVING ".$result["regions_data"][$region]['settings']['limiter_lower']." < mtch ORDER BY value DESC;";
+
 # denies
 $sql .= "SELECT \"denies\", playerid, SUM(denies)/SUM(1) value, SUM(1) mtch FROM matchlines
           JOIN matches ON matchlines.matchid = matches.matchid

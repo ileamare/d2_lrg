@@ -166,7 +166,8 @@
     "regions": {
       "detailed_overview": true,
       "overview_last_match": true,
-      "overview_first_match": true,
+      "overview_first_match": false,
+      "overview_last_match_winners": true,
       "tvt_grid": true,
       "pvp_grid": true,
       "teams_summary_softgen": true

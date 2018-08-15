@@ -58,6 +58,9 @@ $sql .= "SELECT \"comeback\" cap, matchid, comeback, 0 playerid, 0 heroid FROM m
 # length
 $sql .= "SELECT \"longest_match\" cap, matchid, duration/60, 0 playerid, 0 heroid FROM matches ORDER BY duration DESC;";
 $sql .= "SELECT \"shortest_match\" cap, matchid, duration/60, 0 playerid, 0 heroid FROM matches ORDER BY duration ASC;";
+# kills total
+$sql .= "SELECT \"bloodbath\" cap, m.matchid, SUM(ml.kills) val, 0 playerid, 0 heroid
+          FROM matches m JOIN matchlines ml ON m.matchid = ml.matchid GROUP BY m.matchid ORDER BY val DESC;";
 
 # widest hero pool
 $sql .= "SELECT \"widest_hero_pool\" cap, 0 matchid, COUNT(distinct heroid) val, playerid, 0 heroid FROM matchlines GROUP BY playerid ORDER BY val DESC;";

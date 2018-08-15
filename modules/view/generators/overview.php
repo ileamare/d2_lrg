@@ -27,6 +27,9 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
   if (!isset($context['settings']['limiter_lower'])) $context['settings']['limiter_lower'] = $context['settings']['limiter_triplets'];
   if (!isset($context['settings']['limiter_graph'])) $context['settings']['limiter_graph'] = $context['settings']['limiter_combograph'];
 
+  if (!isset($context['settings']['overview_last_match_winners']))
+    $context['settings']['overview_last_match_winners'] = $report['settings']['overview_last_match_winners'];
+
   $context_total_matches = isset($context['main']['matches_total']) ? $context['main']['matches_total'] : $context['main']['matches'];
 
   if (isset($context['overview'])) {
@@ -99,7 +102,7 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
     $res .= "</div>";
   }
 
-  if($report['settings']['overview_last_match_winners'] || (isset($context['last_match']['mid']) && !isset($context['settings'])) ) {
+  if($context['settings']['overview_last_match_winners'] || (isset($context['last_match']['mid']) && !isset($context['settings'])) ) {
     $res .= "<div class=\"block-content\">";
 
     if( $report['matches_additional'][ $context['last_match']['mid'] ]['radiant_win'] ) {
@@ -215,7 +218,7 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
     $res .= "<div class=\"content-header\">".locale_string("notable_paricipans")."</div>";
     $res .= "<div class=\"content-cards\">";
 
-    if (isset($report['teams']) && $report['settings']['overview_last_match_winners']) {
+    if (isset($report['teams']) && $context['settings']['overview_last_match_winners']) {
       if($report['matches_additional'][ $context['last_match']['mid'] ]['radiant_win']) {
           if (isset( $report['match_participants_teams'][ $context['last_match']['mid'] ]['radiant'] ))
               $tid = $report['match_participants_teams'][ $context['last_match']['mid'] ]['radiant'];
@@ -453,9 +456,10 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
   if($report['settings']['overview_matches']) {
     $res .= "<div class=\"content-header\">".locale_string("notable_matches")."</div>";
     $res .= "<div class=\"content-cards\">";
-    if($report['settings']['overview_first_match'] && isset($context['first_match']))
+
+    if($context['settings']['overview_first_match'] && isset($context['first_match']))
       $res .= "<h1>".locale_string("first_match")."</h1>".match_card($context['first_match']['mid']);
-    if($report['settings']['overview_last_match'] && isset($context['last_match']))
+    if($context['settings']['overview_last_match'] && isset($context['last_match']))
       $res .= "<h1>".locale_string("last_match")."</h1>".match_card($context['last_match']['mid']);
 
     if(isset($context['records'])) {

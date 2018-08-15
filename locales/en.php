@@ -167,6 +167,7 @@
     "smallest_hero_pool_team" => "Team with Smallest Hero Pool",
     "diversity" => "Hero Diversity",
     "common_position" => "Main Position",
+    "bloodbath" => "Bloodbath",
 
     "stomp" => "Networth stomp by a team",
     "comeback" => "Networth comeback by a team",

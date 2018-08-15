@@ -133,6 +133,11 @@ $sql .= "SELECT \"longest_match\" cap, matchid, duration/60, 0 playerid, 0 heroi
           WHERE matches.cluster IN (".implode(",", $clusters).") ORDER BY duration DESC;";
 $sql .= "SELECT \"shortest_match\" cap, matchid, duration/60, 0 playerid, 0 heroid FROM matches
           WHERE matches.cluster IN (".implode(",", $clusters).") ORDER BY duration ASC;";
+# kills total
+$sql .= "SELECT \"bloodbath\" cap, m.matchid, SUM(ml.kills) val, 0 playerid, 0 heroid
+          FROM matches m JOIN matchlines ml ON m.matchid = ml.matchid
+          WHERE m.cluster IN (".implode(",", $clusters).")
+          GROUP BY m.matchid ORDER BY val DESC;";
 
 # widest hero pool
 $sql .= "SELECT \"widest_hero_pool\" cap, 0 matchid, COUNT(distinct ml.heroid) val, ml.playerid, 0 heroid FROM matchlines ml

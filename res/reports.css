@@ -514,9 +514,7 @@ table .hero_portrait {
     background-size: cover;
 }
 
-.overview-head .block-content:first-of-type {
-    color: #fff;
-}
+
 .content-text.overview.overview-head .block-content {
     font-size: inherit;
     line-height: inherit;

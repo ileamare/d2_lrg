@@ -7,7 +7,7 @@ $sql  = "SELECT \"matches_total\", COUNT(matchid) FROM matches;";
 # players on event
 $sql .= "SELECT \"players_on_event\", COUNT(playerID) FROM players;";
 if($lg_settings['main']['teams']) # teams on event
-  $sql .= "SELECT \"teams_on_event\", COUNT(teamid) FROM teams;";
+  $sql .= "SELECT \"teams_on_event\", COUNT(DISTINCT teamid) FROM teams_matches;";
 
 # heroes contested
 $sql .= "SELECT \"heroes_contested\", count(distinct hero_id) FROM draft;";

@@ -1,7 +1,7 @@
 <?php
 include_once("rg_report_out_settings.php");
 include_once("modules/functions/versions.php");
-$lg_version = array( 2, 0, 0, -3, 0 );
+$lg_version = array( 2, 0, 0, -3, 2 );
 
 include_once("modules/functions/locale_strings.php");
 include_once("modules/functions/get_language_code_iso6391.php");

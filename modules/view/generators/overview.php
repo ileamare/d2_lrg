@@ -15,10 +15,13 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
 
   if (!isset($context['main'])) $context['main'] = $context['random'];
 
-  if (empty($modlink)) $prefix = "overview-";
-  else $prefix = $modlink."-";
+  if (empty($modlink)) {
+    $prefix = "overview-";
+  } else {
+    $prefix = $modlink."-";
+    $modlink .= "-";
+  }
 
-  $modlink .= "-";
 
   if (!isset($context['settings']['limiter_higher'])) $context['settings']['limiter_higher'] = $context['settings']['limiter'];
   if (!isset($context['settings']['limiter_lower'])) $context['settings']['limiter_lower'] = $context['settings']['limiter_triplets'];
@@ -96,7 +99,7 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
     $res .= "</div>";
   }
 
-  if($report['settings']['overview_last_match_winners']) {
+  if($report['settings']['overview_last_match_winners'] || (isset($context['last_match']['mid']) && !isset($context['settings'])) ) {
     $res .= "<div class=\"block-content\">";
 
     if( $report['matches_additional'][ $context['last_match']['mid'] ]['radiant_win'] ) {
@@ -430,7 +433,7 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
   }
 
   $res .= "<div class=\"content-text\"><a href=\"?league=$leaguetag&mod=".$modlink.
-            "heroes-draft".(empty($linkvars) ? "" : "&".$linkvars)."heroes-draft\">".locale_string("full_draft").
+            "heroes-draft".(empty($linkvars) ? "" : "&".$linkvars)."\">".locale_string("full_draft").
             "</a> / <a href=\"?league=$leaguetag&mod=".$modlink."heroes-meta_graph".(empty($linkvars) ? "" : "&".$linkvars)."\">".
             locale_string("meta_graph")."</a></div>";
 

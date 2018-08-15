@@ -14,6 +14,8 @@ $result['teams'][$id]['matches_total'] = $row[1];
 
 $query_res->free_result();
 
+if (!$result['teams'][$id]['matches_total']) return 1;
+
 $sql = "SELECT playerid FROM teams_rosters WHERE teamid = ".$id.";";
 
 if ($conn->multi_query($sql) === TRUE);
@@ -41,4 +43,6 @@ for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row(
 }
 
 $query_res->free_result();
+
+return 0;
 ?>

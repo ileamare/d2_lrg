@@ -12,6 +12,8 @@ function rg_view_generate_teams_profiles($context, $context_mod) {
     if(check_module($context_mod."team".$tid)) {
       if($mod == $context_mod."team".$tid) $unset_module = true;
 
+      $multiplier = $report['teams'][$tid]['matches_total'] / $report['random']['matches_total'];
+
       if (isset($context[$tid]['averages'])) {
         $res["team".$tid]['overview'] = "";
 
@@ -120,7 +122,7 @@ function rg_view_generate_teams_profiles($context, $context_mod) {
         $res["team".$tid]['heroes']['meta_graph'] = "";
         if(check_module($context_mod."team".$tid."-heroes-meta_graph")) {
           include_once("$root/modules/view/generators/meta_graph.php");
-          $locale_settings = ["lim" => $report['settings']['limiter_triplets']+1,
+          $locale_settings = ["lim" => ceil($report['settings']['limiter_triplets']*$multiplier)+1,
               "per" => "35%"
           ];
           $res["team".$tid]['heroes']['meta_graph'] = "<div class=\"content-text\">".locale_string("desc_meta_graph", $locale_settings)."</div>";
@@ -140,7 +142,8 @@ function rg_view_generate_teams_profiles($context, $context_mod) {
           if(isset($context[$tid]['hero_pairs'])) {
             $res["team".$tid]['heroes']['combos']['pairs'] = "";
             if (check_module($parent_module."pairs")) {
-              $res["team".$tid]['heroes']['combos']['pairs'] =  "<div class=\"content-text\">".locale_string("desc_heroes_pairs", [ "limh"=>$report['settings']['limiter_triplets']+1 ] )."</div>";
+              $res["team".$tid]['heroes']['combos']['pairs'] =  "<div class=\"content-text\">".locale_string("desc_heroes_pairs",
+                                [ "limh"=> ceil($report['settings']['limiter_triplets']*$multiplier)+1 ] )."</div>";
               $res["team".$tid]['heroes']['combos']['pairs'] .=  rg_generator_combos("hero-pairs",
                                                  $context[$tid]['hero_pairs'],
                                                  (isset($context[$tid]['hero_pairs_matches']) ? $context[$tid]['hero_pairs_matches'] : [])
@@ -151,7 +154,8 @@ function rg_view_generate_teams_profiles($context, $context_mod) {
           if(isset($context[$tid]['hero_triplets']) && !empty($context[$tid]['hero_triplets'])) {
             $res["team".$tid]['heroes']['combos']['trios'] = "";
             if (check_module($parent_module."trios")) {
-              $res["team".$tid]['heroes']['combos']['trios'] =  "<div class=\"content-text\">".locale_string("desc_heroes_trios", [ "liml"=>$report['settings']['limiter_triplets']+1 ] )."</div>";
+              $res["team".$tid]['heroes']['combos']['trios'] =  "<div class=\"content-text\">".locale_string("desc_heroes_trios",
+                                [ "liml"=> ceil($report['settings']['limiter_triplets']*$multiplier)+1 ] )."</div>";
               $res["team".$tid]['heroes']['combos']['trios'] .= rg_generator_combos("hero-trios",
                                                  $context[$tid]['hero_triplets'],
                                                  (isset($context[$tid]['hero_triplets_matches']) ? $context[$tid]['hero_triplets_matches'] : [])

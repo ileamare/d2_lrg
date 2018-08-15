@@ -18,7 +18,7 @@ $sql = "SELECT fm1.heroid, fm2.heroid,
         JOIN teams_matches ON fm1.matchid = teams_matches.matchid AND teams_matches.is_radiant = fm1.isRadiant
         WHERE teams_matches.teamid = ".$id."
         GROUP BY fm1.heroid, fm2.heroid
-        HAVING match_count > $limiter_lower
+        HAVING match_count > ".ceil($limiter_lower*$multiplier)."
         ORDER BY match_count DESC, winrate DESC;";
 # limiting match count for hero pair to 3:
 # 1 match = every possible pair

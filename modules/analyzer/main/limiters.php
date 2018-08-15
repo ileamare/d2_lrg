@@ -9,14 +9,16 @@ foreach($result["pickban"] as $hero)
 $median = calculate_median($picks);
 unset($picks);
 
-$limiter = (int)ceil($median/6);
-$limiter_graph = (int)ceil($median/4);
+$limiter = ceil($median/6);
+//$limiter_graph = (int)ceil($median/4);
 if($lg_settings['main']['teams']) {
     //$report['random']['teams_on_event'];
     //$limiter = (int)ceil($result['random']['matches_total']/($result['random']['teams_on_event']*2));
-    $limiter_lower = (int)ceil($result['random']['matches_total']/($result['random']['teams_on_event']*4));
+    $limiter_lower = ceil($result['random']['matches_total']/($result['random']['teams_on_event']*4));
+    $limiter_graph = $limiter_lower*2;
 } else {
-    $limiter_lower = (int)ceil($median/16);
+    $limiter_lower = ceil($median/16);
+    $limiter_graph = ceil($median/4);
 }
 
 unset($median);

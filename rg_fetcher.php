@@ -11,7 +11,6 @@ include_once("libs/simple-opendota-php/simple_opendota.php");
 
 echo("\nInitialising...\n");
 
-#$file_query = "";
 $conn = new mysqli($lrg_sql_host, $lrg_sql_user, $lrg_sql_pass, $lrg_sql_db);
 $meta = json_decode(file_get_contents('res/metadata.json'), true);
 
@@ -27,8 +26,8 @@ if ($conn->connect_error) die("[F] Connection to SQL server failed: ".$conn->con
 $lrg_input  = "matchlists/".$lrg_league_tag.".list";
 
 $rnum = 1;
-$matches = array ();
-$failed_matches = array ();
+$matches = [];
+$failed_matches = [];
 
 $input_cont = file_get_contents($lrg_input);
 $input_cont = str_replace("\r\n", "\n", $input_cont);
@@ -38,30 +37,25 @@ $matches    = explode("\n", trim($input_cont));
 $matches = array_unique($matches);
 
 $json = "";
-$t_matches = array ();
-$t_matchlines = array();
-$t_adv_matchlines = array ();
-$t_draft = array ();
 if ($lg_settings['main']['teams']) {
-    $t_team_matches = array();
-    $t_teams = array();
+    $t_teams = [];
 
     $sql = "SELECT teamid, name, tag FROM teams";
     if ($conn->multi_query($sql)) {
       $res = $conn->store_result();
 
       while ($row = $res->fetch_row()) {
-        $t_teams[$row[0]] = array(
+        $t_teams[$row[0]] = [
           "name"  => $row[1],
           "tag"   => $row[2],
           "added" => true
-        );
+        ];
       }
       $res->free();
     }
 }
 
-$t_players = array();
+$t_players = [];
 $sql = "SELECT playerid FROM players";
 if ($conn->multi_query($sql)) {
   $res = $conn->store_result();
@@ -74,6 +68,14 @@ if ($conn->multi_query($sql)) {
 
 
 foreach ($matches as $match) {
+    $t_match = [];
+    $t_matchlines = [];
+    $t_adv_matchlines = [];
+    $t_draft = [];
+    if ($lg_settings['main']['teams']) {
+      $t_team_matches = [];
+    }
+
     if (empty($match) || $match[0] == "#") continue;
     echo("[$rnum\t] Match $match: ");
     $rnum++;
@@ -263,21 +265,20 @@ foreach ($matches as $match) {
 
     unset($json);
 
-    $i = sizeof($t_matches);
-    $t_matches[$i]['matchid'] = $match;
-    $t_matches[$i]['version'] = get_patchid($matchdata['start_time'], $matchdata['patch']);
-    $t_matches[$i]['radiantWin'] = $matchdata['radiant_win'];
-    $t_matches[$i]['duration'] = $matchdata['duration'];
-    $t_matches[$i]['modeID'] = $matchdata['game_mode'];
-    $t_matches[$i]['leagueID'] = $matchdata['leagueid'];
-    $t_matches[$i]['cluster']  = $matchdata['cluster'];
-    $t_matches[$i]['date'] = $matchdata['start_time'];
+    $t_match['matchid'] = $match;
+    $t_match['version'] = get_patchid($matchdata['start_time'], $matchdata['patch']);
+    $t_match['radiantWin'] = $matchdata['radiant_win'];
+    $t_match['duration'] = $matchdata['duration'];
+    $t_match['modeID'] = $matchdata['game_mode'];
+    $t_match['leagueID'] = $matchdata['leagueid'];
+    $t_match['cluster']  = $matchdata['cluster'];
+    $t_match['date'] = $matchdata['start_time'];
     if (isset($matchdata['stomp']))
-         $t_matches[$i]['stomp'] = $matchdata['stomp'];
-    else $t_matches[$i]['stomp'] = $matchdata['loss'];
+         $t_match['stomp'] = $matchdata['stomp'];
+    else $t_match['stomp'] = $matchdata['loss'];
     if (isset($matchdata['comeback']))
-         $t_matches[$i]['comeback'] = $matchdata['comeback'];
-    else $t_matches[$i]['comeback'] = $matchdata['throw'];
+         $t_match['comeback'] = $matchdata['comeback'];
+    else $t_match['comeback'] = $matchdata['throw'];
 
     if ($lg_settings['main']['teams'] && (isset($matchdata['radiant_team']) || isset($matchdata['dire_team']))) {
       for($i=0; $i<2; $i++) {
@@ -530,98 +531,121 @@ foreach ($matches as $match) {
         }
     }
 
+    echo "..Recording.";
 
+    $sql = ""; $err_query = "";
 
-    echo "..OK.\n";
-}
+    foreach ($t_players as $id => $player) {
+      if ($player === true) continue;
+      $sql = "INSERT INTO players (playerID, nickname) VALUES (".$id.",\"".addslashes($player)."\");";
+      if ($conn->multi_query($sql) === TRUE) $t_players[$id] = true;
+    }
 
-# recording to database
+    $sql = "INSERT INTO matches (matchid, radiantWin, duration, modeID, leagueID, start_date, stomp, comeback, cluster, version) VALUES "
+      ."(".$t_match['matchid'].",".($t_match['radiantWin'] ? "true" : "false" ).",".$t_match['duration'].","
+      .$t_match['modeID'].",".$t_match['leagueID'].",".$t_match['date'].","
+      .$t_match['stomp'].",".$t_match['comeback'].",".$t_match['cluster'].",".$t_match['version'].");";
+    $err_query = "delete from matches where matchid = ".$t_match['matchid'].";";
 
-if (sizeof($t_matches) == 0) die ("[W] No matches to record, exitting...\n");
+    if ($conn->multi_query($sql) === TRUE);
+    else {
+      echo "ERROR (".$conn->error."), reverting match.\n";
+      $failed_matches[] = $t_match['matchid'];
+      $conn->multi_query($err_query);
+      continue;
+    }
 
-echo "[ ] Collecting players data\n";
-
-$new_players = false;
-
-$sql = "INSERT INTO players (playerID, nickname) VALUES ";
-foreach ($t_players as $id => $player) {
-  if ($player === true) continue;
-  if (!$new_players) $new_players = true;
-  $sql .= "\n\t(".$id.",\"".addslashes($player)."\"),";
-}
-$sql[strlen($sql)-1] = ";";
-
-if ($new_players) {
-    if(isset($file_query)) $file_query .= $sql."\n\n\n";
-    else
-    if ($conn->multi_query($sql) === TRUE) echo "[S] Successfully recorded new players data to database.\n";
-    else die("[F] Unexpected problems when recording to database.\n".$conn->error."\n$sql\n");
-}
-
-$len = sizeof($t_matches);
-$sql = "INSERT INTO matches (matchid, radiantWin, duration, modeID, leagueID, start_date, stomp, comeback, cluster, version) VALUES ";
-for($i = 0; $i < $len; $i++) {
-    $sql .= "\n\t(".$t_matches[$i]['matchid'].",".($t_matches[$i]['radiantWin'] ? "true" : "false" ).",".$t_matches[$i]['duration'].","
-               .$t_matches[$i]['modeID'].",".$t_matches[$i]['leagueID'].",".$t_matches[$i]['date'].","
-               .$t_matches[$i]['stomp'].",".$t_matches[$i]['comeback'].",".$t_matches[$i]['cluster'].",".$t_matches[$i]['version']."),";
-}
-$sql[strlen($sql)-1] = ";";
-
-if(isset($file_query)) $file_query .= $sql."\n\n\n";
-else
-    if ($conn->multi_query($sql) === TRUE) echo "[S] Successfully recorded matches to database.\n";
-    else die("[F] Unexpected problems when recording to database.\n".$conn->error."\n$sql\n");
-
-$sql = " INSERT INTO matchlines (matchid, playerid, heroid, level, isRadiant, kills, deaths, assists, networth,".
-        "gpm, xpm, heal, heroDamage, towerDamage, lastHits, denies) VALUES ";
-$len = sizeof($t_matchlines);
-for($i = 0; $i < $len; $i++) {
-    $sql .= "\n\t(".$t_matchlines[$i]['matchid'].",".$t_matchlines[$i]['playerid'].",".$t_matchlines[$i]['heroid'].",".
-                $t_matchlines[$i]['level'].",".($t_matchlines[$i]['isRadiant'] ? "true" : "false").",".$t_matchlines[$i]['kills'].",".
-                $t_matchlines[$i]['deaths'].",".$t_matchlines[$i]['assists'].",".$t_matchlines[$i]['networth'].",".
-                $t_matchlines[$i]['gpm'].",".$t_matchlines[$i]['xpm'].",".$t_matchlines[$i]['heal'].",".
-                $t_matchlines[$i]['heroDamage'].",".$t_matchlines[$i]['towerDamage'].",".$t_matchlines[$i]['lasthits'].",".
-                $t_matchlines[$i]['denies']."),";
-}
-$sql[strlen($sql)-1] = ";";
-
-if(isset($file_query)) $file_query .= $sql."\n\n\n";
-else
-    if ($conn->multi_query($sql) === TRUE) echo "[S] Successfully recorded matchlines to database.\n";
-    else die("[F] Unexpected problems when recording to database.\n".$conn->error."\n$sql\n");
-
-$sql = " INSERT INTO adv_matchlines (matchid, playerid, heroid, lh_at10, isCore, lane, efficiency_at10, wards, sentries,".
-        "couriers_killed, roshans_killed, wards_destroyed, multi_kill, streak, stacks, time_dead, buybacks, pings, stuns, teamfight_part, damage_taken) VALUES ";
-for($i = 0; $i < $len; $i++) {
-    $sql .= "\n\t(".$t_adv_matchlines[$i]['matchid'].",".$t_adv_matchlines[$i]['playerid'].",".$t_adv_matchlines[$i]['heroid'].",".
-                $t_adv_matchlines[$i]['lh10'].",".$t_adv_matchlines[$i]['is_core'].",".$t_adv_matchlines[$i]['lane'].",".
-                $t_adv_matchlines[$i]['lane_efficiency'].",".$t_adv_matchlines[$i]['observers'].",".$t_adv_matchlines[$i]['sentries'].",".
-                $t_adv_matchlines[$i]['couriers_killed'].",".$t_adv_matchlines[$i]['roshans_killed'].",".$t_adv_matchlines[$i]['wards_destroyed'].",".
-                $t_adv_matchlines[$i]['max_multikill'].",".$t_adv_matchlines[$i]['max_streak'].",".$t_adv_matchlines[$i]['stacks'].",".
-                $t_adv_matchlines[$i]['time_dead'].",".$t_adv_matchlines[$i]['buybacks'].",".$t_adv_matchlines[$i]['pings'].",".
-                $t_adv_matchlines[$i]['stuns'].",".$t_adv_matchlines[$i]['teamfight_part'].",".$t_adv_matchlines[$i]['damage_taken']."),";
-}
-$sql[strlen($sql)-1] = ";";
-
-if(isset($file_query)) $file_query .= $sql."\n\n\n";
-else
-    if ($conn->multi_query($sql) === TRUE) echo "[S] Successfully recorded adv matchlines to database.\n";
-    else die("[F] Unexpected problems when recording to database.\n".$conn->error."\n$sql\n");
-
-if(!empty($t_draft)) {
-    $sql = " INSERT INTO draft (matchid, is_radiant, is_pick, hero_id, stage) VALUES ";
-    $len = sizeof($t_draft);
-    for($i = 0; $i < $len; $i++) {
-        $sql .= "\n\t(".$t_draft[$i]['matchid'].",".($t_draft[$i]['is_radiant'] ? "true" : "false").",".
-                    ($t_draft[$i]['is_pick'] ? "true" : "false").",".
-                    $t_draft[$i]['hero_id'].",".$t_draft[$i]['stage']."),";
+    $sql = " INSERT INTO matchlines (matchid, playerid, heroid, level, isRadiant, kills, deaths, assists, networth,".
+            "gpm, xpm, heal, heroDamage, towerDamage, lastHits, denies) VALUES ";
+    foreach($t_matchlines as $ml) {
+        $sql .= "\n\t(".$ml['matchid'].",".$ml['playerid'].",".$ml['heroid'].",".
+            $ml['level'].",".($ml['isRadiant'] ? "true" : "false").",".$ml['kills'].",".
+            $ml['deaths'].",".$ml['assists'].",".$ml['networth'].",".
+            $ml['gpm'].",".$ml['xpm'].",".$ml['heal'].",".
+            $ml['heroDamage'].",".$ml['towerDamage'].",".$ml['lasthits'].",".
+            $ml['denies']."),";
     }
     $sql[strlen($sql)-1] = ";";
 
-    if(isset($file_query)) $file_query .= $sql."\n\n\n";
-    else
-        if ($conn->multi_query($sql) === TRUE) echo "[S] Successfully recorded draft to database.\n";
-        else die("[F] Unexpected problems when recording to database.\n".$conn->error."\n$sql\n");
+    $err_query = "DELETE from matchlines where matchid = ".$t_match['matchid'].";".$err_query;
+
+    if ($conn->multi_query($sql) === TRUE);
+    else {
+      echo "ERROR (".$conn->error."), reverting match.\n";
+      $failed_matches[] = $t_match['matchid'];
+      $conn->multi_query($err_query);
+      continue;
+    }
+
+    $sql = " INSERT INTO adv_matchlines (matchid, playerid, heroid, lh_at10, isCore, lane, efficiency_at10, wards, sentries,".
+            "couriers_killed, roshans_killed, wards_destroyed, multi_kill, streak, stacks, time_dead, buybacks, pings, stuns, teamfight_part, damage_taken) VALUES ";
+    foreach($t_adv_matchlines as $aml) {
+        $sql .= "\n\t(".$aml['matchid'].",".$aml['playerid'].",".$aml['heroid'].",".
+                    $aml['lh10'].",".$aml['is_core'].",".$aml['lane'].",".
+                    $aml['lane_efficiency'].",".$aml['observers'].",".$aml['sentries'].",".
+                    $aml['couriers_killed'].",".$aml['roshans_killed'].",".$aml['wards_destroyed'].",".
+                    $aml['max_multikill'].",".$aml['max_streak'].",".$aml['stacks'].",".
+                    $aml['time_dead'].",".$aml['buybacks'].",".$aml['pings'].",".
+                    $aml['stuns'].",".$aml['teamfight_part'].",".$aml['damage_taken']."),";
+    }
+    $sql[strlen($sql)-1] = ";";
+
+    $err_query = "DELETE from adv_matchlines where matchid = ".$t_match['matchid'].";".$err_query;
+
+    if ($conn->multi_query($sql) === TRUE);
+    else {
+      echo "ERROR (".$conn->error."), reverting match.\n";
+      $failed_matches[] = $t_match['matchid'];
+      $conn->multi_query($err_query);
+      continue;
+    }
+
+    if(!empty($t_draft)) {
+        $sql = " INSERT INTO draft (matchid, is_radiant, is_pick, hero_id, stage) VALUES ";
+        $len = sizeof($t_draft);
+        for($i = 0; $i < $len; $i++) {
+            $sql .= "\n\t(".$t_draft[$i]['matchid'].",".($t_draft[$i]['is_radiant'] ? "true" : "false").",".
+                        ($t_draft[$i]['is_pick'] ? "true" : "false").",".
+                        $t_draft[$i]['hero_id'].",".$t_draft[$i]['stage']."),";
+        }
+        $sql[strlen($sql)-1] = ";";
+
+        $err_query = "DELETE from draft where matchid = ".$t_match['matchid'].";".$err_query;
+
+        if ($conn->multi_query($sql) === TRUE);
+        else {
+          echo "ERROR (".$conn->error."), reverting match.\n";
+          $failed_matches[] = $t_match['matchid'];
+          $conn->multi_query($err_query);
+          continue;
+        }
+    }
+
+    if ($lg_settings['main']['teams']) {
+      $sql = "INSERT INTO teams_matches (matchid, teamid, is_radiant) VALUES ";
+
+      foreach($t_team_matches as $match) {
+          if($match['is_radiant'] > 1) {
+            echo "[W] Error when adding teams-matches data: is_radiant flag has higher value than 1\n".
+                 "[ ]\t".$match['matchid']." - ".$match['teamid']." - ".$match['is_radiant']."\n";
+                continue;
+          }
+          $sql .= "\n\t(".$match['matchid'].",".$match['teamid'].",".$match['is_radiant']."),";
+      }
+      $sql[strlen($sql)-1] = ";";
+
+      $err_query = "DELETE from teams_matches where matchid = ".$t_match['matchid'].";".$err_query;
+
+      if ($conn->multi_query($sql) === TRUE);
+      else {
+        echo "ERROR (".$conn->error."), reverting match.\n";
+        $failed_matches[] = $t_match['matchid'];
+        $conn->multi_query($err_query);
+        continue;
+      }
+    }
+
+    echo "..OK.\n";
 }
 
 if (sizeof($failed_matches)) {
@@ -639,25 +663,6 @@ if (sizeof($failed_matches)) {
 }
 
 if ($lg_settings['main']['teams']) {
-  echo "[ ] Adding new team matches\n";
-
-  $sql = "INSERT INTO teams_matches (matchid, teamid, is_radiant) VALUES ";
-
-  foreach($t_team_matches as $match) {
-      if($match['is_radiant'] > 1) {
-        echo "[W] Error when adding teams-matches data: is_radiant flag has higher value than 1\n".
-             "[ ]\t".$match['matchid']." - ".$match['teamid']." - ".$match['is_radiant']."\n";
-            continue;
-      }
-      $sql .= "\n\t(".$match['matchid'].",".$match['teamid'].",".$match['is_radiant']."),";
-  }
-  $sql[strlen($sql)-1] = ";";
-
-  if(isset($file_query)) $file_query .= $sql."\n\n\n";
-    else
-    if ($conn->multi_query($sql) === TRUE) echo "[S] Successfully recorded new team matches data to database.\n";
-    else die("[F] Unexpected problems when recording to database.\n".$conn->error."\n");
-
   echo "[ ] Adding teams data\n";
 
   $newteams = array();
@@ -672,8 +677,6 @@ if ($lg_settings['main']['teams']) {
     }
     $sql[strlen($sql)-1] = ";";
 
-    if(isset($file_query)) $file_query .= $sql."\n\n\n";
-    else
         if ($conn->multi_query($sql) === TRUE) echo "[S] Successfully recorded new teams data to database.\n";
         else die("[F] Unexpected problems when recording to database.\n".$conn->error."\n");
 
@@ -703,8 +706,6 @@ if ($lg_settings['main']['teams']) {
         $sql[strlen($sql)-1] = ";";
         $sql = "INSERT INTO teams_rosters (teamid, playerid, position) VALUES ".$sql;
 
-        if(isset($file_query)) $file_query .= $sql."\n\n\n";
-        else
             if ($conn->multi_query($sql) === TRUE) echo "[S] Successfully recorded new teams rosters to database.\n";
             else die("[F] Unexpected problems when recording to database.\n".$conn->error."\n");
       }
@@ -715,14 +716,6 @@ if ($lg_settings['main']['teams']) {
   # teamID, playerID, position
 } else {
   echo "[ ] Skipping team stats for PvP competition\n";
-}
-
-if (isset($file_query)) {
-  $f = fopen("query.sql", "w");
-  fwrite($f, $file_query);
-  fclose($f);
-
-  echo "[S] Recorded SQL query to file.\n";
 }
 
 echo "[S] Fetch complete.\n";

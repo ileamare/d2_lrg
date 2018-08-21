@@ -1,7 +1,7 @@
 <?php
 include_once("rg_report_out_settings.php");
 include_once("modules/functions/versions.php");
-$lg_version = array( 2, 0, 0, -3, 2 );
+$lg_version = array( 2, 0, 0, -3, 10 );
 
 include_once("modules/functions/locale_strings.php");
 include_once("modules/functions/get_language_code_iso6391.php");
@@ -37,13 +37,11 @@ if ($lrg_use_get) {
   $locale = GetLanguageCodeISO6391();
 
   if(isset($_GET['league']) && !empty($_GET['league'])) {
-    if(file_exists("reports/report_".$_GET['league'].".json")) {
-      $leaguetag = $_GET['league'];
-      if($lrg_get_depth > 0) {
-        if(isset($_GET['mod'])) $mod = $_GET['mod'];
-        else $mod = "";
-      }
-    } else $leaguetag = "";
+    $leaguetag = $_GET['league'];
+    if($lrg_get_depth > 0) {
+      if(isset($_GET['mod'])) $mod = $_GET['mod'];
+      else $mod = "";
+    }
   } else $leaguetag = "";
 
   if(isset($_GET['loc']) && !empty($_GET['loc'])) {
@@ -68,11 +66,25 @@ for($i=0,$sz=sizeof($linkvars); $i<$sz; $i++)
   $linkvars[$i] = implode($linkvars[$i], "=");
 $linkvars = implode($linkvars, "&");
 
-if (!empty($leaguetag)) {
-  $output = "";
 
-  $report = file_get_contents("reports/report_".$leaguetag.".json") or die("[F] Can't open $teaguetag, probably no such report\n");
-  $report = json_decode($report, true);
+if (!empty($leaguetag)) {
+  if(file_exists($reports_dir."/".$report_mask_search[0].$leaguetag.$report_mask_search[1])) {
+    $report = file_get_contents($reports_dir."/".$report_mask_search[0].$leaguetag.$report_mask_search[1])
+        or die("[F] Can't open $teaguetag, probably no such report\n");
+    $report = json_decode($report, true);
+  } else {
+    $lightcache = true;
+    include_once("modules/view/__open_cache.php");
+    if(isset($cache['reps'][$leaguetag]['file'])) {
+      $report = file_get_contents($reports_dir."/".$cache['reps'][$leaguetag]['file'])
+          or die("[F] Can't open $teaguetag, probably no such report\n");
+      $report = json_decode($report, true);
+    }
+  }
+}
+
+if (isset($report)) {
+  $output = "";
 
   $meta = file_get_contents("res/metadata.json") or die("[F] Can't open metadata\n");
   $meta = json_decode($meta, true);
@@ -111,51 +123,51 @@ if (!empty($leaguetag)) {
   $h3 = array_rand($report['random']);
 
 
-# overview
-if (check_module("overview")) {
-  merge_mods($modules['overview'], rg_view_generate_overview());
-}
-
-# records
-if (isset($modules['records']) && check_module("records")) {
-  merge_mods($modules['records'], rg_view_generate_records());
-}
-
-# heroes
-if (isset($modules['heroes']) && check_module("heroes")) {
-  merge_mods($modules['heroes'], rg_view_generate_heroes());
-}
-
-# players
-if (isset($modules['players']) && check_module("players")) {
-  merge_mods($modules['players'], rg_view_generate_players());
-}
-
-# teams
-if (isset($modules['teams']) && check_module("teams")) {
-  merge_mods($modules['teams'], rg_view_generate_teams());
-}
-
-if (isset($modules['regions']) && check_module("regions")) {
-  merge_mods($modules['regions'], rg_view_generate_regions());
-}
-
-# matches
-if (isset($modules['matches']) && check_module("matches")) {
-  $modules['matches'] = "<div class=\"content-text\">".locale_string("desc_matches")."</div>";
-  $modules['matches'] .= "<div class=\"content-cards\">";
-  foreach($report['matches'] as $matchid => $match) {
-    $modules['matches'] .= match_card($matchid);
+  # overview
+  if (check_module("overview")) {
+    merge_mods($modules['overview'], rg_view_generate_overview());
   }
-  $modules['matches'] .= "</div>";
-}
 
-# participants
-if(isset($modules['participants']) && check_module("participants")) {
-  merge_mods($modules['participants'], rg_view_generate_participants());
-}
+  # records
+  if (isset($modules['records']) && check_module("records")) {
+    merge_mods($modules['records'], rg_view_generate_records());
+  }
+
+  # heroes
+  if (isset($modules['heroes']) && check_module("heroes")) {
+    merge_mods($modules['heroes'], rg_view_generate_heroes());
+  }
+
+  # players
+  if (isset($modules['players']) && check_module("players")) {
+    merge_mods($modules['players'], rg_view_generate_players());
+  }
+
+  # teams
+  if (isset($modules['teams']) && check_module("teams")) {
+    merge_mods($modules['teams'], rg_view_generate_teams());
+  }
+
+  if (isset($modules['regions']) && check_module("regions")) {
+    merge_mods($modules['regions'], rg_view_generate_regions());
+  }
+
+  # matches
+  if (isset($modules['matches']) && check_module("matches")) {
+    $modules['matches'] = "<div class=\"content-text\">".locale_string("desc_matches")."</div>";
+    $modules['matches'] .= "<div class=\"content-cards\">";
+    foreach($report['matches'] as $matchid => $match) {
+      $modules['matches'] .= match_card($matchid);
+    }
+    $modules['matches'] .= "</div>";
+  }
+
+  # participants
+  if(isset($modules['participants']) && check_module("participants")) {
+    merge_mods($modules['participants'], rg_view_generate_participants());
+  }
 } else {
-
+  include_once("modules/view/index.php");
 }
 ?>
 <!DOCTYPE html>
@@ -242,90 +254,20 @@ if(isset($modules['participants']) && check_module("participants")) {
         <div id="image-logo"></div>
       <?php } ?>
       </div>
-      <div id="main-section" class="content-section">
-<?php
-
-if (!empty($custom_content)) echo "<br />".$custom_content;
-
-$output = join_selectors($modules, 0);
-
-echo $output;
-
-?>
-        </div>
     <?php } else { ?>
       <div id="header-image" class="section-header">
         <h1><?php echo  $instance_name; ?></h1>
       </div>
+    <?php } ?>
       <div id="main-section" class="content-section">
         <?php
-        $dir = scandir("reports");
+          if (!empty($custom_content)) echo "<br />".$custom_content;
 
-        if (sizeof($dir) < 3) {
-          echo "<div id=\"content-top\">".
-            "<div class=\"content-header\">".locale_string("empty_instance_cap")."</div>".
-            "<div class=\"content-text\">".locale_string("empty_instance_desc").".</div>".
-          "</div>";
-        } else {
-          echo "<div id=\"content-top\">".
-            "<div class=\"content-header\">".locale_string("noleague_cap")."</div>".
-            "<div class=\"content-text\">".locale_string("noleague_desc").":</div>".
-          "</div>";
+          $output = join_selectors($modules, 0);
 
-          echo "<table id=\"leagues-list\" class=\"list wide\"><tr class=\"thead\">
-            <th onclick=\"sortTable(0,'leagues-list');\">".locale_string("league_name")."</th>
-            <th onclick=\"sortTableNum(1,'leagues-list');\">".locale_string("league_id")."</th>
-            <th>".locale_string("league_desc")."</th>
-            <th onclick=\"sortTableNum(3,'leagues-list');\">".locale_string("matches_total")."</th>
-            <th onclick=\"sortTableValue(4,'leagues-list');\">".locale_string("start_date")."</th>
-            <th onclick=\"sortTableValue(5,'leagues-list');\">".locale_string("end_date")."</th></tr>";
-
-          $reports = array();
-
-          foreach($dir as $report) {
-              if($report[0] == ".")
-                  continue;
-              $name = str_replace("report_", "", $report);
-              $name = str_replace(".json", "", $name);
-
-              $f = fopen("reports/report_".$name.".json","r");
-              $file = fread($f, 400);
-
-              $head = json_decode("[\"".preg_replace("/{\"league_name\":\"(.+)\"\,\"league_desc\":(.*)/", "$1", $file)."\"]");
-              $desc = json_decode("[\"".preg_replace("/{\"league_name\":\"(.+)\"\,\"league_desc\":\"(.+)\",\"league_id\":(.+),\"league_tag\":(.*)/", "$2", $file)."\"]");
-
-              $reports[] = array(
-                "name" => $name,
-                "head" => array_pop($head),
-                "desc" => array_pop($desc),
-                "id" => preg_replace("/{\"league_name\":\"(.+)\"\,\"league_desc\":\"(.+)\",\"league_id\":(.+),\"league_tag\":(.*)/", "$3", $file),
-                "std" => (int)preg_replace("/(.*)\"first_match\":\{(.*)\"date\":\"(\d+)\"\},\"last_match\"(.*)/i", "$3 ", $file),
-                "end" => (int)preg_replace("/(.*)\"last_match\":\{(.*)\"date\":\"(\d+)\"\},\"random\"(.*)/i", "$3 ", $file),
-                "total" => (int)preg_replace("/(.*)\"random\":\{(.*)\"matches_total\":\"(\d+)\",\"(.*)/i", "$3 ", $file)
-              );
-          }
-
-          uasort($reports, function($a, $b) {
-            if($a['end'] == $b['end']) {
-              if($a['std'] == $b['std']) return 0;
-              else return ($a['std'] < $b['std']) ? 1 : -1;
-            } else return ($a['end'] < $b['end']) ? 1 : -1;
-          });
-
-          foreach($reports as $report) {
-            echo "<tr><td><a href=\"?league=".$report['name'].(empty($linkvars) ? "" : "&".$linkvars)."\">".$report['head']."</a></td>".
-              "<td>".($report['id'] == "null" ? "-" : $report['id'])."</td>".
-              "<td>".$report['desc']."</td>".
-              "<td>".$report['total']."</td>".
-              "<td value=\"".$report['std']."\">".date(locale_string("date_format"), $report['std'])."</td>".
-              "<td value=\"".$report['end']."\">".date(locale_string("date_format"), $report['end'])."</td></tr>";
-          }
-
-          echo "</table>";
-        }
+          echo $output;
         ?>
       </div>
-    <?php } ?>
     </div>
       <footer>
         <a href="https://dota2.com" target="_blank" rel="noopener">Dota 2</a> is a registered trademark of <a href="https://valvesoftware.com" target="_blank" rel="noopener">Valve Corporation.</a>

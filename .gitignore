@@ -12,6 +12,7 @@ rg_settings.json
 # Temporary files
 tmp*
 ___*
+_default.json
 
 # Testing files
 test/
@@ -22,3 +23,6 @@ gi_*
 
 # Custom Styles
 res/custom_styles/*
+
+# cachelist
+cachelist.json

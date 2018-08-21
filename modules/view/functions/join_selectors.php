@@ -1,6 +1,8 @@
 <?php
 
 function join_selectors($modules, $level, $parent="") {
+  if (!is_array($modules)) return $modules;
+
   global $lrg_use_get;
   global $lrg_get_depth;
   global $level_codes;

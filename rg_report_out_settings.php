@@ -31,4 +31,16 @@ $noleague_style = "";
 $instance_title = "LRG";
 $instance_name = "League Report Generator Instance";
 
+# main page settings
+$reports_dir = "reports";
+$report_mask = "/(.*)\/?report_(.*)\.json/";
+$report_mask_search = ["report_", ".json"];
+
+$cache_file = "res/cachelist.json";
+$cats_file = "res/meowslist.json";
+
+$hidden_cat = "hidden";
+
+$index_list = true;
+
 ?>

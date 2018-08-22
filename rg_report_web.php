@@ -52,6 +52,10 @@ if ($lrg_use_get) {
     $override_style = $_GET['stow'];
     $linkvars[] = array("stow", $_GET['stow']);
   }
+  if(isset($_GET['cat']) && !empty($_GET['cat'])) {
+    $cat = $_GET['cat'];
+    //$linkvars[] = array("cat", $_GET['cat']);
+  } //else $cat = "";
 }
 
 require_once('locales/en.php');
@@ -90,6 +94,11 @@ if (isset($report)) {
   $meta = json_decode($meta, true);
 
   include_once("modules/view/__post_load.php");
+
+  if(isset($report['settings']['custom_style']) && file_exists("res/custom_styles/".$report['settings']['custom_style'].".css"))
+    $custom_style = $report['settings']['custom_style'];
+  if(isset($report['settings']['custom_logo']) && file_exists("res/custom_styles/logos/".$report['settings']['custom_logo'].".css"))
+    $custom_logo = $report['settings']['custom_logo'];
 
   $modules = [];
   # module => array or ""
@@ -154,6 +163,7 @@ if (isset($report)) {
 
   # matches
   if (isset($modules['matches']) && check_module("matches")) {
+    krsort($report['matches']);
     $modules['matches'] = "<div class=\"content-text\">".locale_string("desc_matches")."</div>";
     $modules['matches'] .= "<div class=\"content-cards\">";
     foreach($report['matches'] as $matchid => $match) {
@@ -192,17 +202,16 @@ if (isset($report)) {
     <?php
           if(isset($override_style) && file_exists("res/custom_styles/".$override_style.".css"))
               echo "<link href=\"res/custom_styles/".$override_style.".css\" rel=\"stylesheet\" type=\"text/css\" />";
-          else if(isset($report['settings']['custom_style']) && file_exists("res/custom_styles/".$report['settings']['custom_style'].".css"))
-              echo "<link href=\"res/custom_styles/".$report['settings']['custom_style'].".css\" rel=\"stylesheet\" type=\"text/css\" />";
+          else if(isset($custom_style))
+              echo "<link href=\"res/custom_styles/".$custom_style.".css\" rel=\"stylesheet\" type=\"text/css\" />";
           else {
-
             if(empty($leaguetag) && !empty($noleague_style))
               echo "<link href=\"res/custom_styles/".$noleague_style.".css\" rel=\"stylesheet\" type=\"text/css\" />";
             else if(!empty($default_style))
               echo "<link href=\"res/custom_styles/".$default_style.".css\" rel=\"stylesheet\" type=\"text/css\" />";
           }
-          if(isset($report['settings']['custom_logo']) && file_exists("res/custom_styles/logos/".$report['settings']['custom_logo'].".css"))
-              echo "<link href=\"res/custom_styles/logos/".$report['settings']['custom_logo'].".css\" rel=\"stylesheet\" type=\"text/css\" />";
+          if(isset($custom_logo))
+              echo "<link href=\"res/custom_styles/logos/".$custom_logo.".css\" rel=\"stylesheet\" type=\"text/css\" />";
           if($use_graphjs) {
             echo "<script type=\"text/javascript\" src=\"res/dependencies/Chart.bundle.min.js\"></script>";
           }
@@ -228,37 +237,36 @@ if (isset($report)) {
        ?>
       <div class="share-links">
         <?php
-          echo '<div class="share-link reddit"><a href="https://www.reddit.com/submit?url='.htmlspecialchars('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].
-            (empty($_SERVER['QUERY_STRING']) ? "" : '?'.$_SERVER['QUERY_STRING'])
-          ).'" target="_blank" rel="noopener">Share on Reddit</a></div>';
-          echo '<div class="share-link twitter"><a href="https://twitter.com/share?text=League+Report:+'.$leaguetag.'+'.htmlspecialchars('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].
-            (empty($_SERVER['QUERY_STRING']) ? "" : '?'.$_SERVER['QUERY_STRING'])
-          ).'" target="_blank" rel="noopener">Share on Twitter</a></div>';
-          echo '<div class="share-link vk"><a href="https://vk.com/share.php?url='.htmlspecialchars('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].
-            (empty($_SERVER['QUERY_STRING']) ? "" : '?'.$_SERVER['QUERY_STRING'])
-          ).'" target="_blank" rel="noopener">Share on VK</a></div>';
-          echo '<div class="share-link fb"><a href="https://www.facebook.com/sharer/sharer.php?u='.htmlspecialchars('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].
-            (empty($_SERVER['QUERY_STRING']) ? "" : '?'.$_SERVER['QUERY_STRING'])
-          ).'" target="_blank" rel="noopener">Share on Facebook</a></div>';
+          echo '<div class="share-link reddit"><a href="https://www.reddit.com/submit?url='.htmlspecialchars('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).
+            '" target="_blank" rel="noopener">Share on Reddit</a></div>';
+          echo '<div class="share-link twitter"><a href="https://twitter.com/share?text=League+Report:+'.$leaguetag.'+'.htmlspecialchars('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).
+            '" target="_blank" rel="noopener">Share on Twitter</a></div>';
+          echo '<div class="share-link vk"><a href="https://vk.com/share.php?url='.htmlspecialchars('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).
+            '" target="_blank" rel="noopener">Share on VK</a></div>';
+          echo '<div class="share-link fb"><a href="https://www.facebook.com/sharer/sharer.php?u='.htmlspecialchars('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).
+            '" target="_blank" rel="noopener">Share on Facebook</a></div>';
         ?>
       </div>
     </header>
     <div id="content-wrapper">
-    <?php if (!empty($leaguetag)) { ?>
       <div id="header-image" class="section-header">
-      <?php if(empty($report['settings']['custom_logo'])) {?>
+    <?php if (!empty($leaguetag)) { ?>
+      <?php if(!isset($custom_logo)) {?>
         <h1><?php echo $report['league_name']; ?></h1>
         <h2><?php echo $report['league_desc']; ?></h2>
         <h3><?php echo locale_string($h3).": ".$report['random'][$h3]; ?></h3>
       <?php } else { ?>
         <div id="image-logo"></div>
       <?php } ?>
-      </div>
     <?php } else { ?>
-      <div id="header-image" class="section-header">
-        <h1><?php echo  $instance_name; ?></h1>
-      </div>
+        <?php if(!isset($custom_logo)) {?>
+          <h1><?php echo $head_name; ?></h1>
+          <h2><?php if(isset($head_desc)) echo $head_desc; ?></h2>
+        <?php } else { ?>
+          <div id="image-logo"></div>
+        <?php } ?>
     <?php } ?>
+    </div>
       <div id="main-section" class="content-section">
         <?php
           if (!empty($custom_content)) echo "<br />".$custom_content;

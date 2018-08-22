@@ -203,10 +203,14 @@
     "heal_per_min_s" => "Heal/min",
     "taken_damage_per_min_s" => "Taken HD/min",
 
-    "noleague_cap" => "Reports List",
-    "noleague_desc" => "This instance contains these reports",
+    "noleague_cap" => "Lastest Reports",
+    "noleague_desc" => "Freshly updated reports",
     "empty_instance_cap" => "Empty instance",
     "empty_instance_desc" => "This instance contains no reports",
+    "main_reports" => "Reports List",
+    "all_reports" => "All Reports",
+    "noreports" => "No Reports",
+    "noreports_desc" => "No reports available for selected tag",
     "start_date" => "Start date",
     "end_date" => "End date",
 

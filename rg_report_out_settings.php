@@ -41,6 +41,6 @@ $cats_file = "res/meowslist.json";
 
 $hidden_cat = "hidden";
 
-$index_list = true;
+$index_list = 5; #-1 all, 0 none, other - number of reports on main page
 
 ?>

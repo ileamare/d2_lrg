@@ -2,7 +2,7 @@
 
 function flat_rscandir($dirname) {
   $dir = scandir($dirname);
-  $folders = [];
+  $subfolders = [];
 
   foreach ($dir as $k => &$v) {
     if($v[0] == ".") {
@@ -10,17 +10,15 @@ function flat_rscandir($dirname) {
       continue;
     }
     if(is_dir($dirname."/".$v)) {
-      $folders[$v] = flat_rscandir($dirname."/".$v);
+      $folder = flat_rscandir($dirname."/".$v);
+      foreach($folder as $file) {
+        $subfolders[] = $v."/".$file;
+      }
       unset($dir[$k]);
     }
   }
 
-  foreach($folders as $k => $v) {
-    foreach($v as &$file)
-      $file = $k."/".$file;
-
-    $dir = array_merge($dir, $v);
-  }
+  $dir = array_merge($dir, $subfolders);
 
   sort($dir);
 

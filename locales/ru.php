@@ -207,10 +207,14 @@
     "heal_per_min_s" => "Леч/мин",
     "taken_damage_per_min_s" => "ПУГ/мин",
 
-    "noleague_cap" => "Список отчётов",
-    "noleague_desc" => "На этом сервере доступны следующие отчёты",
+    "noleague_cap" => "Последние отчёты",
+    "noleague_desc" => "Последние обновлённые отчёты",
     "empty_instance_cap" => "Нет отчётов",
     "empty_instance_desc" => "На этом сервере нет отчётов",
+    "main_reports" => "Список отчётов",
+    "all_reports" => "Все отчёты",
+    "noreports" => "Нет отчётов",
+    "noreports_desc" => "Для выбранной категории не найдено подходящих отчётов",
     "start_date" => "Дата начала",
     "end_date" => "Дата окончания",
 

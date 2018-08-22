@@ -4,9 +4,10 @@
     "names_locales": { "ru": "LAN финалы" },
     "filters": [
       [ [ 0, "/_lan$/" ] ],
-      [ [ 0, "/_final(s?)/" ] ],
+      [ [ 0, "/_fina?l?s?/" ] ],
       [ [ 1, "/LAN/" ] ],
-      [ [ 1, "/final(s?)/" ] ]
+      [ [ 1, "/final(s?)/" ] ],
+      [ [ 2, "/final(s?)/" ] ]
     ]
   },
   "qualis": {
@@ -70,7 +71,7 @@
     "name": "Other Tournaments",
     "names_locales": { "ru": "Прочие турниры" },
     "filters": [
-      [ [ 0, "/^summit9$/" ] ],
+      [ [ 0, "/^summit9/" ] ],
       [ [ 0, "/^midas_mode$/" ] ],
       [ [ 0, "/^galaxy_battles/" ] ],
       [ [ 0, "/^wesg/" ] ]
@@ -90,7 +91,9 @@
   },
   "hidden": {
     "filters": [
-      [ [2, "/^\\.\\.\\.$/"] ]
+      [ [2, "/^\\.\\.\\.$/"] ],
+      [ [0, "/^_(.*)$/"] ],
+      [ [0, "/^(.*)_hid$/"] ]
     ]
   }
 }

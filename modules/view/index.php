@@ -111,7 +111,7 @@ if (sizeof($cache['reps']) === 0) {
     "<th>".locale_string("league_desc")."</th>".
     "<th ".(isset($cat) ? "onclick=\"sortTableNum(3,'leagues-list');" : "")."\">".locale_string("matches_total")."</th>".
     "<th ".(isset($cat) ? "onclick=\"sortTableValue(4,'leagues-list');" : "")."\">".locale_string("start_date")."</th>".
-    "<th ".(isset($cat) ? "onclick=\"sortTableValue(4,'leagues-list');" : "")."\">".locale_string("end_date")."</th></th>";
+    "<th ".(isset($cat) ? "onclick=\"sortTableValue(5,'leagues-list');" : "")."\">".locale_string("end_date")."</th></th>";
 
   uasort($reps, function($a, $b) {
     if($a['last_match']['date'] == $b['last_match']['date']) {

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $dir = flat_rscandir($reports_dir);
 
@@ -12,6 +12,8 @@ foreach($dir as $fname) {
           $cache['files'][$fname][2] != filemtime($full_fname) ||
           !isset($cache['reps'][ $cache['files'][$fname][0] ])
         ) {
+        if(isset($cache['reps'][ $cache['files'][$fname][0] ]))
+          unset($cache['reps'][ $cache['files'][$fname][0] ]);
         $cache_update = true;
         $tmp = file_get_contents($full_fname);
         $tmp = json_decode($tmp, true);

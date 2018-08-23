@@ -58,7 +58,9 @@
     "name": "The Internationals",
     "filters": [
       [ [ 0, "/^ti(\\d+)(_lan)?$/" ] ]
-    ]
+    ],
+    "custom_style": "pro_circuit",
+    "custom_logo": "ti"
   },
   "fpl": {
     "name": "FaceIT Pro League",
@@ -93,7 +95,8 @@
     "filters": [
       [ [2, "/^\\.\\.\\.$/"] ],
       [ [0, "/^_(.*)$/"] ],
-      [ [0, "/^(.*)_hid$/"] ]
+      [ [0, "/^(.*)_hid$/"] ],
+      [ [12, "hidden"] ]
     ]
   }
 }

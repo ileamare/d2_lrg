@@ -415,7 +415,7 @@ footer {
 footer a, footer a:active, footer a:visited, footer a:focus {
   color: #948787;
 }
-.share-links {
+.share-links, .locale-changer {
   margin: 15px 0;
   float: right;
   font-size: 0;
@@ -450,4 +450,15 @@ footer a, footer a:active, footer a:visited, footer a:focus {
 }
 .share-links .share-link.fb {
   background-position: -99px;
+}
+.select-locale {
+  height: 33px;
+  margin-top: 2px;
+  margin-right: 8px;
+  font-size: 15px;
+  text-align: center;
+  width: 100px;
+  background: #373737;
+  color: #fff;
+  border: none;
 }

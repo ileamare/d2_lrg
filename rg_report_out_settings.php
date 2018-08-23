@@ -4,6 +4,11 @@
 $lrg_use_get = true;
 $lrg_get_depth = 6;
 $locale = "en";
+$locales = [
+  "en" => "English",
+  "ru" => "Русский"
+];
+
 $max_tabs = 12;
 
 $mod = "";

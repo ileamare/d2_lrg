@@ -247,6 +247,27 @@ if (isset($report)) {
             '" target="_blank" rel="noopener">Share on Facebook</a></div>';
         ?>
       </div>
+      <div class="locale-changer">
+        <?php
+        $link = substr($_SERVER['REQUEST_URI'], strrpos($_SERVER['REQUEST_URI'], "/")+1);
+          echo '<select onchange="select_modules_link(this);" class="select-locale">';
+          foreach($locales as $loc => $lname) {
+            $loc = str_replace(".json", "", $loc);
+            if($loc == $locale)
+             echo '<option selected>'.$lname.'</option>';
+            else
+             echo '<option value="'.(
+                 empty($link) ? "?loc=$loc" : (
+                     preg_match("/([\&\?])loc=(.+?)/", $link) ?
+                     str_replace("loc=$locale", "loc=$loc", $link) :
+                     $link."&loc=$loc"
+                   )
+               ).'">'.$lname.'</option>';
+          }
+          echo '</select>';
+
+        ?>
+      </div>
     </header>
     <div id="content-wrapper">
       <div id="header-image" class="section-header">

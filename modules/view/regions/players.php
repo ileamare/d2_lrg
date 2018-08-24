@@ -52,6 +52,10 @@ if(isset($reg_report['player_positions'])) {
   }
 }
 
+if(isset($reg_report['pvp']) || isset($report['pvp'])) {
+  include_once("players/pvp.php");
+}
+
 $res["region".$region]['players']["summary"] = "";
 if(check_module($parent_mod."summary")) {
   include_once("players/summary.php");

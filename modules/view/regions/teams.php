@@ -12,7 +12,7 @@ if (check_module($parent_mod."summary")) {
   $res["region".$region]['teams']['summary'] .= rg_view_generator_teams_summary($reg_report['teams']);
 }
 
-if($reg_report['settings']['tvt_grid']) {
+if(isset($reg_report['settings']['tvt_grid']) && $reg_report['settings']['tvt_grid']) {
   $res["region".$region]['teams']['grid'] = "";
   if (check_module($parent_mod."grid")) {
     include_once("$root/modules/view/generators/tvt_unwrap_data.php");

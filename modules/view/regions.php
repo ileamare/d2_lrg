@@ -32,7 +32,10 @@ function rg_view_generate_regions() {
       if(isset($report['players']))
         include_once("regions/players.php");
 
-      if(isset($report['players']))
+      if(isset($reg_report['teams']))
+        include_once("regions/teams.php");
+
+      if(isset($report['players']) || isset($report['teams']))
         include_once("regions/participants.php");
 
       if(isset($report['matches']))

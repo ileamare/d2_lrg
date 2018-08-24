@@ -435,10 +435,16 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
           );
   }
 
-  $res .= "<div class=\"content-text\"><a href=\"?league=$leaguetag&mod=".$modlink.
+  $res .= "<div class=\"content-text\">".
+            "<a href=\"?league=$leaguetag&mod=".$modlink.
+            "heroes-pickban".(empty($linkvars) ? "" : "&".$linkvars)."\">".locale_string("pickban").
+            "</a> / ".
+            "<a href=\"?league=$leaguetag&mod=".$modlink.
             "heroes-draft".(empty($linkvars) ? "" : "&".$linkvars)."\">".locale_string("full_draft").
-            "</a> / <a href=\"?league=$leaguetag&mod=".$modlink."heroes-meta_graph".(empty($linkvars) ? "" : "&".$linkvars)."\">".
-            locale_string("meta_graph")."</a></div>";
+            "</a> / ".
+            "<a href=\"?league=$leaguetag&mod=".$modlink."heroes-meta_graph".(empty($linkvars) ? "" : "&".$linkvars)."\">".
+            locale_string("meta_graph")."</a>".
+          "</div>";
 
   if(!isset($report['teams']) && $report['settings']['overview_top_player_pairs'] && isset($context['player_pairs']) && !empty($context['player_pairs'])) {
     $res .= rg_generator_overview_combos($prefix."player-pairs",

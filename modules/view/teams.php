@@ -10,8 +10,8 @@ function rg_view_generate_teams() {
 
   $res['summary'] = "";
   if (check_module($parent."summary")) {
-    include_once("teams/summary.php");
-    $res['summary'] = rg_view_generate_teams_summary();
+    include_once("$root/modules/view/generators/teams_summary.php");
+    $res['summary'] = rg_view_generator_teams_summary();
   }
 
   $res['grid'] = "";

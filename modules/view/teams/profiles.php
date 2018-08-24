@@ -1,9 +1,15 @@
 <?php
 
-function rg_view_generate_teams_profiles($context, $context_mod) {
+function rg_view_generate_teams_profiles($context, $context_mod, $foreword = "") {
   global $mod, $root, $strings, $unset_module, $report;
   $res = [];
   if($mod == substr($context_mod, 0, strlen($context_mod)-1)) $unset_module = true;
+
+  if(!is_array(array_values($context)[0])) {
+    foreach($context as $team_id => &$content) {
+      $content = $report['teams'][$team_id];
+    }
+  }
 
   foreach ($context as $tid => $team) {
     $res['team'.$tid] = [];
@@ -24,6 +30,7 @@ function rg_view_generate_teams_profiles($context, $context_mod) {
             "dire_wr"
           ];
 
+          $res["team".$tid]['overview'] .= $foreword;
           $res["team".$tid]['overview'] .= "<div class=\"content-cards\">".team_card($tid, true)."</div>";
           $res["team".$tid]['overview'] .= "<div class=\"content-text\">".
               "<a href=\"https://www.dotabuff.com/esports/teams/$tid\">Dotabuff</a> / ".

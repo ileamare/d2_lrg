@@ -1,14 +1,17 @@
 <?php
 include_once("$root/modules/view/functions/links.php");
 
-function rg_view_generate_teams_summary() {
+function rg_view_generator_teams_summary($context = null) {
   global $report;
+
+  if($context == null) $context = array_keys($report['teams']);
+  else $context = array_keys($context);
 
   $res  = "<div class=\"content-text\">".locale_string("desc_teams_summary")."</div>";
 
-  uasort($report['teams'], function($a, $b) {
-    if($a['matches_total'] == $b['matches_total']) return 0;
-    else return ($a['matches_total'] < $b['matches_total']) ? 1 : -1;
+  uasort($context, function($a, $b) use ($report) {
+    if($report['teams'][$a]['matches_total'] == $report['teams'][$b]['matches_total']) return 0;
+    else return ($report['teams'][$a]['matches_total'] < $report['teams'][$b]['matches_total']) ? 1 : -1;
   });
 
   $percentages = [
@@ -47,11 +50,11 @@ function rg_view_generate_teams_summary() {
 
   $res .= "</tr>";
 
-  foreach($report['teams'] as $team_id => $team) {
+  foreach($context as $team_id) {
     $res .= "<tr>".
               "<td>".team_link($team_id)."</td>".
-              "<td>".$team['matches_total']."</td>".
-              "<td>".number_format($team['wins']*100/$team['matches_total'],2)."%</td>";
+              "<td>".$report['teams'][$team_id]['matches_total']."</td>".
+              "<td>".number_format($report['teams'][$team_id]['wins']*100/$report['teams'][$team_id]['matches_total'],2)."%</td>";
 
     foreach($team['averages'] as $k => $v) {
         $res .= "<td>".

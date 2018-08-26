@@ -1,6 +1,7 @@
 {
   "web": {
     "overview_last_match_winners" : false,
-    "overview_last_match" : false
+    "overview_last_match" : false,
+    "overview_teams_summary_short": false
   }
 }

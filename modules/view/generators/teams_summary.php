@@ -1,13 +1,16 @@
 <?php
 include_once("$root/modules/view/functions/links.php");
 
-function rg_view_generator_teams_summary($context = null) {
+function rg_view_generator_teams_summary($context = null, $short_flag = false) {
   global $report;
 
   if($context == null) $context = array_keys($report['teams']);
   else $context = array_keys($context);
 
-  $res  = "<div class=\"content-text\">".locale_string("desc_teams_summary")."</div>";
+  if ($short_flag)
+    $res = "";
+  else
+    $res  = "<div class=\"content-text\">".locale_string("desc_teams_summary")."</div>";
 
   uasort($context, function($a, $b) use ($report) {
     if($report['teams'][$a]['matches_total'] == $report['teams'][$b]['matches_total']) return 0;
@@ -29,7 +32,17 @@ function rg_view_generator_teams_summary($context = null) {
     "avg_match_len" => "duration"
   ];
 
-  $res .= "<table id=\"teams-summary\" class=\"list wide\">";
+  $short = [
+    "kills",
+    "deaths",
+    "assists",
+    "gpm",
+    "xpm",
+    "hero_pool",
+    "avg_match_len"
+  ];
+
+  $res .= "<table id=\"teams-summary\" class=\"list ".($short_flag ? "" : "wide")."\">";
 
   foreach($report['teams'] as $team_id => $team) {
     $keys = array_keys($team['averages']);
@@ -44,6 +57,9 @@ function rg_view_generator_teams_summary($context = null) {
             "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("matches_s")."</th>".
             "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("winrate")."</th>";
   foreach($keys as $k) {
+    if($short_flag) {
+      if(!in_array($k, $short)) continue;
+    }
     if (isset($aliases[$k])) $k = $aliases[$k];
       $res .= "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string($k)."</th>";
   }
@@ -57,13 +73,16 @@ function rg_view_generator_teams_summary($context = null) {
               "<td>".number_format($report['teams'][$team_id]['wins']*100/$report['teams'][$team_id]['matches_total'],2)."%</td>";
 
     foreach($report['teams'][$team_id]['averages'] as $k => $v) {
-        $res .= "<td>".
-                number_format($v*(in_array($k, $percentages) ? 100 : 1),
-                  ($v > 1000) ? 0 : (
-                      ($v > 100) ? 1 : 2
-                    )
-                  ).
-                (in_array($k, $percentages) ? "%" : "")."</td>";
+      if($short_flag) {
+        if(!in_array($k, $short)) continue;
+      }
+      $res .= "<td>".
+              number_format($v*(in_array($k, $percentages) ? 100 : 1),
+                ($v > 1000) ? 0 : (
+                    ($v > 100) ? 1 : 2
+                  )
+                ).
+              (in_array($k, $percentages) ? "%" : "")."</td>";
     }
     $res .= "</tr>";
   }

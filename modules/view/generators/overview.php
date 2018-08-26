@@ -1,6 +1,6 @@
 <?php
 include "overview_sections.php";
-
+include_once("$root/modules/view/generators/teams_summary.php");
 /*
 
 ?league=$leaguetag&mod=$modlink".(empty($linkvars) ? "" : "&".$linkvars)."
@@ -306,7 +306,7 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
 
     $res .= "<div class=\"content-text\"><a href=\"?league=$leaguetag&mod=$modlink".
             "participants".(empty($linkvars) ? "" : "&".$linkvars)."\">".locale_string("full_participants").
-        "</a> / <a href=\"?league=$leaguetag&mod=".$modlink."records".
+        "</a> / <a href=\"?league=$leaguetag&mod=records".
         (empty($linkvars) ? "" : "&".$linkvars)."\">".locale_string("full_records").
         "</a></div>";
     $res .= "</div>";
@@ -315,6 +315,14 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
   if (isset($context['records']) && isset($report['settings']['overview_include_records']) && $report['settings']['overview_include_records']) {
     $res .= "<div class=\"content-header\">".locale_string("records")."</div>";
     $res .= rg_view_generate_records($context);
+  }
+
+  if($report['settings']['overview_teams_summary_short']) {
+    $res .= "<div class=\"content-header\">".locale_string("teams")."</div>";
+    $res .= rg_view_generator_teams_summary($context['teams'], true);
+    $res .= "<div class=\"content-text\"><a href=\"?league=$leaguetag&mod=teams".
+        (empty($linkvars) ? "" : "&".$linkvars)."\">".locale_string("full_teams_info").
+        "</a></div>";
   }
 
   $res .= "<div class=\"content-header\">".locale_string("draft")."</div>";

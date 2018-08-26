@@ -274,6 +274,8 @@
     "desc_participants" => "This page contains all basic data about league participants (players or teams) as cards. To find match with specific player or team use document inner search (usually Ctrl+F).",
     "desc_matches" => "All basic data about matches in this league is available as match cards on this page. To find match with specific team, player, hero or region use document inner search (usually Ctrl+F).",
     "desc_roster" => "This page contains basic information about the team's active roster.",
+    "desc_teams_summary_softgen" => "This section uses teams data based on full report.",
+    "desc_players_summary_softgen" => "This section uses players data based on full report.",
 
     "limiter_h" => "Higher limiter",
     "limiter_l" => "Lower limiter",
@@ -287,6 +289,7 @@
     "full_hero_combos" => "Full hero combinations stats",
     "full_player_combos" => "Full player combinations stats",
     "full_matches" => "All matches",
+    "full_teams_info" => "Detailed teams information",
 
     "lane" => "Lane",
     "lane_0" => "",

@@ -101,6 +101,27 @@ Settings you can change in it:
 * `$lrg_use_get` - Use GET parameters for opening league files and generating modules, `true` by default
 * `$lrg_get_depth` - Sets module link depth for GET parameters, `2` by default. Modules deeper than this will be fully generated
 * `$locale` - Translation file you will use for your report, `"en"` by default
+* `$locales` - List of locales, available for choosing by user. Every value is recorded in format `"locale tag" => "Locale name"`
+* `$max_tabs` - Maximum amount of links shown before it gets replaced by <select>
+* `$custom_head` - Custom text and tags that will be used in <head>
+* `$custom_body` - Custom text and tags that will be used in <body>
+* `$custom_content` - Custom text that's placed before actual generated content
+* `$custom_footer` - Additional text that will be added to <footer>
+* `$title_links` - List of links in title bar. Values are arrays `[ "link" => "http...", "title" => "Lorem Ipsum", "text" => "Text" ]`
+* `$main_path` - Link to an adress that should be opened by clicking top left icon in title bar
+* `$default_style` - Custom style used by default
+* `$noleague_style` - Custom style used if no report is selected
+* `$instance_title` - Instance title
+* `$instance_name` - Instance description
+* `$reports_dir` - Path to reports' directory
+* `$report_mask` - Mask for finding report files in directory
+* `$report_mask_search` - Left and right parts of default report's filename
+* `$cache_file` - Path to cache file
+* `$cats_file` - Path to categories file
+* `$hidden_cat` - Category that will be used as "hidden": reports that apply for it will not be shown in main list
+* `$index_list` - Number of reports on main page. `-1` is equal to showing all reports, positive number is equal to showing a chosen number of reports, zero is equal for not showing any reports
+
+If cache file is specified, it will be generated at first page load and then every time any report changes. While generating, it opens every report and creates a descriptor for it, so it may take a while at first.
 
 GET parameters:
 * `loc` - Force use of locale
@@ -109,6 +130,25 @@ GET parameters:
 * `league` - Current league report
 
 It can use custom styles. To use them you need to put a .css file to "res/custom_styles" directory. You can also get some additional information from custom styles library repository: https://github.com/leamare/D2-LRG-Custom-Styles
+
+Categories file is a simple JSON configuration file. If it is specified and it exists, categories will be loaded and then applied to every report on instance. There is an example of categories config available, but essentially it looks like this:
+```json
+{
+  "category_tag": {
+    "name": "Category Name",
+    "names_locales": { "ru": "Category name for a specific locale" },
+    "desc": "Category Description",
+    "desc_locales": { "ru": "Category description for a specific locale" },
+    "filters": [
+      [ [ 0, "value" ] ]
+    ],
+    "custom_style": "custom style",
+    "custom_logo": "custom logo"
+  }
+}
+```
+
+All category filters types are listed in `modules/view/functions/check_filters.php`. First level filters are applied with logical OR, second level filters are applied with logical AND.
 
 ## Tools
 
@@ -120,4 +160,5 @@ Tools are additional scripts that can be used for specific things. All of them s
 * `clear_database` - removes all data from a league's database. Args: `-l%LEAGUETAG%`
 * `update_league` - updates league parameters to new D2LRG API/leaguefile format. Accepts only `-l%LEAGUETAG%`
 * `remove_cached` - removes cached matches listed in `-f%FNAME%` file.
-* `update_all_report` - updates all reports
+* `update_all_reports` - updates all reports
+* `backport_matchlist` - generates full matchlist based on league's database 

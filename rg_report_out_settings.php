@@ -11,8 +11,6 @@ $locales = [
 
 $max_tabs = 12;
 
-$mod = "";
-
 $custom_head = "";
 
 $custom_body = "";

@@ -56,7 +56,7 @@ function rg_view_generator_teams_summary($context = null) {
               "<td>".$report['teams'][$team_id]['matches_total']."</td>".
               "<td>".number_format($report['teams'][$team_id]['wins']*100/$report['teams'][$team_id]['matches_total'],2)."%</td>";
 
-    foreach($team['averages'] as $k => $v) {
+    foreach($report['teams'][$team_id]['averages'] as $k => $v) {
         $res .= "<td>".
                 number_format($v*(in_array($k, $percentages) ? 100 : 1),
                   ($v > 1000) ? 0 : (

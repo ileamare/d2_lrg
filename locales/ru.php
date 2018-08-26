@@ -168,7 +168,7 @@
     "smallest_hero_pool" => "Игрок с наименьшим пулом героев",
     "widest_hero_pool_team" => "Команда с наибольшим пулом героев",
     "smallest_hero_pool_team" => "Команда с наименьшим пулом героев",
-    "diversity" => "Гибкость игрока",
+    "diversity" => "Гибкость",
     "common_position" => "Основная позиция",
     "bloodbath" => "Кровавая баня",
 

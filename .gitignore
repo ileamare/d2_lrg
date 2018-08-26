@@ -11,7 +11,8 @@ rg_settings.json
 
 # Temporary files
 tmp*
-__*
+___*
+_default.json
 
 # Testing files
 test/
@@ -19,3 +20,9 @@ test*.php
 output
 gi_*
 .htaccess
+
+# Custom Styles
+res/custom_styles/*
+
+# cachelist
+cachelist.json

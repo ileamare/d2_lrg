@@ -37,6 +37,7 @@ a, a:active, a:visited, a:focus {
   line-height: inherit;
 	color: #fff;
   text-decoration: none;
+  cursor: pointer;
 }
 
 a:hover {
@@ -55,6 +56,12 @@ a:hover {
   /* background-image: url('header.jpg'); */
   background-image: url('header_grafenium.jpg');
   background-size: cover;
+}
+
+#image-logo {
+  height: 438px;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .section-header h1 {
@@ -198,7 +205,7 @@ a:hover {
 
   font-size: 18px;
 }
-.selector-modules-level-4 {
+.selector-modules-level-4, .selector-modules-level-5, .selector-modules-level-6, .selector-modules-level-7 {
 	text-align: center;
 
   border-top: 1px solid #464646;
@@ -408,7 +415,7 @@ footer {
 footer a, footer a:active, footer a:visited, footer a:focus {
   color: #948787;
 }
-.share-links {
+.share-links, .locale-changer {
   margin: 15px 0;
   float: right;
   font-size: 0;
@@ -443,4 +450,15 @@ footer a, footer a:active, footer a:visited, footer a:focus {
 }
 .share-links .share-link.fb {
   background-position: -99px;
+}
+.select-locale {
+  height: 33px;
+  margin-top: 2px;
+  margin-right: 8px;
+  font-size: 15px;
+  text-align: center;
+  width: 100px;
+  background: #373737;
+  color: #fff;
+  border: none;
 }

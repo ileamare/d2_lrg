@@ -1,6 +1,8 @@
 <?php
 
 function calculate_median($arr) {
+    if(!is_array($arr)) return false;
+    if(!sizeof($arr)) return 0;
     rsort($arr);
 
     $count = count($arr);

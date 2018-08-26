@@ -85,7 +85,7 @@
          "name":"Windranger"
       },
       "22":{
-         "tag":"zuus",
+         "tag":"zeus",
          "name":"Zeus"
       },
       "23":{
@@ -453,12 +453,16 @@
          "name":"Monkey King"
       },
       "119":{
-         "tag":"sylph",
+         "tag":"dark_willow",
          "name":"Dark Willow"
       },
       "120":{
-         "tag":"pangolin",
+         "tag":"pangolier",
          "name":"Pangolier"
+      },
+      "121":{
+        "tag": "grimstroke",
+        "name": "Grimstroke"
       }
    },
    "items":{
@@ -732,14 +736,6 @@
       "1019":"winter_greevil_garbage",
       "1020":"winter_greevil_chewy"
    },
-   "lanes":[
-      "",
-      "Safelane",
-      "Midlane",
-      "Offlane",
-      "Jungle",
-      "Roaming"
-   ],
    "modes":{
       "0":"Unknown",
       "1":"All Pick",
@@ -777,7 +773,7 @@
       "5":"Southeast Asia",
       "6":"Dubai",
       "7":"Australia",
-      "8":"Russia",
+      "8":"Russia and CIS",
       "9":"Europe East",
       "10":"South America",
       "11":"South Africa",
@@ -835,12 +831,12 @@
       "204":"10",
       "213":"11",
       "214":"11",
-      "223":"18",
+      "223":"12",
       "224":"12",
-      "225":"17",
-      "227":"20",
-      "231":"13",
-      "232":"25",
+      "225":"12",
+      "227":"12",
+      "231":"12",
+      "232":"12",
       "241":"14",
       "242":"14",
       "251":"15",
@@ -849,7 +845,7 @@
    "versions":{
       "0":"6.70",
       "19":"7.00",
-      "33":"7.14/7.15",
-      "34":"7.16"
+      "33":"7.14/15",
+      "34":"7.15"
    }
 }

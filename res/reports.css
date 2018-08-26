@@ -84,9 +84,6 @@ table.list-small caption {
   margin-top: auto;
   margin-bottom: auto;
 }
-table.list-small tr th:first-child {
-  width: 55%;
-}
 table.wide {
   width: 98%;
 }
@@ -246,6 +243,15 @@ table .hero_portrait {
 .team-card:hover {
   max-height: 4000px;
   /* TODO any better ideas? */
+}
+.team-card.full {
+  max-height: none;
+}
+.player-card.full {
+  max-height: none;
+}
+.match-card.full {
+  max-height: none;
 }
 .match-card *, .player-card *, .team-card * {
   font-size: inherit;
@@ -466,6 +472,13 @@ table .hero_portrait {
   width: 100%;
   font-size: 14px;
 }
+.small-heroes .hero img {
+  height: 54px;
+  width: 96px;
+}
+.small-heroes .hero .hero_name {
+  font-size: 11px;
+}
 
 .content-text .hero-list {
   line-height: 0px;
@@ -501,9 +514,7 @@ table .hero_portrait {
     background-size: cover;
 }
 
-.overview-head .block-content:first-of-type {
-    color: #fff;
-}
+
 .content-text.overview.overview-head .block-content {
     font-size: inherit;
     line-height: inherit;
@@ -518,4 +529,28 @@ table .hero_portrait {
 }
 .left-placing {
     text-align: left;
+}
+
+.tagslist {
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.tagslist .category {
+  display: inline-block;
+  background-color: #323232;
+  width: 280px;
+  font-size: 18px;
+  text-align: center;
+  padding: 8px 0;
+  font-family: 'Radiance-SemiBold';
+  text-shadow: 2px 2px 6px #000000;
+  margin: 10px;
+  transition: 200ms all ease;
+}
+.tagslist .category:hover {
+  background-color: #464646;
+}
+.tagslist .category.active {
+  background-color: #525353;
 }

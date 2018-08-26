@@ -36,6 +36,21 @@ function compare_major_ver($v1, $v2) {
    return -1;
 }
 
+function compare_release_ver($v1, $v2) {
+  if ($v1[0] == $v2[0] && $v1[1] == $v2[1] && $v1[2] == $v2[2])
+    return 0;
+  if ($v1[0] > $v2[0] ||
+        ($v1[0] == $v2[0] && $v1[1] > $v2[1]) ||
+        ($v1[0] == $v2[0] && $v1[1] == $v2[1] && $v1[2] > $v2[2])
+      )
+   return 1;
+  if ($v1[0] < $v2[0] ||
+        ($v1[0] == $v2[0] && $v1[1] < $v2[1]) ||
+        ($v1[0] == $v2[0] && $v1[1] == $v2[1] && $v1[2] < $v2[2])
+      )
+   return -1;
+}
+
 function parse_ver($ver) {
   $res = $ver[0].".".$ver[1].".".$ver[2];
   if ($ver[3] < 0) {

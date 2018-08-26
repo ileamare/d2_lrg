@@ -1,0 +1,102 @@
+{
+  "lans": {
+    "name": "LAN finals",
+    "names_locales": { "ru": "LAN финалы" },
+    "filters": [
+      [ [ 0, "/_lan$/" ] ],
+      [ [ 0, "/_fina?l?s?/" ] ],
+      [ [ 1, "/LAN/" ] ],
+      [ [ 1, "/final(s?)/" ] ],
+      [ [ 2, "/final(s?)/" ] ]
+    ]
+  },
+  "qualis": {
+    "name": "Qualifiers",
+    "names_locales": { "ru": "Квалификации" },
+    "filters": [
+      [ [ 0, "/_quali(s?)/" ] ],
+      [ [ 1, "/Qualifiers/" ] ]
+    ]
+  },
+  "ti8": {
+    "name": "The International 8",
+    "filters": [
+      [ [ 12, "ti8" ] ]
+    ],
+    "custom_style": "ti8",
+    "custom_logo": "ti8"
+  },
+  "pro_circuit": {
+    "name": "Pro Circuit",
+    "filters": [
+      [ [ 0, "/pro_circuit/" ], [4, 1504224000] ],
+      [ [ 2, "/Pro Circuit/" ], [4, 1504224000] ],
+      [ [ 0, "/^ti(\\d+)$/"], [4, 1504224000]]
+    ],
+    "custom_style": "pro_circuit"
+  },
+  "ranked": {
+    "name": "Ranked Meta Trends",
+    "names_locales": { "ru": "Тренды рейтинговых матчей" },
+    "desc": "Ranked Meta Trends for Immortal (ex. high Divine 5) Rank",
+    "desc_locales": { "ru": "Тренды рейтинговых матчей на ранге Immortal (Divine 5)" },
+    "filters": [
+      [ [ 0, "/div5_ranked_/" ] ],
+      [ [ 0, "/imm_ranked_/" ] ]
+    ],
+    "custom_style": "ranked"
+  },
+  "pro_circuit_2017_2018": {
+    "name": "Pro Circuit 2017-2018",
+    "filters": [
+      [ [ 2, "/Pro Circuit/" ], [4, 1504224000], [5, 1535760000] ],
+      [ [ 0, "/^ti8$/" ] ]
+    ],
+    "custom_style": "pro_circuit"
+  },
+  "tis": {
+    "name": "The Internationals",
+    "filters": [
+      [ [ 0, "/^ti(\\d+)(_lan)?$/" ] ]
+    ],
+    "custom_style": "pro_circuit",
+    "custom_logo": "ti"
+  },
+  "fpl": {
+    "name": "FaceIT Pro League",
+    "filters": [
+      [ [ 0, "/fpl/" ] ]
+    ],
+    "custom_style": "fpl"
+  },
+  "other": {
+    "name": "Other Tournaments",
+    "names_locales": { "ru": "Прочие турниры" },
+    "filters": [
+      [ [ 0, "/^summit9/" ] ],
+      [ [ 0, "/^midas_mode$/" ] ],
+      [ [ 0, "/^galaxy_battles/" ] ],
+      [ [ 0, "/^wesg/" ] ]
+    ]
+  },
+  "test2": {
+    "name": "Test Cat",
+    "names_locales": { "en": "Test Meow", "ru": "Тестовый Мяу" },
+    "desc": "testing cats",
+    "desc_locales": { "en": "Testing Meows", "ru": "Тестируем Мяу" },
+    "filters": [
+      [ [ 12, "ti8" ] ],
+      [ [ 12, "lans" ] ]
+    ],
+    "custom_style": "sa",
+    "hidden": true
+  },
+  "hidden": {
+    "filters": [
+      [ [2, "/^\\.\\.\\.$/"] ],
+      [ [0, "/^_(.*)$/"] ],
+      [ [0, "/^(.*)_hid$/"] ],
+      [ [12, "hidden"] ]
+    ]
+  }
+}

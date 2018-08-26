@@ -1,10 +1,10 @@
 <?php
-ini_set('memory_limit', '1024M');
+//ini_set('memory_limit', '1024M');
 require_once("modules/functions/versions.php");
 require_once("modules/functions/readline.php");
 
 if(isset($argv)) {
-    $options = getopt("l:m:d:fK");
+    $options = getopt("l:m:d:fKT:");
 
     if(isset($options['l'])) {
       $lrg_league_tag = $options['l'];
@@ -29,7 +29,7 @@ if(isset($argv)) {
 
 # global settings
 
-  $lrg_version = array(1, 3, 1, 0, 0);
+  $lrg_version = array(2, 0, 0, 0, 0);
 
   $settings = json_decode(file_get_contents("rg_settings.json"), true);
 

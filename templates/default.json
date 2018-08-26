@@ -34,12 +34,16 @@
     "hero_triplets" : true,
     "hero_triplets_matches" : true,
 
+    "hero_lane_combos": true,
+
     "hero_combos_graph" : true,
 
     "matchlist" : true,
 
     "player_positions" : true,
     "player_positions_matches" : true,
+
+    "players_draft": true,
 
     "pvp" : true,
     "pvp_matches" : true,
@@ -49,6 +53,8 @@
 
     "player_triplets" : true,
     "player_triplets_matches" : true,
+
+    "players_lane_combos": true,
 
     "players_combo_graph" : true,
 
@@ -62,16 +68,45 @@
       "pickbans" : true,
       "draft": true,
       "draft_against": true,
+      "players_draft": true,
       "heropos" : true,
       "hero_graph" : true,
       "pairs": true,
       "triplets": true,
       "matches": true,
       "team_vs_team" : true
+    },
+    "regions": {
+      "use_limiter": true,
+      "records" : true,
+      "heroes": {
+        "haverages": true,
+        "draft": true,
+        "pairs": true,
+        "trios": true,
+        "lane_combos": true,
+        "positions": true,
+        "meta_graph": true,
+        "summary": true
+      },
+      "players": {
+        "haverages": true,
+        "draft": true,
+        "positions": true,
+        "pairs": true,
+        "trios": true,
+        "lane_combos": true,
+        "parties_graph": true
+      },
+      "teams": {
+        "summary": true,
+        "cards": true
+      }
     }
   },
   "web": {
     "custom_style" : "",
+    "custom_logo" : "",
 
     "pvp_grid" : false,
 
@@ -126,6 +161,17 @@
     "overview_draft_0_2" : false,
     "overview_draft_0_2_count" : 3,
     "overview_draft_0_3" : false,
-    "overview_draft_0_3_count" : 4
+    "overview_draft_0_3_count" : 4,
+
+    "regions": {
+      "detailed_overview": true,
+      "overview_last_match": true,
+      "overview_first_match": false,
+      "overview_last_match_winners": true,
+      "overview_teams_summary_short": true,
+      "tvt_grid": true,
+      "pvp_grid": true,
+      "teams_summary_softgen": true
+    }
   }
 }

@@ -97,11 +97,11 @@ if ( $update_settings ) {
         echo("[ ] Enter updated settings (empty line for old values)\n");
 
         echo("[I] Steam API Key: ");
-        $line = readline();
+        $line = readline_rg();
         if ( !empty($line) )  $settings['steamapikey'] = $line;
 
         echo("[I] OpenDota API Key (enter `n` for none): ");
-        $line = readline();
+        $line = readline_rg();
         if ( !empty($line) )  {
           if ($line == "n")
             $settings['odapikey'] = "";
@@ -110,48 +110,48 @@ if ( $update_settings ) {
         }
 
         echo("[I] MySQL host: ");
-        $line = readline();
+        $line = readline_rg();
         if ( !empty($line) )  $settings['mysql_host'] = $line;
 
         echo("[I] MySQL user: ");
-        $line = readline();
+        $line = readline_rg();
         if ( !empty($line) )  $settings['mysql_user'] = $line;
 
         echo("[I] MySQL password: ");
-        $line = readline();
+        $line = readline_rg();
         if ( !empty($line) )  $settings['mysql_pass'] = $line;
 
         echo("[I] MySQL database name prefix: ");
-        $line = readline();
+        $line = readline_rg();
         if ( !empty($line) )  $settings['mysql_prefix'] = $line;
     } else {
         echo("[ ] Enter your settings\n");
 
         echo("[I] Steam API Key: ");
         do {
-            $settings['steamapikey'] = readline();
+            $settings['steamapikey'] = readline_rg();
         } while (empty($settings['steamapikey']));
 
         echo("[I] OpenDota API Key (empty for none): ");
         do {
-            $settings['odapikey'] = readline();
+            $settings['odapikey'] = readline_rg();
         } while (empty($settings['odapikey']));
 
         echo("[I] MySQL host: ");
         do {
-            $settings['mysql_host'] = readline();
+            $settings['mysql_host'] = readline_rg();
         } while (empty($settings['mysql_host']));
 
         echo("[I] MySQL user: ");
         do {
-            $settings['mysql_user'] = readline();
+            $settings['mysql_user'] = readline_rg();
         } while (empty($settings['mysql_user']));
 
         echo("[I] MySQL password: ");
-        $settings['mysql_pass'] = readline();
+        $settings['mysql_pass'] = readline_rg();
 
         echo("[I] MySQL database name prefix: ");
-        $line = readline();
+        $line = readline_rg();
         if ( !empty($line) )  $settings['mysql_prefix'] = $line;
         else {
             $settings['mysql_prefix'] = "d2_report";
@@ -160,7 +160,7 @@ if ( $update_settings ) {
     }
 
     echo("[ ] Saving settings to `rg_settings.json`...");
-    file_put_contents("rg_settings.json", json_encode($settings)) or die("ERROR\n");
+    file_put_contents("rg_settings.json", json_encode($settings, JSON_PRETTY_PRINT)) or die("ERROR\n");
     echo("OK\n");
 }
 ?>

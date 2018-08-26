@@ -10,12 +10,30 @@
 
 
 function generate_tag($name) {
-  $name = ucwords($name);
-  $tag = "";
+  $words_count = substr_count($name, " ");
+  if(strlen($name) && $words_count === 0) {
+    return $name;
+  } else if (strlen($name) && $words_count > 0  && $words_count < 2) {
+    $name = ucwords($name);
+    $tag = "";
 
-  for ($i=0, $sz=strlen($name); $i < $sz; $i++) {
-    if (ctype_upper($name[$i]))
-      $tag .= $name[$i];
+    for ($i=0, $sz=strlen($name); $i < $sz; $i++) {
+      if (ctype_upper($name[$i])) {
+        $tag .= $name[$i];
+        if(isset($name[$i+1]) && $name[$i+1] != " " && !ctype_upper($name[$i+1]))
+          $tag .= $name[$i+1];
+      }
+    }
+  } else if (strlen($name)) {
+    $name = ucwords($name);
+    $tag = "";
+
+    for ($i=0, $sz=strlen($name); $i < $sz; $i++) {
+      if (ctype_upper($name[$i]))
+        $tag .= $name[$i];
+    }
+  } else {
+    $tag = "( )";
   }
 
   return $tag;

@@ -103,11 +103,11 @@ Settings you can change in it:
 * `$lrg_get_depth` - Sets module link depth for GET parameters, `2` by default. Modules deeper than this will be fully generated
 * `$locale` - Translation file you will use for your report, `"en"` by default
 * `$locales` - List of locales, available for choosing by user. Every value is recorded in format `"locale tag" => "Locale name"`
-* `$max_tabs` - Maximum amount of links shown before it gets replaced by <select>
-* `$custom_head` - Custom text and tags that will be used in <head>
-* `$custom_body` - Custom text and tags that will be used in <body>
+* `$max_tabs` - Maximum amount of links shown before it gets replaced by `<select>`
+* `$custom_head` - Custom text and tags that will be used in `<head>`
+* `$custom_body` - Custom text and tags that will be used in `<body>`
 * `$custom_content` - Custom text that's placed before actual generated content
-* `$custom_footer` - Additional text that will be added to <footer>
+* `$custom_footer` - Additional text that will be added to `<footer>`
 * `$title_links` - List of links in title bar. Values are arrays `[ "link" => "http...", "title" => "Lorem Ipsum", "text" => "Text" ]`
 * `$main_path` - Link to an adress that should be opened by clicking top left icon in title bar
 * `$default_style` - Custom style used by default

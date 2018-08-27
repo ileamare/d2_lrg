@@ -317,7 +317,7 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
     $res .= rg_view_generate_records($context);
   }
 
-  if($report['settings']['overview_teams_summary_short']) {
+  if(isset($context['teams']) && $report['settings']['overview_teams_summary_short']) {
     $res .= "<div class=\"content-header\">".locale_string("teams")."</div>";
     $res .= rg_view_generator_teams_summary($context['teams'], true);
     $res .= "<div class=\"content-text\"><a href=\"?league=$leaguetag&mod=teams".

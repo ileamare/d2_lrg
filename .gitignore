@@ -22,7 +22,7 @@ gi_*
 .htaccess
 
 # Custom Styles
-res/custom_styles/*
+res/custom_styles/
 
 # cachelist
 cachelist.json

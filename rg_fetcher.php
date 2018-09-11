@@ -82,7 +82,7 @@ foreach ($matches as $match) {
 
     $query = $conn->query("SELECT matchid FROM matches WHERE matchid = ".$match.";");
 
-    if ($query->num_rows) {
+    if (isset($query->num_rows) && $query->num_rows) {
         echo("Already in database, skipping\n");
         continue;
     }
@@ -555,7 +555,7 @@ foreach ($matches as $match) {
       continue;
     }
 
-    $sql = " INSERT INTO matchlines (matchid, playerid, heroid, level, isRadiant, kills, deaths, assists, networth,".
+    $sql = "INSERT INTO matchlines (matchid, playerid, heroid, level, isRadiant, kills, deaths, assists, networth,".
             "gpm, xpm, heal, heroDamage, towerDamage, lastHits, denies) VALUES ";
     foreach($t_matchlines as $ml) {
         $sql .= "\n\t(".$ml['matchid'].",".$ml['playerid'].",".$ml['heroid'].",".
@@ -566,7 +566,7 @@ foreach ($matches as $match) {
             $ml['denies']."),";
     }
     $sql[strlen($sql)-1] = ";";
-
+    
     $err_query = "DELETE from matchlines where matchid = ".$t_match['matchid'].";".$err_query;
 
     if ($conn->multi_query($sql) === TRUE);

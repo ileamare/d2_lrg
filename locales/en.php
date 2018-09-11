@@ -168,6 +168,7 @@
     "diversity" => "Hero Diversity",
     "common_position" => "Main Position",
     "bloodbath" => "Bloodbath",
+    "kills_combined" => "Kills Combined",
 
     "stomp" => "Networth stomp by a team",
     "comeback" => "Networth comeback by a team",

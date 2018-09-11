@@ -1,7 +1,7 @@
 <?php
 include_once("rg_report_out_settings.php");
 include_once("modules/functions/versions.php");
-$lg_version = array( 2, 0, 1, 0, 0 );
+$lg_version = array( 2, 1, 0, -5, 1 );
 
 include_once("modules/functions/locale_strings.php");
 include_once("modules/functions/get_language_code_iso6391.php");
@@ -120,10 +120,11 @@ if (isset($report)) {
   if (isset($report['regions_data']))
     include_once("modules/view/regions.php");
 
+  if (isset($report['matches']))
+    include_once("modules/view/matches.php");
+
   if (isset($report['players']))
     include_once("modules/view/participants.php");
-
-  if (isset($report['matches'])) $modules['matches'] = "";
 
 
   if(empty($mod)) $unset_module = true;
@@ -163,13 +164,7 @@ if (isset($report)) {
 
   # matches
   if (isset($modules['matches']) && check_module("matches")) {
-    krsort($report['matches']);
-    $modules['matches'] = "<div class=\"content-text\">".locale_string("desc_matches")."</div>";
-    $modules['matches'] .= "<div class=\"content-cards\">";
-    foreach($report['matches'] as $matchid => $match) {
-      $modules['matches'] .= match_card($matchid);
-    }
-    $modules['matches'] .= "</div>";
+    merge_mods($modules['matches'], rg_view_generate_matches());
   }
 
   # participants

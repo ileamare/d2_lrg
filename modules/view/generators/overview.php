@@ -400,7 +400,7 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
   if($report['settings']['overview_top_draft']) {
     $res .= "<div class=\"small-list-wrapper\">";
 
-    for ($i=0; $i<2; $i++) {
+    for ($i=1; $i>=0; $i--) {
       for ($j=1; $j<4; $j++) {
         if($report['settings']["overview_draft_".$i."_".$j] && isset($context['draft']) && !empty($context['draft'][$i][$j])) {
 

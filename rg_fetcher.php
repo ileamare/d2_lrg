@@ -621,7 +621,7 @@ foreach ($matches as $match) {
         }
     }
 
-    if ($lg_settings['main']['teams']) {
+    if ($lg_settings['main']['teams'] && sizeof($t_team_matches)) {
       $sql = "INSERT INTO teams_matches (matchid, teamid, is_radiant) VALUES ";
 
       foreach($t_team_matches as $match) {
@@ -633,7 +633,7 @@ foreach ($matches as $match) {
           $sql .= "\n\t(".$match['matchid'].",".$match['teamid'].",".$match['is_radiant']."),";
       }
       $sql[strlen($sql)-1] = ";";
-
+      
       $err_query = "DELETE from teams_matches where matchid = ".$t_match['matchid'].";".$err_query;
 
       if ($conn->multi_query($sql) === TRUE);

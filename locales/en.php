@@ -91,6 +91,7 @@
     "diff" => "Advantage",
     "rad_view" => "Radiant Overview",
     "cards" => "Cards",
+    "list" => "List",
 
     "averages" => "Average values",
     "participants" => "Participants",
@@ -172,7 +173,7 @@
 
     "stomp" => "Networth stomp by a team",
     "comeback" => "Networth comeback by a team",
-    "duration" => "Duration (min)",
+    "duration" => "Duration",
     "region" => "Region",
     "game_mode" => "Game mode",
     "game_modes" => "Game modes",

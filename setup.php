@@ -52,26 +52,46 @@ if ( $check_libs ) {
         chdir("..");
     }
 
+    # jQuery and tablesorter
+    if ( !file_exists("res/dependencies/jquery.min.js") ) {
+      echo "[ ] Pulling jQuery 3.3.1 slim\n";
+      file_put_contents(
+        "res/dependencies/jquery.min.js",
+        file_get_contents("https://code.jquery.com/jquery-3.3.1.slim.min.js")
+      );
+    }
+    if ( !file_exists("res/dependencies/jquery.tablesorter.min.js") ) {
+      echo "[ ] Pulling jQuery Tablesorter plugin\n";
+      file_put_contents(
+        "res/dependencies/jquery.tablesorter.min.js",
+        file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.0/js/jquery.tablesorter.min.js")
+      );
+    }
+
     # Vis.JS
     if ( !file_exists("res/dependencies/vis.min.js") ) {
+      echo "[ ] Pulling vis.js 4.21.0 min.js\n";
       file_put_contents(
         "res/dependencies/vis.min.js",
         file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js")
       );
     }
     if ( !file_exists("res/dependencies/vis.min.css") ) {
+      echo "[ ] Pulling vis.js 4.21.0 min.css\n";
       file_put_contents(
         "res/dependencies/vis.min.css",
         file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css")
       );
     }
     if ( !file_exists("res/dependencies/vis-network.min.css") ) {
+      echo "[ ] Pulling vis.js 4.21.0 network.min.css\n";
       file_put_contents(
         "res/dependencies/vis-network.min.css",
         file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis-network.min.css")
       );
     }
     if ( !file_exists("res/dependencies/vis-network.min.js") ) {
+      echo "[ ] Pulling vis.js 4.21.0 network.min.js\n";
       file_put_contents(
         "res/dependencies/vis-network.min.js",
         file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis-network.min.js")
@@ -80,6 +100,7 @@ if ( $check_libs ) {
 
     # Chart.JS
     if ( !file_exists("res/dependencies/Chart.bundle.min.js") ) {
+      echo "[ ] Pulling chart.js 2.7.2 bundle\n";
       file_put_contents(
         "res/dependencies/Chart.bundle.min.js",
         file_get_contents("https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js")

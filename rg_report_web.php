@@ -184,7 +184,7 @@ if (isset($report)) {
       leamare/d2_lrg on github
      -->
     <?php
-       if(file_exists("favicon.ico")) echo "<link rel=\"shortcut icon\" href=\"favicon.ico\" />";
+       if(file_exists("res/favicon.ico")) echo "<link rel=\"shortcut icon\" href=\"res/favicon.ico\" />";
     ?>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title><?php
@@ -218,6 +218,8 @@ if (isset($report)) {
           }
 
      if (!empty($custom_head)) echo $custom_head; ?>
+     <script type="text/javascript" src="res/dependencies/jquery.min.js"></script>
+     <script type="text/javascript" src="res/dependencies/jquery.tablesorter.min.js"></script>
   </head>
   <body>
     <?php if (!empty($custom_body)) echo $custom_body; ?>

@@ -31,7 +31,10 @@ function rg_generator_sides($table_id, $context, $heroes_flag = true) {
   }
 
   foreach($elements as $elid => $el) {
-    $elements[$elid][-1]["diff"] = $elements[$elid][1]["winrate"] - $elements[$elid][0]["winrate"];
+    if(!isset($elements[$elid][1]["winrate"]) || !isset($elements[$elid][0]["winrate"]))
+      $elements[$elid][-1]["diff"] = 0;
+    else
+      $elements[$elid][-1]["diff"] = $elements[$elid][1]["winrate"] - $elements[$elid][0]["winrate"];
   }
 
   uasort($elements, function($a, $b) {
@@ -39,26 +42,25 @@ function rg_generator_sides($table_id, $context, $heroes_flag = true) {
     else return ($a[-1]['diff'] < $b[-1]['diff']) ? 1 : -1;
   });
 
-  $res = "<table id=\"$table_id\" class=\"list wide\">".
-            "<tr class=\"thead overhead\"><th colspan=\"".(2+$heroes_flag)."\"></th>".
+  $res = "<table id=\"$table_id\" class=\"list wide sortable\"><thead>".
+            "<tr><th colspan=\"".(2+$heroes_flag)."\"></th>".
             "<th class=\"separator\" colspan=\"2\">".locale_string("rad_view")."</th>".
             "<th class=\"separator\" colspan=\"".(sizeof($keys)-1)."\">".locale_string("radiant")."</th>".
             "<th class=\"separator\" colspan=\"".(sizeof($keys)-1)."\">".locale_string("dire")."</th></tr>";
 
-  $i = $heroes_flag ? 1 : 0;
-  $res .= "<tr class=\"thead\">".
+  $res .= "<tr>".
             ($heroes_flag ? "<th width=\"1%\"></th>" : "").
-            "<th onclick=\"sortTable(".($i++).",'$table_id');\">".locale_string($heroes_flag ? "hero" : "player")."</th>".
-            "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("matches")."</th>".
-            "<th onclick=\"sortTableNum(".($i++).",'$table_id');\" class=\"separator\">".locale_string("ratio")."</th>".
-            "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("diff")."</th>";
+            "<th>".locale_string($heroes_flag ? "hero" : "player")."</th>".
+            "<th>".locale_string("matches")."</th>".
+            "<th class=\"separator\">".locale_string("ratio")."</th>".
+            "<th>".locale_string("diff")."</th>";
 
   for ($side = 1; $side >= 0; $side--) {
     for($k=1, $end=sizeof($keys); $k < $end; $k++) {
-      $res .= "<th ".($k==1 ? "class=\"separator\"" : "")." onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string($keys[$k])."</th>";
+      $res .= "<th ".($k==1 ? "class=\"separator\"" : "").">".locale_string($keys[$k])."</th>";
     }
   }
-  $res .= "</tr>";
+  $res .= "</tr></thead>";
   foreach ($elements as $elid => $el) {
     if(empty($el[0])) {
       $el[0]["matches"] = 0;
@@ -78,6 +80,7 @@ function rg_generator_sides($table_id, $context, $heroes_flag = true) {
       $res .= "<td class=\"separator\">".number_format($el[$side][ "matches" ])."</th>";
       $res .= "<td>".number_format($el[$side][ "winrate" ]*100, 2)."%</th>";
       for($k=3, $end=sizeof($keys); $k < $end; $k++) {
+        if(!isset($el[$side][ $keys[$k] ])) $el[$side][ $keys[$k] ] = 0;
         $res .= "<td>".number_format($el[$side][ $keys[$k] ], 2)."</th>";
       }
     }

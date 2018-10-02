@@ -58,7 +58,7 @@ table.list td, table.pvp td {
     border-bottom: 1px solid #101010;
     border-top: 1px solid #101010;
     background-color: #323232;
-    opacity: 0.7;
+    opacity: 0.6;
 }
 table.list tr td {
   font-size: 18px;
@@ -94,7 +94,7 @@ table.wide tr td {
     font-size: 16px;
 }
 
-table.list .thead {
+table.list thead tr {
     height: 26px;
     background-color: #525353 !important;
     text-transform: uppercase;
@@ -104,21 +104,21 @@ table.list .thead {
     opacity: 1;
     cursor: pointer;
 }
-table.list .thead th {
+table.list thead tr th {
     font-size: 12px;
     line-height:normal;
 }
-table.wide .thead {
+table.wide thead tr {
   height: 52px;
 }
-.thead.overhead {
+thead tr.overhead {
   text-align: center;
   height: 26px !important;
 }
-.thead.overhead th {
+thead tr.overhead th {
   padding-left: 0;
 }
-table .thead:nth-of-type(2) {
+table thead tr:nth-of-type(2) {
   opacity: 0.8;
   height: 26px !important;
 }
@@ -135,6 +135,10 @@ table .separator {
 
 
 table.list tr:hover td {
+    opacity: 0.85;
+}
+
+table.list tr.highlighted td {
     opacity: 1;
 }
 
@@ -149,13 +153,13 @@ table.pvp td, table.pvp th {
 table.pvp tr td:first-child {
   background-color: #525353 !important;
 }
-table.pvp .thead th:first-child {
+table.pvp thead tr th:first-child {
   width: 10%;
 }
 table.pvp tr th+th {
   width: auto;
 }
-table.pvp .thead th  {
+table.pvp thead tr th  {
   background-color: #525353 !important;
   white-space: nowrap;
   position: relative;
@@ -163,11 +167,11 @@ table.pvp .thead th  {
   opacity: 0.8;
   overflow: hidden;
 }
-table.pvp .thead th:hover  {
+table.pvp thead tr th:hover  {
   opacity: 1;
   overflow: initial;
 }
-table.pvp .thead th span{
+table.pvp thead tr th span {
   line-height: 52px;
   display: block;
   margin: 0 7px;
@@ -180,7 +184,7 @@ table.pvp .thead th span{
   width:inherit;
   overflow:hidden;
 }
-table.pvp .thead th span:hover {
+table.pvp thead tr th span:hover {
   position: absolute;
   width: auto;
   opacity:1;
@@ -287,6 +291,9 @@ table .hero_portrait {
   font-size: inherit;
   line-height: inherit;
 }
+.match-team .match-players {
+  position: relative;
+}
 .match-team .match-players .match-player {
   font-size: 14px;
   color: #fff;
@@ -295,6 +302,7 @@ table .hero_portrait {
   overflow: hidden;
   white-space: nowrap;
 }
+
 .match-team .match-heroes .match-hero {
   width: 20%;
   display: inline-block;

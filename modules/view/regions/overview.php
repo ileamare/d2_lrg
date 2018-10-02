@@ -13,7 +13,11 @@ function rg_view_generate_regions_overview($region, $reg_report) {
   } else {
     $res = "<table class=\"list\" id=\"region$region-table\">";
     foreach($reg_report['main'] as $key => $value) {
-      $res .= "<tr><td>".locale_string($key)."</td><td>".$value."</td></tr>";
+      $res .= "<tr><td>".locale_string($key)."</td><td>".          (
+                  strpos($key, "duration") !== FALSE || strpos($key, "_len") !== FALSE ?
+                  floor($value).":".floor(($value-floor($value))*60) :
+                  $value
+                  )."</td></tr>";
     }
     $res .= "</table>";
   }

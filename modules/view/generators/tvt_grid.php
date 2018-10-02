@@ -6,11 +6,11 @@ function rg_generator_tvt_grid($table_id, $context) {
 
   $res = "<table id=\"$table_id\" class=\"pvp wide\">";
 
-  $res .= "<tr class=\"thead\"><th></th>";
+  $res .= "<thead><tr><th></th>";
   foreach($context as $tid => $data) {
     $res .= "<th><span>".team_tag($tid)."</span></th>";
   }
-  $res .= "</tr>";
+  $res .= "</tr></thead>";
 
   foreach($context as $tid => $teamline) {
     $res .= "<tr><td>".team_name($tid)."</td>";

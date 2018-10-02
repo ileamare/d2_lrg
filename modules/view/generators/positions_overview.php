@@ -47,9 +47,9 @@ function rg_generator_positions_overview($table_id, $context, $hero_flag = true)
     else return ($a['total'] < $b['total']) ? 1 : -1;
   });
 
-  $res = "<table id=\"$table_id\" class=\"list wide\"><tr class=\"thead overhead\"><th width=\"20%\" colspan=\"".(2+$hero_flag)."\"></th>";
+  $res = "<table id=\"$table_id\" class=\"list wide sortable\"><thead><tr class=\"overhead\"><th width=\"20%\" colspan=\"".(2+$hero_flag)."\"></th>";
 
-  $heroline = "<tr class=\"thead\">".
+  $heroline = "<tr>".
                 ($hero_flag ?
                   "<th width=\"1%\"></th><th onclick=\"sortTable(1,'$table_id');\">".locale_string("hero")."</th>" :
                   "<th onclick=\"sortTable(0,'$table_id');\">".locale_string("player")."</th>"
@@ -64,7 +64,7 @@ function rg_generator_positions_overview($table_id, $context, $hero_flag = true)
                   "<th onclick=\"sortTableNum(".($hero_flag+$i++).",'$table_id');\">".locale_string("ratio")."</th>".
                   "<th onclick=\"sortTableNum(".($hero_flag+$i++).",'$table_id');\">".locale_string("winrate_s")."</th>";
   }
-  $res .= "</tr>".$heroline."</tr>";
+  $res .= "</tr>".$heroline."</tr></thead>";
 
   foreach ($overview as $elid => $el) {
     $res .= "<tr><td>".

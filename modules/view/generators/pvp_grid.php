@@ -6,11 +6,11 @@ include_once($root."/modules/view/functions/player_name.php");
 function rg_generator_pvp_grid($table_id, $contesters, $context) {
   $res = "<table  class=\"pvp wide\">";
 
-  $res .= "<tr class=\"thead\"><th></th>";
+  $res .= "<thead><tr><th></th>";
   foreach($contesters as $elid => $name) {
     $res .= "<th><span>".$name."</span></th>";
   }
-  $res .= "</tr>";
+  $res .= "</tr></thead>";
 
   $player_ids = array_keys($contesters);
 

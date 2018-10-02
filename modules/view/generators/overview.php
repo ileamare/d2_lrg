@@ -70,8 +70,8 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
   if($report['settings']['overview_modes'] && isset($context['modes'])) {
     $mode = reset($context['modes']);
     if ($mode/$context_total_matches > 0.99)
-      $res .= locale_string("over-one-mode", ["gm" => $meta['modes'][ key($report['modes']) ] ])." ";
-    else $res .= locale_string("over-most-mode", ["num" => $mode, "gm"=> $meta['modes'][ key($report['modes']) ] ])." ";
+      $res .= locale_string("over-one-mode", ["gm" => $meta['modes'][ key($context['modes']) ] ])." ";
+    else $res .= locale_string("over-most-mode", ["num" => $mode, "gm"=> $meta['modes'][ key($context['modes']) ] ])." ";
   }
 
   if($report['settings']['overview_regions'] && isset($context['regions'])) {
@@ -102,7 +102,7 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
     $res .= "</div>";
   }
 
-  if($context['settings']['overview_last_match_winners'] || (isset($context['last_match']['mid']) && !isset($context['settings'])) ) {
+  if(isset($report['matches_additional']) && ($context['settings']['overview_last_match_winners'] || (isset($context['last_match']['mid']) && !isset($context['settings']))) ) {
     $res .= "<div class=\"block-content\">";
 
     if( $report['matches_additional'][ $context['last_match']['mid'] ]['radiant_win'] ) {
@@ -209,7 +209,13 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
     $res .= "<div class=\"content-header\">".locale_string("random")."</div>";
     $res .= "<table class=\"list\" id=\"overview-table\">";
     foreach($context['main'] as $key => $value) {
-      $res .= "<tr><td>".locale_string($key)."</td><td>".$value."</td></tr>";
+      $res .= "<tr><td>".locale_string($key)."</td><td>".
+          (
+            strpos($key, "duration") !== FALSE || strpos($key, "_len") !== FALSE ?
+            floor($value).":".floor(($value-floor($value))*60) :
+            $value
+            ).
+        "</td></tr>";
     }
     $res .= "</table>";
   }
@@ -240,6 +246,7 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
       $max_wr = 0;
       $max_matches = 0;
       foreach ($context['teams'] as $team_id => $team) {
+        if(!isset($report['teams'][$team_id]['matches_total'])) continue; //FIXME
         if(!$max_matches || $report['teams'][$max_matches]['matches_total'] < $report['teams'][$team_id]['matches_total'] )
           $max_matches = $team_id;
         if($report['teams'][$team_id]['matches_total'] <= $context['settings']['limiter_higher']) continue;
@@ -334,12 +341,12 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
   $res .= "<div class=\"small-list-wrapper\">";
   if($report['settings']['overview_top_picked']) {
       $res .=  "<table id=\"over-heroes-pick\" class=\"list list-small\"><caption>".locale_string("top_picked_heroes")."</caption>
-                <tr class=\"thead\">
+                <thead><tr>
                   <th>".locale_string("hero")."</th>
                   <th>".locale_string("matches_s")."</th>
                   <th>".locale_string("matches_picked")."</th>
                   <th>".locale_string("winrate_s")."</th>
-                </tr>";
+                </tr></thead>";
 
       $workspace = $context['pickban'];
       uasort($workspace, function($a, $b) {
@@ -364,12 +371,12 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
 
   if($report['settings']['overview_top_bans']) {
       $res .=  "<table id=\"over-heroes-ban\" class=\"list list-small\"><caption>".locale_string("top_banned_heroes")."</caption>
-                <tr class=\"thead\">
+                <thead><tr>
                   <th>".locale_string("hero")."</th>
                   <th>".locale_string("matches_s")."</th>
                   <th>".locale_string("matches_banned")."</th>
                   <th>".locale_string("winrate_s")."</th>
-                </tr>";
+                </tr></thead>";
 
       $workspace = $context['pickban'];
       uasort($workspace, function($a, $b) {
@@ -406,11 +413,11 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
 
             $res .=  "<table id=\"over-draft-$i-$j\" class=\"list list-small\">
                       <caption>".locale_string("stage_num_1")." $j ".locale_string("stage_num_2")." ".($i ? locale_string("picks") : locale_string("bans"))."</caption>
-                        <tr class=\"thead\">
+                        <thead><tr>
                           <th>".locale_string("hero")."</th>
                           <th>".locale_string("matches")."</th>
                           <th>".locale_string("winrate_s")."</th>
-                        </tr>";
+                        </tr></thead>";
 
             $counter = $report['settings']["overview_draft_".$i."_".$j."_count"];
 

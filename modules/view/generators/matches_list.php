@@ -8,14 +8,14 @@ function rg_generator_matches_list($table_id, $context) {
   $matches = array_keys($context);
 
   $i = 0;
-  $res = "<table id=\"$table_id\" class=\"list\"><tr class=\"thead\">".
-          "<th onclick=\"sortTable(".($i++).",'$table_id');\">".locale_string("match")."</th>".
-          "<th onclick=\"sortTableValue(".($i++).",'$table_id');\">".locale_string("radiant")."</th>".
-          "<th onclick=\"sortTableValue(".($i++).",'$table_id');\">".locale_string("dire")."</th>".
-          "<th onclick=\"sortTableValue(".($i++).",'$table_id');\">".locale_string("duration")."</th>".
-          "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("kills_combined")."</th>".
-          "<th onclick=\"sortTableValue(".($i++).",'$table_id');\">".locale_string("date")."</th>".
-        "</tr>";
+  $res = "<table id=\"$table_id\" class=\"list sortable\"><thead><tr>".
+          "<th>".locale_string("match")."</th>".
+          "<th>".locale_string("radiant")."</th>".
+          "<th>".locale_string("dire")."</th>".
+          "<th>".locale_string("duration")."</th>".
+          "<th>".locale_string("kills_combined")."</th>".
+          "<th>".locale_string("date")."</th>".
+        "</tr></thead><tbody>";
   foreach($matches as $mid) {
     if(isset($report['teams']) && isset($report['match_participants_teams'][$mid])) {
       if(isset($report['match_participants_teams'][$mid]['radiant']) &&
@@ -57,7 +57,7 @@ function rg_generator_matches_list($table_id, $context) {
               date(locale_string("time_format")." ".locale_string("date_format"), $report['matches_additional'][$mid]['date'])."</td>".
             "</tr>";
   }
-  $res .= "</table>";
+  $res .= "</tbody></table>";
 
   return $res;
 }

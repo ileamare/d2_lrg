@@ -1,7 +1,5 @@
 #!/bin/php
 <?php
-require_once("libs/simple-opendota-php/simple_opendota.php");
-
 // Backported from Simple OpenDota for PHP
 // TODO: replace with Simple STRATZ for PHP
 function post($url, $data = []) {
@@ -37,11 +35,6 @@ $settings = json_decode(file_get_contents("rg_settings.json"), true);
 $input_cont = file_get_contents($filename) or die("[F] Error while opening file.\n");
 $input_cont = str_replace("\r\n", "\n", $input_cont);
 
-if(!empty($settings['odapikey']))
-  $opendota = new odota_api(true, "", 1500, $settings['odapikey']);
-else
-  $opendota = new odota_api(true, "", 1500);
-
 unset($settings);
 
 $matches    = explode("\n", trim($input_cont));
@@ -51,7 +44,6 @@ $matches = array_unique($matches);
 foreach ($matches as $match) {
     if ($match[0] == "#") continue;
 
-    $opendota->request_match($match);
     post("https://api.stratz.com/api/v1/match/$match/retry");
 }
 

@@ -51,8 +51,9 @@ function rg_generator_positions_overview($table_id, $context, $hero_flag = true)
 
   $heroline = "<tr>".
                 ($hero_flag ?
-                  "<th width=\"1%\"></th><th onclick=\"sortTable(1,'$table_id');\">".locale_string("hero")."</th>" :
-                  "<th onclick=\"sortTable(0,'$table_id');\">".locale_string("player")."</th>"
+                  "<th class=\"sorter-no-parser\" width=\"1%\"></th>".
+                  "<th data-sortInitialOrder=\"asc\" onclick=\"sortTable(1,'$table_id');\">".locale_string("hero")."</th>" :
+                  "<th data-sortInitialOrder=\"asc\" onclick=\"sortTable(0,'$table_id');\">".locale_string("player")."</th>"
                 ).
                 "<th onclick=\"sortTableNum(1,'$table_id');\">".locale_string("matches_s")."</th>";
   $i = 2;

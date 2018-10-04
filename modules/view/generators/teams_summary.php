@@ -53,7 +53,7 @@ function rg_view_generator_teams_summary($context = null, $short_flag = false) {
   $i = 0;
 
   $res .= "<thead><tr>".
-            "<th>".locale_string("team_name")."</th>".
+            "<th data-sortInitialOrder=\"asc\">".locale_string("team_name")."</th>".
             "<th>".locale_string("matches_s")."</th>".
             "<th>".locale_string("winrate")."</th>";
   foreach($keys as $k) {

@@ -10,8 +10,8 @@ function rg_generator_matches_list($table_id, $context) {
   $i = 0;
   $res = "<table id=\"$table_id\" class=\"list sortable\"><thead><tr>".
           "<th>".locale_string("match")."</th>".
-          "<th>".locale_string("radiant")."</th>".
-          "<th>".locale_string("dire")."</th>".
+          "<th data-sortInitialOrder=\"asc\">".locale_string("radiant")."</th>".
+          "<th data-sortInitialOrder=\"asc\">".locale_string("dire")."</th>".
           "<th>".locale_string("duration")."</th>".
           "<th>".locale_string("kills_combined")."</th>".
           "<th>".locale_string("date")."</th>".

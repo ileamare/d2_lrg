@@ -31,14 +31,14 @@ function rg_generator_combos($table_id, $context, $context_matches, $heroes_flag
   }
 
   $res = "<table id=\"$table_id\" class=\"list wide sortable\"><thead><tr class=\"thead\">".
-         (($heroes_flag) ? "<th width=\"1%\"></th>" : "").
-         "<th>".locale_string($heroes_flag ? "hero" : "player")." 1</th>".
-         (($heroes_flag) ? "<th width=\"1%\"></th>" : "").
-         "<th>".locale_string($heroes_flag ? "hero" : "player")." 2</th>".
+         (($heroes_flag) ? "<th class=\"sorter-no-parser\" width=\"1%\"></th>" : "").
+         "<th data-sortInitialOrder=\"asc\">".locale_string($heroes_flag ? "hero" : "player")." 1</th>".
+         (($heroes_flag) ? "<th class=\"sorter-no-parser\" width=\"1%\"></th>" : "").
+         "<th data-sortInitialOrder=\"asc\">".locale_string($heroes_flag ? "hero" : "player")." 2</th>".
          (
            $trios ?
            (($heroes_flag && $i++) ? "<th width=\"1%\"></th>" : "").
-           "<th>".locale_string($heroes_flag ? "hero" : "player")." 3</th>" :
+           "<th data-sortInitialOrder=\"asc\">".locale_string($heroes_flag ? "hero" : "player")." 3</th>" :
            ""
            ).
          "<th>".locale_string("matches")."</th>".

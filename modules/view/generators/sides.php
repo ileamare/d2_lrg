@@ -43,14 +43,14 @@ function rg_generator_sides($table_id, $context, $heroes_flag = true) {
   });
 
   $res = "<table id=\"$table_id\" class=\"list wide sortable\"><thead>".
-            "<tr><th colspan=\"".(2+$heroes_flag)."\"></th>".
+            "<tr class=\"overhead\"><th colspan=\"".(2+$heroes_flag)."\"></th>".
             "<th class=\"separator\" colspan=\"2\">".locale_string("rad_view")."</th>".
             "<th class=\"separator\" colspan=\"".(sizeof($keys)-1)."\">".locale_string("radiant")."</th>".
             "<th class=\"separator\" colspan=\"".(sizeof($keys)-1)."\">".locale_string("dire")."</th></tr>";
 
   $res .= "<tr>".
-            ($heroes_flag ? "<th width=\"1%\"></th>" : "").
-            "<th>".locale_string($heroes_flag ? "hero" : "player")."</th>".
+            ($heroes_flag ? "<th class=\"sorter-no-parser\" width=\"1%\"></th>" : "").
+            "<th data-sortInitialOrder=\"asc\">".locale_string($heroes_flag ? "hero" : "player")."</th>".
             "<th>".locale_string("matches")."</th>".
             "<th class=\"separator\">".locale_string("ratio")."</th>".
             "<th>".locale_string("diff")."</th>";

@@ -151,7 +151,7 @@ function rg_generator_draft($table_id, $context_pickban, $context_draft, $contex
   $res .= "<table id=\"$table_id\" class=\"list wide sortable\"><thead><tr class=\"overhead\"><th width=\"11%\"".($hero_flag ? " colspan=\"2\"" : "")."></th>".
           "<th colspan=\"6\">".locale_string("total")."</th>";
   $heroline = "<tr>".
-                ($hero_flag ? "<th width=\"1%\"></th>" : "").
+                ($hero_flag ? "<th class=\"sorter-no-parser\" width=\"1%\"></th>" : "").
                 "<th>".locale_string($hero_flag ? "hero" : "player")."</th>".
                 "<th>".locale_string("matches_s")."</th>".
                 "<th>".locale_string("rank")."</th>".

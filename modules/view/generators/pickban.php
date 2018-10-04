@@ -11,8 +11,8 @@ function rg_generator_pickban($table_id, $context, $context_total_matches, $hero
   });
 
   $res =  "<table id=\"$table_id\" class=\"list sortable\"><thead><tr>".
-            ($heroes_flag ? "<th width=\"1%\"></th>" : "").
-            "<th>".locale_string($heroes_flag ? "hero" : "player")."</th>".
+            ($heroes_flag ? "<th class=\"sorter-no-parser\" width=\"1%\"></th>" : "").
+            "<th data-sortInitialOrder=\"asc\">".locale_string($heroes_flag ? "hero" : "player")."</th>".
             "<th>".locale_string("matches_total")."</th>".
             "<th class=\"separator\">".locale_string("contest_rate")."</th>".
             "<th>".locale_string("rank")."</th>".

@@ -16,7 +16,7 @@ function rg_generator_pvp_profile($table_id, $pvp_context, $heroes_flag = true) 
 
   $res .= "<thead><tr>".
           ($heroes_flag && !$i++ ? "<th width=\"1%\"></th>" : "").
-          "<th>".locale_string("opponent")."</th>".
+          "<th data-sortInitialOrder=\"asc\">".locale_string("opponent")."</th>".
           "<th>".locale_string("winrate")."</th>".
           (!$nodiff ? "<th>".locale_string("diff")."</th>" : "").
           "<th>".locale_string("matches")."</th>".

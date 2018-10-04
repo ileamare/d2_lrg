@@ -11,8 +11,8 @@ function rg_generator_summary($table_id, $context, $hero_flag = true) {
   }
 
   $res = "<table id=\"$table_id\" class=\"list wide sortable\"><thead><tr>".
-          ($hero_flag ? "<th width=\"1%\"></th>" : "").
-          "<th>".locale_string($hero_flag ? "hero" : "player")."</th>";
+          ($hero_flag ? "<th class=\"sorter-no-parser\" width=\"1%\"></th>" : "").
+          "<th data-sortInitialOrder=\"asc\">".locale_string($hero_flag ? "hero" : "player")."</th>";
 
   for($k=0, $end=sizeof($keys); $k < $end; $k++) {
     $res .= "<th>".locale_string($keys[$k])."</th>";

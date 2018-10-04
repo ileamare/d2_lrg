@@ -6,7 +6,8 @@ $(document).ready(function() {
   // FIXME
   //$('thead.th').removeAttr('onclick');
   $('table.sortable').tablesorter({
-    sortInitialOrder: "desc"
+    sortInitialOrder: "desc",
+    stringTo: 'min'
   });
   //$('#heroes-pickban').tablesorter();
 });

@@ -7,7 +7,7 @@
     "league_id" => "LID",
     "league_tag" => "League tag",
     "league_desc" => "Description",
-    "leag_reports" => "League Reports",
+    "leag_reports" => "Reports",
 
     "random" => "Random stats",
     "notable_matches" => "Notable matches",
@@ -128,6 +128,7 @@
     "most_deaths" => "Most deaths",
     "assists" => "Assists",
     "networth" => "Networth",
+    "gold_earned" => "Gold Earned",
     "lasthits" => "Last hits",
     "lh_at10" => "LH at 10",
     "lasthits_per_min" => "Last hits / min",

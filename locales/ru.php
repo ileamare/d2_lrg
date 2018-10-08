@@ -7,7 +7,7 @@
     "league_id" => "LID",
     "league_tag" => "Тег лиги",
     "league_desc" => "Описание",
-    "leag_reports" => "Отчёты по лигам",
+    "leag_reports" => "Отчёты",
 
     "random" => "Прочие данные",
     "notable_matches" => "Примечательные матчи",
@@ -131,6 +131,7 @@
     "most_deaths" => "Больше всего смертей",
     "assists" => "Помощь",
     "networth" => "Общая ценность",
+    "gold_earned" => "Заработано золота",
     "lasthits" => "Добиваний крипов",
     "lh_at10" => "Добито к 10:00",
     "lasthits_per_min" => "Крипов в минуту",

@@ -3,6 +3,7 @@ html {
   --link: #fff;
   --navlink: #eee;
   --selector-link: #fff;
+  --selector-bg: #aaa;
   --section-header: #090909;
   --section-header-h1: #fff;
   --section-header-h2: #bbb;
@@ -11,7 +12,6 @@ html {
   --content-bg: #000;
   --content-header: #525353;
   --content-text-overview: #fff;
-  --header: #525353;
   --caption: #D9D9D9;
   --text: #aaa;
   --section-border: #464646;
@@ -25,7 +25,8 @@ html {
   --table-bg: #323232;
   --table-border: #101010;
   --table-text: #fff;
-  --table-thead: #fff;
+  --table-thead-bg: #525353;
+  --table-thead-text: #fff;
   --tagslist-bg: #323232;
   --tagslist-bg-hover: #323232;
   --tagslist-active: #525353;
@@ -134,11 +135,11 @@ table.wide tr td {
 
 table.list thead tr {
     height: 26px;
-    background-color: var(--header) !important;
+    background-color: var(--table-thead-bg) !important;
     text-transform: uppercase;
     letter-spacing: 3px;
     padding-top: 7px;
-    color: var(--table-thead);
+    color: var(--table-thead-text);
     opacity: 1;
     cursor: pointer;
 }

@@ -226,7 +226,7 @@ if (isset($report)) {
     <header class="navBar">
       <!-- these shouldn't be spans, but I was mimicking Valve pro circuit style in everything, so I copied that too. -->
       <span class="navItem dotalogo"><a href="<?php echo $main_path; ?>"></a></span>
-      <span class="navItem"><a href=".<?php if(!empty($linkvars)) echo "?".$linkvars; ?>" title="Dota 2 League Reports"><?php echo locale_string("leag_reports")?></a></span>
+      <span class="navItem bold"><a href=".<?php if(!empty($linkvars)) echo "?".$linkvars; ?>" title="Dota 2 League Reports"><?php echo locale_string("leag_reports")?></a></span>
       <?php
         foreach($title_links as $link) {
           echo "<span class=\"navItem\"><a href=\"".$link['link']."\" target=\"_blank\" rel=\"noopener\" title=\"".$link['title']."\">".$link['text']."</a></span>";

@@ -29,13 +29,13 @@
 body {
   background-position: top center;
   background-repeat: no-repeat;
-  background-color: #0a0a0a;
+  background-color: var(--body-bg);
 }
 
 a, a:active, a:visited, a:focus {
 	font-size: inherit;
   line-height: inherit;
-	color: #fff;
+	color: var(--link);
   text-decoration: none;
   cursor: pointer;
 }
@@ -49,7 +49,7 @@ a:hover {
 	height: 438px;
 	background-position: center;
 	background-repeat: no-repeat;
-	background-color: #090909;
+	background-color: var(--section-header);
 }
 
 #header-image {
@@ -70,7 +70,7 @@ a:hover {
 	font-size: 48px;
 	letter-spacing: 4px;
 	text-transform: uppercase;
-	color: white;
+	color: var(--section-header-h1);
 	padding-top: 158px;
 	margin-bottom: 0px;
 	font-family: 'Radiance-SemiBold';
@@ -83,10 +83,10 @@ a:hover {
 	font-size: 24px;
 	letter-spacing: 3px;
 	text-transform: uppercase;
-	color: #bbb;
+	color: var(--section-header-h2);
 	margin-top: 4px;
 	font-family: 'Radiance-SemiBold';
-	text-shadow: 2px 2px 6px #000000;
+	text-shadow: 2px 2px 6px var(--text-shadow);
 }
 
 .section-header h3 {
@@ -95,10 +95,10 @@ a:hover {
 	font-size: 14px;
 	letter-spacing: 2px;
 	text-transform: uppercase;
-	color: #999;
+	color: var(--section-header-h3);
 	margin-top: 8px;
 	font-family: 'Radiance-SemiBold';
-	text-shadow: 2px 2px 3px #000000;
+	text-shadow: 2px 2px 3px var(--text-shadow);
 }
 
 .content-section {
@@ -107,7 +107,7 @@ a:hover {
 	background-repeat: no-repeat;
 	margin-top: 0px;
 	padding-top: 40px;
-	background-color: #000000;
+	background-color: var(--content-bg);
 	padding-bottom: 40px;
   overflow: hidden;
   overflow-x: auto;
@@ -124,7 +124,7 @@ a:hover {
 }
 
 .content-section .content-header {
-	background-color: #525353;
+	background-color: var(--content-header);
 	width: 600px;
 
 	margin-left: auto;
@@ -132,13 +132,13 @@ a:hover {
 
 	font-size: 22px;
 	text-align: center;
-	color: #D9D9D9;
+	color: var(--caption);
 	text-transform: uppercase;
 	letter-spacing: 4px;
 	padding: 17px 0;
 	font-family: 'Radiance-SemiBold';
 
-	text-shadow: 2px 2px 6px #000000;
+	text-shadow: 2px 2px 6px var(--text-shadow);
   margin-top: 30px;
 }
 
@@ -147,7 +147,7 @@ a:hover {
 
 	font-size: 18px;
 	line-height: 34px;
-	color: #aaa;
+	color: var(--text);
   clear: both;
 
 	margin: 30px 20% 0;
@@ -162,7 +162,7 @@ a:hover {
 
 	font-size: 18px;
 	line-height: 34px;
-	color: #ccc;
+	color: var(--text);
 
 
 	margin: 30px 15% 0;
@@ -174,7 +174,7 @@ a:hover {
 	margin-left: auto;
 	margin-right: auto;
 
-	color: #464646;
+	color: var(--section-border);
 	font-family: 'Radiance-SemiBold';
 
 	text-align: center;
@@ -186,8 +186,8 @@ a:hover {
 .selector-modules-sublevel {
 	text-align: center;
 
-  border-top: 1px solid #464646;
-  color: #aaa;
+  border-top: 1px solid var(--section-border);
+  color: var(--text);
 
   padding-top: 20px;
 	margin: 0 25% 20px;
@@ -197,8 +197,8 @@ a:hover {
 .selector-modules-level-3 {
 	text-align: center;
 
-  border-top: 1px solid #464646;
-  color: #aaa;
+  border-top: 1px solid var(--section-border);
+  color: var(--text);
 
   padding-top: 20px;
 	margin: 0 25% 20px;
@@ -208,8 +208,8 @@ a:hover {
 .selector-modules-level-4, .selector-modules-level-5, .selector-modules-level-6, .selector-modules-level-7 {
 	text-align: center;
 
-  border-top: 1px solid #464646;
-  color: #aaa;
+  border-top: 1px solid var(--section-border);
+  color: var(--text);
 
   padding-top: 20px;
 	margin: 0 25% 20px;
@@ -229,12 +229,12 @@ a:hover {
 
 	font-family: 'Radiance-SemiBold';
 
-	color: #fff;
+	color: var(--selector-link);
   display: inline-block;
 }
 .select-selectors {
-  background: #323232;
-  color: #fff;
+  background: var(--selectors-bg);
+  color: var(--selector-link);
   line-height: inherit;
   font-family: inherit;
   font-size: inherit;
@@ -248,7 +248,7 @@ a:hover {
 }
 
 .selector:hover {
-	color: white;
+	color: var(--selector-link);
 }
 
 .content-text h1 , .content-cards h1{
@@ -260,17 +260,17 @@ a:hover {
     margin-right: auto;
     text-align: center;
     font-weight: bold;
-    color: #D9D9D9;
+    color: var(--caption);
 }
 
 .faqAnswer {
-    color: #bbb;
+    color: var(--section-header-h2);
     line-height: 30px;
     font-size: 18px;
     padding-bottom: 20px;
 }
 .faqQuestion {
-    color: #D9D9D9;
+    color: var(--caption);
     font-weight: bold;
     font-size: 18px;
     line-height: 30px;
@@ -293,7 +293,7 @@ header.navBar {
     z-index: 10001;
     background-image: url(header_bg.png);
     font-family: 'Radiance';
-    box-shadow: 0 0 10px #000;
+    box-shadow: 0 0 10px var(--text-shadow);
     text-align: center;
     padding: 0 10%;
     font-size: 0;
@@ -303,10 +303,13 @@ header.navBar {
     padding: 0 20px;
     font-size: 18px;
     line-height: 18px;
-    color: #cecece;
+    color: var(--nav-item);
     display: inline-block;
-    border-right: 1px solid #464646;
+    border-right: 1px solid var(--section-border);
     float: left;
+}
+.navItem.bold {
+  font-weight: bolder;
 }
 .navItem:last-child {
   border: none;
@@ -325,32 +328,30 @@ header.navBar {
   height: 33px;
   display: block;
 }
+header.navBar a, header.navBar a:hover, header.navBar a:visited, header.navBar a:focus {
+  color: var(--navlink) !important;
+}
 
-
-
-/* Modal window code from w3c */
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    display: none;
+    position: fixed;
+    z-index: 1;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    -webkit-animation-name: fadeIn; /* Fade in the background */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    -webkit-animation-name: fadeIn;
     -webkit-animation-duration: 0.4s;
     animation-name: fadeIn;
     animation-duration: 0.4s
 }
-
-/* Modal Content */
 .modal-content {
     position: fixed;
     bottom: 0;
-    background-color: #525353;
+    background-color: var(--modal-content-bg);
     width: 100%;
     -webkit-animation-name: slideIn;
     -webkit-animation-duration: 0.4s;
@@ -358,17 +359,17 @@ header.navBar {
     animation-duration: 0.4s;
 }
 .modal-text {
-    color: #fff;
+    color: var(--modal-text);
     font-size: 22px;
     font-family: 'Radiance-SemiBold';
     padding: 30px 5%;
 }
 .modal-sublevel {
-    color: #fff;
+    color: var(--modal-text);
     font-size: 22px;
     font-family: 'Radiance-SemiBold';
     padding: 30px 5%;
-    background-color: #999;
+    background-color: var(--section-header-h3);
     display: none;
     -webkit-animation-name: slideIn;
     -webkit-animation-duration: 0.4s;
@@ -376,8 +377,8 @@ header.navBar {
     animation-duration: 0.4s;
 }
 .modal-header {
-    color: #fff;
-    background-color: #323232;
+    color: var(--modal-header);
+    background-color: var(--selectors-bg);
     font-size: 22px;
     font-family: 'Radiance-SemiBold';
     padding: 30px 5%;
@@ -405,7 +406,7 @@ header.navBar {
 }
 
 footer {
-  color: #525050;
+  color: var(--footer);
   font-size: 12px;
   line-height: 20px;
   padding: 40px 0 80px 0;
@@ -413,7 +414,7 @@ footer {
   width: 70%;
 }
 footer a, footer a:active, footer a:visited, footer a:focus {
-  color: #948787;
+  color: var(--footer-link);
 }
 .share-links, .locale-changer {
   margin: 15px 0;
@@ -458,7 +459,7 @@ footer a, footer a:active, footer a:visited, footer a:focus {
   font-size: 15px;
   text-align: center;
   width: 100px;
-  background: #373737;
-  color: #fff;
+  background: var(--selectors-bg);
+  color: var(--selector-link);
   border: none;
 }

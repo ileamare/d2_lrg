@@ -28,7 +28,7 @@ html {
   --table-thead-bg: #525353;
   --table-thead-text: #fff;
   --tagslist-bg: #323232;
-  --tagslist-bg-hover: #323232;
+  --tagslist-bg-hover: #464646;
   --tagslist-active: #525353;
   --name-bg: rgba(255,255,255,0.2);
   --subname-bg: rgba(255,255,255,0.1);
@@ -597,6 +597,7 @@ table .hero_portrait {
 }
 .tagslist .category:hover {
   background-color: var(--tagslist-bg-hover);
+  text-decoration: none;
 }
 .tagslist .category.active {
   background-color: var(--tagslist-active);

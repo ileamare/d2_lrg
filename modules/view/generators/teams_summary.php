@@ -1,5 +1,6 @@
 <?php
 include_once("$root/modules/view/functions/links.php");
+include_once("$root/modules/view/functions/convert_time.php");
 
 function rg_view_generator_teams_summary($context = null, $short_flag = false) {
   global $report;
@@ -78,7 +79,7 @@ function rg_view_generator_teams_summary($context = null, $short_flag = false) {
       $res .= "<td>".
               (
                 strpos($k, "duration") !== FALSE || strpos($k, "_len") !== FALSE ?
-                  floor($v).":".floor(($v-floor($v))*60) :
+                  convert_time($v) :
                   number_format($v*(in_array($k, $percentages) ? 100 : 1),
                     ($v > 1000) ? 0 : (
                         ($v > 100) ? 1 : 2

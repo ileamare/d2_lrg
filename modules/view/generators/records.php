@@ -3,6 +3,7 @@ include_once($root."/modules/view/functions/player_name.php");
 include_once($root."/modules/view/functions/team_name.php");
 include_once($root."/modules/view/functions/links.php");
 include_once($root."/modules/view/functions/hero_name.php");
+include_once($root."/modules/view/functions/convert_time.php");
 
 function rg_generator_records($context) {
   if(!sizeof($context)) return "";
@@ -18,8 +19,13 @@ function rg_generator_records($context) {
           <td>". ($record['matchid'] ?
                     match_link($record['matchid']) :
                "")."</td>
-          <td>".number_format($record['value'],2)."</td>
-          <td>". ($record['playerid'] ?
+          <td>".(
+            strpos($key, "duration") !== FALSE || strpos($key, "_len") !== FALSE ||
+            strpos($key, "shortest") !== FALSE || strpos($key, "longest") !== FALSE ?
+              convert_time($record['value']) :
+              number_format($record['value'],2)
+            ).
+          "</td><td>". ($record['playerid'] ?
                     (strstr($key, "_team") != FALSE ?
                       team_link($record['playerid']) :
                       player_name($record['playerid'])

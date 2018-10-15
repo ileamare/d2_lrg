@@ -1,6 +1,7 @@
 <?php
 include_once($root."/modules/view/functions/hero_name.php");
 include_once($root."/modules/view/functions/player_name.php");
+include_once($root."/modules/view/functions/convert_time.php");
 
 function rg_generator_summary($table_id, $context, $hero_flag = true) {
   if(!sizeof($context)) return "";
@@ -28,7 +29,7 @@ function rg_generator_summary($table_id, $context, $hero_flag = true) {
     for($k=2, $end=sizeof($keys); $k < $end; $k++) {
       $res .= "<td>";
       if (strpos($keys[$k], "duration") !== FALSE || strpos($keys[$k], "_len") !== FALSE) {
-        $res .= floor($el[$keys[$k]]).":".floor(($el[$keys[$k]]-floor($el[$keys[$k]]))*60);
+        $res .= convert_time($el[$keys[$k]]);
       } else if(is_numeric($el[$keys[$k]])) {
         if ($el[$keys[$k]] > 10)
           $res .= number_format($el[$keys[$k]],1);

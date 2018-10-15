@@ -7,6 +7,8 @@ function rg_view_generator_teams_summary($context = null, $short_flag = false) {
   if($context == null) $context = array_keys($report['teams']);
   else $context = array_keys($context);
 
+  if(!sizeof($context)) return "";
+
   if ($short_flag)
     $res = "";
   else
@@ -42,12 +44,9 @@ function rg_view_generator_teams_summary($context = null, $short_flag = false) {
     "avg_match_len"
   ];
 
-  $res .= "<table id=\"teams-summary\" class=\"list ".($short_flag ? "" : "wide")." sortable\">";
+  $keys = array_keys( array_values($report['teams'])[0]['averages'] );
 
-  foreach($report['teams'] as $team_id => $team) {
-    $keys = array_keys($team['averages']);
-    break;
-  }
+  $res .= "<table id=\"teams-summary\" class=\"list ".($short_flag ? "" : "wide")." sortable\">";
 
   $table_id = "teams-summary";
   $i = 0;

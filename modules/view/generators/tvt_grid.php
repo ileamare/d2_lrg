@@ -2,6 +2,8 @@
 include_once("$root/modules/view/functions/team_name.php");
 
 function rg_generator_tvt_grid($table_id, $context) {
+  if(!sizeof($context)) return "";
+  
   $team_ids = array_keys($context);
 
   $res = "<table id=\"$table_id\" class=\"pvp wide\">";

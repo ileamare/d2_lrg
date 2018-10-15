@@ -3,12 +3,11 @@ include_once($root."/modules/view/functions/hero_name.php");
 include_once($root."/modules/view/functions/player_name.php");
 
 function rg_generator_summary($table_id, $context, $hero_flag = true) {
+  if(!sizeof($context)) return "";
+
   global $report;
 
-  foreach($context as $c) {
-    $keys = array_keys($c);
-    break;
-  }
+  $keys = array_keys( array_values($context)[0] );
 
   $res = "<table id=\"$table_id\" class=\"list wide sortable\"><thead><tr>".
           ($hero_flag ? "<th class=\"sorter-no-parser\" width=\"1%\"></th>" : "").

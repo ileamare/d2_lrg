@@ -16,14 +16,7 @@ function team_card($tid, $full = false) {
 
   if(isset($report['teams'][$tid]['regions'])) {
     asort($report['teams'][$tid]['regions']);
-    $region_line = "";
-    foreach($report['teams'][$tid]['regions'] as $region => $m) {
-      //if(!empty($region_line)) $region_line .= ", ";
-      $region_line .= region_link($region);
-      # initially I thought that there will be a list of all team's regions
-      # but I don't think it's good idea for
-      break;
-    }
+    $region_line = region_link( array_keys($report['teams'][$tid]['regions'])[0] );
   }
 
   $output .= "<div class=\"team-info-block\">".

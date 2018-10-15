@@ -3,6 +3,8 @@ include_once($root."/modules/view/functions/hero_name.php");
 include_once($root."/modules/view/functions/player_name.php");
 
 function rg_generator_sides($table_id, $context, $heroes_flag = true) {
+  if(!sizeof($context)) return "";
+
   $elements = [];
   $id = $heroes_flag ? "heroid" : "playerid";
 

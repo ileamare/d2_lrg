@@ -1,12 +1,10 @@
 <?php
 include "overview_sections.php";
 include_once("$root/modules/view/generators/teams_summary.php");
-/*
-
-?league=$leaguetag&mod=$modlink".(empty($linkvars) ? "" : "&".$linkvars)."
-*/
 
 function rg_view_generator_overview($modlink, $context, $foreword = "") {
+  if(!sizeof($context)) return "";
+  
   global $report;
   global $meta;
   global $charts_colors;

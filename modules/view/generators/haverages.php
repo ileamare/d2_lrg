@@ -3,6 +3,8 @@ include_once($root."/modules/view/functions/hero_name.php");
 include_once($root."/modules/view/functions/player_name.php");
 
 function rg_generator_haverages($table_id, $context, $hero_flag = true) {
+  if(!sizeof($context)) return "";
+
   $res = "<div class=\"small-list-wrapper\">";
   $id = $hero_flag ? "heroid" : "playerid";
   foreach($context as $key => $avg) {

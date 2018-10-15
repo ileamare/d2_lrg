@@ -7,12 +7,12 @@ function rg_generator_pvp_profile($table_id, $pvp_context, $heroes_flag = true) 
   $res = "<table id=\"$table_id\" class=\"list sortable\">";
   $i = 0;
 
-  foreach($pvp_context as $elid_op => $data) {
-    if (isset($data['diff'])) $nodiff = false;
-    else $nodiff = true;
+  if(!sizeof($pvp_context)) return "";
 
-    break;
-  }
+  if (isset( array_values($pvp_context)[0]['diff'] ))
+    $nodiff = false;
+  else
+    $nodiff = true;
 
   $res .= "<thead><tr>".
           ($heroes_flag && !$i++ ? "<th width=\"1%\"></th>" : "").

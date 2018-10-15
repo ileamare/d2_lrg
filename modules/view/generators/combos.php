@@ -6,29 +6,34 @@ include_once($root."/modules/view/functions/player_name.php");
 function rg_generator_combos($table_id, $context, $context_matches, $heroes_flag = true) {
   $id = $heroes_flag ? "heroid" : "playerid";
 
-  foreach($context as $combo) {
-      if(isset($combo['lane_rate']))
-        $lane_rate = true;
-      else
-        $lane_rate = false;
+  if(!sizeof($context))
+    return "";
 
-      if(isset($combo['lane']))
-        $lane = true;
-      else
-        $lane = false;
+  # Figuring out what kind of context we have here
 
-      if(isset($combo['expectation']))
-        $expectation = true;
-      else
-        $expectation = false;
+  $combo = array_values($context)[0];
 
-      if(isset($combo[$id.'3']))
-        $trios = true;
-      else
-        $trios = false;
+  if(isset($combo['lane_rate']))
+    $lane_rate = true;
+  else
+    $lane_rate = false;
 
-      break;
-  }
+  if(isset($combo['lane']))
+    $lane = true;
+  else
+    $lane = false;
+
+  if(isset($combo['expectation']))
+    $expectation = true;
+  else
+    $expectation = false;
+
+  if(isset($combo[$id.'3']))
+    $trios = true;
+  else
+    $trios = false;
+
+  unset($combo);
 
   $res = "<table id=\"$table_id\" class=\"list wide sortable\"><thead><tr class=\"thead\">".
          (($heroes_flag) ? "<th class=\"sorter-no-parser\" width=\"1%\"></th>" : "").

@@ -3,6 +3,7 @@ include_once($root."/modules/view/functions/hero_name.php");
 include_once($root."/modules/view/functions/player_name.php");
 
 function rg_generator_overview_chart($name, $labels, $context) {
+  if(!sizeof($context)) return "";
   global $charts_colors;
 
   $colors = array_slice($charts_colors, 0, sizeof($labels));
@@ -25,29 +26,34 @@ function rg_generator_overview_combos($table_id, $caption, $context, $limiter = 
   $i = 0;
   $id = $heroes_flag ? "heroid" : "playerid";
 
-  foreach($context as $combo) {
-      if(isset($combo['lane_rate']))
-        $lane_rate = true;
-      else
-        $lane_rate = false;
+  if(!isset(array_values($context)[0]))
+    return "";
 
-      if(isset($combo['lane']))
-        $lane = true;
-      else
-        $lane = false;
+  # Figuring out what kind of context we have here
 
-      if(isset($combo['expectation']))
-        $expectation = true;
-      else
-        $expectation = false;
+  $combo = array_values($context)[0];
 
-      if(isset($combo[$id.'3']))
-        $trios = true;
-      else
-        $trios = false;
+  if(isset($combo['lane_rate']))
+    $lane_rate = true;
+  else
+    $lane_rate = false;
 
-      break;
-  }
+  if(isset($combo['lane']))
+    $lane = true;
+  else
+    $lane = false;
+
+  if(isset($combo['expectation']))
+    $expectation = true;
+  else
+    $expectation = false;
+
+  if(isset($combo[$id.'3']))
+    $trios = true;
+  else
+    $trios = false;
+
+  unset($combo);
 
   $res = "<table id=\"$table_id\" class=\"list\"><caption>$caption</caption><thead><tr>".
          (($heroes_flag && !$i++) ? "<th width=\"1%\"></th>" : "").

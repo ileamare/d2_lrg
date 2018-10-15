@@ -3,7 +3,7 @@ include_once($root."/modules/view/functions/hero_name.php");
 include_once($root."/modules/view/functions/player_name.php");
 
 function rg_generator_pickban($table_id, $context, $context_total_matches, $heroes_flag = true) {
-  // TODO $report["random"]["matches_total"]
+  if(!sizeof($context)) return "";
 
   uasort($context, function($a, $b) {
     if($a['matches_total'] == $b['matches_total']) return 0;

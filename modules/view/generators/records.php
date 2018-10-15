@@ -5,6 +5,8 @@ include_once($root."/modules/view/functions/links.php");
 include_once($root."/modules/view/functions/hero_name.php");
 
 function rg_generator_records($context) {
+  if(!sizeof($context)) return "";
+
   $res = "<table id=\"records-module-table\" class=\"list sortable\"><thead>".
                              "<th>".locale_string("record")."</th>".
                              "<th>".locale_string("match")."</th>".

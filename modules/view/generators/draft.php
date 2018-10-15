@@ -4,6 +4,8 @@ function rg_generator_draft($table_id, $context_pickban, $context_draft, $contex
   $res = ""; $draft = [];
   $id_name = $hero_flag ? "heroid" : "playerid";
 
+  if(!sizeof($context_pickban)) return "";
+
   for ($i=0; $i<2; $i++) {
     $type = $i ? "pick" : "ban";
     $max_stage = 1;

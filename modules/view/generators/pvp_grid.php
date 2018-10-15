@@ -4,6 +4,8 @@ include_once($root."/modules/view/functions/hero_name.php");
 include_once($root."/modules/view/functions/player_name.php");
 
 function rg_generator_pvp_grid($table_id, $contesters, $context) {
+  if(!sizeof($context)) return "";
+
   $res = "<table  class=\"pvp wide\">";
 
   $res .= "<thead><tr><th></th>";

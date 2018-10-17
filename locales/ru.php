@@ -3,9 +3,9 @@
     "date_format" => "j.m.Y",
     "time_format" => "h:i:s",
 
-    "league_name" => "Название лиги",
+    "league_name" => "Название отчёта",
     "league_id" => "LID",
-    "league_tag" => "Тег лиги",
+    "league_tag" => "Тег отчёта",
     "league_desc" => "Описание",
     "leag_reports" => "Отчёты",
 
@@ -230,7 +230,7 @@
     "over-pregen-report" => "Это автоматически составленный отчёт для",
     "over-league" => "лиги",
     "over-custom-league" => "кастомной лиги",
-    "over-matches" => "Матчей в лиге — %num%.",
+    "over-matches" => "Сыграно матчей: %num%.",
     "over-teams" => "Команд, принявших участие — %num%.",
     "over-players" => "Игроков, принявших участие — %num%.",
     "over-one-version" => "Все матчи были сыграны в патче %ver%.",

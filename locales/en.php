@@ -3,9 +3,9 @@
     "date_format" => "j M Y",
     "time_format" => "h:i:s",
 
-    "league_name" => "League name",
+    "league_name" => "Report name",
     "league_id" => "LID",
-    "league_tag" => "League tag",
+    "league_tag" => "Report tag",
     "league_desc" => "Description",
     "leag_reports" => "Reports",
 
@@ -226,7 +226,7 @@
     "over-pregen-report" => "This is automatically generated report for",
     "over-league" => "league",
     "over-custom-league" => "custom league",
-    "over-matches" => "There were %NUM% matches played in this league.",
+    "over-matches" => "There were %NUM% matches played.",
     "over-teams" => "%NUM% teams participated in this event.",
     "over-players" => "%NUM% players participated in this event.",
     "over-one-version" => "All matches were played on %ver% patch.",

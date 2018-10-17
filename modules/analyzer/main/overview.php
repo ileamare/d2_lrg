@@ -36,9 +36,9 @@ $sql .= "set @rn := 0; select * from ( select *, @rn := @rn + 1 as rn from (
         ORDER BY `value`  DESC
         ) a ) b where b.rn = @rn div 2;";
 
-# heroes median gpm
+# heroes median xpm
 $sql .= "set @rn := 0; select * from ( select *, @rn := @rn + 1 as rn from (
-        select \"heroes_median_gpm\", matchlines.xpm value from matchlines
+        select \"heroes_median_xpm\", matchlines.xpm value from matchlines
         ORDER BY `value`  DESC
         ) a ) b where b.rn = @rn div 2;";
 

@@ -288,25 +288,31 @@ a:hover {
 
 
 header.navBar {
-    height: 64px;
-    position: relative;
-    z-index: 10001;
-    background-image: url(header_bg.png);
-    font-family: 'Radiance';
-    box-shadow: 0 0 10px var(--text-shadow);
-    text-align: center;
-    padding: 0 10%;
-    font-size: 0;
+  height: 64px;
+  position: relative;
+  z-index: 10001;
+  background-image: url(header_bg.png);
+  font-family: 'Radiance';
+  box-shadow: 0 0 10px var(--text-shadow);
+  text-align: center;
+  padding: 0 10%;
+  font-size: 0;
+}
+.navLinks {
+  overflow: hidden;
+  height: 64px;
+  float: left;
+  width: 75%;
 }
 .navItem {
-    margin: 20px 0;
-    padding: 0 20px;
-    font-size: 18px;
-    line-height: 18px;
-    color: var(--nav-item);
-    display: inline-block;
-    border-right: 1px solid var(--section-border);
-    float: left;
+  margin: 20px 0;
+  padding: 0 20px;
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--nav-item);
+  display: inline-block;
+  border-right: 1px solid var(--section-border);
+  float: left;
 }
 .navItem.bold {
   font-weight: bolder;

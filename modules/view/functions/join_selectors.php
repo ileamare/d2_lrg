@@ -27,22 +27,34 @@ function join_selectors($modules, $level, $parent="") {
   $selectors = array();
   $selectors_num = sizeof($modules);
 
-  foreach($modules as $modname => $module) {
-    $mn = (empty($parent) ? "" : $parent."-" ).$modname;
+  foreach($modules as $modtag => $module) {
+    $mn = (empty($parent) ? "" : $parent."-" ).$modtag;
     $startline_check_res = stripos($mod, $mn) === 0 && (
           (strlen($mod) == strlen($mn)) ||
           (strlen($mod) > strlen($mn) && $mod[strlen($mn)] == '-')
         );
 
+    $modname = locale_string($modtag);
+    if(is_array($module)) {
+      if (strpos($parent, "profiles") == strlen($parent)-8)
+        $modname .= "";
+        # FIXME Remove this block later, using class-based modules with a parameter
+        #       either show child indicator or not
+      else if ($selectors_num < $max_tabs)
+        $modname .= " &#9776;";
+      else
+        $modname .= " ...";
+    }
+
     if ($selectors_num < $max_tabs) {
       if($lrg_use_get && $lrg_get_depth > $level) {
         if ( $startline_check_res )
-          $selectors[] = "<span class=\"selector active\">".locale_string($modname)."</span>";
+          $selectors[] = "<span class=\"selector active\">".$modname."</span>";
         else
           $selectors[] = "<span class=\"selector".($unset_selector ? " active" : "").
                             "\"><a href=\"?league=".$leaguetag."&mod=".$mn.
                             (empty($linkvars) ? "" : "&".$linkvars).
-                            "\">".locale_string($modname)."</a></span>";
+                            "\">".$modname."</a></span>";
       } else {
         $selectors[] = "<span class=\"mod-".$level_codes[$level][1]."-selector selector".
                             ($first ? " active" : "")."\" onclick=\"switchTab(event, 'module-".$mn."', 'mod-".$level_codes[$level][1]."');\">".locale_string($modname)."</span>";
@@ -56,12 +68,12 @@ function join_selectors($modules, $level, $parent="") {
             ) )
           $selectors[] = "<option selected=\"selected\" value=\"?league=".$leaguetag."&mod=".$mn."&".
           (empty($linkvars) ? "" : "&".$linkvars)
-          ."\">".locale_string($modname)."</option>";
+          ."\">".$modname."</option>";
         else
           $selectors[] = "<option".($unset_selector ? "selected=\"selected\"" : "")." value=\"?league=".$leaguetag."&mod=".$mn.(empty($linkvars) ? "" : "&".$linkvars)
-          ."\">".locale_string($modname)."</option>";
+          ."\">".$modname."</option>";
       } else {
-        $selectors[] = "<option value=\"module-".$mn."\">".locale_string($modname)."</option>";
+        $selectors[] = "<option value=\"module-".$mn."\">".$modname."</option>";
       }
     }
     if($startline_check_res || !$lrg_use_get || $lrg_get_depth < $level+1 || $unset_selector) {

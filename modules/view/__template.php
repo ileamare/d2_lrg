@@ -47,14 +47,15 @@
   <body>
     <?php if (!empty($custom_body)) echo $custom_body; ?>
     <header class="navBar">
-      <!-- these shouldn't be spans, but I was mimicking Valve pro circuit style in everything, so I copied that too. -->
-      <span class="navItem dotalogo"><a href="<?php echo $main_path; ?>"></a></span>
-      <span class="navItem bold"><a href=".<?php if(!empty($linkvars)) echo "?".$linkvars; ?>" title="Dota 2 League Reports"><?php echo locale_string("leag_reports")?></a></span>
-      <?php
-        foreach($title_links as $link) {
-          echo "<span class=\"navItem\"><a href=\"".$link['link']."\" target=\"_blank\" rel=\"noopener\" title=\"".$link['title']."\">".$link['text']."</a></span>";
-        }
-       ?>
+      <div class="navLinks">
+        <div class="navItem dotalogo"><a href="<?php echo $main_path; ?>"></a></div>
+        <div class="navItem bold"><a href=".<?php if(!empty($linkvars)) echo "?".$linkvars; ?>" title="Dota 2 League Reports"><?php echo locale_string("leag_reports")?></a></div>
+        <?php
+          foreach($title_links as $link) {
+            echo "<div class=\"navItem\"><a href=\"".$link['link']."\" target=\"_blank\" rel=\"noopener\" title=\"".$link['title']."\">".$link['text']."</a></div>";
+          }
+         ?>
+      </div>
       <div class="share-links">
         <?php
           echo '<div class="share-link reddit"><a href="https://www.reddit.com/submit?url='.htmlspecialchars('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).

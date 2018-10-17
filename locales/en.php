@@ -11,8 +11,8 @@
 
     "random" => "Random stats",
     "notable_matches" => "Notable matches",
-    "buybacks_total" => "Total Buybacks",
-    "creeps_killed"  => "Total Creeps Killed",
+    "buybacks_total" => "Total buybacks",
+    "creeps_killed"  => "Total creeps murdered",
     "avg_match_len" => "Average match duration",
     "total_time_dead" => "Total time players were dead (minutes)",
     "heroes_contested"=> "Heroes contested",
@@ -28,6 +28,12 @@
     "matches_total" => "Total matches played",
     "players_on_event" => "Players in league",
     "teams_on_event" => "Teams on event",
+
+    "heroes_median_picks" => "Median hero picks",
+    "heroes_median_bans" => "Median hero bans",
+    "heroes_median_gpm" => "Median hero gpm",
+    "heroes_median_xpm" => "Median hero xpm",
+    "matches_median_duration" => "Median match duration",
 
     "hero" => "Hero",
     "player" => "Player",
@@ -52,10 +58,10 @@
     "vs" => "vs",
 
     "radiant" => "Radiant",
-    "radiant_wr" => "Radiant Winrate",
+    "radiant_wr" => "Radiant winrate",
     "radiant_matches" => "Radiant Won",
     "dire" => "Dire",
-    "dire_wr" => "Dire Winrate",
+    "dire_wr" => "Dire winrate",
     "dire_matches" => "Dire Matches",
     "rad_ratio" => "Radiant Ratio",
 

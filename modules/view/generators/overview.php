@@ -1,10 +1,11 @@
 <?php
 include "overview_sections.php";
 include_once("$root/modules/view/generators/teams_summary.php");
+include_once("$root/modules/view/functions/convert_time.php");
 
 function rg_view_generator_overview($modlink, $context, $foreword = "") {
   if(!sizeof($context)) return "";
-  
+
   global $report;
   global $meta;
   global $charts_colors;
@@ -210,7 +211,7 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
       $res .= "<tr><td>".locale_string($key)."</td><td>".
           (
             strpos($key, "duration") !== FALSE || strpos($key, "_len") !== FALSE ?
-            floor($value).":".floor(($value-floor($value))*60) :
+            convert_time($value) :
             $value
             ).
         "</td></tr>";

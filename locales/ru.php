@@ -29,6 +29,12 @@
     "players_on_event" => "Игроков в лиге",
     "teams_on_event" => "Команд в лиге",
 
+    "heroes_median_picks" => "Медиана выборов героев",
+    "heroes_median_bans" => "Медиана запретов героев",
+    "heroes_median_gpm" => "Медиана ЗВМ героев",
+    "heroes_median_xpm" => "Медиана ОВМ героев",
+    "matches_median_duration" => "Медианная длительность матча",
+
     "hero" => "Герой",
     "player" => "Игрок",
     "match" => "Матч",

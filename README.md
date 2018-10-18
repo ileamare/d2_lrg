@@ -1,6 +1,6 @@
 # Dota 2 League Stats Fetcher and Report Generator
 
-## Current version: 2.0.1
+## Current version: 2.1.0
 
 **D2LRG** (for short) is a tool for fetching stats for dota matches and forming fancy stats pages with every data you may need.
 
@@ -48,6 +48,8 @@ It would be nice to have bash on your system. For Windows it's recommended to ha
 After getting D2LRG code to your computer, run `php setup.php`. It will install the rest of dependencies:
 * Vis.js
 * Graph.js
+* jQuery
+* jquery-tablesorter
 * PHP OpenDota SDK
 
 ## How to use
@@ -157,9 +159,12 @@ Tools are additional scripts that can be used for specific things. All of them s
 
 * `remove_match` - removes match from a league's database. Uses only `-l%TAG%` and `-m%MATCH%` parameters. Example: `php tools/remove_match.php -ltestleague -m1234567891`
 * `remove_matches` - removes matches from a league's database. Uses only `-l%TAG%` and `-f%FNAME%` parameters. Example: `php tools/remove_match.php -ltestleague -flist`
-* `replay_request` - sends API command to OpenDota, requesting every match from a file. Accepts only one arguement: `-f%FILENAME%`. You can use failed matches dump files (from fetcher) with it
+* `replay_request` - sends API commands to OpenDota and Stratz, requesting every match from a file. Accepts only one arguement: `-f%FILENAME%`. You can use failed matches dump files (from fetcher) with it
+* `replay_request_od` - same as `replay_request`, but strictly requesting match analysis with OpenDota
+* `replay_request_stratz` - same as `replay_request`, but strictly requesting match analysis with Stratz
 * `clear_database` - removes all data from a league's database. Args: `-l%LEAGUETAG%`
 * `update_league` - updates league parameters to new D2LRG API/leaguefile format. Accepts only `-l%LEAGUETAG%`
 * `remove_cached` - removes cached matches listed in `-f%FNAME%` file.
 * `update_all_reports` - updates all reports
-* `backport_matchlist` - generates full matchlist based on league's database 
+* `backport_matchlist` - generates full matchlist based on league's database
+* `update_rosters` - updates official rosters for all teams in report. Args: `-l%LEAGUETAG%`

@@ -1,6 +1,6 @@
 <?php
 
-$result["random"] = array();
+$result["random"] = [];
 
 # matches total
 $sql  = "SELECT \"matches_total\", COUNT(matchid) FROM matches;";
@@ -15,6 +15,41 @@ $sql .= "SELECT \"heroes_contested\", count(distinct hero_id) FROM draft;";
 $sql .= "SELECT \"heroes_picked\", count(distinct hero_id) FROM draft WHERE is_pick = 1;";
 # heroes banned
 $sql .= "SELECT \"heroes_banned\", count(distinct hero_id) FROM draft WHERE is_pick = 0;";
+
+# ********** Medians
+
+# heroes median picks
+$sql .= "set @rn := 0; select * from ( select *, @rn := @rn + 1 as rn from (
+        select \"heroes_median_picks\", COUNT(DISTINCT matchlines.matchid) value, matchlines.heroid hid from matchlines GROUP BY matchlines.heroid
+        ORDER BY `value`  DESC
+        ) a ) b where b.rn = @rn div 2;";
+
+# heroes median bans
+$sql .= "set @rn := 0; select * from ( select *, @rn := @rn + 1 as rn from (
+        select \"heroes_median_bans\", SUM(1) value, draft.hero_id hid
+        from draft where draft.is_pick = 0 GROUP BY hid ORDER BY `value`  DESC
+        ) a ) b where b.rn = @rn div 2;";
+
+# heroes median gpm
+$sql .= "set @rn := 0; select * from ( select *, @rn := @rn + 1 as rn from (
+        select \"heroes_median_gpm\", matchlines.gpm value from matchlines
+        ORDER BY `value`  DESC
+        ) a ) b where b.rn = @rn div 2;";
+
+# heroes median xpm
+$sql .= "set @rn := 0; select * from ( select *, @rn := @rn + 1 as rn from (
+        select \"heroes_median_xpm\", matchlines.xpm value from matchlines
+        ORDER BY `value`  DESC
+        ) a ) b where b.rn = @rn div 2;";
+
+# matches median duration
+$sql .= "set @rn := 0; select * from ( select *, @rn := @rn + 1 as rn from (
+        select \"matches_median_duration\", matches.duration/60 as value
+        from matches ORDER BY `value` DESC
+        ) a ) b where b.rn = @rn div 2;";
+
+# **********
+
 # Radiant winrate
 $sql .= "SELECT \"radiant_wr\", SUM(radiantWin)*100/SUM(1) FROM matches;";
 # Dire winrate
@@ -41,11 +76,11 @@ else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n"
 do {
   $query_res = $conn->store_result();
 
-  $row = $query_res->fetch_row();
-
-  $result["random"][$row[0]] = $row[1];
-
-  $query_res->free_result();
+  if(!is_bool($query_res)) {
+    $row = $query_res->fetch_row();
+    $result["random"][$row[0]] = $row[1];
+    $query_res->free_result();
+  }
 } while($conn->next_result());
 
 ?>

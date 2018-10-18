@@ -16,8 +16,8 @@ $sql .= "SELECT \"assists\" cap, matchid, assists, playerid, heroid FROM matchli
 $sql .= "SELECT \"kda0\" cap, matchid, kills+assists val, playerid, heroid FROM matchlines WHERE deaths = 0 ORDER BY val DESC;";
 # kda1
 $sql .= "SELECT \"kda1\" cap, matchid, (kills+assists)/deaths val, playerid, heroid FROM matchlines WHERE deaths > 0 ORDER BY val DESC;";
-# networth
-$sql .= "SELECT \"networth\" cap, matchid, networth, playerid, heroid FROM matchlines ORDER BY networth DESC;";
+# gold earned
+$sql .= "SELECT \"gold_earned\" cap, matchid, networth, playerid, heroid FROM matchlines ORDER BY networth DESC;";
 # lasthits
 $sql .= "SELECT \"lasthits\" cap, matchid, lastHits, playerid, heroid FROM matchlines ORDER BY lastHits DESC;";
 # hero damage

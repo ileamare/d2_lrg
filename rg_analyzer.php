@@ -97,6 +97,7 @@ require_once("modules/analyzer/main/days.php");
 # Heroes modules
 require_once("modules/analyzer/heroes/__main.php");
 
+$result["players_additional"] = [];
 // Players Summary
 if($lg_settings['ana']['players']) {
   # player summary

@@ -4,6 +4,8 @@ include_once($root."/modules/view/functions/hero_name.php");
 include_once($root."/modules/view/functions/player_name.php");
 
 function rg_generator_positions_overview($table_id, $context, $hero_flag = true) {
+  if(!sizeof($context)) return "";
+
   $position_overview_template = array("total" => 0);
   for ($i=1; $i>=0 && !isset($keys); $i--) {
     for ($j=1; $j<6 && $j>0; $j++) {
@@ -47,12 +49,13 @@ function rg_generator_positions_overview($table_id, $context, $hero_flag = true)
     else return ($a['total'] < $b['total']) ? 1 : -1;
   });
 
-  $res = "<table id=\"$table_id\" class=\"list wide\"><tr class=\"thead overhead\"><th width=\"20%\" colspan=\"".(2+$hero_flag)."\"></th>";
+  $res = "<table id=\"$table_id\" class=\"list wide sortable\"><thead><tr class=\"overhead\"><th width=\"20%\" colspan=\"".(2+$hero_flag)."\"></th>";
 
-  $heroline = "<tr class=\"thead\">".
+  $heroline = "<tr>".
                 ($hero_flag ?
-                  "<th width=\"1%\"></th><th onclick=\"sortTable(1,'$table_id');\">".locale_string("hero")."</th>" :
-                  "<th onclick=\"sortTable(0,'$table_id');\">".locale_string("player")."</th>"
+                  "<th class=\"sorter-no-parser\" width=\"1%\"></th>".
+                  "<th data-sortInitialOrder=\"asc\" onclick=\"sortTable(1,'$table_id');\">".locale_string("hero")."</th>" :
+                  "<th data-sortInitialOrder=\"asc\" onclick=\"sortTable(0,'$table_id');\">".locale_string("player")."</th>"
                 ).
                 "<th onclick=\"sortTableNum(1,'$table_id');\">".locale_string("matches_s")."</th>";
   $i = 2;
@@ -64,7 +67,7 @@ function rg_generator_positions_overview($table_id, $context, $hero_flag = true)
                   "<th onclick=\"sortTableNum(".($hero_flag+$i++).",'$table_id');\">".locale_string("ratio")."</th>".
                   "<th onclick=\"sortTableNum(".($hero_flag+$i++).",'$table_id');\">".locale_string("winrate_s")."</th>";
   }
-  $res .= "</tr>".$heroline."</tr>";
+  $res .= "</tr>".$heroline."</tr></thead>";
 
   foreach ($overview as $elid => $el) {
     $res .= "<tr><td>".

@@ -13,8 +13,9 @@ $limiter = ceil($median/6);
 //$limiter_graph = (int)ceil($median/4);
 if($lg_settings['main']['teams']) {
     //$report['random']['teams_on_event'];
-    //$limiter = (int)ceil($result['random']['matches_total']/($result['random']['teams_on_event']*2));
-    $limiter_lower = ceil($result['random']['matches_total']/($result['random']['teams_on_event']*4));
+    $limiter = (int)ceil($median/($result['random']['teams_on_event']));
+    //$limiter_lower = ceil($result['random']['matches_total']/($result['random']['teams_on_event']*4));
+    $limiter_lower = ceil($limiter/2);
     $limiter_graph = $limiter_lower*2;
 } else {
     $limiter_lower = ceil($median/16);

@@ -29,7 +29,7 @@ if(isset($argv)) {
 
 # global settings
 
-  $lrg_version = array(2, 0, 1, 0, 0);
+  $lrg_version = array(2, 1, 0, 0, 0);
 
   $settings = json_decode(file_get_contents("rg_settings.json"), true);
 

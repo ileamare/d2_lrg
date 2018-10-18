@@ -3,23 +3,23 @@ include_once($root."/modules/view/functions/hero_name.php");
 include_once($root."/modules/view/functions/player_name.php");
 
 function rg_generator_pickban($table_id, $context, $context_total_matches, $heroes_flag = true) {
-  // TODO $report["random"]["matches_total"]
+  if(!sizeof($context)) return "";
 
   uasort($context, function($a, $b) {
     if($a['matches_total'] == $b['matches_total']) return 0;
     else return ($a['matches_total'] < $b['matches_total']) ? 1 : -1;
   });
 
-  $res =  "<table id=\"$table_id\" class=\"list\"><tr class=\"thead\">".
-            ($heroes_flag ? "<th width=\"1%\"></th>" : "").
-            "<th onclick=\"sortTable(".(0+$heroes_flag).",'$table_id');\">".locale_string($heroes_flag ? "hero" : "player")."</th>".
-            "<th onclick=\"sortTableNum(".(1+$heroes_flag).",'$table_id');\">".locale_string("matches_total")."</th>".
-            "<th class=\"separator\"onclick=\"sortTableNum(".(2+$heroes_flag).",'$table_id');\">".locale_string("contest_rate")."</th>".
-            "<th onclick=\"sortTableNum(".(3+$heroes_flag).",'$table_id');\">".locale_string("rank")."</th>".
-            "<th class=\"separator\" onclick=\"sortTableNum(".(4+$heroes_flag).",'$table_id');\">".locale_string("matches_picked")."</th>".
-            "<th onclick=\"sortTableNum(".(5+$heroes_flag).",'$table_id');\">".locale_string("winrate")."</th>".
-            "<th class=\"separator\" onclick=\"sortTableNum(".(6+$heroes_flag).",'$table_id');\">".locale_string("matches_banned")."</th>".
-            "<th onclick=\"sortTableNum(".(7+$heroes_flag).",'$table_id');\">".locale_string("winrate")."</th></tr>";
+  $res =  "<table id=\"$table_id\" class=\"list sortable\"><thead><tr>".
+            ($heroes_flag ? "<th class=\"sorter-no-parser\" width=\"1%\"></th>" : "").
+            "<th data-sortInitialOrder=\"asc\">".locale_string($heroes_flag ? "hero" : "player")."</th>".
+            "<th>".locale_string("matches_total")."</th>".
+            "<th class=\"separator\">".locale_string("contest_rate")."</th>".
+            "<th>".locale_string("rank")."</th>".
+            "<th class=\"separator\">".locale_string("matches_picked")."</th>".
+            "<th>".locale_string("winrate")."</th>".
+            "<th class=\"separator\">".locale_string("matches_banned")."</th>".
+            "<th>".locale_string("winrate")."</th></tr></thead>";
 
   $ranks = [];
   $context_copy = $context;

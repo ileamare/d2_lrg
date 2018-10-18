@@ -1,11 +1,14 @@
 <?php
 include_once("$root/modules/view/functions/links.php");
+include_once("$root/modules/view/functions/convert_time.php");
 
 function rg_view_generator_teams_summary($context = null, $short_flag = false) {
   global $report;
 
   if($context == null) $context = array_keys($report['teams']);
   else $context = array_keys($context);
+
+  if(!sizeof($context)) return "";
 
   if ($short_flag)
     $res = "";
@@ -42,29 +45,26 @@ function rg_view_generator_teams_summary($context = null, $short_flag = false) {
     "avg_match_len"
   ];
 
-  $res .= "<table id=\"teams-summary\" class=\"list ".($short_flag ? "" : "wide")."\">";
+  $keys = array_keys( array_values($report['teams'])[0]['averages'] );
 
-  foreach($report['teams'] as $team_id => $team) {
-    $keys = array_keys($team['averages']);
-    break;
-  }
+  $res .= "<table id=\"teams-summary\" class=\"list ".($short_flag ? "" : "wide")." sortable\">";
 
   $table_id = "teams-summary";
   $i = 0;
 
-  $res .= "<tr class=\"thead\">".
-            "<th onclick=\"sortTable(".($i++).",'$table_id');\">".locale_string("team_name")."</th>".
-            "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("matches_s")."</th>".
-            "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("winrate")."</th>";
+  $res .= "<thead><tr>".
+            "<th data-sortInitialOrder=\"asc\">".locale_string("team_name")."</th>".
+            "<th>".locale_string("matches_s")."</th>".
+            "<th>".locale_string("winrate")."</th>";
   foreach($keys as $k) {
     if($short_flag) {
       if(!in_array($k, $short)) continue;
     }
     if (isset($aliases[$k])) $k = $aliases[$k];
-      $res .= "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string($k)."</th>";
+      $res .= "<th>".locale_string($k)."</th>";
   }
 
-  $res .= "</tr>";
+  $res .= "</tr></thead>";
 
   foreach($context as $team_id) {
     $res .= "<tr>".
@@ -77,11 +77,15 @@ function rg_view_generator_teams_summary($context = null, $short_flag = false) {
         if(!in_array($k, $short)) continue;
       }
       $res .= "<td>".
-              number_format($v*(in_array($k, $percentages) ? 100 : 1),
-                ($v > 1000) ? 0 : (
-                    ($v > 100) ? 1 : 2
-                  )
-                ).
+              (
+                strpos($k, "duration") !== FALSE || strpos($k, "_len") !== FALSE ?
+                  convert_time($v) :
+                  number_format($v*(in_array($k, $percentages) ? 100 : 1),
+                    ($v > 1000) ? 0 : (
+                        ($v > 100) ? 1 : 2
+                      )
+                    )
+              ).
               (in_array($k, $percentages) ? "%" : "")."</td>";
     }
     $res .= "</tr>";

@@ -1,3 +1,19 @@
+$(document).ready(function() {
+  $('.list tbody tr').on('click', function() {
+    $(this).toggleClass('highlighted');
+  });
+
+  // FIXME
+  //$('thead.th').removeAttr('onclick');
+  $('table.sortable').tablesorter({
+    sortInitialOrder: 'desc',
+    stringTo: 'min',
+    sortReset: true
+  });
+  //$('#heroes-pickban').tablesorter();
+});
+
+
 // code from example on w3c
 
 function showModal(text, cap) {
@@ -20,124 +36,6 @@ document.getElementById('modal-text').onclick = function(event) {
     if (event.target == document.getElementById('modal-text')) {
         document.getElementById('modal-sublevel').style.display = "none";
     }
-}
-
-function sortTable(n, table_id) {
-  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-  table = document.getElementById(table_id);
-  switching = true;
-  dir = "desc";
-  while (switching) {
-    switching = false;
-    rows = table.getElementsByTagName("TR");
-    for (i = 1; i < (rows.length - 1); i++) {
-      if(rows[i].getElementsByTagName("TD").length == 0) continue;
-      shouldSwitch = false;
-      x = rows[i].getElementsByTagName("TD")[n];
-      y = rows[i + 1].getElementsByTagName("TD")[n];
-      if (dir == "asc") {
-        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-          shouldSwitch= true;
-          break;
-        }
-      } else if (dir == "desc") {
-        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-          shouldSwitch= true;
-          break;
-        }
-      }
-    }
-    if (shouldSwitch) {
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-      switchcount ++;
-    } else {
-      if (switchcount == 0 && dir == "desc") {
-        dir = "asc";
-        switching = true;
-      }
-    }
-  }
-}
-
-function sortTableNum(n, table_id) {
-  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-  table = document.getElementById(table_id);
-  switching = true;
-  dir = "desc";
-  while (switching) {
-    switching = false;
-    rows = table.getElementsByTagName("TR");
-    for (i = 1; i < (rows.length - 1); i++) {
-      if(rows[i].getElementsByTagName("TD").length == 0) continue;
-      shouldSwitch = false;
-      x = rows[i].getElementsByTagName("TD")[n];
-      y = rows[i + 1].getElementsByTagName("TD")[n];
-      if (x.innerHTML == "-") x = 0;
-      else x = parseFloat(x.innerHTML.replace(/,/, ''));
-      if (y.innerHTML == "-") y = 0;
-      else y = parseFloat(y.innerHTML.replace(/,/, ''))
-      if (dir == "asc") {
-        if (x > y) {
-          shouldSwitch= true;
-          break;
-        }
-      } else if (dir == "desc") {
-        if (x < y) {
-          shouldSwitch= true;
-          break;
-        }
-      }
-    }
-    if (shouldSwitch) {
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-      switchcount ++;
-    } else {
-      if (switchcount == 0 && dir == "desc") {
-        dir = "asc";
-        switching = true;
-      }
-    }
-  }
-}
-
-function sortTableValue(n, table_id) {
-  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-  table = document.getElementById(table_id);
-  switching = true;
-  dir = "desc";
-  while (switching) {
-    switching = false;
-    rows = table.getElementsByTagName("TR");
-    for (i = 1; i < (rows.length - 1); i++) {
-      if(rows[i].getElementsByTagName("TD").length == 0) continue;
-      shouldSwitch = false;
-      x = rows[i].getElementsByTagName("TD")[n].getAttribute("value");
-      y = rows[i + 1].getElementsByTagName("TD")[n].getAttribute("value");
-      if (dir == "asc") {
-        if (parseFloat(x) > parseFloat(y)) {
-          shouldSwitch= true;
-          break;
-        }
-      } else if (dir == "desc") {
-        if (parseFloat(x) < parseFloat(y)) {
-          shouldSwitch= true;
-          break;
-        }
-      }
-    }
-    if (shouldSwitch) {
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-      switchcount ++;
-    } else {
-      if (switchcount == 0 && dir == "desc") {
-        dir = "asc";
-        switching = true;
-      }
-    }
-  }
 }
 
 function switchTab(evt, moduleID, className) {

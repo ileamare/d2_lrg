@@ -4,24 +4,24 @@ include_once($root."/modules/view/functions/hero_name.php");
 include_once($root."/modules/view/functions/player_name.php");
 
 function rg_generator_pvp_profile($table_id, $pvp_context, $heroes_flag = true) {
-  $res = "<table id=\"$table_id\" class=\"list\">";
+  $res = "<table id=\"$table_id\" class=\"list sortable\">";
   $i = 0;
 
-  foreach($pvp_context as $elid_op => $data) {
-    if (isset($data['diff'])) $nodiff = false;
-    else $nodiff = true;
+  if(!sizeof($pvp_context)) return "";
 
-    break;
-  }
+  if (isset( array_values($pvp_context)[0]['diff'] ))
+    $nodiff = false;
+  else
+    $nodiff = true;
 
-  $res .= "<tr class=\"thead\">".
+  $res .= "<thead><tr>".
           ($heroes_flag && !$i++ ? "<th width=\"1%\"></th>" : "").
-          "<th onclick=\"sortTable(".($i++).",'$table_id');\">".locale_string("opponent")."</th>".
-          "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("winrate")."</th>".
-          (!$nodiff ? "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("diff")."</th>" : "").
-          "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("matches")."</th>".
-          "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("won")."</th>".
-          "<th onclick=\"sortTableNum(".($i++).",'$table_id');\">".locale_string("lost")."</th></tr>";
+          "<th data-sortInitialOrder=\"asc\">".locale_string("opponent")."</th>".
+          "<th>".locale_string("winrate")."</th>".
+          (!$nodiff ? "<th>".locale_string("diff")."</th>" : "").
+          "<th>".locale_string("matches")."</th>".
+          "<th>".locale_string("won")."</th>".
+          "<th>".locale_string("lost")."</th></tr></thead>";
 
   if ($nodiff) {
     uasort($pvp_context, function($a, $b) {

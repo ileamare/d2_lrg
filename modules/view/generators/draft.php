@@ -4,6 +4,8 @@ function rg_generator_draft($table_id, $context_pickban, $context_draft, $contex
   $res = ""; $draft = [];
   $id_name = $hero_flag ? "heroid" : "playerid";
 
+  if(!sizeof($context_pickban)) return "";
+
   for ($i=0; $i<2; $i++) {
     $type = $i ? "pick" : "ban";
     $max_stage = 1;
@@ -148,35 +150,35 @@ function rg_generator_draft($table_id, $context_pickban, $context_draft, $contex
     else return ($a['matches'] < $b['matches']) ? 1 : -1;
   });
 
-  $res .= "<table id=\"$table_id\" class=\"list wide\"><tr class=\"thead overhead\"><th width=\"11%\"".($hero_flag ? " colspan=\"2\"" : "")."></th>".
+  $res .= "<table id=\"$table_id\" class=\"list wide sortable\"><thead><tr class=\"overhead\"><th width=\"11%\"".($hero_flag ? " colspan=\"2\"" : "")."></th>".
           "<th colspan=\"6\">".locale_string("total")."</th>";
-  $heroline = "<tr class=\"thead\">".
-                ($hero_flag ? "<th width=\"1%\"></th>" : "").
-                "<th onclick=\"sortTable(".(0+$hero_flag).",'$table_id');\">".locale_string($hero_flag ? "hero" : "player")."</th>".
-                "<th onclick=\"sortTableNum(".(1+$hero_flag).",'$table_id');\">".locale_string("matches_s")."</th>".
-                "<th onclick=\"sortTableNum(".(2+$hero_flag).",'$table_id');\">".locale_string("rank")."</th>".
-                "<th onclick=\"sortTableNum(".(3+$hero_flag).",'$table_id');\">".locale_string("picks_s")."</th>".
-                "<th onclick=\"sortTableNum(".(4+$hero_flag).",'$table_id');\">".locale_string("winrate_s")."</th>".
-                "<th onclick=\"sortTableNum(".(5+$hero_flag).",'$table_id');\">".locale_string("bans_s")."</th>".
-                "<th onclick=\"sortTableNum(".(6+$hero_flag).",'$table_id');\">".locale_string("winrate_s")."</th>";
+  $heroline = "<tr>".
+                ($hero_flag ? "<th class=\"sorter-no-parser\" width=\"1%\"></th>" : "").
+                "<th>".locale_string($hero_flag ? "hero" : "player")."</th>".
+                "<th>".locale_string("matches_s")."</th>".
+                "<th>".locale_string("rank")."</th>".
+                "<th>".locale_string("picks_s")."</th>".
+                "<th>".locale_string("winrate_s")."</th>".
+                "<th>".locale_string("bans_s")."</th>".
+                "<th>".locale_string("winrate_s")."</th>";
 
   if($max_stage > 1)
     for($i=1; $i<=$max_stage; $i++) {
       $res .= "<th class=\"separator\" colspan=\"5\">".locale_string("stage")." $i</th>";
-      $heroline .= "<th onclick=\"sortTableNum(".(1+5*$i+1+$hero_flag).",'$table_id');\" class=\"separator\">".locale_string("rank")."</th>".
-                  "<th onclick=\"sortTableNum(".(1+5*$i+2+$hero_flag).",'$table_id');\">".locale_string("picks_s")."</th>".
-                  "<th onclick=\"sortTableNum(".(1+5*$i+3+$hero_flag).",'$table_id');\">".locale_string("winrate_s")."</th>".
-                  "<th onclick=\"sortTableNum(".(1+5*$i+4+$hero_flag).",'$table_id');\">".locale_string("bans_s")."</th>".
-                  "<th onclick=\"sortTableNum(".(1+5*$i+5+$hero_flag).",'$table_id');\">".locale_string("winrate_s")."</th>";
+      $heroline .= "<th class=\"separator\">".locale_string("rank")."</th>".
+                  "<th>".locale_string("picks_s")."</th>".
+                  "<th>".locale_string("winrate_s")."</th>".
+                  "<th>".locale_string("bans_s")."</th>".
+                  "<th>".locale_string("winrate_s")."</th>";
     }
-  $res .= "</tr>".$heroline."</tr>";
+  $res .= "</tr>".$heroline."</tr></thead><tbody>";
 
   unset($heroline);
 
   foreach($draft as $hero)
     $res .= $hero['out'];
 
-  $res .= "</table>";
+  $res .= "</tbody></table>";
 
   return $res;
 }

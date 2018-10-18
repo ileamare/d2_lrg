@@ -1,6 +1,8 @@
 <?php
 
 function rg_generator_pvp_unwrap_data($context, $context_wrs, $heroes_flag = true) {
+  if(!sizeof($context)) return [];
+
   $pvp = [];
   $id = $heroes_flag ? "heroid" : "playerid";
   $sid = $heroes_flag ? "h" : "p";

@@ -15,10 +15,10 @@ function match_card($mid) {
 
   for($i=0; $i<10; $i++) {
     if($report['matches'][$mid][$i]['radiant']) {
-      $players_radi .= "<div class=\"match-player\">".player_name($report['matches'][$mid][$i]['player'])."</div>";
+      $players_radi .= "<div class=\"match-player\">".player_name($report['matches'][$mid][$i]['player'], false)."</div>";
       $heroes_radi .= "<div class=\"match-hero\">".hero_portrait($report['matches'][$mid][$i]['hero'])."</div>";
     } else {
-      $players_dire .= "<div class=\"match-player\">".player_name($report['matches'][$mid][$i]['player'])."</div>";
+      $players_dire .= "<div class=\"match-player\">".player_name($report['matches'][$mid][$i]['player'], false)."</div>";
       $heroes_dire .= "<div class=\"match-hero\">".hero_portrait($report['matches'][$mid][$i]['hero'])."</div>";
     }
 
@@ -27,14 +27,14 @@ function match_card($mid) {
     if(isset($report['match_participants_teams'][$mid]['radiant']) &&
        isset($report['teams'][ $report['match_participants_teams'][$mid]['radiant'] ]['name']))
       $team_radiant = team_link($report['match_participants_teams'][$mid]['radiant']);
-    else $team_radiant = "Radiant";
+    else $team_radiant = locale_string("radiant");
     if(isset($report['match_participants_teams'][$mid]['dire']) &&
        isset($report['teams'][ $report['match_participants_teams'][$mid]['dire'] ]['name']))
       $team_dire = team_link($report['match_participants_teams'][$mid]['dire']);
-    else $team_dire = "Dire";
+    else $team_dire = locale_string("dire");
   } else {
-    $team_radiant = "Radiant";
-    $team_dire = "Dire";
+    $team_radiant = locale_string("radiant");
+    $team_dire = locale_string("dire");
   }
   $radiant .= "<div class=\"match-team-score\">".$report['matches_additional'][$mid]['radiant_score']."</div>".
               "<div class=\"match-team-name".($report['matches_additional'][$mid]['radiant_win'] ? " winner" : "")."\">".$team_radiant."</div>";

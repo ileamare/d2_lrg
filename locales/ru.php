@@ -3,11 +3,11 @@
     "date_format" => "j.m.Y",
     "time_format" => "h:i:s",
 
-    "league_name" => "Название лиги",
+    "league_name" => "Название отчёта",
     "league_id" => "LID",
-    "league_tag" => "Тег лиги",
+    "league_tag" => "Тег отчёта",
     "league_desc" => "Описание",
-    "leag_reports" => "Отчёты по лигам",
+    "leag_reports" => "Отчёты",
 
     "random" => "Прочие данные",
     "notable_matches" => "Примечательные матчи",
@@ -28,6 +28,12 @@
     "matches_total" => "Всего сыграно матчей",
     "players_on_event" => "Игроков в лиге",
     "teams_on_event" => "Команд в лиге",
+
+    "heroes_median_picks" => "Медиана выборов героев",
+    "heroes_median_bans" => "Медиана запретов героев",
+    "heroes_median_gpm" => "Медиана ЗВМ героев",
+    "heroes_median_xpm" => "Медиана ОВМ героев",
+    "matches_median_duration" => "Медианная длительность матча",
 
     "hero" => "Герой",
     "player" => "Игрок",
@@ -94,6 +100,7 @@
     "diff" => "Преимущество",
     "rad_view" => "Обзор Света",
     "cards" => "Карточки",
+    "list" => "Список",
 
     "averages" => "Средние показатели",
     "participants" => "Участники",
@@ -130,6 +137,7 @@
     "most_deaths" => "Больше всего смертей",
     "assists" => "Помощь",
     "networth" => "Общая ценность",
+    "gold_earned" => "Заработано золота",
     "lasthits" => "Добиваний крипов",
     "lh_at10" => "Добито к 10:00",
     "lasthits_per_min" => "Крипов в минуту",
@@ -171,6 +179,7 @@
     "diversity" => "Гибкость",
     "common_position" => "Основная позиция",
     "bloodbath" => "Кровавая баня",
+    "kills_combined" => "Всего убийств",
 
     "stomp" => "Доминация от команды",
     "comeback" => "Камбек от команды",
@@ -221,7 +230,7 @@
     "over-pregen-report" => "Это автоматически составленный отчёт для",
     "over-league" => "лиги",
     "over-custom-league" => "кастомной лиги",
-    "over-matches" => "Матчей в лиге — %num%.",
+    "over-matches" => "Сыграно матчей: %num%.",
     "over-teams" => "Команд, принявших участие — %num%.",
     "over-players" => "Игроков, принявших участие — %num%.",
     "over-one-version" => "Все матчи были сыграны в патче %ver%.",

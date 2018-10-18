@@ -16,7 +16,7 @@ function region_link($rid) {
   global $leaguetag;
   global $linkvars;
 
-  return "<a href=\"?league=".$leaguetag."&mod=regions-regions$rid".(empty($linkvars) ? "" : "&$linkvars")
+  return "<a href=\"?league=".$leaguetag."&mod=regions-region$rid".(empty($linkvars) ? "" : "&$linkvars")
     ."\" title=\"".locale_string("region$rid")."\">".locale_string("region$rid")."</a>";
 }
 

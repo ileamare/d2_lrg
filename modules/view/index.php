@@ -105,13 +105,13 @@ if (sizeof($cache['reps']) === 0) {
     $modules .= "<div class=\"content-header\">".locale_string("noleague_cap")."</div>";
   $modules .= "</div>";
 
-  $modules .= "<table id=\"leagues-list\" class=\"list wide\"><tr class=\"thead\">";
-  $modules .= "<th ".(isset($cat) ? "onclick=\"sortTable(0,'leagues-list');" : "")."\">".locale_string("league_name")."</th>".
-    "<th ".(isset($cat) ? "onclick=\"sortTableNum(1,'leagues-list');" : "")."\">".locale_string("league_id")."</th>".
+  $modules .= "<table id=\"leagues-list\" class=\"list wide ".(isset($cat) ? "sortable" : "")."\"><thead><tr>";
+  $modules .= "<th>".locale_string("league_name")."</th>".
+    "<th>".locale_string("league_id")."</th>".
     "<th>".locale_string("league_desc")."</th>".
-    "<th ".(isset($cat) ? "onclick=\"sortTableNum(3,'leagues-list');" : "")."\">".locale_string("matches_total")."</th>".
-    "<th ".(isset($cat) ? "onclick=\"sortTableValue(4,'leagues-list');" : "")."\">".locale_string("start_date")."</th>".
-    "<th ".(isset($cat) ? "onclick=\"sortTableValue(5,'leagues-list');" : "")."\">".locale_string("end_date")."</th></th>";
+    "<th>".locale_string("matches_total")."</th>".
+    "<th>".locale_string("start_date")."</th>".
+    "<th>".locale_string("end_date")."</th></tr></thead>";
 
   uasort($reps, function($a, $b) {
     if($a['last_match']['date'] == $b['last_match']['date']) {

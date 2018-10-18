@@ -82,7 +82,7 @@ foreach ($matches as $match) {
 
     $query = $conn->query("SELECT matchid FROM matches WHERE matchid = ".$match.";");
 
-    if ($query->num_rows) {
+    if (isset($query->num_rows) && $query->num_rows) {
         echo("Already in database, skipping\n");
         continue;
     }
@@ -555,7 +555,7 @@ foreach ($matches as $match) {
       continue;
     }
 
-    $sql = " INSERT INTO matchlines (matchid, playerid, heroid, level, isRadiant, kills, deaths, assists, networth,".
+    $sql = "INSERT INTO matchlines (matchid, playerid, heroid, level, isRadiant, kills, deaths, assists, networth,".
             "gpm, xpm, heal, heroDamage, towerDamage, lastHits, denies) VALUES ";
     foreach($t_matchlines as $ml) {
         $sql .= "\n\t(".$ml['matchid'].",".$ml['playerid'].",".$ml['heroid'].",".
@@ -621,7 +621,7 @@ foreach ($matches as $match) {
         }
     }
 
-    if ($lg_settings['main']['teams']) {
+    if ($lg_settings['main']['teams'] && sizeof($t_team_matches)) {
       $sql = "INSERT INTO teams_matches (matchid, teamid, is_radiant) VALUES ";
 
       foreach($t_team_matches as $match) {
@@ -686,20 +686,19 @@ if ($lg_settings['main']['teams']) {
       $sql = "";
 
       foreach ($newteams as $id => $team) {
-      $json = file_get_contents('https://api.steampowered.com/IDOTA2Match_570/GetTeamInfoByTeamID/v001/?key='.$steamapikey.'&teams_requested=1&start_at_team_id='.$id);
-      $matchdata = json_decode($json, true);
-      # it may return more than 5 players, but we actually care only about the first 5 players
-      # others are probably coach and standins, they aren't part of official active roster
+        $json = file_get_contents('https://api.steampowered.com/IDOTA2Match_570/GetTeamInfoByTeamID/v001/?key='.$steamapikey.'&teams_requested=1&start_at_team_id='.$id);
+        $matchdata = json_decode($json, true);
+        # it may return more than 5 players, but we actually care only about the first 5 players
+        # others are probably coach and standins, they aren't part of official active roster
 
-      # initial idea about positions was to detect player position somehow and use it in team competitions
-      # to detect heros stats based on player positions
-      # right now it's placeholder
-      # TODO
-      $position = 0;
+        # initial idea about positions was to detect player position somehow and use it in team competitions
+        # to detect heros stats based on player positions
+        # right now it's placeholder
+        # TODO
+        $position = 0;
 
-      for($i=0; isset($matchdata['result']['teams'][0]['player_'.$i.'_account_id']); $i++)
-          $sql .= "\n\t(".$id.",".$matchdata['result']['teams'][0]['player_'.$i.'_account_id'].", ".$position."),";
-
+        for($i=0; isset($matchdata['result']['teams'][0]['player_'.$i.'_account_id']); $i++)
+            $sql .= "\n\t(".$id.",".$matchdata['result']['teams'][0]['player_'.$i.'_account_id'].", ".$position."),";
       }
 
       if(!empty($sql)) {

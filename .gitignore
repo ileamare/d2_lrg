@@ -24,5 +24,8 @@ gi_*
 # Custom Styles
 res/custom_styles/
 
+# Dependencies
+res/dependencies/
+
 # cachelist
 cachelist.json

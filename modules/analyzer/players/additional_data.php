@@ -13,10 +13,11 @@ for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row(
 
 $query_res->free_result();
 
-$result["players_additional"] = array();
+//$result["players_additional"] = array();
 
 foreach ($result['players'] as $pid => &$name) {
-  $result["players_additional"][$pid] = array();
+  if(!isset($result["players_additional"][$pid]))
+    $result["players_additional"][$pid] = [];
 
   /*
     team
@@ -28,40 +29,6 @@ foreach ($result['players'] as $pid => &$name) {
     gpm xpm pings
     TODO average fantasy values
   */
-
-  if ($lg_settings['main']['teams']) {
-    $sql = "SELECT teamid
-            FROM teams_rosters
-            WHERE playerid = $pid;";
-
-    if ($conn->multi_query($sql) === TRUE);
-    else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
-
-    $query_res = $conn->store_result();
-
-    $row = $query_res->fetch_row();
-
-    if(!$row[0]) {
-      $query_res->free_result();
-
-      $sql = "SELECT teams_matches.teamid, count(distinct matches.matchid) mts
-              FROM teams_matches JOIN matches ON teams_matches.matchid = matches.matchid
-              JOIN matchlines ON matches.matchid = matchlines.matchid AND matchlines.isradiant = teams_matches.is_radiant
-              WHERE matchlines.playerid = $pid
-              GROUP BY teams_matches.teamid
-              ORDER BY mts DESC;";
-
-      if ($conn->multi_query($sql) === TRUE);
-      else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
-
-      $query_res = $conn->store_result();
-      $row = $query_res->fetch_row();
-    }
-
-    $result["players_additional"][$pid]['team'] = $row[0];
-
-    $query_res->free_result();
-  }
 
   # matches overall
   $sql = "SELECT count(distinct matchid) FROM matchlines WHERE playerid = $pid GROUP BY playerid;";

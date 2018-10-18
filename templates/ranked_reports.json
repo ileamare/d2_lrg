@@ -23,6 +23,11 @@
     "overview_draft_1_3_count" : 5,
     "overview_draft_0_1" : false,
 
-    "overview_heroes_contested_graph" : false
+    "overview_heroes_contested_graph" : false,
+    "regions": {
+      "overview_last_match": false,
+      "overview_first_match": false,
+      "overview_last_match_winners": false
+    }
   }
 }

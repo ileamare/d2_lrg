@@ -115,6 +115,12 @@
         else if ($date < 1537056000) return 3801;
         else if ($date < 1539317940) return 3802;
         else return 3803;
+      case 39: # 7.20
+        if ($date < 1542767347) return 3900;
+        else if ($date < 1543090140) return 3901;
+        else if ($date < 1543635060) return 3902;
+        else if ($date < 1544424420) return 3903;
+        else return 3904;
       default:
         return $patch*100;
     }

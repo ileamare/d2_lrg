@@ -5,7 +5,8 @@ $options = getopt("f:");
 
 if(isset($options['f']))
   $file = $options['f'];
-else die("[F] No match ID specified\n");
+else
+  $file = "matchlists/$lrg_league_tag.list";
 
 $mids = explode("\n", file_get_contents($file));
 
@@ -28,9 +29,6 @@ foreach ($mids as $mid) {
         $conn->store_result();
     } while($conn->next_result());
 }
-
-$query_res = $conn->store_result();
-$query_res->free_result();
 
 echo "OK \n";
 

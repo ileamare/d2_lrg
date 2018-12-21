@@ -130,7 +130,7 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
 
     $res .= "<div class=\"content-text overview overview-charts\">";
 
-    if(isset($context['versions'])) {
+    if(isset($context['versions']) && $report['settings']['overview_versions_chart']) {
       $chart_context_max = reset($context['versions']);
       if ($report['settings']['overview_versions'] && $chart_context_max/$context_total_matches < 0.99) {
         $chart_context = [];

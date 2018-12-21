@@ -1,6 +1,6 @@
 # Dota 2 League Stats Fetcher and Report Generator
 
-## Current version: 2.1.0
+## Current version: 2.2.0
 
 **D2LRG** (for short) is a tool for fetching stats for dota matches and forming fancy stats pages with every data you may need.
 
@@ -86,6 +86,7 @@ Fetches data for matches in matchlist.
 Parameters:
 * `-l / --league=` - required, the tag of your database, league and report file
 * `-K` - ignore OpenDota API key
+* `-F` - add match to database even if there's no replay analysis available
 
 ### rg_analyzer
 

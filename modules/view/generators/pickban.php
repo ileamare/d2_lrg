@@ -1,6 +1,7 @@
 <?php
 include_once($root."/modules/view/functions/hero_name.php");
 include_once($root."/modules/view/functions/player_name.php");
+include_once($root."/modules/view/functions/ranking.php");
 
 function rg_generator_pickban($table_id, $context, $context_total_matches, $heroes_flag = true) {
   if(!sizeof($context)) return "";
@@ -23,14 +24,12 @@ function rg_generator_pickban($table_id, $context, $context_total_matches, $hero
 
   $ranks = [];
   $context_copy = $context;
-  uasort($context, function($a, $b) use ($context_total_matches) {
-    $a_oi_rank = ($a['matches_picked']*$a['winrate_picked'] + $a['matches_banned']*$a['winrate_banned'])
-      / $context_total_matches * 100;
-    $b_oi_rank = ($b['matches_picked']*$b['winrate_picked'] + $b['matches_banned']*$b['winrate_banned'])
-      / $context_total_matches * 100;
-    if($a_oi_rank == $b_oi_rank) return 0;
-    else return ($a_oi_rank < $b_oi_rank) ? 1 : -1;
-  });
+
+  $compound_ranking_sort = function($a, $b) use ($context_total_matches) {
+    return compound_ranking_sort($a, $b, $context_total_matches);
+  };
+
+  uasort($context, $compound_ranking_sort);
 
   $increment = 100 / sizeof($context); $i = 0;
 

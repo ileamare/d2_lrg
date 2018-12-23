@@ -1,4 +1,5 @@
 <?php
+include_once($root."/modules/view/functions/ranking.php");
 
 function rg_generator_draft($table_id, $context_pickban, $context_draft, $context_total_matches, $hero_flag = true) {
   $res = ""; $draft = [];
@@ -44,14 +45,11 @@ function rg_generator_draft($table_id, $context_pickban, $context_draft, $contex
   }
 
   $ranks = [];
-  uasort($context_pickban, function($a, $b) use ($context_total_matches) {
-    $a_oi_rank = ($a['matches_picked']*$a['winrate_picked'] + $a['matches_banned']*$a['winrate_banned'])
-      / $context_total_matches * 100;
-    $b_oi_rank = ($b['matches_picked']*$b['winrate_picked'] + $b['matches_banned']*$b['winrate_banned'])
-      / $context_total_matches * 100;
-    if($a_oi_rank == $b_oi_rank) return 0;
-    else return ($a_oi_rank < $b_oi_rank) ? 1 : -1;
-  });
+  $compound_ranking_sort = function($a, $b) use ($context_total_matches) {
+    return compound_ranking_sort($a, $b, $context_total_matches);
+  };
+
+  uasort($context_pickban, $compound_ranking_sort);
 
   $increment = 100 / sizeof($context_pickban); $i = 0;
 
@@ -70,19 +68,22 @@ function rg_generator_draft($table_id, $context_pickban, $context_draft, $contex
   $ranks_stages = [];
   for ($i = 1; $i <= $max_stage; $i++) {
     $ranks_stages[$i] = [];
-    $oi = [];
+    $scores = [];
     foreach ($draft as $id => $stages) {
       if(isset($stages[$i]) && ($stages[$i]['pick']+$stages[$i]['ban']))
-        $oi[$id] = ($stages[$i]['pick']*$stages[$i]['pick_wr']+$stages[$i]['ban']*$stages[$i]['ban_wr'])/$context_total_matches*100;
+        $scores[$id] = [
+          "matches_picked" => $stages[$i]['pick'],
+          "winrate_picked" => $stages[$i]['pick_wr'],
+          "matches_banned" => $stages[$i]['ban'],
+          "winrate_banned" => $stages[$i]['ban_wr'],
+        ];
+
     }
-    uasort($oi, function($a, $b) {
-      if($a == $b) return 0;
-      else return ($a < $b) ? 1 : -1;
-    });
+    uasort($scores, $compound_ranking_sort);
 
-    $increment = 100 / sizeof($oi); $j = 0;
+    $increment = 100 / sizeof($scores); $j = 0;
 
-    foreach ($oi as $id => $el) {
+    foreach ($scores as $id => $el) {
       if(isset($last) && $el == $last) {
         $j++;
         $ranks_stages[$i][$id] = $last_rank;

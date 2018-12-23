@@ -54,18 +54,18 @@ function rg_generator_positions_overview($table_id, $context, $hero_flag = true)
   $heroline = "<tr>".
                 ($hero_flag ?
                   "<th class=\"sorter-no-parser\" width=\"1%\"></th>".
-                  "<th data-sortInitialOrder=\"asc\" onclick=\"sortTable(1,'$table_id');\">".locale_string("hero")."</th>" :
-                  "<th data-sortInitialOrder=\"asc\" onclick=\"sortTable(0,'$table_id');\">".locale_string("player")."</th>"
+                  "<th data-sortInitialOrder=\"asc\" data-sorter=\"text\">".locale_string("hero")."</th>" :
+                  "<th data-sortInitialOrder=\"asc\" data-sorter=\"text\">".locale_string("player")."</th>"
                 ).
-                "<th onclick=\"sortTableNum(1,'$table_id');\">".locale_string("matches_s")."</th>";
+                "<th>".locale_string("matches_s")."</th>";
   $i = 2;
   foreach($position_overview_template as $k => $v) {
     if ($k == "total") continue;
 
-    $res .= "<th colspan=\"3\" class=\"separator\">".locale_string("position_$k")."</th>";
-    $heroline .= "<th onclick=\"sortTableNum(".($hero_flag+$i++).",'$table_id');\"  class=\"separator\">".locale_string("matches_s")."</th>".
-                  "<th onclick=\"sortTableNum(".($hero_flag+$i++).",'$table_id');\">".locale_string("ratio")."</th>".
-                  "<th onclick=\"sortTableNum(".($hero_flag+$i++).",'$table_id');\">".locale_string("winrate_s")."</th>";
+    $res .= "<th colspan=\"3\" class=\"separator\" data-sorter=\"digit\">".locale_string("position_$k")."</th>";
+    $heroline .= "<th class=\"separator\" data-sorter=\"digit\">".locale_string("matches_s")."</th>".
+                  "<th data-sorter=\"digit\">".locale_string("ratio")."</th>".
+                  "<th data-sorter=\"digit\">".locale_string("winrate_s")."</th>";
   }
   $res .= "</tr>".$heroline."</tr></thead>";
 

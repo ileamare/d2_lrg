@@ -107,12 +107,12 @@ function rg_generator_draft($table_id, $context_pickban, $context_draft, $contex
         if($stage['pick'])
           $draftline .= "<td>".$stage['pick']."</td><td>".number_format($stage['pick_wr']*100, 2)."%</td>";
         else
-          $draftline .= "<td>-</td><td>-</td>";
+          $draftline .= "<td>&zwnj;-</td><td>&zwnj;-</td>";
 
         if($stage['ban'])
           $draftline .= "<td>".$stage['ban']."</td><td>".number_format($stage['ban_wr']*100, 2)."%</td>";
         else
-          $draftline .= "<td>-</td><td>-</td>";
+          $draftline .= "<td>&zwnj;-</td><td>&zwnj;-</td>";
       }
 
       $stages_passed++;
@@ -120,7 +120,7 @@ function rg_generator_draft($table_id, $context_pickban, $context_draft, $contex
 
     if($stages_passed < $max_stage) {
       for ($i=$stages_passed; $i<$max_stage; $i++)
-        $draftline .= "<td class=\"separator\">-</td><td>-</td><td>-</td><td>-</td><td>-</td>";
+        $draftline .= "<td class=\"separator\">&zwnj;-</td><td>&zwnj;-</td><td>&zwnj;-</td><td>&zwnj;-</td><td>&zwnj;-</td>";
     }
 
     $draft[$id] = array ("out" => "", "matches" => $context_pickban[$id]['matches_total']);
@@ -155,22 +155,22 @@ function rg_generator_draft($table_id, $context_pickban, $context_draft, $contex
           "<th colspan=\"6\">".locale_string("total")."</th>";
   $heroline = "<tr>".
                 ($hero_flag ? "<th class=\"sorter-no-parser\" width=\"1%\"></th>" : "").
-                "<th>".locale_string($hero_flag ? "hero" : "player")."</th>".
-                "<th>".locale_string("matches_s")."</th>".
-                "<th>".locale_string("rank")."</th>".
-                "<th>".locale_string("picks_s")."</th>".
-                "<th>".locale_string("winrate_s")."</th>".
-                "<th>".locale_string("bans_s")."</th>".
-                "<th>".locale_string("winrate_s")."</th>";
+                "<th data-sorter=\"text\">".locale_string($hero_flag ? "hero" : "player")."</th>".
+                "<th data-sorter=\"digit\">".locale_string("matches_s")."</th>".
+                "<th data-sorter=\"digit\">".locale_string("rank")."</th>".
+                "<th data-sorter=\"digit\">".locale_string("picks_s")."</th>".
+                "<th data-sorter=\"digit\">".locale_string("winrate_s")."</th>".
+                "<th data-sorter=\"digit\">".locale_string("bans_s")."</th>".
+                "<th data-sorter=\"digit\">".locale_string("winrate_s")."</th>";
 
   if($max_stage > 1)
     for($i=1; $i<=$max_stage; $i++) {
-      $res .= "<th class=\"separator\" colspan=\"5\">".locale_string("stage")." $i</th>";
-      $heroline .= "<th class=\"separator\">".locale_string("rank")."</th>".
-                  "<th>".locale_string("picks_s")."</th>".
-                  "<th>".locale_string("winrate_s")."</th>".
-                  "<th>".locale_string("bans_s")."</th>".
-                  "<th>".locale_string("winrate_s")."</th>";
+      $res .= "<th class=\"separator\" colspan=\"5\" data-sorter=\"digit\">".locale_string("stage")." $i</th>";
+      $heroline .= "<th class=\"separator\" data-sorter=\"digit\">".locale_string("rank")."</th>".
+                  "<th data-sorter=\"digit\">".locale_string("picks_s")."</th>".
+                  "<th data-sorter=\"digit\">".locale_string("winrate_s")."</th>".
+                  "<th data-sorter=\"digit\">".locale_string("bans_s")."</th>".
+                  "<th data-sorter=\"digit\">".locale_string("winrate_s")."</th>";
     }
   $res .= "</tr>".$heroline."</tr></thead><tbody>";
 

@@ -8,7 +8,7 @@ $(document).ready(function() {
   $('table.sortable').tablesorter({
     sortInitialOrder: 'desc',
     stringTo: 'min',
-    sortReset: true
+    sortReset: true,
   });
   //$('#heroes-pickban').tablesorter();
 });

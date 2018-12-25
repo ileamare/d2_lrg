@@ -1,12 +1,6 @@
 <?php
-# open metadata
-# decide, what clusters are part of a region
-if(!isset($metadata)) {
-  $metadata = json_decode(file_get_contents("res/metadata.json"), true);
-}
-
 $regions = [];
-foreach($metadata['clusters'] as $cluster => $region) {
+foreach($meta['clusters'] as $cluster => $region) {
   if(!isset($regions[$region])) $regions[$region] = [];
   $regions[$region][] = $cluster;
 }
@@ -17,10 +11,10 @@ if(sizeof($result["regions"]) == 1 ||
 
 $reg_matches = [];
 foreach($result["regions"] as $clid => $matches) {
-  if(!isset($reg_matches[ $metadata['clusters'][$clid] ]))
-    $reg_matches[ $metadata['clusters'][$clid] ] = $matches;
+  if(!isset($reg_matches[ $meta['clusters'][$clid] ]))
+    $reg_matches[ $meta['clusters'][$clid] ] = $matches;
   else
-    $reg_matches[ $metadata['clusters'][$clid] ] += $matches;
+    $reg_matches[ $meta['clusters'][$clid] ] += $matches;
 }
 
 if(sizeof($reg_matches) == 1 ||

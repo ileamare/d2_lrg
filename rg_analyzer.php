@@ -5,12 +5,15 @@ include_once("modules/commons/utf8ize.php");
 include_once("modules/commons/migrate_params.php");
 include_once("modules/commons/calc_median.php");
 include_once("modules/commons/generate_tag.php");
+include_once("modules/commons/metadata.php");
 
 echo("\nConnecting to database...\n");
 
 $conn = new mysqli($lrg_sql_host, $lrg_sql_user, $lrg_sql_pass, $lrg_sql_db);
 
 if ($conn->connect_error) die("[F] Connection to SQL server failed: ".$conn->connect_error."\n");
+
+$meta = new lrg_metadata;
 
 $result = [];
 $result["league_name"]  = $lg_settings['league_name'];

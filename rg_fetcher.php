@@ -6,13 +6,14 @@ include_once("head.php");
 include_once("modules/fetcher/get_patchid.php");
 include_once("modules/commons/migrate_params.php");
 include_once("modules/commons/generate_tag.php");
+include_once("modules/commons/metadata.php");
 
 include_once("libs/simple-opendota-php/simple_opendota.php");
 
 echo("\nInitialising...\n");
 
 $conn = new mysqli($lrg_sql_host, $lrg_sql_user, $lrg_sql_pass, $lrg_sql_db);
-$meta = json_decode(file_get_contents('res/metadata.json'), true);
+$meta = new lrg_metadata;
 
 //$stratz_old_api_endpoint = 3707179408;
 

@@ -5,6 +5,7 @@ leagues/
 matchlists/
 reports/
 libs/
+metadata/
 
 # Settings container
 rg_settings.json

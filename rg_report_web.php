@@ -6,6 +6,7 @@ $lg_version = array( 2, 2, 0, 0, 0 );
 include_once("modules/commons/locale_strings.php");
 include_once("modules/commons/get_language_code_iso6391.php");
 include_once("modules/commons/merge_mods.php");
+include_once("modules/commons/metadata.php");
 
 # FUNCTIONS
 include_once("modules/view/functions/modules.php");
@@ -90,8 +91,7 @@ if (!empty($leaguetag)) {
 if (isset($report)) {
   $output = "";
 
-  $meta = file_get_contents("res/metadata.json") or die("[F] Can't open metadata\n");
-  $meta = json_decode($meta, true);
+  $meta = new lrg_metadata;
 
   include_once("modules/view/__post_load.php");
 

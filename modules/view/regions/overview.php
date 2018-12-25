@@ -1,6 +1,6 @@
 <?php
 include_once "$root/modules/view/generators/overview.php";
-include_once "$root/modules/functions/migrate_params.php";
+include_once "$root/modules/commons/migrate_params.php";
 
 function rg_view_generate_regions_overview($region, $reg_report) {
   global $meta;

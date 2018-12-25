@@ -4,8 +4,8 @@ ini_set('memory_limit', '4000M');
 
 include_once("head.php");
 include_once("modules/fetcher/get_patchid.php");
-include_once("modules/functions/migrate_params.php");
-include_once("modules/functions/generate_tag.php");
+include_once("modules/commons/migrate_params.php");
+include_once("modules/commons/generate_tag.php");
 
 include_once("libs/simple-opendota-php/simple_opendota.php");
 
@@ -75,7 +75,7 @@ foreach ($matches as $match) {
     $t_adv_matchlines = [];
     $t_draft = [];
     $bad_replay = false;
-    
+
     if ($lg_settings['main']['teams']) {
       $t_team_matches = [];
     }
@@ -360,11 +360,11 @@ foreach ($matches as $match) {
         $t_matchlines[$i]['lasthits'] = $matchdata['players'][$j]['last_hits'];
         $t_matchlines[$i]['denies'] = $matchdata['players'][$j]['denies'];
 
-        
+
         $t_adv_matchlines[$i]['matchid'] = $match;
         $t_adv_matchlines[$i]['playerid'] = $matchdata['players'][$j]['account_id'];
         $t_adv_matchlines[$i]['heroid'] = $matchdata['players'][$j]['hero_id'];
-        
+
         if (!$bad_replay) {
           $t_adv_matchlines[$i]['lh10'] = $matchdata['players'][$j]['lh_t'][10];
           if ($matchdata['players'][$j]['lane_role'] == 5)
@@ -380,26 +380,26 @@ foreach ($matches as $match) {
         if (!$bad_replay) {
           if ($matchdata['players'][$j]['lh_t'][5] <= 6) $support_indicators++;
           if ($matchdata['players'][$j]['lh_t'][3] <= 2) $support_indicators++;
-          
+
           if ($matchdata['players'][$j]['obs_placed'] > 0) $support_indicators++;
           if ($matchdata['players'][$j]['obs_placed'] > 3) $support_indicators++;
           if ($matchdata['players'][$j]['obs_placed'] > 8) $support_indicators++;
           if ($matchdata['players'][$j]['obs_placed'] > 12) $support_indicators++;
           if ($matchdata['players'][$j]['sen_placed'] > 6) $support_indicators++;
-          
+
           if ($matchdata['players'][$j]['lane_efficiency'] < 0.55 && $matchdata['players'][$j]['win']) $support_indicators++;
           if ($matchdata['players'][$j]['lane_efficiency'] < 0.50) $support_indicators++;
           if ($matchdata['players'][$j]['lane_efficiency'] < 0.35) $support_indicators++;
           if ($matchdata['players'][$j]['is_roaming']) $support_indicators+=3;
         }
-        
+
         if ($matchdata['players'][$j]['gold_per_min'] < 420 && $matchdata['players'][$j]['win']) $support_indicators++;
         if ($matchdata['players'][$j]['gold_per_min'] < 355) $support_indicators++;
         if ($matchdata['players'][$j]['gold_per_min'] < 290) $support_indicators++;
-        
+
         if ($matchdata['players'][$j]['hero_damage']*60/$matchdata['duration'] < 375 && $matchdata['players'][$j]['win']) $support_indicators++;
         if ($matchdata['players'][$j]['hero_damage']*60/$matchdata['duration'] < 275 && !$matchdata['players'][$j]['win']) $support_indicators++;
-        
+
         if ($matchdata['players'][$j]['last_hits']*60/$matchdata['duration'] < 2.5) $support_indicators++;
 
         # TODO compare to teammates on the same lane/role
@@ -422,14 +422,14 @@ foreach ($matches as $match) {
             $sql = "SELECT a.lane, COUNT(DISTINCT matchid) mc FROM".
                     "(select * from `adv_matchlines` WHERE heroid=".$t_adv_matchlines[$i]['heroid']." limit 35) a ".
                     "GROUP BY a.lane ORDER BY mc DESC";
-            
+
             if ($conn->multi_query($sql) !== TRUE) die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
 
             $query_res = $conn->store_result();
 
             $row = $query_res->fetch_row();
             $t_adv_matchlines[$i]['lane'] = $row[0];
-            
+
             $query_res->free_result();
             # It's not ideal, but it works for now.
           } else {
@@ -629,9 +629,9 @@ foreach ($matches as $match) {
     if (!$bad_replay)
       $sql = " INSERT INTO adv_matchlines (matchid, playerid, heroid, lh_at10, isCore, lane, efficiency_at10, wards, sentries,".
             "couriers_killed, roshans_killed, wards_destroyed, multi_kill, streak, stacks, time_dead, buybacks, pings, stuns, teamfight_part, damage_taken) VALUES ";
-    else 
+    else
       $sql = " INSERT INTO adv_matchlines (matchid, playerid, heroid, isCore, lane) VALUES ";
-    
+
     foreach($t_adv_matchlines as $aml) {
       if (!$bad_replay)
         $sql .= "\n\t(".$aml['matchid'].",".$aml['playerid'].",".$aml['heroid'].",".
@@ -641,7 +641,7 @@ foreach ($matches as $match) {
                     $aml['max_multikill'].",".$aml['max_streak'].",".$aml['stacks'].",".
                     $aml['time_dead'].",".$aml['buybacks'].",".$aml['pings'].",".
                     $aml['stuns'].",".$aml['teamfight_part'].",".$aml['damage_taken']."),";
-      else 
+      else
         $sql .= "\n\t(".$aml['matchid'].",".$aml['playerid'].",".$aml['heroid'].",".$aml['is_core'].",".$aml['lane']."),";
     }
     $sql[strlen($sql)-1] = ";";

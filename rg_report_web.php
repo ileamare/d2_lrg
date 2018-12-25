@@ -1,11 +1,11 @@
 <?php
 include_once("rg_report_out_settings.php");
-include_once("modules/functions/versions.php");
+include_once("modules/commons/versions.php");
 $lg_version = array( 2, 2, 0, 0, 0 );
 
-include_once("modules/functions/locale_strings.php");
-include_once("modules/functions/get_language_code_iso6391.php");
-include_once("modules/functions/merge_mods.php");
+include_once("modules/commons/locale_strings.php");
+include_once("modules/commons/get_language_code_iso6391.php");
+include_once("modules/commons/merge_mods.php");
 
 # FUNCTIONS
 include_once("modules/view/functions/modules.php");

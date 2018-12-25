@@ -1,5 +1,5 @@
 <?php
-include_once("modules/functions/recursive_scandir.php");
+include_once("modules/commons/recursive_scandir.php");
 include_once("modules/view/functions/report_descriptor.php");
 
 # open cachefile

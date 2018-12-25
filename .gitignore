@@ -30,3 +30,7 @@ res/dependencies/
 
 # cachelist
 cachelist.json
+
+# symlinks workaround
+metadata
+res/custom_styles

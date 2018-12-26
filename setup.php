@@ -1,6 +1,6 @@
 <?php
-require_once("modules/functions/check_directory.php");
-require_once("modules/functions/readline.php");
+require_once("modules/commons/check_directory.php");
+require_once("modules/commons/readline.php");
 
 # Initialising
 $check_libs = true;

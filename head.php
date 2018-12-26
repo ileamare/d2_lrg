@@ -1,7 +1,7 @@
 <?php
 //ini_set('memory_limit', '1024M');
-require_once("modules/functions/versions.php");
-require_once("modules/functions/readline.php");
+require_once("modules/commons/versions.php");
+require_once("modules/commons/readline.php");
 
 if(isset($argv)) {
     $options = getopt("l:m:d:fKT:");

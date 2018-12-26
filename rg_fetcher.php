@@ -281,7 +281,7 @@ foreach ($matches as $match) {
     unset($json);
 
     $t_match['matchid'] = $match;
-    $t_match['version'] = get_patchid($matchdata['start_time'], $matchdata['patch']);
+    $t_match['version'] = get_patchid($matchdata['start_time'], $matchdata['patch'], $meta);
     $t_match['radiantWin'] = $matchdata['radiant_win'];
     $t_match['duration'] = $matchdata['duration'];
     $t_match['modeID'] = $matchdata['game_mode'];

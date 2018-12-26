@@ -25,11 +25,11 @@ class lrg_metadata implements ArrayAccess {
   }
 
   public function offsetExists($offset) {
-      return isset($this->$metadata[$offset]);
+      return isset($this->metadata[$offset]);
   }
 
   public function offsetUnset($offset) {
-      unset($this->$metadata[$offset]);
+      unset($this->metadata[$offset]);
   }
 
   public function & offsetGet($offset) {

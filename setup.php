@@ -33,10 +33,22 @@ if ( $check_folders ) {
     check_directory("matchlists");
     check_directory("reports");
     check_directory("libs");
+    check_directory("tmp");
 }
 # Downloading libs via Git
 
 if ( $check_libs ) {
+    # LRG Metadata
+    if ( check_directory("metadata") ) {
+        chdir("metadata");
+        echo("[ ] Git: Pulling updates for LRG Metadata\n");
+        `git pull`;
+        chdir("..");
+    } else {
+        echo("[ ] Git: Downloading LRG Metadata\n");
+        `git clone https://github.com/leamare/D2-LRG-Metadata.git metadata`;
+    }
+
     # TODO simple stratz php
 
     # Simple OpenDota PHP

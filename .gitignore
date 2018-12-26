@@ -6,6 +6,7 @@ matchlists/
 reports/
 libs/
 metadata/
+tmp/
 
 # Settings container
 rg_settings.json

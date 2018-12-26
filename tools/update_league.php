@@ -1,6 +1,6 @@
 <?php
 require_once("head.php");
-require_once("modules/mod.migrate_params.php");
+require_once("modules/commons/merge_mods.php");
 
 $reports = scandir("leagues");
 
@@ -8,7 +8,7 @@ if (!file_exists("templates/default.json")) die("[F] No default league template 
 
 $def_settings = json_decode(file_get_contents("templates/default.json"), true);
 
-migrate_params($def_settings, $lg_settings);
+merge_mods($def_settings, $lg_settings);
 
 echo " OK";
 
@@ -17,6 +17,5 @@ fwrite($f, json_encode($def_settings));
 fclose($f);
 
 echo " OK\n";
-}
 
  ?>

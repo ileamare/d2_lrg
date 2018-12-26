@@ -18,6 +18,7 @@
   * Parameters:
   *  $date  - UNIX tmestamp of the match, int
   *  $patch - patch ID from API response, int
+  *  $meta  - metadata object, lrg_metadata or array
   * Returns:
   *  Converted Patch ID (int) to support minor lettered patches
   */

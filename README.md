@@ -50,7 +50,8 @@ After getting D2LRG code to your computer, run `php setup.php`. It will install 
 * Graph.js
 * jQuery
 * jquery-tablesorter
-* PHP OpenDota SDK
+* Simple PHP OpenDota SDK
+* D2-LRG-Metadata
 
 ## How to use
 

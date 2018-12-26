@@ -17,7 +17,6 @@ if (file_exists($cache_file)) {
       throw(new Exception("Old cache version"));
     }
   } catch (Exception $e) {
-    var_dump($e);
     $cache_update = true;
     $cache = [
       "files" => [],

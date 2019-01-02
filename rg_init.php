@@ -115,7 +115,7 @@ if ($conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag'])) {
   echo "OK\n[ ] Creating table `matches`...";
 
   $conn->query("CREATE TABLE `matches` (
-    `matchid` int(10) UNSIGNED NOT NULL,
+    `matchid` bigint(20) UNSIGNED NOT NULL,
     `radiantWin` tinyint(1) NOT NULL,
     `duration` int(11) NOT NULL,
     `modeID` tinyint(11) UNSIGNED NOT NULL,
@@ -130,8 +130,8 @@ if ($conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag'])) {
   echo "OK\n[ ] Creating table `matchlines`...";
 
   $conn->query("CREATE TABLE `matchlines` (
-    `matchid` int(11) UNSIGNED NOT NULL,
-    `playerid` int(11) NOT NULL,
+    `matchid` bigint(20) UNSIGNED NOT NULL,
+    `playerid` bigint(20) NOT NULL,
     `heroid` smallint(6) NOT NULL,
     `level` tinyint(3) UNSIGNED NOT NULL,
     `isRadiant` tinyint(1) NOT NULL,
@@ -151,8 +151,8 @@ if ($conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag'])) {
   echo "OK\n[ ] Creating table `adv_matchlines`...";
 
   $conn->query("CREATE TABLE `adv_matchlines` (
-    `matchid` int(10) UNSIGNED NOT NULL,
-    `playerid` int(10) NOT NULL,
+    `matchid` bigint(20) UNSIGNED NOT NULL,
+    `playerid` bigint(20) NOT NULL,
     `heroid` smallint(5) UNSIGNED NOT NULL,
     `lh_at10` tinyint(3) UNSIGNED NOT NULL,
     `isCore` tinyint(1) NOT NULL,
@@ -177,7 +177,7 @@ if ($conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag'])) {
   echo "OK\n[ ] Creating table `draft`...";
 
   $conn->query("CREATE TABLE `draft` (
-    `matchid` int(10) UNSIGNED NOT NULL,
+    `matchid` bigint(20) UNSIGNED NOT NULL,
     `is_radiant` tinyint(1) NOT NULL,
     `is_pick` tinyint(1) NOT NULL,
     `hero_id` smallint(5) UNSIGNED NOT NULL,
@@ -187,7 +187,7 @@ if ($conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag'])) {
   echo "OK\n[ ] Creating table `players`...";
 
   $conn->query("CREATE TABLE `players` (
-    `playerID` int(11) NOT NULL,
+    `playerID` bigint(20) NOT NULL,
     `nickname` varchar(25) NOT NULL
   );");
     if ($conn->connect_error) die("[F] Can't create table `draft`: ".$conn->connect_error."\n");
@@ -219,7 +219,7 @@ if ($conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag'])) {
   if($lg_settings['main']['teams']) {
     echo "[ ] Creating table `teams`...";
     $conn->query("CREATE TABLE `teams` (
-      `teamid` int(10) UNSIGNED NOT NULL,
+      `teamid` bigint(20) UNSIGNED NOT NULL,
       `name` varchar(50) NOT NULL,
       `tag` varchar(25) NOT NULL
     );");
@@ -228,8 +228,8 @@ if ($conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag'])) {
 
     echo "[ ] Creating table `teams_matches`...";
     $conn->query("CREATE TABLE `teams_matches` (
-      `matchid` int(10) UNSIGNED NOT NULL,
-      `teamid` int(10) UNSIGNED NOT NULL,
+      `matchid` bigint(20) UNSIGNED NOT NULL,
+      `teamid` bigint(20) UNSIGNED NOT NULL,
       `is_radiant` tinyint(1) NOT NULL
     );");
       if ($conn->connect_error) die("[F] Can't create table `teams_matches`: ".$conn->connect_error."\n");
@@ -237,8 +237,8 @@ if ($conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag'])) {
 
     echo "[ ] Creating table `teams_rosters`...";
     $conn->query("CREATE TABLE `teams_rosters` (
-      `teamid` int(10) UNSIGNED NOT NULL,
-      `playerid` int(11) NOT NULL,
+      `teamid` bigint(20) UNSIGNED NOT NULL,
+      `playerid` bigint(20) NOT NULL,
       `position` tinyint(3) UNSIGNED NOT NULL
     );");
       if ($conn->connect_error) die("[F] Can't create table `teams_rosters`: ".$conn->connect_error."\n");

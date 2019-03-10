@@ -16,6 +16,7 @@ $conn = new mysqli($lrg_sql_host, $lrg_sql_user, $lrg_sql_pass, $lrg_sql_db);
 $meta = new lrg_metadata;
 
 //$stratz_old_api_endpoint = 3707179408;
+$stratz_timeout_retries = 5;
 
 $force_adding = isset($options['F']);
 
@@ -141,7 +142,7 @@ foreach ($matches as $match) {
             $failed_matches[sizeof($failed_matches)] = $match;
             continue;
           } else {
-          echo("..WARNING: Replay isn't parsed.");
+            echo("..WARNING: Replay isn't parsed.");
             $bad_replay = true;
           }
         }
@@ -167,7 +168,7 @@ foreach ($matches as $match) {
 
         $stratz = json_decode($json, true);
 
-        if(!isset($stratz['results'][0]['parsedDate'])) {
+        if(!isset($stratz[0]['parsedDate'])) {
           echo("..ERROR: Missing STRATZ analysis, skipping.\n");
           $failed_matches[sizeof($failed_matches)] = $match;
           continue;
@@ -175,12 +176,14 @@ foreach ($matches as $match) {
 
         $full_request = false;
         if($matchdata['game_mode'] == 22 || $matchdata['game_mode'] == 3) {
-          while(!isset($stratz['results'][0]['pickBans']) || $stratz['results'][0]['pickBans'] === NULL) {
+          $stratz_retries = $stratz_timeout_retries+1;
+          while(!isset($stratz[0]['pickBans']) || $stratz[0]['pickBans'] === NULL) {
+            $stratz_retries--;
             echo "..STRATZ ERROR";
             `sleep 5`;
             echo ", retrying.";
 
-            if (!isset($stratz['results'][0]['pickBans'])) {
+            if (!isset($stratz[0]['pickBans'])) {
                 $request = "https://api.stratz.com/api/v1/match/$match";
                 $full_request = true;
             }
@@ -191,7 +194,7 @@ foreach ($matches as $match) {
                 $stratz = array( "results" => array ( json_decode($json, true) ) );
             else $stratz = json_decode($json, true);
 
-            if($full_request && strlen($json) < 6500) {
+            if($full_request && strlen($json) < 6500 || !$stratz_retries) {
                 echo("..ERROR: Missing STRATZ analysis, skipping.\n");
                 $failed_matches[sizeof($failed_matches)] = $match;
                 break;
@@ -199,20 +202,28 @@ foreach ($matches as $match) {
           }
           if(in_array($match, $failed_matches)) continue;
 
-          $matchdata['picks_bans'] = $stratz['results'][0]['pickBans'];
+          $matchdata['picks_bans'] = $stratz[0]['pickBans'];
         }
 
-        for($i=0; $i<10; $i++) {
-          if(!isset($matchdata['players'][$i]['account_id']) || $matchdata['players'][$i]['account_id'] === null) {
-            $matchdata['players'][$i]['account_id'] = $stratz['results'][0]['players'][$i]['steamId'];
+        for($i=0, $j=0, $sz=sizeof($matchdata['players']); $i<$sz; $i++) {
+          if(!isset($matchdata['players'][$i]['hero_id']) || !$matchdata['players'][$i]['hero_id'] || $j>9) {
+            unset($matchdata['players'][$i]);
+            continue;
+          }
+          if(!isset($matchdata['players'][$i]['account_id']) || $matchdata['players'][$i]['account_id'] === null
+              || $matchdata['players'][$i]['account_id'] != $stratz[0]['players'][$j]['steamId']) {
+            $matchdata['players'][$i]['account_id'] = $stratz[0]['players'][$j]['steamId'];
             //$tmp = $opendota->player($matchdata['players'][$i]['account_id']);
 
-            $matchdata['players'][$i]["name"] = $stratz['results'][0]['players'][$i]['name'];
-            if(isset($stratz['results'][0]['players'][$i]['proPlayerName']))
-              $matchdata['players'][$i]["personaname"] = $stratz['results'][0]['players'][$i]['proPlayerName'];
+            $matchdata['players'][$i]["name"] = $stratz[0]['players'][$j]['name'];
+            if(isset($stratz[0]['players'][$j]['proPlayerName']))
+              $matchdata['players'][$i]["personaname"] = $stratz[0]['players'][$j]['proPlayerName'];
           }
+          $j++;
         }
-
+        
+        $matchdata['players'] = array_values($matchdata['players']);
+        
         echo("..Stratz data merged.");
 
         unset($stratz);
@@ -314,11 +325,19 @@ foreach ($matches as $match) {
         }
       }
     }
-
+    
+    
+    
     $i = sizeof($t_matchlines);
-    for ($j = 0; $j < 10; $j++, $i++) {
+    for ($j=0, $sz=10; $j<$sz; $j++) {
         $t_matchlines[$i]['matchid'] = $match;
 
+        # for wrong numbers of players in opendota response
+        if (!isset($matchdata['players'][$j]['hero_id'])) {
+          $sz++;
+          continue;
+        }
+        
         # support for botmatches
         if ($matchdata['players'][$j]['account_id'] != null)
           $t_matchlines[$i]['playerid'] = $matchdata['players'][$j]['account_id'];
@@ -430,6 +449,8 @@ foreach ($matches as $match) {
 
             $row = $query_res->fetch_row();
             $t_adv_matchlines[$i]['lane'] = $row[0];
+            if($row[0] == 5)
+              $t_adv_matchlines[$i]['is_core'] = 0;
 
             $query_res->free_result();
             # It's not ideal, but it works for now.
@@ -470,6 +491,7 @@ foreach ($matches as $match) {
             $t_adv_matchlines[$i]['damage_taken'] += $instance;
           }
         }
+        $i++;
     }
 
     $i = sizeof($t_draft);
@@ -495,6 +517,9 @@ foreach ($matches as $match) {
             -2 => 0 # radi bans
         );
         foreach ($matchdata['picks_bans'] as $draft_instance) {
+            if (!isset($draft_instance['hero_id']) || !$draft_instance['hero_id'])
+              continue;
+            
             $stage_sum = (1+(int)$draft_instance['is_pick'])*($draft_instance['team'] ? 1 : -1);
             $draft_stage = 0;
 
@@ -524,6 +549,9 @@ foreach ($matches as $match) {
         }
     } else if ($matchdata['game_mode'] == 16) {
         foreach ($matchdata['picks_bans'] as $draft_instance) {
+            if (!isset($draft_instance['hero_id']) || !$draft_instance['hero_id'])
+              continue;
+        
             $t_draft[$i]['matchid'] = $match;
             $t_draft[$i]['is_radiant'] = $draft_instance['team'] ? 0 : 1;
             $t_draft[$i]['is_pick'] = $draft_instance['is_pick'];
@@ -540,6 +568,8 @@ foreach ($matches as $match) {
         }
     } else if ($matchdata['game_mode'] == 22) {
       foreach ($matchdata['picks_bans'] as $draft_instance) {
+        if (!isset($draft_instance['hero_id']) || !$draft_instance['hero_id'])
+          continue;
         # ban nominants counts as bans ? Need to thing about that.
         if (!$draft_instance['isPick']) {
           if(!$draft_instance['wasBannedSuccessfully']) continue;
@@ -561,6 +591,8 @@ foreach ($matches as $match) {
       }
     } else if ($matchdata['game_mode'] == 3) {
       foreach ($matchdata['picks_bans'] as $draft_instance) {
+        if (!isset($draft_instance['hero_id']) || !$draft_instance['hero_id'])
+          continue;
         $t_draft[$i]['matchid'] = $match;
         $t_draft[$i]['is_radiant'] = ($draft_instance['playerIndex'] < 5) ? 1 : 0;
         $t_draft[$i]['is_pick'] = 1;
@@ -572,6 +604,8 @@ foreach ($matches as $match) {
       }
     } else {
         foreach($matchdata['players'] as $draft_instance) {
+            if (!isset($draft_instance['hero_id']) || !$draft_instance['hero_id'])
+              continue;
             $t_draft[$i]['matchid'] = $match;
             $t_draft[$i]['is_radiant'] = $draft_instance['isRadiant'];
             $t_draft[$i]['is_pick'] = 1;
@@ -602,6 +636,9 @@ foreach ($matches as $match) {
       echo "ERROR (".$conn->error."), reverting match.\n";
       $failed_matches[] = $t_match['matchid'];
       $conn->multi_query($err_query);
+      do {
+        $conn->store_result();
+      } while($conn->next_result());
       continue;
     }
 
@@ -624,6 +661,9 @@ foreach ($matches as $match) {
       echo "ERROR (".$conn->error."), reverting match.\n";
       $failed_matches[] = $t_match['matchid'];
       $conn->multi_query($err_query);
+      do {
+        $conn->store_result();
+      } while($conn->next_result());
       continue;
     }
 
@@ -654,6 +694,9 @@ foreach ($matches as $match) {
       echo "ERROR (".$conn->error."), reverting match.\n";
       $failed_matches[] = $t_match['matchid'];
       $conn->multi_query($err_query);
+      do {
+        $conn->store_result();
+      } while($conn->next_result());
       continue;
     }
 
@@ -674,6 +717,9 @@ foreach ($matches as $match) {
           echo "ERROR (".$conn->error."), reverting match.\n";
           $failed_matches[] = $t_match['matchid'];
           $conn->multi_query($err_query);
+          do {
+            $conn->store_result();
+          } while($conn->next_result());
           continue;
         }
     }
@@ -698,6 +744,9 @@ foreach ($matches as $match) {
         echo "ERROR (".$conn->error."), reverting match.\n";
         $failed_matches[] = $t_match['matchid'];
         $conn->multi_query($err_query);
+        do {
+          $conn->store_result();
+        } while($conn->next_result());
         continue;
       }
     }

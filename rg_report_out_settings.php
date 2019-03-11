@@ -46,4 +46,6 @@ $hidden_cat = "hidden";
 
 $index_list = 5; #-1 all, 0 none, other - number of reports on main page
 
+$link_provider = "stratz.com"; //opendota.com dotabuff.com
+
 ?>

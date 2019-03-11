@@ -1,7 +1,8 @@
 <?php
 
 function match_link($mid) {
-  return "<a href=\"https://opendota.com/matches/$mid\" target=\"_blank\" rel=\"noopener\">$mid</a>";
+  global $link_provider;
+  return "<a href=\"https://$link_provider/matches/$mid\" target=\"_blank\" rel=\"noopener\">$mid</a>";
 }
 
 function team_link($tid) {

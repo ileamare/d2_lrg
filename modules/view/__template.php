@@ -121,7 +121,7 @@
     </div>
       <footer>
         <a href="https://dota2.com" target="_blank" rel="noopener">Dota 2</a> is a registered trademark of <a href="https://valvesoftware.com" target="_blank" rel="noopener">Valve Corporation.</a>
-        Match replay data analyzed by <a href="https://opendota.com" target="_blank" rel="noopener">OpenDota</a>.<br />
+        Match replay data provided by <a href="https://stratz.com/" target="_blank" rel="noopener">STRATZ</a> and <a href="https://opendota.com" target="_blank" rel="noopener">OpenDota</a>.<br />
         Graphs are made with <a href="https://visjs.org" target="_blank" rel="noopener">vis.js</a> and <a href="http://www.chartjs.org/" target="_blank" rel="noopener">chart.js</a>.<br />
         Made by <a href="https://spectralalliance.ru" target="_blank" rel="noopener">Spectral Alliance</a>
         with support of <a href="https://vk.com/thecybersport" target="_blank" rel="noopener">TheCyberSport</a>. Klozi is a registered trademark of Grafensky.<br />

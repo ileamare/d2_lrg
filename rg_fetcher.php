@@ -602,17 +602,19 @@ foreach ($matches as $match) {
         else $t_draft[$i]['stage'] = 3;
         $i++;
       }
-    } else {
-        foreach($matchdata['players'] as $draft_instance) {
-            if (!isset($draft_instance['hero_id']) || !$draft_instance['hero_id'])
-              continue;
-            $t_draft[$i]['matchid'] = $match;
-            $t_draft[$i]['is_radiant'] = $draft_instance['isRadiant'];
-            $t_draft[$i]['is_pick'] = 1;
-            $t_draft[$i]['hero_id'] = $draft_instance['hero_id'];
-            $t_draft[$i]['stage'] = 1;
-            $i++;
-        }
+    }
+    
+    if (!sizeof($t_draft)) {
+      foreach($matchdata['players'] as $draft_instance) {
+          if (!isset($draft_instance['hero_id']) || !$draft_instance['hero_id'])
+            continue;
+          $t_draft[$i]['matchid'] = $match;
+          $t_draft[$i]['is_radiant'] = $draft_instance['isRadiant'];
+          $t_draft[$i]['is_pick'] = 1;
+          $t_draft[$i]['hero_id'] = $draft_instance['hero_id'];
+          $t_draft[$i]['stage'] = 1;
+          $i++;
+      }
     }
 
     echo "..Recording.";

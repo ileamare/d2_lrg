@@ -128,7 +128,7 @@
         <?php if (!empty($custom_footer)) echo $custom_footer."<br />";
           echo "LRG web version: <a>".parse_ver($lg_version)."</a>. ";
         ?>
-        All changes can be discussed on Spectral Alliance discord channel and on <a href="https://github.com/leamare/d2_lrg" target="_blank" rel="noopener">github</a>.
+        All changes can be discussed on Spectral discord channel and on <a href="https://github.com/leamare/D2-LRG-lrg2" target="_blank" rel="noopener">github</a>.
       </footer>
       <div class="modal" id="modal-box">
         <div class="modal-content">

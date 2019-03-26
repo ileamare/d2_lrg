@@ -1,8 +1,10 @@
-# Dota 2 League Stats Fetcher and Report Generator
+# Dota 2 League Report Generator (D2-LRG-lrg2)
 
-## Current version: 2.2.0
+## Current version: 2.4.0
 
 **D2LRG** (for short) is a tool for fetching stats for dota matches and forming fancy stats pages with every data you may need.
+
+This is **lrg2** version that won't be updated any further. For new releases look for D2-LRG-Simon repository or issue #102.
 
 ### Features
 * Fetching data from OpenDota

@@ -2,7 +2,7 @@
 
 ## Current version: 2.4.0
 
-**D2LRG** (for short) is a tool for fetching stats for dota matches and forming fancy stats pages with every data you may need.
+**D2-LRG** (for short) is a tool for fetching stats for dota matches and forming fancy stats pages with every data you may need.
 
 This is **lrg2** version that won't be updated any further. For new releases look for D2-LRG-Simon repository or issue #102.
 
@@ -30,9 +30,11 @@ D2LRG is made of four scripts, divided into smaller modules:
 - `analyzer` makes series of SQL requests to get ready-to-use data and saves it as .report file as JSON data. It can be transferred to another D2LRG instance from now on and not linked to MySQL anymore
 - `view` is standalone module that reads .report file and allows easy to use basic web interface for it
 
-### But why PHP?
+### Why PHP and Why migrate to LRG-Simon
 
-Just because. There's no reasoning behind it. I just wanted to do so. Don't judge me.
+1. The project was created as a proof-of-concept collection of scripts. Initially it should be working on a cheapest web server possible with minimal effort. It became much bigger than intended, but it still can be used that way.
+2. PHP5 and PHP7 are easy and fast tools to work with
+3. LRG-Simon (LRG3) will be rebuilt from scratch. A lot of features and ideas will be backported from LRG2, but the code will be much easier to read and to work with. It will also be harder to work with, but it will be more powerful too.
 
 ### What do I need to use it?
 
@@ -43,7 +45,7 @@ I also recommend using PHPMyAdmin for manual data change.
 It would be nice to have bash on your system. For Windows it's recommended to have git bash or cygwin with ConEmu.
 
 ## Dependencies:
-* PHP
+* PHP 7+
 * MySQL
 * cURL
 
@@ -90,6 +92,7 @@ Parameters:
 * `-l / --league=` - required, the tag of your database, league and report file
 * `-K` - ignore OpenDota API key
 * `-F` - add match to database even if there's no replay analysis available
+* `-cDIRECTORY` - Use DIRECTORY to store and check cached data (./cache by default)
 
 ### rg_analyzer
 
@@ -99,6 +102,7 @@ Parameters:
 * `-l / --league=` - required, the tag of your database, league and report file
 * `-K` - ignore OpenDota API key
 * `-T` - merge settings with a template
+* `-oFILENAME` - save result to FILENAME
 
 ### rg_report_web
 

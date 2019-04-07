@@ -179,12 +179,11 @@ $result['ana_version'] = $lrg_version;
 
 echo("[ ] Encoding results to JSON\n");
 $output = json_encode(utf8ize($result));
-//$output = json_encode($result);
 
-$filename = "reports/report_".$lg_settings['league_tag'].".json";
-$f = fopen($filename, "w") or die("[F] Couldn't open file to save results. Check working directory for `reports` folder.\n");
+$filename = $options['o'] ?? "reports/report_".$lg_settings['league_tag'].".json";
+$f = fopen($filename, "w") or die("[F] Couldn't open file to save results.\n");
 fwrite($f, $output);
 fclose($f);
-echo("[S] Recorded results to file `reports/".$lg_settings['league_tag'].".json`\n");
+echo("[S] Recorded results to file `$filename`\n");
 
 ?>

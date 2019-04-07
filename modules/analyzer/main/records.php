@@ -35,8 +35,6 @@ $sql .= "SELECT \"lane_efficiency\" cap, matchid, efficiency_at10, playerid, her
 $sql .= "SELECT \"wards_placed\" cap, matchid, wards, playerid, heroid FROM adv_matchlines ORDER BY wards DESC LIMIT 1;";
 # sentries
 $sql .= "SELECT \"sentries_placed\" cap, matchid, sentries, playerid, heroid FROM adv_matchlines ORDER BY sentries DESC LIMIT 1;";
-# teamfight participation
-$sql .= "SELECT \"teamfight_participation\" cap, matchid, teamfight_part, playerid, heroid FROM adv_matchlines ORDER BY teamfight_part DESC LIMIT 1;";
 # wards destroyed
 $sql .= "SELECT \"wards_destroyed\" cap, matchid, wards_destroyed, playerid, heroid FROM adv_matchlines ORDER BY wards_destroyed DESC LIMIT 1;";
 # pings by player

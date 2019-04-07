@@ -19,6 +19,7 @@ $meta = new lrg_metadata;
 $stratz_timeout_retries = 5;
 
 $force_adding = isset($options['F']);
+$cache_dir = $options['c'] ?? "cache";
 
 if(!empty($odapikey) && !isset($ignore_api_key))
   $opendota = new odota_api(false, "", 0, $odapikey);
@@ -93,13 +94,13 @@ foreach ($matches as $match) {
         continue;
     }
 
-    if($lrg_use_cache && file_exists("cache/".$match.".json")) {
+    if($lrg_use_cache && file_exists("$cache_dir/".$match.".json")) {
       echo("Reusing cache.");
-      $json = file_get_contents("cache/".$match.".json");
+      $json = file_get_contents("$cache_dir/".$match.".json");
       $matchdata = json_decode($json, true);
-    } else if($lrg_use_cache && file_exists("cache/unparsed_".$match.".json") && $force_adding) {
+    } else if($lrg_use_cache && file_exists("$cache_dir/unparsed_".$match.".json") && $force_adding) {
       echo("Reusing unparsed cache.");
-      $json = file_get_contents("cache/unparsed_".$match.".json");
+      $json = file_get_contents("$cache_dir/unparsed_".$match.".json");
       $matchdata = json_decode($json, true);
       $bad_replay = true;
     } else {
@@ -149,7 +150,7 @@ foreach ($matches as $match) {
       }
     }
 
-    if(!file_exists("cache/".$match.".json") || ( $bad_replay && !file_exists("cache/unparsed_".$match.".json") )) {
+    if(!file_exists("$cache_dir/".$match.".json") || ( $bad_replay && !file_exists("$cache_dir/unparsed_".$match.".json") )) {
       if($matchdata['lobby_type'] != 1 && $matchdata['lobby_type'] != 2) {
         echo("..Requesting STRATZ.");
 
@@ -281,7 +282,7 @@ foreach ($matches as $match) {
 
       $json = json_encode($matchdata);
       if($lrg_use_cache) {
-        $f = fopen("cache/".($bad_replay ? "unparsed_" : "").$match.".json", "w");
+        $f = fopen("$cache_dir/".($bad_replay ? "unparsed_" : "").$match.".json", "w");
         fwrite($f, $json);
         fclose($f);
 

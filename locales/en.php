@@ -203,6 +203,8 @@
 
     "pair_expectation" => "Expected matches",
     "pair_deviation" => "Deviation",
+    "deviation" => "Deviation",
+    "winrate_diff" => "Winrate difference",
     "lane_rate" => "Same lane rate",
 
     "matches_s" => "Mtchs",

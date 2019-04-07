@@ -207,6 +207,8 @@
 
     "pair_expectation" => "Ожидание матчей",
     "pair_deviation" => "Отклонение",
+    "deviation" => "Отклонение",
+    "winrate_diff" => "Изменение винрейта",
     "lane_rate" => "Встреч на линии",
 
     "matches_s" => "Мтч",

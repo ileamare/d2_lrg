@@ -64,6 +64,7 @@ if(check_module($parent_mod."summary")) {
 
 $res["region".$region]['players']["cards"] = "";
 if(check_module($parent_mod."cards")) {
+  generate_positions_strings();
   include_once("$root/modules/view/generators/participants_players.php");
   $res["region".$region]['players']["cards"] .= "<div class=\"content-text\">".locale_string("desc_participants")."</div>";
   $res["region".$region]['players']["cards"] .= rg_generator_participants_players($reg_report['players_summary']);

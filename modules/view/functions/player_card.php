@@ -16,7 +16,7 @@ function player_card($player_id) {
     }
   }
 
-  $output = "<div class=\"player-card\"><div class=\"player-name\"><a href=\"http://opendota.com/players/$player_id\" target=\"_blank\" rel=\"noopener\">".$pname." (".$player_id.")</a></div>";
+  $output = "<div class=\"player-card\"><div class=\"player-name\">".player_link($player_id)." (".$player_id.")</div>";
   if(isset($report['teams']) && isset($report['teams'][ $pinfo['team'] ]))
     $output .= "<div class=\"player-team\">".team_link($pinfo['team'])."</div>";
   $output .= "<div class=\"player-add-info\">".

@@ -28,7 +28,7 @@ function rg_generator_records($context) {
           "</td><td>". ($record['playerid'] ?
                     (strstr($key, "_team") != FALSE ?
                       team_link($record['playerid']) :
-                      player_name($record['playerid'])
+                      player_link($record['playerid'])
                     ) :
                "")."</td>
           <td>".($record['heroid'] ? hero_full($record['heroid']) : "").

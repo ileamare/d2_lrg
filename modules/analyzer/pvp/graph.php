@@ -14,11 +14,23 @@ else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n"
 $query_res = $conn->store_result();
 
 for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
+  $rate1 = $result['players_summary'][$row[0]]['matches_s'] / $result['random']['matches_total'];
+  $rate2 = $result['players_summary'][$row[1]]['matches_s'] / $result['random']['matches_total'];
+  $expected_pair  = round($rate1 * $rate2 * ($result['random']['matches_total']/2));
+
+  if($row[2]-$expected_pair < $row[3]*0.1) //min deviation 10% of total matches
+    continue;
+
+  $wr_diff = ($result['players_summary'][$row[0]]['winrate_s'] + $result['players_summary'][$row[1]]['winrate_s'])/2 - $row[2]/$row[3];
+  $dev_pct = $expected_pair ? $row[2]/$expected_pair - 1 : 1;
+
   $result["players_combo_graph"][] = array (
     "playerid1" => $row[0],
     "playerid2" => $row[1],
     "matches" => $row[3],
-    "wins" => $row[2]
+    "wins" => $row[2],
+    "wr_diff" => $wr_diff,
+    "dev_pct" => $dev_pct,
   );
 }
 

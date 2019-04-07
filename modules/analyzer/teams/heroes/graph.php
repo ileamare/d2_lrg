@@ -29,11 +29,23 @@ else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n"
 $query_res = $conn->store_result();
 
 for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
+  $hero1_pickrate = $result["teams"][$id]['pickban'][$row[0]]['matches_picked'] / $result["teams"][$id]['matches_total'];
+  $hero2_pickrate = $result["teams"][$id]['pickban'][$row[1]]['matches_picked'] / $result["teams"][$id]['matches_total'];
+  $expected_pair  = round($hero1_pickrate * $hero2_pickrate * ($result["teams"][$id]['matches_total']/2));
+
+  if($row[2]-$expected_pair < $row[2]*0.1) //min deviation 10% of total matches
+    continue;
+
+  $wr_diff = ($result["teams"][$id]['pickban'][$row[0]]['winrate_picked'] + $result["teams"][$id]['pickban'][$row[1]]['winrate_picked'])/2 - $row[3];
+  $dev_pct = $expected_pair ? $row[2]/$expected_pair - 1 : 1;
+
   $result["teams"][$id]["hero_graph"][] = array (
     "heroid1" => $row[0],
     "heroid2" => $row[1],
     "matches" => $row[2],
-    "winrate" => $row[3]
+    "winrate" => $row[3],
+    "wr_diff" => $wr_diff,
+    "dev_pct" => $dev_pct,
   );
 }
 

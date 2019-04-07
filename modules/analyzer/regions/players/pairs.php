@@ -30,13 +30,17 @@ for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row(
   $p2_matchrate = $result["regions_data"][$region]['players_summary'][$row[1]]['matches_s'] / $result["regions_data"][$region]['main']['matches'];
   $expected_pair  = $p1_matchrate * $p2_matchrate * ($result["regions_data"][$region]['main']['matches']/2);
 
+  $wr_diff = ($result["regions_data"][$region]['players_summary'][$row[0]]['winrate_s'] + 
+              $result["regions_data"][$region]['players_summary'][$row[1]]['winrate_s'])/2 - $row[3]/$row[2];
+
   $result["regions_data"][$region]["player_pairs"][] = [
     "playerid1" => $row[0],
     "playerid2" => $row[1],
     "matches" => $row[2],
     "winrate" => $row[3],
     "expectation" => $expected_pair,
-    "lane_rate" => $row[4]
+    "lane_rate" => $row[4],
+    "wr_diff" => $wr_diff,
   ];
 }
 

@@ -16,11 +16,12 @@ if($lg_settings['main']['teams']) {
     $limiter = (int)ceil($median/($result['random']['teams_on_event']));
     //$limiter_lower = ceil($result['random']['matches_total']/($result['random']['teams_on_event']*4));
     $limiter_lower = ceil($limiter/2);
-    $limiter_graph = $limiter_lower*2;
+    $limiter_graph = $limiter;
 } else {
     $limiter_lower = ceil($median/16);
-    $limiter_graph = ceil($median/4);
+    $limiter_graph = ceil($median/8);
 }
+//$limiter_graph = $limiter_lower*3;
 
 unset($median);
 

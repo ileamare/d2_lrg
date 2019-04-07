@@ -17,11 +17,24 @@ else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n"
 $query_res = $conn->store_result();
 
 for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
+  $hero1_pickrate = $result["regions_data"][$region]['pickban'][$row[0]]['matches_picked'] / $result["regions_data"][$region]['main']['matches'];
+  $hero2_pickrate = $result["regions_data"][$region]['pickban'][$row[1]]['matches_picked'] / $result["regions_data"][$region]['main']['matches'];
+  $expected_pair  = $hero1_pickrate * $hero2_pickrate * ($result["regions_data"][$region]['main']['matches']/2);
+
+  if($row[2]-$expected_pair < $row[2]*0.1) //min deviation 10% of total matches
+    continue;
+
+  $wr_diff = ($result["regions_data"][$region]['pickban'][$row[0]]['winrate_picked'] + 
+              $result["regions_data"][$region]['pickban'][$row[1]]['winrate_picked'])/2 - $row[3]/$row[2];
+  $dev_pct = $expected_pair ? $row[2]/$expected_pair - 1 : 1;
+  
   $result["regions_data"][$region]["heroes_meta_graph"][] = [
     "heroid1" => $row[0],
     "heroid2" => $row[1],
     "matches" => $row[2],
-    "wins" => $row[3]
+    "wins" => $row[3],
+    "wr_diff" => $wr_diff,
+    "dev_pct" => $dev_pct,
   ];
 }
 

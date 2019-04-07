@@ -29,13 +29,16 @@ for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row(
   $p2_matchrate = $result['players_summary'][$row[1]]['matches_s'] / $result['random']['matches_total'];
   $expected_pair  = $p1_matchrate * $p2_matchrate * ($result['random']['matches_total']/2);
 
+  $wr_diff = ($result['players_summary'][$row[0]]['winrate_s'] + $result['players_summary'][$row[1]]['winrate_s'])/2 - $row[3];
+
   $result["player_pairs"][] = [
     "playerid1" => $row[0],
     "playerid2" => $row[1],
     "matches" => $row[2],
     "winrate" => $row[3],
     "expectation" => $expected_pair,
-    "lane_rate" => $row[4]
+    "lane_rate" => $row[4],
+    "wr_diff" => $wr_diff
   ];
 }
 

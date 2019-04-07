@@ -28,6 +28,11 @@ function rg_generator_combos($table_id, $context, $context_matches, $heroes_flag
   else
     $expectation = false;
 
+  if(isset($combo['wr_diff']))
+    $wr_diff = true;
+  else
+    $wr_diff = false;
+
   if(isset($combo[$id.'3']))
     $trios = true;
   else
@@ -48,6 +53,7 @@ function rg_generator_combos($table_id, $context, $context_matches, $heroes_flag
            ).
          "<th>".locale_string("matches")."</th>".
          "<th>".locale_string("winrate")."</th>".
+         ($wr_diff ? "<th>".locale_string("winrate_diff")."</th>" : "").
          ($expectation ? "<th>".locale_string("pair_expectation")."</th>".
                          "<th>".locale_string("pair_deviation")."</th>".
                          "<th>".locale_string("percentage")."</th>" : "").
@@ -71,8 +77,9 @@ function rg_generator_combos($table_id, $context, $context_matches, $heroes_flag
                   ).
                 "<td>".$combo['matches']."</td>".
                 "<td>".number_format($combo['winrate']*100,2)."%</td>".
-                ($expectation ? "<td>".number_format($combo['expectation'], 3)."</td>".
-                                "<td>".number_format($combo['matches']-$combo['expectation'], 3)."</td>".
+                ($wr_diff ? "<td>".number_format($combo['wr_diff']*100,2)."%</td>" : "").
+                ($expectation ? "<td>".number_format($combo['expectation'], 0)."</td>".
+                                "<td>".number_format($combo['matches']-$combo['expectation'], 0)."</td>".
                                 "<td>".number_format(($combo['matches']-$combo['expectation'])*100/$combo['matches'], 2)."%</td>" : "").
                 ($lane_rate ? "<td>".number_format($combo['lane_rate']*100, 2)."%</td>" : "").
                 ($lane ? "<td>".locale_string("lane_".$combo['lane'])."</td>" : "").

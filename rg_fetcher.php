@@ -177,7 +177,7 @@ foreach ($matches as $match) {
         }
 
         $full_request = false;
-        if($matchdata['game_mode'] == 22 || $matchdata['game_mode'] == 3) {
+        if($matchdata['game_mode'] == 22 || $matchdata['game_mode'] == 3 || $matchdata['pickBans'] === null) {
           $stratz_retries = $stratz_timeout_retries+1;
           while(!isset($stratz[0]['pickBans']) || $stratz[0]['pickBans'] === NULL) {
             $stratz_retries--;
@@ -568,7 +568,7 @@ foreach ($matches as $match) {
             }
             $i++;
         }
-    } else if ($matchdata['game_mode'] == 22) {
+    } else if ($matchdata['game_mode'] == 22 || $matchdata['game_mode'] == 3) {
       foreach ($matchdata['picks_bans'] as $draft_instance) {
         if (!isset($draft_instance['hero_id']) || !$draft_instance['hero_id'])
           continue;
@@ -589,19 +589,6 @@ foreach ($matches as $match) {
           else if ($draft_instance['order'] < 8) $t_draft[$i]['stage'] = 2;
           else $t_draft[$i]['stage'] = 3;
         }
-        $i++;
-      }
-    } else if ($matchdata['game_mode'] == 3) {
-      foreach ($matchdata['picks_bans'] as $draft_instance) {
-        if (!isset($draft_instance['hero_id']) || !$draft_instance['hero_id'])
-          continue;
-        $t_draft[$i]['matchid'] = $match;
-        $t_draft[$i]['is_radiant'] = ($draft_instance['playerIndex'] < 5) ? 1 : 0;
-        $t_draft[$i]['is_pick'] = 1;
-        $t_draft[$i]['hero_id'] = $draft_instance['heroId'];
-        if ($draft_instance['order'] < 2) $t_draft[$i]['stage'] = 1;
-        else if ($draft_instance['order'] < 4) $t_draft[$i]['stage'] = 2;
-        else $t_draft[$i]['stage'] = 3;
         $i++;
       }
     }

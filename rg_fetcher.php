@@ -576,17 +576,17 @@ foreach ($matches as $match) {
         if (!$draft_instance['isPick']) {
           if(!$draft_instance['wasBannedSuccessfully']) continue;
           $t_draft[$i]['matchid'] = $match;
-          $t_draft[$i]['is_radiant'] = ($draft_instance['playerIndex'] < 5) ? 1 : 0;
+          $t_draft[$i]['is_radiant'] = $draft_instance['isRadiant'];
           $t_draft[$i]['is_pick'] = 0;
-          $t_draft[$i]['hero_id'] = $draft_instance['heroId'];
+          $t_draft[$i]['hero_id'] = $draft_instance['bannedHeroId'];
           $t_draft[$i]['stage'] = 1;
         } else {
           $t_draft[$i]['matchid'] = $match;
-          $t_draft[$i]['is_radiant'] = ($draft_instance['playerIndex'] < 5) ? 1 : 0;
+          $t_draft[$i]['is_radiant'] = $draft_instance['isRadiant'];
           $t_draft[$i]['is_pick'] = 1;
           $t_draft[$i]['hero_id'] = $draft_instance['heroId'];
-          if ($draft_instance['order'] < 2) $t_draft[$i]['stage'] = 1;
-          else if ($draft_instance['order'] < 4) $t_draft[$i]['stage'] = 2;
+          if ($draft_instance['order'] < 4) $t_draft[$i]['stage'] = 1;
+          else if ($draft_instance['order'] < 8) $t_draft[$i]['stage'] = 2;
           else $t_draft[$i]['stage'] = 3;
         }
         $i++;
@@ -606,7 +606,7 @@ foreach ($matches as $match) {
       }
     }
     
-    if (!sizeof($t_draft)) {
+    if (empty($t_draft)) {
       foreach($matchdata['players'] as $draft_instance) {
           if (!isset($draft_instance['hero_id']) || !$draft_instance['hero_id'])
             continue;
@@ -671,14 +671,11 @@ foreach ($matches as $match) {
       continue;
     }
 
-    if (!$bad_replay)
+    if (!$bad_replay) {
       $sql = " INSERT INTO adv_matchlines (matchid, playerid, heroid, lh_at10, isCore, lane, efficiency_at10, wards, sentries,".
             "couriers_killed, roshans_killed, wards_destroyed, multi_kill, streak, stacks, time_dead, buybacks, pings, stuns, teamfight_part, damage_taken) VALUES ";
-    else
-      $sql = " INSERT INTO adv_matchlines (matchid, playerid, heroid, isCore, lane) VALUES ";
 
-    foreach($t_adv_matchlines as $aml) {
-      if (!$bad_replay)
+      foreach($t_adv_matchlines as $aml) {
         $sql .= "\n\t(".$aml['matchid'].",".$aml['playerid'].",".$aml['heroid'].",".
                     $aml['lh10'].",".$aml['is_core'].",".$aml['lane'].",".
                     $aml['lane_efficiency'].",".$aml['observers'].",".$aml['sentries'].",".
@@ -686,22 +683,21 @@ foreach ($matches as $match) {
                     $aml['max_multikill'].",".$aml['max_streak'].",".$aml['stacks'].",".
                     $aml['time_dead'].",".$aml['buybacks'].",".$aml['pings'].",".
                     $aml['stuns'].",".$aml['teamfight_part'].",".$aml['damage_taken']."),";
-      else
-        $sql .= "\n\t(".$aml['matchid'].",".$aml['playerid'].",".$aml['heroid'].",".$aml['is_core'].",".$aml['lane']."),";
-    }
-    $sql[strlen($sql)-1] = ";";
+      }
+      $sql[strlen($sql)-1] = ";";
 
-    $err_query = "DELETE from adv_matchlines where matchid = ".$t_match['matchid'].";".$err_query;
+      $err_query = "DELETE from adv_matchlines where matchid = ".$t_match['matchid'].";".$err_query;
 
-    if ($conn->multi_query($sql) === TRUE);
-    else {
-      echo "ERROR (".$conn->error."), reverting match.\n";
-      $failed_matches[] = $t_match['matchid'];
-      $conn->multi_query($err_query);
-      do {
-        $conn->store_result();
-      } while($conn->next_result());
-      continue;
+      if ($conn->multi_query($sql) === TRUE);
+      else {
+        echo "ERROR (".$conn->error."), reverting match.\n";
+        $failed_matches[] = $t_match['matchid'];
+        $conn->multi_query($err_query);
+        do {
+          $conn->store_result();
+        } while($conn->next_result());
+        continue;
+      }
     }
 
     if(!empty($t_draft)) {

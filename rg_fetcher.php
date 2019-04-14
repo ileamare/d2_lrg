@@ -20,6 +20,7 @@ $stratz_timeout_retries = 5;
 
 $force_adding = isset($options['F']);
 $cache_dir = $options['c'] ?? "cache";
+if($cache_dir === "NULL") $cache_dir = "";
 
 if(!empty($odapikey) && !isset($ignore_api_key))
   $opendota = new odota_api(false, "", 0, $odapikey);
@@ -281,7 +282,7 @@ foreach ($matches as $match) {
       unset($matchdata['cosmetics']);
 
       $json = json_encode($matchdata);
-      if($lrg_use_cache) {
+      if(!empty($cache_dir) && $lrg_use_cache) {
         $f = fopen("$cache_dir/".($bad_replay ? "unparsed_" : "").$match.".json", "w");
         fwrite($f, $json);
         fclose($f);

@@ -57,6 +57,17 @@ After getting D2LRG code to your computer, run `php setup.php`. It will install 
 * Simple PHP OpenDota SDK
 * D2-LRG-Metadata
 
+## Setup
+
+Use `php setup.php` to install, setup and update all the things.
+
+You can also specify special parameters:
+* `-l` - skip dependency updates
+* `-s` - skip settings update
+* `-d` - skip directory check
+
+It's recommended to use `php setup.php -ds` to update.
+
 ## How to use
 
 LRG is made of these modules:

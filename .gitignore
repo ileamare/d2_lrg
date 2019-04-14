@@ -15,6 +15,7 @@ rg_settings.json
 tmp*
 ___*
 _default.json
+nohup.out
 
 # Testing files
 test/

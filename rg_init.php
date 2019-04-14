@@ -112,8 +112,8 @@ if ($conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag'])) {
   $conn->query("CREATE DATABASE ".$lrg_db_prefix."_".$lg_settings['league_tag'].";");
     if ($conn->connect_error) die("[F] Can't create database: ".$conn->connect_error."\n");
   $conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag']);
-
   echo "OK\n[ ] Creating table `matches`...";
+
   $conn->query("CREATE TABLE `matches` (
     `matchid` bigint(20) UNSIGNED NOT NULL,
     `radiantWin` tinyint(1) NOT NULL,

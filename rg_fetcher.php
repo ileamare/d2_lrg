@@ -23,9 +23,9 @@ $cache_dir = $options['c'] ?? "cache";
 if($cache_dir === "NULL") $cache_dir = "";
 
 if(!empty($odapikey) && !isset($ignore_api_key))
-  $opendota = new odota_api(false, "", 0, $odapikey);
+  $opendota = new \SimpleOpenDotaPHP\odota_api(false, "", 0, $odapikey);
 else
-  $opendota = new odota_api();
+  $opendota = new \SimpleOpenDotaPHP\odota_api();
 
 if ($conn->connect_error) die("[F] Connection to SQL server failed: ".$conn->connect_error."\n");
 

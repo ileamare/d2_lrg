@@ -13,9 +13,9 @@ $input_cont = file_get_contents($filename) or die("[F] Error while opening file.
 $input_cont = str_replace("\r\n", "\n", $input_cont);
 
 if(!empty($settings['odapikey']))
-  $opendota = new odota_api(true, "", 1500, $settings['odapikey']);
+  $opendota = new \SimpleOpenDotaPHP\odota_api(true, "", 1500, $settings['odapikey']);
 else
-  $opendota = new odota_api(true, "", 1500);
+  $opendota = new \SimpleOpenDotaPHP\odota_api(true, "", 1500);
 
 unset($settings);
 

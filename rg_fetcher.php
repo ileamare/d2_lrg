@@ -78,6 +78,7 @@ foreach ($matches as $match) {
     $t_matchlines = [];
     $t_adv_matchlines = [];
     $t_draft = [];
+    $t_new_players = [];
     $bad_replay = false;
 
     if ($lg_settings['main']['teams']) {
@@ -177,7 +178,7 @@ foreach ($matches as $match) {
         }
 
         $full_request = false;
-        if($matchdata['game_mode'] == 22 || $matchdata['game_mode'] == 3 || $matchdata['pickBans'] === null) {
+        if($matchdata['game_mode'] == 22 || $matchdata['game_mode'] == 3 || empty($matchdata['picks_bans'])) {
           $stratz_retries = $stratz_timeout_retries+1;
           while(!isset($stratz[0]['pickBans']) || $stratz[0]['pickBans'] === NULL) {
             $stratz_retries--;
@@ -356,14 +357,14 @@ foreach ($matches as $match) {
         }
         if(!isset($t_players[$matchdata['players'][$j]['account_id']])) {
           if ($matchdata['players'][$j]['account_id'] < 0) {
-            $t_players[$matchdata['players'][$j]['account_id']] = "Bot ".$meta['heroes'][$matchdata['players'][$j]['hero_id']]['name'];
+            $t_new_players[$matchdata['players'][$j]['account_id']] = "Bot ".$meta['heroes'][$matchdata['players'][$j]['hero_id']]['name'];
           } else {
             if (isset($matchdata['players'][$j]["name"]) && $matchdata['players'][$j]["name"] != null) {
-              $t_players[$matchdata['players'][$j]['account_id']] = $matchdata['players'][$j]["name"];
+              $t_new_players[$matchdata['players'][$j]['account_id']] = $matchdata['players'][$j]["name"];
             } else if ($matchdata['players'][$j]["personaname"] != null) {
-              $t_players[$matchdata['players'][$j]['account_id']] = $matchdata['players'][$j]["personaname"];
+              $t_new_players[$matchdata['players'][$j]['account_id']] = $matchdata['players'][$j]["personaname"];
             } else
-              $t_players[$matchdata['players'][$j]['account_id']] = "Player ".$matchdata['players'][$j]['account_id'];
+              $t_new_players[$matchdata['players'][$j]['account_id']] = "Player ".$matchdata['players'][$j]['account_id'];
           }
 
         }
@@ -610,10 +611,10 @@ foreach ($matches as $match) {
 
     $sql = ""; $err_query = "";
 
-    foreach ($t_players as $id => $player) {
+    foreach ($t_new_players as $id => $player) {
       if ($player === true) continue;
       $sql = "INSERT INTO players (playerID, nickname) VALUES (".$id.",\"".addslashes($player)."\");";
-      if ($conn->multi_query($sql) === TRUE) $t_players[$id] = true;
+      if ($conn->query($sql) === TRUE) $t_players[$id] = true;
     }
 
     $sql = "INSERT INTO matches (matchid, radiantWin, duration, modeID, leagueID, start_date, stomp, comeback, cluster, version) VALUES "

@@ -13,6 +13,7 @@ include_once("libs/simple-opendota-php/simple_opendota.php");
 echo("\nInitialising...\n");
 
 $conn = new mysqli($lrg_sql_host, $lrg_sql_user, $lrg_sql_pass, $lrg_sql_db);
+$conn->set_charset('utf8mb4');
 $meta = new lrg_metadata;
 
 //$stratz_old_api_endpoint = 3707179408;

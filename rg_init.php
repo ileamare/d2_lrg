@@ -101,6 +101,7 @@ fclose($f);
 echo "[ ] Creating database...";
 
 $conn = new mysqli($lrg_sql_host, $lrg_sql_user, $lrg_sql_pass);
+$conn->set_charset('utf8mb4');
 
 if ($conn->connect_error) die("[F] Connection to SQL server failed: ".$conn->connect_error."\n");
 
@@ -109,9 +110,9 @@ if ($conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag'])) {
   die();
   # TODO ask user for clearing database or changing prefix
 } else {
-  $conn->query("CREATE DATABASE ".$lrg_db_prefix."_".$lg_settings['league_tag']."; 
-        DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_unicode_ci;");
-    if ($conn->connect_error) die("[F] Can't create database: ".$conn->connect_error."\n");
+  $conn->query("CREATE DATABASE ".$lrg_db_prefix."_".$lg_settings['league_tag']."  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+  if ($conn->connect_error) die("[F] Can't create database: ".$conn->connect_error."\n");
+  if ($conn->error) die("[F] Can't create database: ".$conn->error."\n");
   $conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag']);
   echo "OK\n[ ] Creating table `matches`...";
 

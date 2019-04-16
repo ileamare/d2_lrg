@@ -109,7 +109,8 @@ if ($conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag'])) {
   die();
   # TODO ask user for clearing database or changing prefix
 } else {
-  $conn->query("CREATE DATABASE ".$lrg_db_prefix."_".$lg_settings['league_tag'].";");
+  $conn->query("CREATE DATABASE ".$lrg_db_prefix."_".$lg_settings['league_tag']."; 
+        DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_unicode_ci;");
     if ($conn->connect_error) die("[F] Can't create database: ".$conn->connect_error."\n");
   $conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag']);
   echo "OK\n[ ] Creating table `matches`...";
@@ -188,7 +189,7 @@ if ($conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag'])) {
 
   $conn->query("CREATE TABLE `players` (
     `playerID` bigint(20) NOT NULL,
-    `nickname` varchar(25) NOT NULL
+    `nickname` varchar(128) NOT NULL
   );");
     if ($conn->connect_error) die("[F] Can't create table `draft`: ".$conn->connect_error."\n");
   echo "OK\n";

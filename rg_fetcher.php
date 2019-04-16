@@ -614,6 +614,7 @@ foreach ($matches as $match) {
 
     foreach ($t_new_players as $id => $player) {
       if ($player === true) continue;
+      $player = mb_substr($player, 0, 127);
       $sql = "INSERT INTO players (playerID, nickname) VALUES (".$id.",\"".addslashes($player)."\");";
       if ($conn->query($sql) === TRUE) $t_players[$id] = true;
       else echo $conn->error."\n";

@@ -46,6 +46,7 @@ It would be nice to have bash on your system. For Windows it's recommended to ha
 
 ## Dependencies:
 * PHP 7+
+* php mbstring
 * MySQL
 * cURL
 

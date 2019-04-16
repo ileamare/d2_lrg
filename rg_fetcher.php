@@ -615,6 +615,7 @@ foreach ($matches as $match) {
       if ($player === true) continue;
       $sql = "INSERT INTO players (playerID, nickname) VALUES (".$id.",\"".addslashes($player)."\");";
       if ($conn->query($sql) === TRUE) $t_players[$id] = true;
+      else echo $conn->error."\n";
     }
 
     $sql = "INSERT INTO matches (matchid, radiantWin, duration, modeID, leagueID, start_date, stomp, comeback, cluster, version) VALUES "

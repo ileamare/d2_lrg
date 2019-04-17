@@ -23,6 +23,11 @@ $force_adding = isset($options['F']);
 $cache_dir = $options['c'] ?? "cache";
 if($cache_dir === "NULL") $cache_dir = "";
 
+$use_stratz = isset($options['S']) || isset($options['s']);
+$require_stratz = isset($options['S']);
+
+$request_unparsed = isset($options['R']);
+
 if(!empty($odapikey) && !isset($ignore_api_key))
   $opendota = new \SimpleOpenDotaPHP\odota_api(false, "", 0, $odapikey);
 else
@@ -35,6 +40,9 @@ $lrg_input  = "matchlists/".$lrg_league_tag.".list";
 $rnum = 1;
 $matches = [];
 $failed_matches = [];
+
+$scheduled = [];
+$first_scheduled = null;
 
 $input_cont = file_get_contents($lrg_input);
 $input_cont = str_replace("\r\n", "\n", $input_cont);
@@ -75,6 +83,12 @@ if ($conn->multi_query($sql)) {
 
 
 foreach ($matches as $match) {
+    if($request_unparsed && !in_array($match, $scheduled)) {
+      $diff = time() - $first_scheduled;
+      if ($diff < 60) sleep(60); // wait for at least one minute before requesting again
+    }
+
+
     $t_match = [];
     $t_matchlines = [];
     $t_adv_matchlines = [];
@@ -114,6 +128,16 @@ foreach ($matches as $match) {
           echo("..ERROR: Unable to read JSON skipping.\n");
           //if (!isset($matchdata['duration'])) var_dump($matchdata);
           $failed_matches[sizeof($failed_matches)] = $match;
+
+          if($request_unparsed && !in_array($match, $scheduled)) {
+            $opendota->request_match($match);
+            echo "[\t] Requested and scheduled $match\n";
+            if(empty($first_scheduled))
+              $first_scheduled = time();
+            $matches[] = $match;
+            $scheduled[] = $match;
+          }
+
           continue;
       } else {
         if($matchdata['duration'] < 600) {
@@ -141,6 +165,16 @@ foreach ($matches as $match) {
         }
 
         if ($matchdata['players'][0]['lh_t'] == null) {
+          if($request_unparsed && !in_array($match, $scheduled)) {
+            $opendota->request_match($match);
+            echo "..Unparsed. Requested and scheduled $match\n";
+            if(empty($first_scheduled))
+              $first_scheduled = time();
+            $matches[] = $match;
+            $scheduled[] = $match;
+            continue;
+          }
+
           if(!$force_adding) {
             echo("..ERROR: Replay isn't parsed.\n");
             $failed_matches[sizeof($failed_matches)] = $match;

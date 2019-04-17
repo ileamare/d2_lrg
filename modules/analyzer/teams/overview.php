@@ -62,7 +62,7 @@ $result['teams'][$id]['active_roster'] = [];
 for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
   if ($row[1] > ($result['teams'][$id]['matches_total']/10) &&
       $result['teams'][$id]['last_match']-$row[2] < (3600*24*14) &&
-      $row[1] > $result['players_summary'][$row[0]]['matches_s']/10) {
+      $row[1] > ($result['players_summary'][$row[0]]['matches_s'] ?? 0)/10) {
   // Rules for fetching roster members based on matches:
   // 1. More than 10% of team's matches
   // 2. Last match played with the tag within two weeks

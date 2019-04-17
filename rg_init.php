@@ -110,7 +110,7 @@ if ($conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag'])) {
   die();
   # TODO ask user for clearing database or changing prefix
 } else {
-  $conn->query("CREATE DATABASE ".$lrg_db_prefix."_".$lg_settings['league_tag']."  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+  $conn->query("CREATE DATABASE ".$lrg_db_prefix."_".$lg_settings['league_tag']." CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
   if ($conn->connect_error) die("[F] Can't create database: ".$conn->connect_error."\n");
   if ($conn->error) die("[F] Can't create database: ".$conn->error."\n");
   $conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag']);

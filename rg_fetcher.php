@@ -275,8 +275,9 @@ function fetch($matches) {
 
             if(in_array($match, $failed_matches) && $require_stratz)
               continue;
-            else if(isset($stratz))
-              $matchdata['picks_bans'] = $stratz[0]['pickBans'];
+            else if(isset($stratz)) {
+              $matchdata['picks_bans_stratz'] = $stratz[0]['pickBans'];
+            } 
           }
           
           $matchdata['players'] = array_values($matchdata['players']);
@@ -625,11 +626,14 @@ function fetch($matches) {
               }
               $i++;
           }
-      } else if (!empty($matchdata['picks_bans']) && ($matchdata['game_mode'] == 22 || $matchdata['game_mode'] == 3)) {
+      } else if (!empty($matchdata['picks_bans_stratz']) && ($matchdata['game_mode'] == 22 || $matchdata['game_mode'] == 3)) {
         foreach ($matchdata['picks_bans'] as $draft_instance) {
           if (!isset($draft_instance['hero_id']) || !$draft_instance['hero_id'])
             continue;
-          # ban nominants counts as bans ? Need to thing about that.
+          // ban nominants counts as bans ? Need to thing about that.
+          // I'm skipping opendota picks_bans information since it lacks information on
+          // who nominated hero to ban and is missing pick order info
+          // altho I guess I should reconsider adding it later
           if (!$draft_instance['isPick']) {
             if(!$draft_instance['wasBannedSuccessfully']) continue;
             $t_draft[$i]['matchid'] = $match;

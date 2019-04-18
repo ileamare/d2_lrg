@@ -12,7 +12,7 @@ function rg_view_generate_heroes_combos() {
   if(isset($report['hero_pairs'])) {
     $res['pairs'] = "";
     if (check_module($parent_module."pairs")) {
-      $res['pairs'] =  "<div class=\"content-text\">".locale_string("desc_heroes_pairs", [ "limh"=>$report['settings']['limiter']+1 ] )."</div>";
+      $res['pairs'] =  "<div class=\"content-text\">".locale_string("desc_heroes_pairs", [ "limh"=>$report['settings']['limiter_combograph']+1 ] )."</div>";
       $res['pairs'] .=  rg_generator_combos("hero-pairs",
                                          $report['hero_pairs'],
                                          (isset($report['hero_pairs_matches']) ? $report['hero_pairs_matches'] : [])

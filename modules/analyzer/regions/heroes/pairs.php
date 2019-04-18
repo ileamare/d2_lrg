@@ -3,7 +3,7 @@ $result["regions_data"][$region]["hero_pairs"] = [];
 
 $sql = "SELECT fm1.heroid, fm2.heroid,
           COUNT(distinct fm1.matchid) match_count,
-          SUM(NOT matches.radiantWin XOR fm1.isRadiant)/SUM(1) winrate,
+          SUM(NOT matches.radiantWin XOR fm1.isRadiant) wins,
           SUM(fm1.lane = fm2.lane)/SUM(1) lane_rate
         FROM
           ( select m1.matchid, m1.heroid, am1.lane, m1.isRadiant
@@ -17,8 +17,8 @@ $sql = "SELECT fm1.heroid, fm2.heroid,
         JOIN matches ON fm1.matchid = matches.matchid
         WHERE matches.cluster IN (".implode(",", $clusters).")
         GROUP BY fm1.heroid, fm2.heroid
-        HAVING match_count > ".$result["regions_data"][$region]['settings']['limiter_higher']."
-        ORDER BY match_count DESC, winrate DESC;";
+        HAVING match_count > ".$result["regions_data"][$region]['settings']['limiter_graph']."
+        ORDER BY match_count DESC, wins DESC;";
 # limiting match count for hero pair to 3:
 # 1 match = every possible pair
 # 2 matches = may be a coincedence
@@ -40,7 +40,8 @@ for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row(
     "heroid1" => $row[0],
     "heroid2" => $row[1],
     "matches" => $row[2],
-    "winrate" => $row[3],
+    "winrate" => $row[3]/$row[2],
+    "wins" => $row[3],
     "expectation" => $expected_pair,
     "lane_rate" => $row[4],
     "wr_diff" => $wr_diff,

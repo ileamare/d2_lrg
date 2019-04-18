@@ -13,7 +13,9 @@ function rg_view_generate_regions_heroes_combos($region, $reg_report, $modstr) {
     $res['pairs'] = "";
     if (check_module($parent_module."pairs")) {
       $res['pairs'] =  "<div class=\"content-text\">".
-                        locale_string("desc_heroes_pairs", [ "limh"=>$reg_report['settings']['limiter_higher']+1 ] )."</div>";
+                        locale_string("desc_heroes_pairs", [ 
+                          "limh"=>($reg_report['settings']['limiter_graph'] )+1 
+                        ] )."</div>";
       $res['pairs'] .=  rg_generator_combos("region$region-hero-pairs",
                                          $reg_report['hero_pairs'],
                                          []

@@ -20,14 +20,14 @@ if ($lg_settings['ana']['hero_sides']) {
   require_once("modules/analyzer/heroes/sides.php");
 }
 
-if ($lg_settings['ana']['hero_combos_graph']) {
-  # heroes combo graph
-  require_once("modules/analyzer/heroes/combo_graph.php");
-}
-
 if ($lg_settings['ana']['hero_pairs']) {
   # heroes pairs
   require_once("modules/analyzer/heroes/pairs.php");
+}
+
+if ($lg_settings['ana']['hero_combos_graph']) {
+  # heroes combo graph
+  require_once("modules/analyzer/heroes/combo_graph.php");
 }
 
 if ($lg_settings['ana']['hero_triplets']) {

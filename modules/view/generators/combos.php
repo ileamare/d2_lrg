@@ -47,7 +47,7 @@ function rg_generator_combos($table_id, $context, $context_matches, $heroes_flag
          "<th data-sortInitialOrder=\"asc\">".locale_string($heroes_flag ? "hero" : "player")." 2</th>".
          (
            $trios ?
-           (($heroes_flag && $i++) ? "<th width=\"1%\"></th>" : "").
+           (($heroes_flag) ? "<th width=\"1%\"></th>" : "").
            "<th data-sortInitialOrder=\"asc\">".locale_string($heroes_flag ? "hero" : "player")." 3</th>" :
            ""
            ).

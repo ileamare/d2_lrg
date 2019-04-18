@@ -1,20 +1,24 @@
 <?php
 
-function calculate_median($arr) {
+function quantile($arr, $val) {
     if(!is_array($arr)) return false;
     if(!sizeof($arr)) return 0;
-    rsort($arr);
+    sort($arr);
 
     $count = count($arr);
-    $middleval = floor(($count-1)/2);
+    $quantile_val = round(($count-1)*$val);
     if($count % 2) {
-        $median = $arr[$middleval];
+        $quantile = $arr[$quantile_val];
     } else {
-        $low = $arr[$middleval];
-        $high = $arr[$middleval+1];
-        $median = (($low+$high)/2);
+        $low = $arr[$quantile_val];
+        $high = $arr[$quantile_val+1];
+        $quantile = round(($low+$high)/2);
     }
-    return $median;
+    return $quantile;
+}
+
+function calculate_median($arr) {
+    return quantile($arr, 0.5);
 }
 
 ?>

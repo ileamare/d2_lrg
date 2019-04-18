@@ -35,17 +35,16 @@ foreach ($regions as $region => $clusters) {
     foreach($result["regions_data"][$region]["pickban"] as $hero)
         $picks[] = $hero["matches_total"];
     $median = calculate_median($picks);
-    unset($picks);
 
     $result["regions_data"][$region]['settings'] = [];
 
-    $result["regions_data"][$region]['settings']['limiter_higher'] = (int)ceil($median/6);
-    $result["regions_data"][$region]['settings']['limiter_graph'] = (int)ceil($median/3);
+    $result["regions_data"][$region]['settings']['limiter_higher'] = quantile($picks, 0.2);
+    $result["regions_data"][$region]['settings']['limiter_graph'] = quantile($picks, 0.1);
     if($lg_settings['main']['teams'] && $result["regions_data"][$region]['main']['teams_on_event']) {
         $result["regions_data"][$region]['settings']['limiter_lower'] = (int)ceil($result["regions_data"][$region]['main']['matches']/
                                                               ($result["regions_data"][$region]['main']['teams_on_event']*4));
     } else {
-        $result["regions_data"][$region]['settings']['limiter_lower'] = (int)ceil($median/20);
+        $result["regions_data"][$region]['settings']['limiter_lower'] = quantile($picks, 0.075);
     }
 
     # records

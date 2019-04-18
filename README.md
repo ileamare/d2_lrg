@@ -101,10 +101,15 @@ Parameters:
 Fetches data for matches in matchlist.
 
 Parameters:
-* `-l / --league=` - required, the tag of your database, league and report file
+* `-l` - required, the tag of your database, league and report file
 * `-K` - ignore OpenDota API key
 * `-F` - add match to database even if there's no replay analysis available
 * `-cDIRECTORY` - Use DIRECTORY to store and check cached data (./cache by default)
+* `-R` - Automatically request a match to parse and try again later
+* `-S` - Strongly require STRATZ (for Ranked All Pick and Random Draft pick order and non-tournament matches player names), skip it STRATZ doesn't respond. In combination with -R reschedules match and tries again later
+* `-s` - Softly require STRATZ (works just like -S, but after failure just continues without STRATZ response)
+* `-Z` - Use full match data request from Stratz (called when can't get data using shortcuts)
+* `-w123` - Specify number of seconds to wait before requesting scheduled matches again (default: 60)
 
 ### rg_analyzer
 

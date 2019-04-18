@@ -28,6 +28,8 @@ foreach ($regions as $region => $clusters) {
     $err = include("overview.php");
     if ($err) continue;
 
+    echo "[ ] REGION $region\n";
+
     # pickbans
     include("heroes/pickban.php");
 

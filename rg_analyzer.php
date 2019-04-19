@@ -3,7 +3,7 @@ include_once("head.php");
 
 include_once("modules/commons/utf8ize.php");
 include_once("modules/commons/migrate_params.php");
-include_once("modules/commons/calc_median.php");
+include_once("modules/commons/quantile.php");
 include_once("modules/commons/generate_tag.php");
 include_once("modules/commons/metadata.php");
 

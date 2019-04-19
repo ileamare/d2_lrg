@@ -1,12 +1,14 @@
 <?php
-/*
+/** 
  * League Report Generator - Generate Team Tag - Fetcher Module
- *
- * Parameters:
- *   $name - string, team's name
- * Returns:
- *   String with team tag, based on team's name
+ * ported from D2-LRG-lrg2 v 2.*
+ * @author Darien "leamare" Fawkes
+ * @license GNU GPL 3.0
+ * 
+ * @param string $name team's name
+ * @return string team tag, based on team's name
  */
+
 
 
 function generate_tag($name) {

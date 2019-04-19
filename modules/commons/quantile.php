@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * LRG Library - quantile library v 2.4.0
+ * Originally ported from D2-LRG-lrg2 codebase
+ * Collection of functions to calculate quantiles, median values and find find dispersion
+ * @author Darien "leamare" Fawkes
+ * @license GNU GPL 3.0
+ */
+
 function quantile($arr, $val) {
   if(!is_array($arr)) return false;
   if(!sizeof($arr)) return 0;

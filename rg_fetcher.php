@@ -627,10 +627,7 @@ function fetch($matches) {
               $i++;
           }
       } else if (!empty($matchdata['picks_bans_stratz']) && ($matchdata['game_mode'] == 22 || $matchdata['game_mode'] == 3)) {
-        foreach ($matchdata['picks_bans'] as $draft_instance) {
-          if (!isset($draft_instance['hero_id']) || !$draft_instance['hero_id'])
-            continue;
-          // ban nominants counts as bans ? Need to thing about that.
+        foreach ($matchdata['picks_bans_stratz'] as $draft_instance) {
           // I'm skipping opendota picks_bans information since it lacks information on
           // who nominated hero to ban and is missing pick order info
           // altho I guess I should reconsider adding it later

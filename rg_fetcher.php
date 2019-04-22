@@ -4,7 +4,6 @@ ini_set('memory_limit', '4000M');
 
 include_once("head.php");
 include_once("modules/fetcher/get_patchid.php");
-include_once("modules/commons/migrate_params.php");
 include_once("modules/commons/generate_tag.php");
 include_once("modules/commons/metadata.php");
 

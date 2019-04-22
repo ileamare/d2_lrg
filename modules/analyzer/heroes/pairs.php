@@ -31,7 +31,7 @@ for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row(
   $hero1_pickrate = $result['pickban'][$row[0]]['matches_picked'] / $result['random']['matches_total'];
   $hero2_pickrate = $result['pickban'][$row[1]]['matches_picked'] / $result['random']['matches_total'];
   $expected_pair  = round($hero1_pickrate * $hero2_pickrate * ($result['random']['matches_total']/2));
-  $wr_diff = ($result['pickban'][$row[0]]['winrate_picked'] + $result['pickban'][$row[1]]['winrate_picked'])/2 - $row[3];
+  $wr_diff = ($result['pickban'][$row[0]]['winrate_picked'] + $result['pickban'][$row[1]]['winrate_picked'])/2 - $row[3]/$row[2];
 
   $result["hero_pairs"][] = [
     "heroid1" => $row[0],

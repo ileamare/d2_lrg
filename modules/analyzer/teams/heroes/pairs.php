@@ -3,7 +3,7 @@ $result["teams"][$id]["hero_pairs"] = [];
 
 $sql = "SELECT fm1.heroid, fm2.heroid,
           COUNT(distinct fm1.matchid) match_count,
-          SUM(NOT matches.radiantWin XOR fm1.isRadiant)/SUM(1) winrate,
+          SUM(NOT matches.radiantWin XOR fm1.isRadiant) wins,
           SUM(fm1.lane = fm2.lane)/SUM(1) lane_rate
         FROM
           ( select m1.matchid, m1.heroid, am1.lane, m1.isRadiant
@@ -30,17 +30,17 @@ else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n"
 $query_res = $conn->store_result();
 
 for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
-  $hero1_pickrate = $result["teams"][$id]['pickban'][$row[0]]['matches_picked'] / $result["teams"][$id]['matches_total'];
-  $hero2_pickrate = $result["teams"][$id]['pickban'][$row[1]]['matches_picked'] / $result["teams"][$id]['matches_total'];
-  $expected_pair  = round($hero1_pickrate * $hero2_pickrate * ($result["teams"][$id]['matches_total']/2));
+  $expected_pair  = ($result["teams"][$id]['pickban'][$row[0]]['matches_picked'] * $result["teams"][$id]['pickban'][$row[1]]['matches_picked']) /
+    ($result["teams"][$id]['matches_total'] * 2 * sqrt(2));
 
-  $wr_diff = ($result["teams"][$id]['pickban'][$row[0]]['winrate_picked'] + $result["teams"][$id]['pickban'][$row[1]]['winrate_picked'])/2 - $row[3];
+  $wr_diff = $row[3]/$row[2] - ($result["teams"][$id]['pickban'][$row[0]]['winrate_picked'] + $result["teams"][$id]['pickban'][$row[1]]['winrate_picked'])/2;
 
   $result["teams"][$id]["hero_pairs"][] = [
     "heroid1" => $row[0],
     "heroid2" => $row[1],
     "matches" => $row[2],
-    "winrate" => $row[3],
+    "wins" => $row[3],
+    "winrate" => $row[3]/$row[2],
     "expectation" => $expected_pair,
     "lane_rate" => $row[4],
     "wr_diff" => $wr_diff

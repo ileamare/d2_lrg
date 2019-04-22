@@ -4,7 +4,7 @@ include_once($root."/modules/view/functions/hero_name.php");
 include_once($root."/modules/view/functions/player_name.php");
 
 function rg_generator_meta_graph($div_id, $context, $context_pickban, $heroes_flag = true) {
-  if(!sizeof($context)) return "";
+  //if(!sizeof($context)) return "";
   global $visjs_settings, $use_visjs, $meta;
 
   $use_visjs = true;

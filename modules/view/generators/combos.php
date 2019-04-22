@@ -28,7 +28,7 @@ function rg_generator_combos($table_id, $context, $context_matches, $heroes_flag
   else
     $expectation = false;
 
-  if(isset($combo['wr_diff']) && $combo['wr_diff'] <= 1)
+  if(isset($combo['wr_diff']))
     $wr_diff = true;
   else
     $wr_diff = false;

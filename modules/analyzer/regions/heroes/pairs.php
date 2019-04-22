@@ -29,12 +29,11 @@ else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n"
 $query_res = $conn->store_result();
 
 for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
-  $hero1_pickrate = $result["regions_data"][$region]['pickban'][$row[0]]['matches_picked'] / $result["regions_data"][$region]['main']['matches'];
-  $hero2_pickrate = $result["regions_data"][$region]['pickban'][$row[1]]['matches_picked'] / $result["regions_data"][$region]['main']['matches'];
-  $expected_pair  = $hero1_pickrate * $hero2_pickrate * ($result["regions_data"][$region]['main']['matches']/2);
+  $expected_pair  = ($result["regions_data"][$region]['pickban'][$row[0]]['matches_picked'] * $result["regions_data"][$region]['pickban'][$row[1]]['matches_picked']) / 
+        (2*sqrt(2)*$result["regions_data"][$region]['main']['matches']);
 
-  $wr_diff = ($result["regions_data"][$region]['pickban'][$row[0]]['winrate_picked'] + 
-              $result["regions_data"][$region]['pickban'][$row[1]]['winrate_picked'])/2 - $row[3]/$row[2];
+  $wr_diff = $row[3]/$row[2] - ($result["regions_data"][$region]['pickban'][$row[0]]['winrate_picked'] + 
+              $result["regions_data"][$region]['pickban'][$row[1]]['winrate_picked'])/2;
 
   $result["regions_data"][$region]["hero_pairs"][] = [
     "heroid1" => $row[0],
@@ -42,7 +41,7 @@ for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row(
     "matches" => $row[2],
     "winrate" => $row[3]/$row[2],
     "wins" => $row[3],
-    "expectation" => $expected_pair,
+    "expectation" => round($expected_pair),
     "lane_rate" => $row[4],
     "wr_diff" => $wr_diff,
   ];

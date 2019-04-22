@@ -19,7 +19,7 @@ $sql = "SELECT fm1.heroid, fm2.heroid,
         WHERE teams_matches.teamid = ".$id."
         GROUP BY fm1.heroid, fm2.heroid
         HAVING match_count > ".ceil($limiter_lower*$multiplier)."
-        ORDER BY match_count DESC, winrate DESC;";
+        ORDER BY match_count DESC, wins DESC;";
 # limiting match count for hero pair to 3:
 # 1 match = every possible pair
 # 2 matches = may be a coincedence

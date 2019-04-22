@@ -29,10 +29,10 @@ function calculate_limiters($dataset, $teams = null) {
     "limiter_quantile" => $limiter_quantile,
     "median" => $median,
     "limiter_higher" => quantile($dataset, $limiter_quantile),
-    "limiter_graph" => quantile($dataset, $limiter_quantile*2/3),
+    "limiter_graph" => quantile($dataset, $limiter_quantile*0.5),
     "limiter_lower" => $teams ? 
       ceil(quantile($dataset, $limiter_quantile)/$teams) :
-      quantile($dataset, $limiter_quantile/3)
+      quantile($dataset, $limiter_quantile*0.3)
   ];
 }
 

@@ -9,14 +9,15 @@ die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
 
 $query_res = $conn->store_result();
 $row = $query_res->fetch_row();
-if (!$row[1] || ( $row[1] < $limiter && isset($lg_settings['ana']['regions']['use_limiter']) && $lg_settings['ana']['regions']['use_limiter']) ) {
-  $query_res->free_result();
+$query_res->free_result();
+if (!$row[1] || ( ($lg_settings['ana']['regions']['use_limiter'] ?? false) && $row[1] < $limiter_median ) ) {
+  // using median number of matches as a limiter for regions
+  // Regular limiter is too small and the median number of picks value fits just right
   return 1;
 } else {
   $result["regions_data"][$region] = [];
   $result["regions_data"][$region]["main"] = [];
   $result["regions_data"][$region]["main"]["matches"] = $row[1];
-  $query_res->free_result();
 
   # players on event
   $sql = "SELECT \"players_on_event\", COUNT(DISTINCT players.playerID)

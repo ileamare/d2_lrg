@@ -51,14 +51,14 @@ foreach($result['teams'] as $id => $team) {
     require("heroes/positions.php");
   }
 
-  if ($lg_settings['ana']['teams']['hero_graph']) {
-    # heroes graph
-    require("heroes/graph.php");
-  }
-
   if ($lg_settings['ana']['teams']['pairs']) {
     # heroes pairs
     require("heroes/pairs.php");
+  }
+
+  if ($lg_settings['ana']['teams']['hero_graph']) {
+    # heroes graph
+    require("heroes/graph.php");
   }
 
   if ($lg_settings['ana']['teams']['triplets']) {

@@ -29,8 +29,10 @@ else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n"
 $query_res = $conn->store_result();
 
 for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
-  $expected_pair  = ($result["regions_data"][$region]['pickban'][$row[0]]['matches_picked'] * $result["regions_data"][$region]['pickban'][$row[1]]['matches_picked']) / 
-        (2*sqrt(2)*$result["regions_data"][$region]['main']['matches']);
+  $expected_pair  = ( ($result["regions_data"][$region]['pickban'][$row[0]]['matches_picked']/$result["regions_data"][$region]['main']['matches'])
+       * ($result["regions_data"][$region]['pickban'][$row[1]]['matches_picked']/$result["regions_data"][$region]['main']['matches'])
+       * $result["regions_data"][$region]['main']['matches'] ) 
+       / 2;
 
   $wr_diff = $row[3]/$row[2] - ($result["regions_data"][$region]['pickban'][$row[0]]['winrate_picked'] + 
               $result["regions_data"][$region]['pickban'][$row[1]]['winrate_picked'])/2;

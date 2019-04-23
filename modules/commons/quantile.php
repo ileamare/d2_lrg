@@ -1,4 +1,4 @@
-<?php
+<?php 
 
 /**
  * LRG Library - quantile library v 2.4.0
@@ -15,10 +15,11 @@ function quantile($arr, $val) {
 
   $count = count($arr);
   $quantile_val = floor(($count-1)*$val);
+//  $quantile_dev = $quantile_val < $count ? (($count-1)*$val) - $quantile_val : 0;
   if($count*$val == $quantile_val+1) {
     $low = $arr[$quantile_val];
     $high = $arr[$quantile_val+1];
-    $quantile = round(($low+$high)/2);
+    $quantile = (($low+$high)/2);
   } else if ($count*$val < $quantile_val+1) {
     $quantile = $arr[$quantile_val];
   } else {
@@ -56,10 +57,19 @@ function sq_dev($arr) {
 
 function find_position($arr, $val) {
   sort($arr);
-  $last = 0;
+  reset($arr);
+  $last = null;
   foreach($arr as $id => $v) {
+    if ($v > $val) {
+      if ($last !== null) {
+        $delta = ($val - $arr[$last])/($v - $arr[$last]);
+        $last += $delta;
+      } else {
+        $last = -($val - $v)/($v);
+      }
+      break;
+    }
     $last = $id;
-    if ($v > $val) break;
   }
   return $last;
 }

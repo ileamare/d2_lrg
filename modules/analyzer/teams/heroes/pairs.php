@@ -30,8 +30,10 @@ else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n"
 $query_res = $conn->store_result();
 
 for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
-  $expected_pair  = ($result["teams"][$id]['pickban'][$row[0]]['matches_picked'] * $result["teams"][$id]['pickban'][$row[1]]['matches_picked']) /
-    ($result["teams"][$id]['matches_total'] * 2 * sqrt(2));
+  $expected_pair  = ( ($result["teams"][$id]['pickban'][$row[0]]['matches_picked']/$result["teams"][$id]['matches_total'])
+       * ($result["teams"][$id]['pickban'][$row[1]]['matches_picked']/$result["teams"][$id]['matches_total'])
+       * $result["teams"][$id]['matches_total'] )
+       / 2;
 
   $wr_diff = $row[3]/$row[2] - ($result["teams"][$id]['pickban'][$row[0]]['winrate_picked'] + $result["teams"][$id]['pickban'][$row[1]]['winrate_picked'])/2;
 

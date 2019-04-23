@@ -16,13 +16,19 @@ foreach($result["pickban"] as $hero)
 // 0.025 is close to 2q
 
 function calculate_limiters($dataset, $teams = null) {
-  $median = quantile($dataset, 0.5);
-  $sq_dev = sq_dev($dataset);
-  //$closest = find_position($dataset, $sq_dev+$median);
-  //$sq_dev_pct = (1-$closest/count($dataset));
-  $closest = find_position($dataset, $sq_dev-$median);
-  $sq_dev_pct = $closest/count($dataset);
-  $limiter_quantile = sqrt(0.20*$sq_dev_pct);
+  if (!empty($dataset)) {
+    $median = quantile($dataset, 0.5);
+    $sq_dev = sq_dev($dataset);
+    $closest = find_position($dataset, $sq_dev-$median);
+    $sq_dev_pct = $closest/count($dataset);
+    $limiter_quantile = sqrt(0.20*$sq_dev_pct);
+  } else {
+    $median = 0;
+    $sq_dev = 0;
+    $closest = 0;
+    $sq_dev_pct = 0;
+    $limiter_quantile = 0;
+  }
 
   return [
     "sq_quantile" => $sq_dev_pct,
@@ -44,9 +50,7 @@ $limiter = $limiters['limiter_higher'];
 $limiter_graph = $limiters['limiter_graph'];
 $limiter_lower = $limiters['limiter_lower'];
 $limiter_median = $limiters['median'];
-$deviation_treshold = $limiters['sq_quantile'];
 $limiter_quantile = $limiters['limiter_quantile'];
-$multiplier_pairs = $limiters['sq_dev']/$limiters['median'];
 
 echo <<<LIMITERS
 [ ] Limiter: $limiter
@@ -54,7 +58,6 @@ echo <<<LIMITERS
 [ ] Lower Limiter: $limiter_lower
 [ ] Median Limiter: $limiter_median
 [ ] Quantile: $limiter_quantile
-[ ] Pairs multiplier: $multiplier_pairs
 
 LIMITERS;
 

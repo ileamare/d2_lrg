@@ -33,8 +33,9 @@ function calculate_median($arr) {
 }
 
 function expected($arr) {
-  sort($arr);
   $count = count($arr);
+  if (!$count) return 0;
+  sort($arr);
   $sum = array_reduce($arr, function($carry, $item) {
     $carry += $item;
     return $carry;

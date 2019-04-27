@@ -1,14 +1,14 @@
 <?php 
 
 /**
- * LRG Library - quantile library v 2.4.0
+ * LRG Library - quantile library v 2.4.0-r2
  * Originally ported from D2-LRG-lrg2 codebase
  * Collection of functions to calculate quantiles, median values and find find dispersion
  * @author Darien "leamare" Fawkes
  * @license GNU GPL 3.0
  */
 
-function quantile($arr, $val) {
+function quantile(array $arr, float $val): float {
   if(!is_array($arr)) return false;
   if(!sizeof($arr)) return 0;
   sort($arr);
@@ -28,22 +28,18 @@ function quantile($arr, $val) {
   return $quantile;
 }
 
-function calculate_median($arr) {
+function calculate_median(array $arr): float {
   return quantile($arr, 0.5);
 }
 
-function expected($arr) {
+function expected(array $arr): float {
   $count = count($arr);
   if (!$count) return 0;
-  sort($arr);
-  $sum = array_reduce($arr, function($carry, $item) {
-    $carry += $item;
-    return $carry;
-  }, 0);
+  $sum = array_sum($arr);
   return ($sum/$count);
 }
 
-function dispersion($arr) {
+function dispersion(array $arr): float {
   $expected = expected($arr);
   $d = [];
   foreach ($arr as $v) {
@@ -53,20 +49,21 @@ function dispersion($arr) {
 }
 
 function sq_dev($arr) {
-  return pow(dispersion($arr), 0.5);
+  return sqrt(dispersion($arr));
 }
 
-function find_position($arr, $val) {
+function find_position(array $arr, float $val): float {
   sort($arr);
   reset($arr);
   $last = null;
   foreach($arr as $id => $v) {
     if ($v > $val) {
       if ($last !== null) {
-        $delta = ($val - $arr[$last])/($v - $arr[$last]);
+        $delta = abs($val - $arr[$last])/abs($v - $arr[$last]);
         $last += $delta;
       } else {
-        $last = -($val - $v)/($v);
+        if ($v > 0 && $val < 0 || $v < 0 && $val > 0) $last = 0;
+        else $last += abs($val - $v)/abs($v);
       }
       break;
     }

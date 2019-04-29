@@ -16,16 +16,16 @@ function quantile(array $arr, float $val): float {
   $count = count($arr);
   $quantile_val = floor(($count-1)*$val);
 //  $quantile_dev = $quantile_val < $count ? (($count-1)*$val) - $quantile_val : 0;
-  if($count*$val == $quantile_val+1) {
-    $low = $arr[$quantile_val];
-    $high = $arr[$quantile_val+1];
+  if($count*$val == $quantile_val+1 && $count > 1) {
+    $low = $arr[$quantile_val] ?? reset($arr);
+    $high = $arr[$quantile_val+1] ?? reset($arr);
     $quantile = (($low+$high)/2);
   } else if ($count*$val < $quantile_val+1) {
     $quantile = $arr[$quantile_val];
   } else {
-    $quantile = $arr[$quantile_val+1];
+    $quantile = $arr[$quantile_val+1] ?? reset($arr);
   }
-  return $quantile;
+  return $quantile ?? reset($arr) ?? 0;
 }
 
 function calculate_median(array $arr): float {

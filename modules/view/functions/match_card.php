@@ -67,9 +67,9 @@ function match_card($mid) {
                 <div class=\"match-info-line\"><span class=\"caption\">".locale_string("duration").":</span> ".
                   $duration."</div>
                 <div class=\"match-info-line\"><span class=\"caption\">".locale_string("region").":</span> ".
-                  $meta['regions'][
-                    $meta['clusters'][ $report['matches_additional'][$mid]['cluster'] ]
-                  ]."</div>
+                  ($meta['regions'][
+                    $meta['clusters'][ $report['matches_additional'][$mid]['cluster'] ] ?? 0
+                  ] ?? "unknown")."</div>
                 <div class=\"match-info-line\"><span class=\"caption\">".locale_string("game_mode").":</span> ".
                   $meta['modes'][$report['matches_additional'][$mid]['game_mode']]."</div>
                   <div class=\"match-info-line\"><span class=\"caption\">".locale_string("winner").":</span> ".

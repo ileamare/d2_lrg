@@ -87,7 +87,7 @@ if ($conn->multi_query($sql)) {
 function fetch($matches) {
   global $opendota, $conn, $rnum, $failed_matches, $scheduled, $scheduled_stratz, $t_teams, $t_players, $use_stratz, $require_stratz,
     $request_unparsed, $meta, $stratz_timeout_retries, $force_adding, $cache_dir, $lg_settings, $lrg_use_cache, $first_scheduled,
-    $use_full_stratz, $scheduled_wait_period;
+    $use_full_stratz, $scheduled_wait_period, $steamapikey;
   
   foreach ($matches as $match) {
       $t_match = [];
@@ -356,7 +356,7 @@ function fetch($matches) {
       $t_match['duration'] = $matchdata['duration'];
       $t_match['modeID'] = $matchdata['game_mode'];
       $t_match['leagueID'] = $matchdata['leagueid'];
-      $t_match['cluster']  = $matchdata['cluster'];
+      $t_match['cluster']  = $matchdata['cluster'] ?? 0;
       $t_match['date'] = $matchdata['start_time'];
       if (isset($matchdata['stomp']))
           $t_match['stomp'] = $matchdata['stomp'];
@@ -575,11 +575,18 @@ function fetch($matches) {
               -1 => 0,# radi bans
               -2 => 0 # radi bans
           );
-          foreach ($matchdata['picks_bans'] as $draft_instance) {
+          if (isset($matchdata['picks_bans']))
+            $drafts =& $matchdata['picks_bans'];
+          else 
+            $drafts =& $matchdata['draft_timings'];
+          foreach ($drafts as $draft_instance) {
               if (!isset($draft_instance['hero_id']) || !$draft_instance['hero_id'])
                 continue;
               
-              $stage_sum = (1+(int)$draft_instance['is_pick'])*($draft_instance['team'] ? 1 : -1);
+              $ispick = $draft_instance['is_pick'] ?? $draft_instance['pick'];
+              $team = $draft_instance['team'] ?? $draft_instance['active_team']-2;
+
+              $stage_sum = (1+(int)$ispick)*($team ? 1 : -1);
               $draft_stage = 0;
 
               if ($matchdata['version'] < 21) {
@@ -587,7 +594,7 @@ function fetch($matches) {
                 else if ($stages[$stage_sum] < 5) $draft_stage = 2;
                 else $draft_stage = 3;
               } else {
-                if($draft_instance['is_pick']) {
+                if($draft_instance['is_pick'] ?? $draft_instance['pick']) {
                   if    (++$stages[$stage_sum] < 3) $draft_stage = 1;
                   else if ($stages[$stage_sum] < 5) $draft_stage = 2;
                   else $draft_stage = 3;
@@ -599,8 +606,8 @@ function fetch($matches) {
               }
 
               $t_draft[$i]['matchid'] = $match;
-              $t_draft[$i]['is_radiant'] = $draft_instance['team'] ? 0 : 1;
-              $t_draft[$i]['is_pick'] = $draft_instance['is_pick'];
+              $t_draft[$i]['is_radiant'] = $team ? 0 : 1;
+              $t_draft[$i]['is_pick'] = $ispick;
               $t_draft[$i]['hero_id'] = $draft_instance['hero_id'];
               $t_draft[$i]['stage'] = $draft_stage;
 
@@ -683,7 +690,7 @@ function fetch($matches) {
 
       if ($conn->multi_query($sql) === TRUE);
       else {
-        echo "ERROR (".$conn->error."), reverting match.\n";
+        echo "ERROR (".$conn->error."), reverting match.\n$sql\n";
         $failed_matches[] = $t_match['matchid'];
         $conn->multi_query($err_query);
         do {

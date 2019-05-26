@@ -19,6 +19,7 @@ foreach($dir as $fname) {
         $tmp = json_decode($tmp, true);
         $tmp = get_report_descriptor($tmp);
         $tmp['file'] = $fname;
+        $tmp['short_fname'] = basename($fname);
         $cache['files'][$fname] = [
           $tmp['tag'],
           filesize($full_fname),
@@ -42,6 +43,7 @@ foreach($dir as $fname) {
       $tmp = json_decode($tmp, true);
       $tmp = get_report_descriptor($tmp);
       $tmp['file'] = $fname;
+      $tmp['short_fname'] = basename($fname);
       $cache['files'][$fname] = [
         $tmp['tag'],
         filesize($full_fname),
@@ -53,6 +55,7 @@ foreach($dir as $fname) {
         $cache['files'][$fname][0] = str_replace("/", "_", $cache['files'][$fname][0]);
         $cache['files'][$fname][0] = str_replace(".json", "", $cache['files'][$fname][0]);
         $cache['reps'][ $cache['files'][$fname][0] ] = $tmp;
+        $cache['reps'][ $cache['files'][$fname][0] ]['short_fname'] = basename($fname);
       }
       unset($tmp);
     } catch (Exception $e) {

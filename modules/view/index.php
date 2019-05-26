@@ -121,7 +121,7 @@ if (sizeof($cache['reps']) === 0) {
   });
 
   foreach($reps as $report) {
-    if ($report['tag'][0] == '!') continue;
+    if ($report['short_fname'][0] == '!') continue;
     if(!isset($cat) && $index_list < sizeof($reps)) {
       if(!$index_list) break;
       $index_list--;

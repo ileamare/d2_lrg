@@ -87,9 +87,9 @@
     "combos" => "Combos",
     "pairs_and_trios" => "Pairs and Trios",
     "meta_graph" => "Meta Graph",
-    "pvp" => "Player versus player",
+    "pvp" => "Player vs Player",
     "hvh" => "Hero vs Hero",
-    "tvt" => "Team versus team",
+    "tvt" => "Team vs Team",
     "party_graph" => "Parties Graph",
     "position" => "Position",
     "rad_wr_s" => "Radiant WR",
@@ -101,6 +101,7 @@
 
     "averages" => "Average values",
     "participants" => "Participants",
+    "ranked" => "Ranked",
 
     "overview" => "Overview",
     "teams" => "Teams",

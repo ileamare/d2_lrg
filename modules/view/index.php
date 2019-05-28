@@ -110,8 +110,12 @@ if (sizeof($cache['reps']) === 0) {
     "<th>".locale_string("league_id")."</th>".
     "<th>".locale_string("league_desc")."</th>".
     "<th>".locale_string("matches_total")."</th>".
+    "<th>".locale_string("participants")."</th>".
+    "<th>".locale_string("type")."</th>".
+    "<th>".locale_string("regions")."</th>".
     "<th>".locale_string("start_date")."</th>".
-    "<th>".locale_string("end_date")."</th></tr></thead>";
+    "<th>".locale_string("end_date")."</th>".
+    "</tr></thead>";
 
   uasort($reps, function($a, $b) {
     if($a['last_match']['date'] == $b['last_match']['date']) {
@@ -127,15 +131,26 @@ if (sizeof($cache['reps']) === 0) {
       $index_list--;
     }
 
+    $event_type = $report['tvt'] ? 'tvt' : (
+      isset($report['players']) ? 'pvp' : 'ranked'
+    );
+
+    $participants = isset($report['teams']) ? sizeof($report['teams']) : (
+      isset($report['players']) ? sizeof($report['players']) : '-'
+    );
+
     $modules .= "<tr><td><a href=\"?league=".$report['tag'].(empty($linkvars) ? "" : "&".$linkvars)."\">".$report['name']."</a></td>".
       "<td>".($report['id'] == "" ? "-" : $report['id'])."</td>".
       "<td>".$report['desc']."</td>".
       "<td>".$report['matches']."</td>".
-      "<td value=\"".$report['first_match']['date']."\">".date(locale_string("date_format"), $report['first_match']['date'])."</td>".
-      "<td value=\"".$report['last_match']['date']."\">".date(locale_string("date_format"), $report['last_match']['date'])."</td></tr>";
+      "<td>".$participants."</td>".
+      "<td>".locale_string($event_type)."</td>".
+      "<td>".(isset($report['regions']) ? sizeof($report['regions']) : ' - ')."</td>".
+      "<td value=\"".$report['first_match']['date']."\" data-matchid=\"".$report['first_match']['mid']."\">".date(locale_string("date_format"), $report['first_match']['date'])."</td>".
+      "<td value=\"".$report['last_match']['date']."\" data-matchid=\"".$report['last_match']['mid']."\">".date(locale_string("date_format"), $report['last_match']['date'])."</td></tr>";
   }
   if(!$index_list ) {
-    $modules .= "<tr><td></td><td></td><td>...</td><td></td><td></td><td></td></tr>";
+    $modules .= "<tr><td></td><td></td><td>...</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
   }
 
   $modules .= "</table>";

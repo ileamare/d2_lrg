@@ -11,7 +11,7 @@ function get_report_descriptor($report) {
     "first_match" => $report['first_match'],
     "last_match" => $report['last_match'],
     "matches" => $report['random']['matches_total'],
-    "ver" => $report['ana_version']
+    "ver" => $report['ana_version'],
   ];
 
   if(isset($report['teams'])) {

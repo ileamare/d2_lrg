@@ -12,9 +12,9 @@ function calculate_limiters(array $dataset, int $teams = null): array {
     // getting quantiles higher than mean, it's easier to work with
     $q1 = 1-find_position($dataset, $mean+$sq_dev)/count($dataset);
     $q2 = 1-find_position($dataset, $mean+$sq_dev*2)/count($dataset);
-    $q2m = 1-find_position($dataset, $mean+$sq_dev*1.2)/count($dataset);
+    $q2m = 1-find_position($dataset, $mean+$sq_dev*1.75)/count($dataset);
     // graphs limiter isn't really good at M-2sd, so we need to use a value
-    // somewhere in the middle, 1.2 multiplier proved to be the best solution
+    // somewhere in the middle, 1.75 multiplier proved to be the best solution
     // since it's pretty close to 10% treshold which I was using before
     // It's kind of practically proven value
     $q3 = 1-find_position($dataset, $mean+$sq_dev*3)/count($dataset);

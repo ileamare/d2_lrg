@@ -64,6 +64,7 @@ if ( $check_libs ) {
         chdir("..");
     }
 
+    check_directory("res/dependencies");
     # jQuery and tablesorter
     if ( !file_exists("res/dependencies/jquery.min.js") ) {
       echo "[ ] Pulling jQuery 3.3.1 slim\n";

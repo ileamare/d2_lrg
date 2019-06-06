@@ -4,6 +4,7 @@ ini_set('memory_limit', '4000M');
 
 include_once("head.php");
 include_once("modules/fetcher/get_patchid.php");
+include_once("modules/fetcher/processRules.php");
 include_once("modules/commons/generate_tag.php");
 include_once("modules/commons/metadata.php");
 
@@ -102,6 +103,9 @@ function fetch($matches) {
       }
 
       if (empty($match) || $match[0] == "#") continue;
+
+      $match_rules = processRules($match);
+
       echo("[$rnum\t] Match $match: ");
       $rnum++;
 
@@ -220,8 +224,7 @@ function fetch($matches) {
                 unset($matchdata['players'][$i]);
                 continue;
               }
-              if(!isset($matchdata['players'][$i]['account_id']) || $matchdata['players'][$i]['account_id'] === null
-                  || $matchdata['players'][$i]['account_id'] != $stratz[0]['players'][$j]['steamId']) {
+              if(!isset($matchdata['players'][$i]['account_id']) || !$matchdata['players'][$i]['account_id']) {
                 $matchdata['players'][$i]['account_id'] = $stratz[0]['players'][$j]['steamId'];
                 //$tmp = $opendota->player($matchdata['players'][$i]['account_id']);
     
@@ -350,6 +353,28 @@ function fetch($matches) {
 
       unset($json);
 
+      for($i=0; $i<2; $i++, $teamid = null) {
+        $tag = $i ? 'radiant_team' : 'dire_team';
+        $teamid = null;
+      
+        if (!empty($teamid) && isset($match_rules['team'][ $matchdata[$tag."_id"] ]))
+          $teamid = (int)$match_rules['team'][ $teamid ];
+      
+        if (isset($match_rules['side'][ $tag ]) || isset($match_rules['side'][ $i ? 'radiant' : 'dire' ]) || isset($match_rules['side'][ $i ]))
+          $teamid = (int) ($match_rules['side'][ $tag ] ?? $match_rules['side'][ $i ? 'radiant' : 'dire' ] ?? $match_rules['side'][ $i ] ?? $teamid);
+      
+        if(empty($teamid)) continue;
+
+        $json = file_get_contents('https://api.steampowered.com/IDOTA2Match_570/GetTeamInfoByTeamID/v001/?key='.$steamapikey.'&teams_requested=1&start_at_team_id='.$teamid);
+        $team = json_decode($json, true);
+
+        $matchdata[$tag] = [
+          'team_id' => $teamid,
+          'name' => $team['result']['teams'][0]['name'],
+          'tag' => $team['result']['teams'][0]['tag'] ?? generate_tag($team['result']['teams'][0]['name']),
+        ];
+      }
+
       $t_match['matchid'] = $match;
       $t_match['version'] = get_patchid($matchdata['start_time'], $matchdata['patch'], $meta);
       $t_match['radiantWin'] = $matchdata['radiant_win'];
@@ -424,6 +449,14 @@ function fetch($matches) {
             }
 
           }
+
+          // using fetcher rules
+          if (isset($match_rules['player'][ $t_matchlines[$i]['playerid'] ]))
+            $t_matchlines[$i]['playerid'] = (int)$match_rules['player'][ $t_matchlines[$i]['playerid'] ];
+
+          if (isset($match_rules['pslot'][$i]))
+            $t_matchlines[$i]['playerid'] = (int)$match_rules['pslot'][$i];
+
           $t_matchlines[$i]['heroid'] = $matchdata['players'][$j]['hero_id'];
           $t_matchlines[$i]['isRadiant'] = $matchdata['players'][$j]['isRadiant'];
           $t_matchlines[$i]['level'] = $matchdata['players'][$j]['level'];

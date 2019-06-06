@@ -50,7 +50,7 @@ function rg_generator_matches_list($table_id, $context) {
             "<td>".$mid."</td>".
             "<td value=\"".(isset($report['match_participants_teams'][$mid]['radiant']) ? $report['match_participants_teams'][$mid]['radiant'] : 0)."\">".
               $team_radiant."</td>".
-            "<td value=\"".(isset($report['match_participants_teams'][$mid]['radiant']) ? $report['match_participants_teams'][$mid]['dire'] : 0)."\">".
+            "<td value=\"".(isset($report['match_participants_teams'][$mid]['dire']) ? $report['match_participants_teams'][$mid]['dire'] : 0)."\">".
               $team_dire."</td>".
             "<td value=\"".$report['matches_additional'][$mid]['duration']."\">".$duration."</td>".
             "<td>".($report['matches_additional'][$mid]['radiant_score']+$report['matches_additional'][$mid]['dire_score'])."</td>".

@@ -23,7 +23,7 @@ function rg_generator_records($context) {
             strpos($key, "duration") !== FALSE || strpos($key, "_len") !== FALSE ||
             strpos($key, "shortest") !== FALSE || strpos($key, "longest") !== FALSE ?
               convert_time($record['value']) :
-              number_format($record['value'],2)
+              ( $record['value'] - floor($record['value']) != 0 ? number_format($record['value'], 2) : number_format($record['value'], 0) )
             ).
           "</td><td>". ($record['playerid'] ?
                     (strstr($key, "_team") != FALSE ?

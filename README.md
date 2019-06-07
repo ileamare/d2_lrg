@@ -1,10 +1,18 @@
 # Dota 2 League Report Generator (D2-LRG-lrg2)
 
+**IMPORTANT**
+
+This is the **lrg2** version that won't be updated any further.
+
+For new releases look for leamare/D2-LRG-Simon repository or issue #102.
+
+D2-LRG-Simon will feature major performance improvements, new features, API, WAY BETTER code that will be rewritten from scratch and with all the features in mind. This version was written as I was going on with the idea so it was initially just a shitty PHP script and it got bigger eventually. There are a lot of relics of that and it's pretty hard to work with all this stuff.
+
+If you're reading this before LRG-Simon was finished - the first working version should be ready sometime in September.
+
 ## Current version: 2.4.0
 
 **D2-LRG** (for short) is a tool for fetching stats for dota matches and forming fancy stats pages with every data you may need.
-
-This is **lrg2** version that won't be updated any further. For new releases look for D2-LRG-Simon repository or issue #102.
 
 ### Features
 * Fetching data from OpenDota
@@ -20,7 +28,7 @@ This is **lrg2** version that won't be updated any further. For new releases loo
 
 Thanks to custom leagues, it can be used as a tool for teams as well. It is possible to fetch data for enemy teams before tournaments, as well as forming stats reports for your own team to make analysis for that.
 
-Working prototype: http://spectralalliance.ru/reports/
+Working prototype: http://stats.spectral.gg/
 
 ## How does it work
 
@@ -110,6 +118,25 @@ Parameters:
 * `-s` - Softly require STRATZ (works just like -S, but after failure just continues without STRATZ response)
 * `-Z` - Use full match data request from Stratz (called when can't get data using shortcuts)
 * `-w123` - Specify number of seconds to wait before requesting scheduled matches again (default: 60)
+
+Fetcher has two modes: "listen" mode and the regular one. Fetcher is using matchlist from `matchlists` follder by default, listen mode changes it to STDIN. It's not async because of time limitation on OpenDota side (basically you can't be too fast with your requests anyway, so there's no need to be asynchronous).
+
+Matchlist is basically a line delimited text file, each line is a new match string. It's using following rules:
+* Lines starting with `#` symbol or empty lines are skipped
+* If a line consists of a number, it's used as a match ID
+* If a line is a matchrule string, it's being parsed by `processRules()`
+
+Listen mode accepts lines in the same format.
+
+Fetcher matchrule string is a string matching following format: `{matchid}::{rule_type}:{search}:{value}::...rules`, where {search} is replaced by {value} following specific {rule_type} rules. Any matchrule string may have an unlmited number of rules.
+
+Rules types:
+
+* `player` - replaces one player steam ID with another (`player:1234:2345`)
+* `pslot` - replaces player steam ID of a player in a given slot (`player:0:1234`)
+* `team` - replaces one team ID with another (`team:1:2`)
+* `side` - replaces team ID of a team based on it's side, given sides are either `radiant_team` or `dire_team` (`side:dire_team:1234`)
+
 
 ### rg_analyzer
 

@@ -53,21 +53,26 @@ if($lg_settings['main']['teams'])
 if ($conn->multi_query($sql) === TRUE) echo "[S] Cleared tables.\n";
 else echo("[F] Unexpected problems when recording to database.\n".$conn->error."\n");
 
-do {
+while( $conn->more_results() ) {
+  $conn->next_result();
   $conn->store_result();
-} while($conn->next_result());
+}
 
 if ($conn->multi_query($matches) === TRUE) echo "[S] Deleted match data.\n";
 else echo("[F] Unexpected problems when recording to database.\n".$conn->error."\n");
-do {
+
+while( $conn->more_results() ) {
+  $conn->next_result();
   $conn->store_result();
-} while($conn->next_result());
+}
 
 if ($conn->multi_query($players) === TRUE) echo "[S] Deleted players data.\n";
 else echo("[F] Unexpected problems when recording to database.\n".$conn->error."\n");
-do {
+
+while( $conn->more_results() ) {
+  $conn->next_result();
   $conn->store_result();
-} while($conn->next_result());
+}
 
 if($lg_settings['main']['teams']) {
   if ($conn->multi_query($teams) === TRUE) echo "[S] Deleted teams data.\n";

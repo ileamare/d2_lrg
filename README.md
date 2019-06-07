@@ -137,6 +137,12 @@ Rules types:
 * `team` - replaces one team ID with another (`team:1:2`)
 * `side` - replaces team ID of a team based on it's side, given sides are either `radiant_team` or `dire_team` (`side:dire_team:1234`)
 
+And some things about the listen mode:
+
+* it ends on EOF
+* it keeps going on forever otherwise
+* it's not async and it looks horrifying; I was thinking about implementing some kind of setTimeout() thingy from JS, but it's not compatible with all OSes
+* it may or may not hang up when you're passing matches in force mode and it's not a big amount of matches. Basically the script will be waiting for your input and then will continue working. Or maybe not. I'm not entirely sure.
 
 ### rg_analyzer
 

@@ -98,7 +98,7 @@ if ($listen)
 
 // this code is such a shitshow tbh, but I don't want to fix it, c ya in lrg-simon
 while(sizeof($matches) || $listen) {
-  if (!$stdin_flag && !empty($first_requested)) {
+  if (!$stdin_flag && !empty($first_scheduled)) {
     asort($first_scheduled);
     $first_requested = reset($first_scheduled);
     if (time() - $first_requested < $scheduled_wait_period)

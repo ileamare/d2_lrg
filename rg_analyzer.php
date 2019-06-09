@@ -2,7 +2,6 @@
 include_once("head.php");
 
 include_once("modules/commons/utf8ize.php");
-include_once("modules/commons/migrate_params.php");
 include_once("modules/commons/quantile.php");
 include_once("modules/commons/generate_tag.php");
 include_once("modules/commons/metadata.php");
@@ -30,18 +29,18 @@ if(compare_ver($lg_settings['version'], $lrg_version) < 0) {
     if (file_exists("templates/".$options['T'].".json"))
       $tmpl = json_decode(file_get_contents("templates/".$options['T'].".json"), true);
 
-    migrate_params($tmp, $tmpl);
+    array_replace_recursive($tmp, $tmpl);
     unset($tmpl);
   }
 
-  migrate_params($tmp, $lg_settings);
+  array_replace_recursive($tmp, $lg_settings);
   $lg_settings = $tmp;
   unset($tmp);
 } else if(isset($options['T'])) {
   if (file_exists("templates/".$options['T'].".json"))
     $tmp = json_decode(file_get_contents("templates/".$options['T'].".json"), true);
 
-  migrate_params($tmp, $lg_settings);
+  array_replace_recursive($tmp, $lg_settings);
   $lg_settings = $tmp;
   unset($tmp);
 }

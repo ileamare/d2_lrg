@@ -1,7 +1,6 @@
 <?php
 $init = true;
 include_once("head.php");
-include_once("modules/commons/migrate_params.php");
 
 if (!file_exists("templates/default.json")) die("[F] No default league template found, exitting.");
 $lg_settings = json_decode(file_get_contents("templates/default.json"), true);
@@ -12,7 +11,7 @@ if(isset($argv)) {
   if(isset($options['T'])) {
     if (file_exists("templates/".$options['T'].".json")) {
       $tmp = json_decode(file_get_contents("templates/".$options['T'].".json"), true);
-      migrate_params($lg_settings, $tmp);
+      array_replace_recursive($lg_settings, $tmp);
       unset($tmp);
     }
   }

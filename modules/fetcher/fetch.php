@@ -176,6 +176,7 @@ function fetch($match) {
                 echo "[\t] Requested and scheduled $match\n";
                 $first_scheduled[$match] = time();
                 $scheduled_stratz[] = $match;
+                unset($stratz);
                 break;
               } else if ($require_stratz) {
                 echo("..ERROR: Missing STRATZ analysis, skipping.\n");
@@ -188,16 +189,16 @@ function fetch($match) {
           }
         }
 
-        if(in_array($match, $failed_matches) && $require_stratz)
+        if(!isset($stratz) && $require_stratz)
           return null;
-        else if(isset($stratz)) {
+        else if(isset($stratz[0]['pickBans'])) {
           $matchdata['picks_bans_stratz'] = $stratz[0]['pickBans'];
         } 
       }
       
       $matchdata['players'] = array_values($matchdata['players']);
       
-      if (isset($stratz)) {
+      if (isset($matchdata['picks_bans_stratz'])) {
         echo("..Stratz data merged.");
         unset($stratz);
       } else {

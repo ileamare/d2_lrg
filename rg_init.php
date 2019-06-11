@@ -11,7 +11,7 @@ if(isset($argv)) {
   if(isset($options['T'])) {
     if (file_exists("templates/".$options['T'].".json")) {
       $tmp = json_decode(file_get_contents("templates/".$options['T'].".json"), true);
-      array_replace_recursive($tmp, $lg_settings);
+      $lg_settings = array_replace_recursive($lg_settings, $tmp);
       unset($tmp);
     }
   }

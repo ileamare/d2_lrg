@@ -29,18 +29,18 @@ if(compare_ver($lg_settings['version'], $lrg_version) < 0) {
     if (file_exists("templates/".$options['T'].".json"))
       $tmpl = json_decode(file_get_contents("templates/".$options['T'].".json"), true);
 
-    array_replace_recursive($tmp, $tmpl);
+    $tmp = array_replace_recursive($tmp, $tmpl);
     unset($tmpl);
   }
 
-  array_replace_recursive($tmp, $lg_settings);
+  $tmp = array_replace_recursive($tmp, $lg_settings);
   $lg_settings = $tmp;
   unset($tmp);
 } else if(isset($options['T'])) {
   if (file_exists("templates/".$options['T'].".json"))
     $tmp = json_decode(file_get_contents("templates/".$options['T'].".json"), true);
 
-  array_replace_recursive($tmp, $lg_settings);
+  $tmp = array_replace_recursive($tmp, $lg_settings);
   $lg_settings = $tmp;
   unset($tmp);
 }

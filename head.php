@@ -4,7 +4,7 @@ require_once("modules/commons/versions.php");
 require_once("modules/commons/readline.php");
 
 if(isset($argv)) {
-    $options = getopt("l:m:d:FfKT:o:c:SsRrZwL");
+    $options = getopt("l:m:d:FfKT:o:c:SsRrZw:LA");
 
     if(isset($options['l'])) {
       $lrg_league_tag = $options['l'];

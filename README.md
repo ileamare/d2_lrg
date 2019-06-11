@@ -118,6 +118,7 @@ Parameters:
 * `-s` - Softly require STRATZ (works just like -S, but after failure just continues without STRATZ response)
 * `-Z` - Use full match data request from Stratz (called when can't get data using shortcuts)
 * `-w123` - Specify number of seconds to wait before requesting scheduled matches again (default: 60)
+* `-A` - Force await flag, forces awaiting for awailability of replay data (for cases when you pass data to the script and don't want it to end on EOF)
 
 Fetcher has two modes: "listen" mode and the regular one. Fetcher is using matchlist from `matchlists` follder by default, listen mode changes it to STDIN. It's not async because of time limitation on OpenDota side (basically you can't be too fast with your requests anyway, so there's no need to be asynchronous).
 

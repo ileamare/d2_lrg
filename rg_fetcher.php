@@ -48,7 +48,8 @@ $failed_matches = [];
 $scheduled = [];
 $first_scheduled = [];
 
-$scheduled_wait_period = $options['w'] ?? 60;
+$scheduled_wait_period = (int)($options['w'] ?? 60);
+$force_await = isset($options['A']);
 
 $scheduled_stratz = [];
 
@@ -101,7 +102,7 @@ while(sizeof($matches) || $listen) {
   if (!$stdin_flag && !empty($first_scheduled)) {
     asort($first_scheduled);
     $first_requested = reset($first_scheduled);
-    if (time() - $first_requested < $scheduled_wait_period)
+    if (time() - $first_requested < $scheduled_wait_period && !$force_await)
       $stdin_flag = true;
   }
 
@@ -122,10 +123,10 @@ while(sizeof($matches) || $listen) {
     processRules($match_raw);
   } else $match_raw = $match;
 
-  if($request_unparsed) {
-    if (isset($first_scheduled[$match_raw]) && time() - $first_scheduled[$match_raw] < $scheduled_wait_period) {
+  if($request_unparsed && isset($first_scheduled[$match_raw])) {
+    if (time() - $first_scheduled[$match_raw] < $scheduled_wait_period) {
       if (!sizeof($matches)) {
-        if ($listen) {
+        if ($listen && !$force_await) {
           $stdin_flag = true;
         }
         if (!$stdin_flag) {
@@ -140,7 +141,7 @@ while(sizeof($matches) || $listen) {
   }
 
   $r = fetch($match);
-  if ($r === FALSE) {
+  if ($r === FALSE || ($force_await && $request_unparsed && $r !== TRUE)) {
     array_push($matches, $match);
   } else if ($r === NULL) {
     $failed_matches[] = $match;

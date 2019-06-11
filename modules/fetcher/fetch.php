@@ -56,6 +56,7 @@ function fetch($match) {
           $opendota->request_match($match);
           echo "[\t] Requested and scheduled $match\n";
           $first_scheduled[$match] = time();
+          $scheduled[] = $match;
           return false;
         } else if (in_array($match, $scheduled) && !$force_adding) {
           return null;
@@ -90,6 +91,7 @@ function fetch($match) {
           $opendota->request_match($match);
           echo "..Unparsed. Requested and scheduled $match\n";
           $first_scheduled[$match] = time();
+          $scheduled[] = $match;
           return false;
         }
 
@@ -810,6 +812,16 @@ function fetch($match) {
       }
     }
   }
+
+  if (isset($first_scheduled[$match]))
+    unset($first_scheduled[$match]);
+
+  $k = array_search($match, $scheduled);
+  if ($k !== FALSE)
+    unset($scheduled[$k]);
+  $k = array_search($match, $scheduled_stratz);
+  if ($k !== FALSE)
+    unset($scheduled_stratz[$k]);
 
   return true;
 }

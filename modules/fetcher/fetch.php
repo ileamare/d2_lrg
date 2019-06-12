@@ -48,7 +48,7 @@ function fetch($match) {
     echo("Requesting OpenDota.");
     $matchdata = $opendota->match($match);
     echo("..OK.");
-    if ($matchdata === FALSE || !isset($matchdata['duration'])) {
+    if ($matchdata === FALSE || !isset($matchdata['duration']) || empty($matchdata['players'])) {
         echo("..ERROR: Unable to read JSON skipping.\n");
         //if (!isset($matchdata['duration'])) var_dump($matchdata);
 

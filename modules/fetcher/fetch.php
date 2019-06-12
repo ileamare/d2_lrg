@@ -737,13 +737,13 @@ function fetch($match) {
   if ($lg_settings['main']['teams'] && sizeof($t_team_matches)) {
     $sql = "INSERT INTO teams_matches (matchid, teamid, is_radiant) VALUES ";
 
-    foreach($t_team_matches as $match) {
-        if($match['is_radiant'] > 1) {
+    foreach($t_team_matches as $m) {
+        if($m['is_radiant'] > 1) {
           echo "[W] Error when adding teams-matches data: is_radiant flag has higher value than 1\n".
-              "[ ]\t".$match['matchid']." - ".$match['teamid']." - ".$match['is_radiant']."\n";
+              "[ ]\t".$m['matchid']." - ".$m['teamid']." - ".$m['is_radiant']."\n";
               continue;
         }
-        $sql .= "\n\t(".$match['matchid'].",".$match['teamid'].",".$match['is_radiant']."),";
+        $sql .= "\n\t(".$m['matchid'].",".$m['teamid'].",".$m['is_radiant']."),";
     }
     $sql[strlen($sql)-1] = ";";
 

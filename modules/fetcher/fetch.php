@@ -21,7 +21,7 @@ function fetch($match) {
     $t_team_matches = [];
   }
 
-  if (empty($match) || $match[0] == "#") return true;
+  if (empty($match) || $match[0] == "#" || strlen($match) < 2) return true;
 
   $match_rules = processRules($match);
 
@@ -814,7 +814,7 @@ function fetch($match) {
     }
   }
 
-  if (isset($first_scheduled[$match]))
+  if ($match && isset($first_scheduled[$match]))
     unset($first_scheduled[$match]);
 
   $k = array_search($match, $scheduled);

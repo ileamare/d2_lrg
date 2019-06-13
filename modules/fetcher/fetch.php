@@ -8,7 +8,7 @@
 function fetch($match) {
   global $opendota, $conn, $rnum, $failed_matches, $scheduled, $scheduled_stratz, $t_teams, $t_players, $use_stratz, $require_stratz,
   $request_unparsed, $meta, $stratz_timeout_retries, $force_adding, $cache_dir, $lg_settings, $lrg_use_cache, $first_scheduled,
-  $use_full_stratz, $scheduled_wait_period, $steamapikey;
+  $use_full_stratz, $scheduled_wait_period, $steamapikey, $force_await;
 
   $t_match = [];
   $t_matchlines = [];
@@ -48,17 +48,17 @@ function fetch($match) {
     echo("Requesting OpenDota.");
     $matchdata = $opendota->match($match);
     echo("..OK.");
-    if ($matchdata === FALSE  || !isset($matchdata['start_time']) || !isset($matchdata['duration']) || empty($matchdata['players'])) {
+    if (empty($matchdata) || empty($matchdata['duration']) || empty($matchdata['players'])) {
         echo("..ERROR: Unable to read JSON skipping.\n");
         //if (!isset($matchdata['duration'])) var_dump($matchdata);
 
-        if($request_unparsed && !in_array($match, $scheduled)) {
+        if($request_unparsed && !in_array($match, $scheduled) || $force_await) {
           $opendota->request_match($match);
           echo "[\t] Requested and scheduled $match\n";
           $first_scheduled[$match] = time();
           $scheduled[] = $match;
           return false;
-        } else if (in_array($match, $scheduled) && !$force_adding) {
+        } else { //if (in_array($match, $scheduled) && !$force_adding) {
           return null;
         }
     } else {

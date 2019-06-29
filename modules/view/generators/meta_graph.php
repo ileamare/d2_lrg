@@ -80,8 +80,8 @@ function rg_generator_meta_graph($div_id, $context, $context_pickban, $heroes_fl
     $nodes .= "{from: ".$combo[$id.'1'].", to: ".$combo[$id.'2'].", value:".$combo['matches'].", title:\"".
       $combo['matches']." ".locale_string("matches").", ".number_format($combo['winrate']*100, 2)."% ".locale_string("winrate").
       (isset($combo['dev_pct']) ? ", ".number_format($combo['dev_pct']*100, 2)."% ".locale_string("deviation") : "")."\", color:{color:'rgba(".
-      round(126-255*(($combo['winrate']-0.5)/$max_wr)).",124,".
-      round(126+255*(($combo['winrate']-0.5)/$max_wr)).",1)'}},";
+      round(126-255*($max_wr ? ($combo['winrate']-0.5)/$max_wr : 0)).",124,".
+      round(126+255*($max_wr ? ($combo['winrate']-0.5)/$max_wr : 0)).",1)'}},";
   }
 
   $res .= "var edges = [".$nodes."];";

@@ -119,7 +119,7 @@ function fetch($match) {
 
       $stratz = empty($json) ? [] : json_decode($json, true);
 
-      if(!isset($stratz[0]['parsedDate'])) {
+      if(!isset($stratz[0]['parsedDateTime'])) {
         unset($stratz);
 
         if($request_unparsed && !in_array($match, $scheduled_stratz)) {
@@ -139,12 +139,17 @@ function fetch($match) {
             continue;
           }
           if(!isset($matchdata['players'][$i]['account_id']) || !$matchdata['players'][$i]['account_id']) {
-            $matchdata['players'][$i]['account_id'] = $stratz[0]['players'][$j]['steamId'];
-            //$tmp = $opendota->player($matchdata['players'][$i]['account_id']);
+            $matchdata['players'][$i]['account_id'] = $stratz[0]['players'][$j]['steamAccount']['id'];
 
-            $matchdata['players'][$i]["name"] = $stratz[0]['players'][$j]['name'];
-            if(isset($stratz[0]['players'][$j]['proPlayerName']))
-              $matchdata['players'][$i]["personaname"] = $stratz[0]['players'][$j]['proPlayerName'];
+            // TODO
+            if (!isset($t_players[ $matchdata['players'][$i]['account_id'] ])) {
+              $tmp = $opendota->player($matchdata['players'][$i]['account_id']);
+
+              $matchdata['players'][$i]["name"] = $tmp['profile']['name'] ?? null;
+              $matchdata['players'][$i]["personaname"] = $tmp['profile']['personaname'] ?? null;
+            } else {
+              $matchdata['players'][$i]["name"] = $t_players[ $matchdata['players'][$i]['account_id'] ];
+            }
           }
           $j++;
         }
@@ -154,7 +159,9 @@ function fetch($match) {
       if(($matchdata['game_mode'] == 22 || $matchdata['game_mode'] == 3 || empty($matchdata['picks_bans'])) && 
           (!in_array($match, $failed_matches) || false)) {
         $stratz_retries = $stratz_timeout_retries+1;
-        while ((!isset($stratz[0]['pickBans']) || $stratz[0]['pickBans'] === NULL) && $use_full_stratz) {
+        echo 2;
+        while ((!isset($stratz[0]['pickBans']) || $stratz[0]['pickBans'] === NULL || empty($stratz)) && $use_full_stratz) {
+          echo 3;
           $stratz_retries--;
           echo "..STRATZ ERROR";
           sleep(5);
@@ -191,7 +198,11 @@ function fetch($match) {
 
         if(!isset($stratz) && $require_stratz)
           return null;
-        else if(isset($stratz[0]['pickBans'])) {
+        
+        echo 4;
+
+        if(isset($stratz[0]['pickBans'])) {
+          echo 1;
           $matchdata['picks_bans_stratz'] = $stratz[0]['pickBans'];
         } 
       }
@@ -350,6 +361,7 @@ function fetch($match) {
         $matchdata['players'][$j]['account_id'] *= (-1)*$matchdata['players'][$j]['hero_id'];
         $t_matchlines[$i]['playerid'] = $matchdata['players'][$j]['account_id'];
       }
+
       if(!isset($t_players[$matchdata['players'][$j]['account_id']])) {
         if ($matchdata['players'][$j]['account_id'] < 0) {
           $t_new_players[$matchdata['players'][$j]['account_id']] = $meta['heroes'][$matchdata['players'][$j]['hero_id']]['name']." Player";
@@ -639,7 +651,7 @@ function fetch($match) {
     if ($player === true) continue;
     $player = mb_substr($player, 0, 127);
     $sql = "INSERT INTO players (playerID, nickname) VALUES (".$id.",\"".addslashes($player)."\");";
-    if ($conn->query($sql) === TRUE) $t_players[$id] = true;
+    if ($conn->query($sql) === TRUE) $t_players[$id] = $player;
     else echo $conn->error."\n";
   }
 

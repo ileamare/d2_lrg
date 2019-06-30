@@ -82,12 +82,12 @@ if ($lg_settings['main']['teams']) {
 }
 
 $t_players = [];
-$sql = "SELECT playerid FROM players";
+$sql = "SELECT playerid, name FROM players";
 if ($conn->multi_query($sql)) {
   $res = $conn->store_result();
 
   while ($row = $res->fetch_row()) {
-    $t_players[$row[0]] = true;
+    $t_players[$row[0]] = $row[1];
   }
   $res->free();
 }

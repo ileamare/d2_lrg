@@ -52,7 +52,7 @@ function fetch($match) {
         echo("..ERROR: Unable to read JSON skipping.\n");
         //if (!isset($matchdata['duration'])) var_dump($matchdata);
 
-        if($request_unparsed && !in_array($match, $scheduled) || $force_await) {
+        if($request_unparsed && !in_array($match, $scheduled)) {
           $opendota->request_match($match);
           echo "[\t] Requested and scheduled $match\n";
           $first_scheduled[$match] = time();

@@ -49,7 +49,9 @@ $scheduled = [];
 $first_scheduled = [];
 
 $scheduled_wait_period = (int)($options['w'] ?? 60);
+
 $force_await = isset($options['A']);
+$force_await_retries = (int)$options['A'] ? (int)$options['A'] : 0;
 
 $scheduled_stratz = [];
 
@@ -102,7 +104,7 @@ while(sizeof($matches) || $listen) {
   if (!$stdin_flag && !empty($first_scheduled) && sizeof($matches) < 2 && !$force_await) {
     asort($first_scheduled);
     $first_requested = reset($first_scheduled);
-    if (time() - $first_requested < $scheduled_wait_period && !$force_await)
+    if (time() - $first_requested < $scheduled_wait_period)
       $stdin_flag = true;
   }
 
@@ -141,7 +143,7 @@ while(sizeof($matches) || $listen) {
   }
 
   $r = fetch($match);
-  if ($r === FALSE || ($force_await && $request_unparsed && $r !== TRUE)) {
+  if ($r === FALSE) { //|| ($force_await && $request_unparsed && $r !== TRUE)) {
     array_push($matches, $match);
   } else if ($r === NULL) {
     $failed_matches[] = $match;

@@ -51,7 +51,7 @@ $first_scheduled = [];
 $scheduled_wait_period = (int)($options['w'] ?? 60);
 
 $force_await = isset($options['A']);
-$force_await_retries = (int)$options['A'] ? (int)$options['A'] : 0;
+//$force_await_retries = (int)$options['A'] ? (int)$options['A'] : 0;
 
 $scheduled_stratz = [];
 

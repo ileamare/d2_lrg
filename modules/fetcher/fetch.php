@@ -159,9 +159,7 @@ function fetch($match) {
       if(($matchdata['game_mode'] == 22 || $matchdata['game_mode'] == 3 || empty($matchdata['picks_bans'])) && 
           (!in_array($match, $failed_matches) || false)) {
         $stratz_retries = $stratz_timeout_retries+1;
-        echo 2;
         while ((!isset($stratz[0]['pickBans']) || $stratz[0]['pickBans'] === NULL || empty($stratz)) && $use_full_stratz) {
-          echo 3;
           $stratz_retries--;
           echo "..STRATZ ERROR";
           sleep(5);
@@ -198,11 +196,8 @@ function fetch($match) {
 
         if(!isset($stratz) && $require_stratz)
           return null;
-        
-        echo 4;
 
         if(isset($stratz[0]['pickBans'])) {
-          echo 1;
           $matchdata['picks_bans_stratz'] = $stratz[0]['pickBans'];
         } 
       }

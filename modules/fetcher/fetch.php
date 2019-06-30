@@ -643,7 +643,7 @@ function fetch($match) {
   $sql = ""; $err_query = "";
 
   foreach ($t_new_players as $id => $player) {
-    if ($player === true) continue;
+    if (isset($t_players[$id])) continue;
     $player = mb_substr($player, 0, 127);
     $sql = "INSERT INTO players (playerID, nickname) VALUES (".$id.",\"".addslashes($player)."\");";
     if ($conn->query($sql) === TRUE) $t_players[$id] = $player;

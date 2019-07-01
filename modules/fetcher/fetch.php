@@ -357,16 +357,17 @@ function fetch($match) {
         $t_matchlines[$i]['playerid'] = $matchdata['players'][$j]['account_id'];
       }
 
-      if(!isset($t_players[$matchdata['players'][$j]['account_id']])) {
-        if ($matchdata['players'][$j]['account_id'] < 0) {
-          $t_new_players[$matchdata['players'][$j]['account_id']] = $meta['heroes'][$matchdata['players'][$j]['hero_id']]['name']." Player";
+      $pid = (int)$matchdata['players'][$j]['account_id'];
+      if(!isset($t_players[$pid])) {
+        if ($pid < 0) {
+          $t_new_players[$pid] = $meta['heroes'][$matchdata['players'][$j]['hero_id']]['name']." Player";
         } else {
           if (isset($matchdata['players'][$j]["name"]) && $matchdata['players'][$j]["name"] != null) {
-            $t_new_players[$matchdata['players'][$j]['account_id']] = $matchdata['players'][$j]["name"];
+            $t_new_players[$pid] = $matchdata['players'][$j]["name"];
           } else if ($matchdata['players'][$j]["personaname"] != null) {
-            $t_new_players[$matchdata['players'][$j]['account_id']] = $matchdata['players'][$j]["personaname"];
+            $t_new_players[$pid] = $matchdata['players'][$j]["personaname"];
           } else
-            $t_new_players[$matchdata['players'][$j]['account_id']] = "Player ".$matchdata['players'][$j]['account_id'];
+            $t_new_players[$pid] = "Player ".$pid;
         }
 
       }

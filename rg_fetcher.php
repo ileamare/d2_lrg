@@ -89,7 +89,7 @@ if ($conn->multi_query($sql)) {
   $res = $conn->store_result();
 
   while ($row = $res->fetch_row()) {
-    $t_players[$row[0]] = $row[1];
+    $t_players[(int)$row[0]] = $row[1];
   }
   $res->free();
 }

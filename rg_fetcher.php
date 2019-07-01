@@ -84,15 +84,15 @@ if ($lg_settings['main']['teams']) {
 }
 
 $t_players = [];
-$sql = "SELECT playerid, name FROM players";
-if ($conn->multi_query($sql)) {
+$sql = "SELECT playerid, nickname FROM players;";
+if ($conn->multi_query($sql) === TRUE) {
   $res = $conn->store_result();
 
-  while ($row = $res->fetch_row()) {
+  for ($row = $res->fetch_row(); $row != null; $row = $res->fetch_row()) {
     $t_players[(int)$row[0]] = $row[1];
   }
-  $res->free();
-}
+  $res->free_result();
+} else die("Something went wrong: ".$conn->error."\n");
 
 $stdin_flag = false;
 

@@ -12,6 +12,11 @@ function rg_view_generate_teams_profiles($context, $context_mod, $foreword = "")
   }
 
   foreach ($context as $tid => $team) {
+    if(isset($report['teams_interest'])) {
+      if (!in_array($tid, $report['teams_interest']) && !check_module($context_mod."team".$tid)) 
+        continue;
+    }
+
     $res['team'.$tid] = [];
     $strings['en']["team".$tid] = team_name($tid);
 

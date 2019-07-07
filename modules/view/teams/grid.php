@@ -10,7 +10,7 @@ function rg_view_generate_teams_grid() {
 
   $res  = "<div class=\"content-text\">".locale_string("desc_tvt")."</div>";
 
-  $res .= rg_generator_tvt_grid("teams-tvt", $tvt);
+  $res .= rg_generator_tvt_grid("teams-tvt", $tvt, $report['teams_interest'] ?? []);
 
   return $res;
 }

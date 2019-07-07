@@ -6,7 +6,7 @@ if (!file_exists("templates/default.json")) die("[F] No default league template 
 $lg_settings = json_decode(file_get_contents("templates/default.json"), true);
 
 if(isset($argv)) {
-  $options = getopt("ST:l:N:D:I:", [ "settings", "template", "league", "name", "desc", "id" ]);
+  $options = getopt("ST:l:N:D:I:t:", [ "settings", "template", "league", "name", "desc", "id", "teams" ]);
 
   if(isset($options['T'])) {
     if (file_exists("templates/".$options['T'].".json")) {
@@ -28,6 +28,11 @@ if(isset($argv)) {
   if(isset($options['I'])) {
     $lg_settings['league_id'] = (int)$options['I'];
     if (!$lg_settings['league_id']) $lg_settings['league_id'] = null;
+  }
+
+  if(isset($options['t']) || isset($options['teams'])) {
+    $teams = $options['t'] ?? $options['teams'];
+    $lg_settings['teams'] = explode(",", $teams);
   }
 
   if(isset($options['S'])) {

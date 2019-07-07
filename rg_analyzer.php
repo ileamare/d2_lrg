@@ -21,6 +21,9 @@ $result["league_desc"] = $lg_settings['league_desc'];
 $result['league_id'] = $lg_settings['league_id'];
 $result["league_tag"] = $lg_settings['league_tag'];
 
+if (isset($lg_settings['teams']))
+  $result["teams_interest"] = $lg_settings['teams'];
+
 if(compare_ver($lg_settings['version'], $lrg_version) < 0) {
   if (!file_exists("templates/default.json")) die("[F] No default league template found, exitting.");
   $tmp = json_decode(file_get_contents("templates/default.json"), true);

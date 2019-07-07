@@ -1,7 +1,7 @@
 <?php
 include_once("$root/modules/view/functions/team_name.php");
 
-function rg_generator_tvt_grid($table_id, $context) {
+function rg_generator_tvt_grid($table_id, $context, $teams_interest = []) {
   if(!sizeof($context)) return "";
   
   $team_ids = array_keys($context);
@@ -10,11 +10,13 @@ function rg_generator_tvt_grid($table_id, $context) {
 
   $res .= "<thead><tr><th></th>";
   foreach($context as $tid => $data) {
+    if (!empty($teams_interest) && in_array($tid, $teams_interest)) continue;
     $res .= "<th><span>".team_tag($tid)."</span></th>";
   }
   $res .= "</tr></thead>";
 
   foreach($context as $tid => $teamline) {
+    if (!empty($teams_interest) && in_array($tid, $teams_interest)) continue;
     $res .= "<tr><td>".team_name($tid)."</td>";
     for($i=0, $end = sizeof($team_ids); $i<$end; $i++) {
       if($tid == $team_ids[$i]) {

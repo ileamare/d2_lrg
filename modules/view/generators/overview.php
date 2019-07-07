@@ -477,9 +477,9 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
     $res .= "<div class=\"content-header\">".locale_string("notable_matches")."</div>";
     $res .= "<div class=\"content-cards\">";
 
-    if($context['settings']['overview_first_match'] && isset($context['first_match']))
+    if(($context['settings']['overview_first_match'] ?? true) && isset($context['first_match']))
       $res .= "<h1>".locale_string("first_match")."</h1>".match_card($context['first_match']['mid']);
-    if($context['settings']['overview_last_match'] && isset($context['last_match']))
+    if(($context['settings']['overview_last_match'] ?? true) && isset($context['last_match']))
       $res .= "<h1>".locale_string("last_match")."</h1>".match_card($context['last_match']['mid']);
 
     if(isset($context['records'])) {

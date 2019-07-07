@@ -22,6 +22,16 @@
     <link href="res/valve_mimic.css" rel="stylesheet" type="text/css" />
     <link href="res/reports.css" rel="stylesheet" type="text/css" />
     <?php
+      if($use_graphjs) {
+        echo "<script type=\"text/javascript\" src=\"res/dependencies/Chart.bundle.min.js\"></script>";
+      }
+      if($use_visjs) {
+        echo "<script type=\"text/javascript\" src=\"res/dependencies/vis.min.js\"></script>";
+        echo "<script type=\"text/javascript\" src=\"res/dependencies/vis-network.min.js\"></script>";
+        echo "<link href=\"res/dependencies/vis.min.css\" rel=\"stylesheet\" type=\"text/css\" />";
+        echo "<link href=\"res/dependencies/vis-network.min.css\" rel=\"stylesheet\" type=\"text/css\" />";
+      }
+
           if(isset($override_style) && file_exists("res/custom_styles/".$override_style.".css"))
               echo "<link href=\"res/custom_styles/".$override_style.".css\" rel=\"stylesheet\" type=\"text/css\" />";
           else if(isset($custom_style))
@@ -129,17 +139,6 @@
           <div id="modal-sublevel" class="modal-sublevel"></div>
         </div>
       </div>
-      <?php 
-      if($use_graphjs) {
-        echo "<script type=\"text/javascript\" src=\"res/dependencies/Chart.bundle.min.js\"></script>";
-      }
-      if($use_visjs) {
-        echo "<script type=\"text/javascript\" src=\"res/dependencies/vis.min.js\"></script>";
-        echo "<script type=\"text/javascript\" src=\"res/dependencies/vis-network.min.js\"></script>";
-        echo "<link href=\"res/dependencies/vis.min.css\" rel=\"stylesheet\" type=\"text/css\" />";
-        echo "<link href=\"res/dependencies/vis-network.min.css\" rel=\"stylesheet\" type=\"text/css\" />";
-      }
-      ?>
       <script type="text/javascript" src="res/dependencies/jquery.min.js"></script>
       <script type="text/javascript" src="res/dependencies/jquery.tablesorter.min.js"></script>
       <script type="text/javascript" src="res/reports.js"></script>

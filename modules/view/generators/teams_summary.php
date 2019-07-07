@@ -70,7 +70,9 @@ function rg_view_generator_teams_summary($context = null, $short_flag = false) {
     $res .= "<tr>".
               "<td>".team_link($team_id)."</td>".
               "<td>".$report['teams'][$team_id]['matches_total']."</td>".
-              "<td>".number_format($report['teams'][$team_id]['wins']*100/$report['teams'][$team_id]['matches_total'],2)."%</td>";
+              "<td>".number_format( $report['teams'][$team_id]['matches_total'] ? 
+                $report['teams'][$team_id]['wins']*100/$report['teams'][$team_id]['matches_total']
+                : 0,2)."%</td>";
 
     foreach($report['teams'][$team_id]['averages'] as $k => $v) {
       if($short_flag) {

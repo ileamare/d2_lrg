@@ -7,7 +7,7 @@ $parent_mod = $modstr."-teams-";
 $res["region".$region]['teams']['summary'] = "";
 if (check_module($parent_mod."summary")) {
   include_once("$root/modules/view/generators/teams_summary.php");
-  if($reg_report['settings']['teams_summary_softgen'])
+  if($reg_report['settings']['teams_summary_softgen'] ?? false)
     $res["region".$region]['teams']['summary']  = "<div class=\"content-text\">".locale_string("desc_teams_summary_softgen")."</div>";
   $res["region".$region]['teams']['summary'] .= rg_view_generator_teams_summary($reg_report['teams']);
 }

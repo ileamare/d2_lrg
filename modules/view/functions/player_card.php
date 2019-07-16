@@ -17,7 +17,7 @@ function player_card($player_id) {
   }
 
   $output = "<div class=\"player-card\"><div class=\"player-name\">".player_link($player_id)." (".$player_id.")</div>";
-  if(isset($report['teams']) && isset($report['teams'][ $pinfo['team'] ]))
+  if(isset($report['teams']) && isset($pinfo['team']) && isset($report['teams'][ $pinfo['team'] ]))
     $output .= "<div class=\"player-team\">".team_link($pinfo['team'])."</div>";
   $output .= "<div class=\"player-add-info\">".
                 "<div class=\"player-info-line\"><span class=\"caption\">".locale_string("matches").":</span> ".$pinfo['matches']." (".

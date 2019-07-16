@@ -67,7 +67,7 @@ function rg_view_generator_teams_summary($context = null, $short_flag = false) {
   $res .= "</tr></thead>";
 
   foreach($context as $team_id) {
-    if (isset($report['teams_interest']) && in_array($team_id, $report['teams_interest'])) continue;
+    if (isset($report['teams_interest']) && !in_array($team_id, $report['teams_interest'])) continue;
     $res .= "<tr>".
               "<td>".team_link($team_id)."</td>".
               "<td>".$report['teams'][$team_id]['matches_total']."</td>".

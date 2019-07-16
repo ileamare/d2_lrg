@@ -16,7 +16,7 @@ function rg_generator_tvt_grid($table_id, $context, $teams_interest = []) {
   $res .= "</tr></thead>";
 
   foreach($context as $tid => $teamline) {
-    if (!empty($teams_interest) && in_array($tid, $teams_interest)) continue;
+    if (!empty($teams_interest) && !in_array($tid, $teams_interest)) continue;
     $res .= "<tr><td>".team_name($tid)."</td>";
     for($i=0, $end = sizeof($team_ids); $i<$end; $i++) {
       if($tid == $team_ids[$i]) {

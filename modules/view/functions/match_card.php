@@ -13,6 +13,9 @@ function match_card($mid) {
   $players_radi = ""; $players_dire = "";
   $heroes_radi = "";  $heroes_dire = "";
 
+  $clusters = $meta['clusters'];
+  $regions = $meta['regions'];
+
   for($i=0; $i<10; $i++) {
     if($report['matches'][$mid][$i]['radiant']) {
       $players_radi .= "<div class=\"match-player\">".player_name($report['matches'][$mid][$i]['player'], false)."</div>";

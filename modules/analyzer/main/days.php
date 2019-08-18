@@ -26,7 +26,7 @@ for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row(
 $query_res->free_result();
 
 foreach($result["days"] as $day => $date) {
-  $sql = "SELECT matchid FROM matches WHERE start_date >= ".$date['timestamp']." AND start_date < ".$date['timestamp']."+86401;";
+  $sql = "SELECT matchid FROM matches WHERE start_date >= ".$date['timestamp']." AND start_date < ".$date['timestamp']."+86400;";
 
   if ($conn->multi_query($sql) === FALSE) die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
 

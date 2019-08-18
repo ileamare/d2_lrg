@@ -302,7 +302,7 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
           player_name($context['records']['smallest_hero_pool']['playerid'])."</td><td>".$context['records']['smallest_hero_pool']['value']."</td></tr>";
       }
 
-      if (isset($context['averages_players'])) {
+      if (isset($context['averages_players']) && isset($context['averages_players']['diversity'])) {
         $res .= "<tr><td>".locale_string("diversity")."</td><td>".
           player_name($context['averages_players']['diversity'][0]['playerid'])."</td><td>".
           number_format($context['averages_players']['diversity'][0]['value']*100,2)."%</td></tr>";

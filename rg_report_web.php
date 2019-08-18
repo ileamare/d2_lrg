@@ -82,7 +82,7 @@ if (!empty($leaguetag)) {
     include_once("modules/view/__open_cache.php");
     if(isset($cache['reps'][$leaguetag]['file'])) {
       $report = file_get_contents($reports_dir."/".$cache['reps'][$leaguetag]['file'])
-          or die("[F] Can't open $teaguetag, probably no such report\n");
+          or die("[F] Can't open $leaguetag, probably no such report\n");
       $report = json_decode($report, true);
     }
   }

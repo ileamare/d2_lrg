@@ -1,5 +1,6 @@
 <?php
 include_once("head.php");
+ini_set('memory_limit', '4000M');
 
 include_once("modules/commons/utf8ize.php");
 include_once("modules/commons/quantile.php");

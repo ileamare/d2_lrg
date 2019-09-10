@@ -21,6 +21,7 @@ $result["league_name"]  = $lg_settings['league_name'];
 $result["league_desc"] = $lg_settings['league_desc'];
 $result['league_id'] = $lg_settings['league_id'];
 $result["league_tag"] = $lg_settings['league_tag'];
+$avg_limit = $lg_settings['ana']['avg_limit'];
 
 if (isset($lg_settings['teams']))
   $result["teams_interest"] = $lg_settings['teams'];

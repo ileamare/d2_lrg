@@ -648,7 +648,12 @@ function fetch($match) {
     $player = mb_substr($player, 0, 127);
     $sql = "INSERT INTO players (playerID, nickname) VALUES (".$id.",\"".addslashes($player)."\");";
     if ($conn->query($sql) === TRUE) $t_players[$id] = $player;
-    else echo $conn->error."\n";
+    else {
+      echo $conn->error."\n";
+      if ($conn->error === "MySQL server has gone away") {
+        sleep(300); // if MySQL server is not responding and got carried away - wait for five minutes and go on
+      }
+    }
   }
 
   $sql = "INSERT INTO matches (matchid, radiantWin, duration, modeID, leagueID, start_date, stomp, comeback, cluster, version) VALUES "
@@ -660,6 +665,9 @@ function fetch($match) {
   if ($conn->multi_query($sql) === TRUE);
   else {
     echo "ERROR (".$conn->error."), reverting match.\n$sql\n";
+    if ($conn->error === "MySQL server has gone away") {
+      sleep(300);
+    }
     $conn->multi_query($err_query);
     do {
       $conn->store_result();
@@ -684,6 +692,9 @@ function fetch($match) {
   if ($conn->multi_query($sql) === TRUE);
   else {
     echo "ERROR (".$conn->error."), reverting match.\n";
+    if ($conn->error === "MySQL server has gone away") {
+      sleep(300);
+    }
     $conn->multi_query($err_query);
     do {
       $conn->store_result();

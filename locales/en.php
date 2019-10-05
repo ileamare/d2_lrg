@@ -215,7 +215,7 @@
     "heal_per_min_s" => "Heal/min",
     "taken_damage_per_min_s" => "Taken HD/min",
 
-    "noleague_cap" => "Lastest Reports",
+    "noleague_cap" => "Latest Reports",
     "noleague_desc" => "Freshly updated reports",
     "empty_instance_cap" => "Empty instance",
     "empty_instance_desc" => "This instance contains no reports",

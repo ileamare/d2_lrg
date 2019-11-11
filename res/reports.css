@@ -507,6 +507,7 @@ table .hero_portrait {
   display: inline-block;
   position: relative;
   opacity:0.8;
+  font-size: 0;
 }
 .hero:hover {
   opacity: 1;

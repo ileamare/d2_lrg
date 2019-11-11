@@ -26,6 +26,11 @@ $force_adding = isset($options['F']);
 $cache_dir = $options['c'] ?? "cache";
 if($cache_dir === "NULL") $cache_dir = "";
 
+if (!empty($options['P'])) {
+  $players_list = file_get_contents($options['P']);
+  $players_list = json_decode($players_list);
+}
+
 $use_stratz = isset($options['S']) || isset($options['s']);
 $require_stratz = isset($options['S']);
 $use_full_stratz = isset($options['Z']);

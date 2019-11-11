@@ -8,7 +8,7 @@
 function fetch($match) {
   global $opendota, $conn, $rnum, $failed_matches, $scheduled, $scheduled_stratz, $t_teams, $t_players, $use_stratz, $require_stratz,
   $request_unparsed, $meta, $stratz_timeout_retries, $force_adding, $cache_dir, $lg_settings, $lrg_use_cache, $first_scheduled,
-  $use_full_stratz, $scheduled_wait_period, $steamapikey, $force_await;
+  $use_full_stratz, $scheduled_wait_period, $steamapikey, $force_await, $players_list;
 
   $t_match = [];
   $t_matchlines = [];
@@ -16,6 +16,8 @@ function fetch($match) {
   $t_draft = [];
   $t_new_players = [];
   $bad_replay = false;
+
+  $match_skip = false;
 
   if ($lg_settings['main']['teams']) {
     $t_team_matches = [];
@@ -46,6 +48,20 @@ function fetch($match) {
     $bad_replay = true;
   } else {
     echo("Requesting OpenDota.");
+
+    if (!empty($players_list)) {
+      $request = "https://api.stratz.com/api/v1/match?include=Player,PickBan&matchid=$match";
+      $json = @file_get_contents($request);
+      $stratz = empty($json) ? [] : json_decode($json, true);
+
+      $players = $stratz[0]['players'];
+      foreach ($players as $pl) {
+        if (!in_array($pl['steamId'], $players_list)) {
+          return true;
+        }
+      }
+    }
+
     $matchdata = $opendota->match($match);
     echo("..OK.");
     if (empty($matchdata) || empty($matchdata['duration']) || empty($matchdata['players'])) {
@@ -106,6 +122,15 @@ function fetch($match) {
     }
   }
 
+  if (!empty($players_list)) {
+    $players = $matchdata[0]['players'];
+    foreach ($players as $pl) {
+      if (!in_array($pl['account_id'], $players_list)) {
+        return true;
+      }
+    }
+  }
+
   if(!file_exists("$cache_dir/".$match.".json") || ( $bad_replay && !file_exists("$cache_dir/unparsed_".$match.".json") )) {
     if($matchdata['lobby_type'] != 1 && $matchdata['lobby_type'] != 2 && $use_stratz) {
       echo("..Requesting STRATZ.");
@@ -113,11 +138,13 @@ function fetch($match) {
       // Not all matches in Stratz database have PickBan support for /match? endpoint
       // so there will be kind of workaround for it.
 
-      $request = "https://api.stratz.com/api/v1/match?include=Player,PickBan&matchid=$match";
+      if (empty($stratz)) {
+        $request = "https://api.stratz.com/api/v1/match?include=Player,PickBan&matchid=$match";
 
-      $json = @file_get_contents($request);
+        $json = @file_get_contents($request);
 
-      $stratz = empty($json) ? [] : json_decode($json, true);
+        $stratz = empty($json) ? [] : json_decode($json, true);
+      }
 
       if(!isset($stratz[0]['parsedDateTime'])) {
         unset($stratz);

@@ -25,7 +25,7 @@
 
   # open metadata
 
-  function get_patchid($date, $patch, $meta) {
+  function get_patchid($date, $patch, &$meta) {
     # So the way it works:
     # report displayer will check for analyzer version and if it's lower than 1.2.1,
     # then everything works as usual.
@@ -34,6 +34,7 @@
     # report viewer will just transform it into casual version + alphabet symbol
     # current versions time is approximate, based on dota 2 wiki data
     # newer patches will be more accurate.
+    $meta['patchdates'];
 
     if(isset($meta['patchdates'][$patch])) {
       sort($meta['patchdates'][$patch]['dates']);

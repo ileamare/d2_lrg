@@ -1,18 +1,33 @@
 # Dota 2 League Report Generator (D2-LRG-lrg2)
 
-**IMPORTANT**
+## Current version: 2.4.0
 
 This is the **lrg2** version that won't be updated any further.
 
-For new releases look for leamare/D2-LRG-Simon repository or issue #102.
-
-D2-LRG-Simon will feature major performance improvements, new features, API, WAY BETTER code that will be rewritten from scratch and with all the features in mind. This version was written as I was going on with the idea so it was initially just a shitty PHP script and it got bigger eventually. There are a lot of relics of that and it's pretty hard to work with all this stuff.
-
-If you're reading this before LRG-Simon was finished - the first working version should be ready sometime in September.
-
-## Current version: 2.4.0
-
 **D2-LRG** (for short) is a tool for fetching stats for dota matches and forming fancy stats pages with every data you may need.
+
+## Before we start
+
+So, first of all, **I do not recommend using this project for yourself**. Like at all.
+
+It was created just as three (four) simple PHP scripts to gather detailed match data for Dota and generate JSON report blobs and HTML pages for them. It was pretty simple initially and it just became a much bigger thing I initially intended it to be. As you may understand, it's pretty hard to understand what's going on in this code and it's hard to modify it. It doesn't follow any PSR suggestions. It doesn't use Composer. It's pretty simple in its functionality and it was written mostly for myself.
+
+The reason why it's open source project is pretty simple: I just thought "why not"?
+
+So technically you *can* use if you want. Altho you need to keep in mind some things:
+
+1. It's pretty ugly inside, it's hard to modify and some things are just illogical.
+2. I abandoned it a long time ago. I released some fixes relatively recently and I will release some hotfixes later on (probably), but the thing is it won't be usable at some point.
+
+Around Jan 2019 I switched to part-time development of a D2-LRG-Simon project that should've effectively replace this project and it would be much cleaner and easier to use/modify. However I ended up switching to another project with closed source (D2-LRG-Guame) that's using a lot of Simon ideas and code inside. Guame is still in PHP and it's using ReactPHP, the fetcher is server that's listening for orders all the time, and there's just WebAPI for all the stuff.
+
+I could've develop Simon in this same repo, but it's so defferent in it's core so it's easier to write everything from scratch. And the final nail is Simon will probably be a JavaScript based project.
+
+So what does it mean in context of this repository:
+1. It doesn't show how I would actually write a decent PHP code. I will write some showcase projects later on for that.
+2. As soon as I finish the first working version of D2-Simon, this repo will be abandoned completely.
+  - However, Simon will be able to transform lrg2 JSON reports into its own reports format. So technically (if you want) you can use this collection of scripts and make your reports and then reuse it here
+3. Simon will be somewhat ready sometime around Feb 2020 (maybe even later) and then I will be working on an interface for all this, so this one will be completely shut down around June 2020.
 
 ### Features
 * Fetching data from OpenDota

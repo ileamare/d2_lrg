@@ -8,7 +8,7 @@
 function fetch($match) {
   global $opendota, $conn, $rnum, $failed_matches, $scheduled, $scheduled_stratz, $t_teams, $t_players, $use_stratz, $require_stratz,
   $request_unparsed, $meta, $stratz_timeout_retries, $force_adding, $cache_dir, $lg_settings, $lrg_use_cache, $first_scheduled,
-  $use_full_stratz, $scheduled_wait_period, $steamapikey, $force_await, $players_list;
+  $use_full_stratz, $scheduled_wait_period, $steamapikey, $force_await, $players_list, $rank_limit;
 
   $t_match = [];
   $t_matchlines = [];
@@ -49,14 +49,17 @@ function fetch($match) {
   } else {
     echo("Requesting OpenDota.");
 
-    if (!empty($players_list)) {
+    if (!empty($players_list) || !empty($rank_limit)) {
       $request = "https://api.stratz.com/api/v1/match?include=Player,PickBan&matchid=$match";
       $json = @file_get_contents($request);
       $stratz = empty($json) ? [] : json_decode($json, true);
 
       $players = $stratz[0]['players'];
       foreach ($players as $pl) {
-        if (!in_array($pl['steamId'], $players_list)) {
+        if (!empty($players_list) && !in_array($pl['steamId'], $players_list)) {
+          return true;
+        }
+        if (!empty($rank_limit) && $pl['steamAccount']['seasonRank'] < $rank_limit) {
           return true;
         }
       }

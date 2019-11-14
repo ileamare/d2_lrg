@@ -30,6 +30,9 @@ if (!empty($options['P'])) {
   $players_list = file_get_contents($options['P']);
   $players_list = json_decode($players_list);
 }
+if (!empty($options['N'])) {
+  $rank_limit = (int)$options['N'];
+}
 
 $use_stratz = isset($options['S']) || isset($options['s']);
 $require_stratz = isset($options['S']);

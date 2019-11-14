@@ -178,6 +178,7 @@
     "common_position" => "Main Position",
     "bloodbath" => "Bloodbath",
     "kills_combined" => "Kills Combined",
+    "closest_match" => "Closest match",
 
     "stomp" => "Networth stomp by a team",
     "comeback" => "Networth comeback by a team",

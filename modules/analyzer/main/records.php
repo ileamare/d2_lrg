@@ -53,11 +53,20 @@ $sql .= "SELECT \"roshans_killed_in_game\" cap, matchid, SUM(roshans_killed) ros
 $sql .= "SELECT \"stomp\" cap, matchid, stomp, 0 playerid, 0 heroid FROM matches ORDER BY stomp DESC LIMIT 1;";
 # comeback
 $sql .= "SELECT \"comeback\" cap, matchid, comeback, 0 playerid, 0 heroid FROM matches ORDER BY comeback DESC LIMIT 1;";
+# closest match
+$sql .= "SELECT \"closest_match\" cap, matchid, 
+  (CASE WHEN ABS(comeback) > ABS(stomp) THEN ABS(comeback) ELSE ABS(stomp) END) val, 
+  0 playerid, 0 heroid FROM matches 
+  WHERE stomp <> 0 AND comeback <> 0 
+  ORDER BY val ASC, matchid DESC LIMIT 1;";
 # length
 $sql .= "SELECT \"longest_match\" cap, matchid, duration/60, 0 playerid, 0 heroid FROM matches ORDER BY duration DESC LIMIT 1;";
 $sql .= "SELECT \"shortest_match\" cap, matchid, duration/60, 0 playerid, 0 heroid FROM matches ORDER BY duration ASC LIMIT 1;";
 # kills total
-$sql .= "SELECT \"bloodbath\" cap, m.matchid, SUM(ml.kills) val, 0 playerid, 0 heroid
+$sql .= "SELECT \"kills_combined\" cap, m.matchid, SUM(ml.kills) val, 0 playerid, 0 heroid
+          FROM matches m JOIN matchlines ml ON m.matchid = ml.matchid GROUP BY m.matchid ORDER BY val DESC LIMIT 1;";
+# kills per minute
+$sql .= "SELECT \"bloodbath\" cap, m.matchid, SUM(ml.kills)/(m.duration / 60) val, 0 playerid, 0 heroid
           FROM matches m JOIN matchlines ml ON m.matchid = ml.matchid GROUP BY m.matchid ORDER BY val DESC LIMIT 1;";
 
 # widest hero pool

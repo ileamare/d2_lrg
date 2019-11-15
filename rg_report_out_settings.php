@@ -19,6 +19,8 @@ $custom_content = "";
 
 $custom_footer = "";
 
+$support_me_block = "";
+
 $title_links = array(
   // array( "link" => "",
   //       "title" => "",

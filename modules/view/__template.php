@@ -58,18 +58,6 @@
           }
          ?>
       </div>
-      <div class="share-links">
-        <?php
-          echo '<div class="share-link reddit"><a href="https://www.reddit.com/submit?url='.htmlspecialchars('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).
-            '" target="_blank" rel="noopener">Share on Reddit</a></div>';
-          echo '<div class="share-link twitter"><a href="https://twitter.com/share?text=League+Report:+'.$leaguetag.'+'.htmlspecialchars('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).
-            '" target="_blank" rel="noopener">Share on Twitter</a></div>';
-          echo '<div class="share-link vk"><a href="https://vk.com/share.php?url='.htmlspecialchars('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).
-            '" target="_blank" rel="noopener">Share on VK</a></div>';
-          echo '<div class="share-link fb"><a href="https://www.facebook.com/sharer/sharer.php?u='.htmlspecialchars('https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).
-            '" target="_blank" rel="noopener">Share on Facebook</a></div>';
-        ?>
-      </div>
       <div class="locale-changer">
         <?php
         $link = substr($_SERVER['REQUEST_URI'], strrpos($_SERVER['REQUEST_URI'], "/")+1);
@@ -92,6 +80,9 @@
         ?>
       </div>
     </header>
+    <?php 
+      if (!empty($support_me_block)) echo "<div class=\"support-me-block\">$support_me_block</div>";
+    ?>
     <div id="content-wrapper">
       <div id="header-image" class="section-header">
     <?php if (!empty($leaguetag)) { ?>

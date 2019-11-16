@@ -83,6 +83,9 @@
     <?php 
       if (!empty($support_me_block)) echo "<div class=\"support-me-block\">$support_me_block</div>";
     ?>
+    <?php 
+      if (!empty($ads_block) && !empty($leaguetag)) echo "<div class=\"ads-block-report\">$ads_block</div>";
+    ?>
     <div id="content-wrapper">
       <div id="header-image" class="section-header">
     <?php if (!empty($leaguetag)) { ?>

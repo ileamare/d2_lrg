@@ -19,7 +19,11 @@ $custom_content = "";
 
 $custom_footer = "";
 
-$support_me_block = "";
+$support_me_block = "asdas";
+
+$ads_block = "";
+
+$ads_block_main = "";
 
 $title_links = array(
   // array( "link" => "",

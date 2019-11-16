@@ -105,6 +105,8 @@ if (sizeof($cache['reps']) === 0) {
     "<div class=\"content-text\">".locale_string("noreports_desc").".</div>".
   "</div>";
 } else {
+  if (!empty($ads_block_main)) $modules .= "<div class=\"ads-block-main\">$ads_block</div>";
+
   if(!isset($cat) && $index_list < sizeof($reps))
     $modules .= "<div class=\"content-header\">".locale_string("noleague_cap")."</div>";
   $modules .= "</div>";

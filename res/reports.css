@@ -584,7 +584,7 @@ table .hero_portrait {
   margin-right: 5%;
 }
 .tagslist.hidden {
-  visibility: none;
+  display: none;
 }
 
 .tagslist .category, .tagsshow .category {
@@ -619,6 +619,11 @@ table .hero_portrait {
 
 .ads-block-report {
   position: absolute;
-  top: 478px;
-  right: 4px;
+  top: 542px;
+  left: 4px;
+}
+
+.ads-block-main {
+  text-align: center;
+  max-height: 100px;
 }

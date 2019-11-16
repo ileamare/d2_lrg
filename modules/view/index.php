@@ -67,7 +67,7 @@ if(isset($cats) && !empty($cats)) {
     $modules .= "<div class=\"content-text tagsshow\"><a class=\"category\">".locale_string("show_tags")."</a></div>";
   }
 
-  $modules .= "<div class=\"content-text tagslist ".(isset($cat) ? "hidden" : "")."\">";
+  $modules .= "<div class=\"content-text tagslist ".(isset($cat) ? "hidden" : "")."\" ".(isset($cat) ? " style=\"display:none;\"" : "").">";
 
   $modules .= "<a class=\"category".(isset($cat) && "main" == $cat ? " active" : "").
               "\" href=\"?cat=main".(empty($linkvars) ? "" : "&".$linkvars).
@@ -105,7 +105,7 @@ if (sizeof($cache['reps']) === 0) {
     "<div class=\"content-text\">".locale_string("noreports_desc").".</div>".
   "</div>";
 } else {
-  if (!empty($ads_block_main)) $modules .= "<div class=\"ads-block-main\">$ads_block</div>";
+  if (!empty($ads_block_main)) $modules .= "<div class=\"ads-block-main\">$ads_block_main</div>";
 
   if(!isset($cat) && $index_list < sizeof($reps))
     $modules .= "<div class=\"content-header\">".locale_string("noleague_cap")."</div>";

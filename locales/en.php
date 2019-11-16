@@ -222,6 +222,7 @@
     "empty_instance_desc" => "This instance contains no reports",
     "main_reports" => "Reports List",
     "all_reports" => "All Reports",
+    "show_tags" => "Show Tags List",
     "noreports" => "No Reports",
     "noreports_desc" => "No reports available for selected tag",
     "start_date" => "Start date",

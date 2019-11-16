@@ -84,7 +84,7 @@ if (!empty($leaguetag)) {
       $report = file_get_contents($reports_dir."/".$cache['reps'][$leaguetag]['file'])
           or die("[F] Can't open $leaguetag, probably no such report\n");
       $report = json_decode($report, true);
-    }
+    } else $leaguetag = "";
   }
 }
 

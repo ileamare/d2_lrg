@@ -62,3 +62,12 @@ function select_modules_link(a) {
   if(a.value)
     window.location=a.value;
 }
+
+$(".tagsshow .category").on("click", () => {
+    if ($(".tagslist").hasClass("hidden")) {
+        $(".tagslist").toggleClass("hidden");
+        $(".tagslist").slideDown();
+    } else {
+        $(".tagslist").slideUp(300, () => $(".tagslist").toggleClass("hidden"));
+    }
+});

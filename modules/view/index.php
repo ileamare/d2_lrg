@@ -63,6 +63,10 @@ $modules = "";
 $modules .= "<div id=\"content-top\">";
 
 if(isset($cats) && !empty($cats)) {
+  if(isset($cat)) {
+    $modules .= "<div class=\"content-text tagsshow\"><a class=\"category\">".locale_string("show_tags")."</a></div>";
+  }
+
   $modules .= "<div class=\"content-text tagslist\">";
 
   $modules .= "<a class=\"category".(isset($cat) && "main" == $cat ? " active" : "").

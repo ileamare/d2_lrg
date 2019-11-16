@@ -70,7 +70,8 @@ if ( $check_libs ) {
       echo "[ ] Pulling jQuery 3.3.1 slim\n";
       file_put_contents(
         "res/dependencies/jquery.min.js",
-        file_get_contents("https://code.jquery.com/jquery-3.3.1.slim.min.js")
+        //file_get_contents("https://code.jquery.com/jquery-3.3.1.slim.min.js")
+        file_get_contents("https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js")
       );
     }
     if ( !file_exists("res/dependencies/jquery.tablesorter.min.js") ) {

@@ -583,8 +583,11 @@ table .hero_portrait {
   margin-left: 5%;
   margin-right: 5%;
 }
+.tagslist.hidden {
+  visibility: none;
+}
 
-.tagslist .category {
+.tagslist .category, .tagsshow .category {
   display: inline-block;
   background-color: var(--tagslist-bg);
   width: 280px;
@@ -596,7 +599,7 @@ table .hero_portrait {
   margin: 10px;
   transition: 200ms all ease;
 }
-.tagslist .category:hover {
+.tagslist .category:hover, .tagsshow .category:hover {
   background-color: var(--tagslist-bg-hover);
   text-decoration: none;
 }

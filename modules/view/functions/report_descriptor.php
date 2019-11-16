@@ -1,6 +1,6 @@
 <?php
 
-function get_report_descriptor($report) {
+function get_report_descriptor(&$report) {
   //echo  $report['league_tag']."<br />";
 
   $desc = [

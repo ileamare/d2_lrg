@@ -1,3 +1,4 @@
+<?php  $__postfix = "?v=24042"; ?>
 <!DOCTYPE html>
 <html lang="<?php echo $locale; ?>">
   <head>
@@ -19,17 +20,17 @@
       if (!empty($leaguetag))
           echo " - ".$report['league_name'];
       ?></title>
-    <link href="res/valve_mimic.css" rel="stylesheet" type="text/css" />
-    <link href="res/reports.css" rel="stylesheet" type="text/css" />
+    <link href="res/valve_mimic.css<?php echo $__postfix; ?>" rel="stylesheet" type="text/css" />
+    <link href="res/reports.css<?php echo $__postfix; ?>" rel="stylesheet" type="text/css" />
     <?php
       if($use_graphjs) {
-        echo "<script type=\"text/javascript\" src=\"res/dependencies/Chart.bundle.min.js\"></script>";
+        echo "<script type=\"text/javascript\" src=\"res/dependencies/Chart.bundle.min.js$__postfix\"></script>";
       }
       if($use_visjs) {
-        echo "<script type=\"text/javascript\" src=\"res/dependencies/vis.min.js\"></script>";
-        echo "<script type=\"text/javascript\" src=\"res/dependencies/vis-network.min.js\"></script>";
-        echo "<link href=\"res/dependencies/vis.min.css\" rel=\"stylesheet\" type=\"text/css\" />";
-        echo "<link href=\"res/dependencies/vis-network.min.css\" rel=\"stylesheet\" type=\"text/css\" />";
+        echo "<script type=\"text/javascript\" src=\"res/dependencies/vis.min.js$__postfix\"></script>";
+        echo "<script type=\"text/javascript\" src=\"res/dependencies/vis-network.min.js$__postfix\"></script>";
+        echo "<link href=\"res/dependencies/vis.min.css$__postfix\" rel=\"stylesheet\" type=\"text/css\" />";
+        echo "<link href=\"res/dependencies/vis-network.min.css$__postfix\" rel=\"stylesheet\" type=\"text/css\" />";
       }
 
           if(isset($override_style) && file_exists("res/custom_styles/".$override_style.".css"))
@@ -132,8 +133,8 @@
           <div id="modal-sublevel" class="modal-sublevel"></div>
         </div>
       </div>
-      <script type="text/javascript" src="res/dependencies/jquery.min.js"></script>
-      <script type="text/javascript" src="res/dependencies/jquery.tablesorter.min.js"></script>
-      <script type="text/javascript" src="res/reports.js"></script>
+      <script type="text/javascript" src="res/dependencies/jquery.min.js<?php echo $__postfix; ?>"></script>
+      <script type="text/javascript" src="res/dependencies/jquery.tablesorter.min.js<?php echo $__postfix; ?>"></script>
+      <script type="text/javascript" src="res/reports.js<?php echo $__postfix; ?>"></script>
     </body>
   </html>

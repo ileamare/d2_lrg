@@ -12,6 +12,7 @@ function get_report_descriptor(&$report) {
     "last_match" => $report['last_match'],
     "matches" => $report['random']['matches_total'],
     "ver" => $report['ana_version'],
+    "days" => sizeof($report['days']),
   ];
 
   if(isset($report['teams'])) {

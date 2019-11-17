@@ -116,6 +116,7 @@ if (sizeof($cache['reps']) === 0) {
     "<th>".locale_string("league_id")."</th>".
     "<th>".locale_string("league_desc")."</th>".
     "<th>".locale_string("matches_total")."</th>".
+    "<th>".locale_string("days")."</th>".
     "<th>".locale_string("participants")."</th>".
     "<th>".locale_string("type")."</th>".
     "<th>".locale_string("regions")."</th>".
@@ -149,6 +150,7 @@ if (sizeof($cache['reps']) === 0) {
       "<td>".($report['id'] == "" ? "-" : $report['id'])."</td>".
       "<td>".$report['desc']."</td>".
       "<td>".$report['matches']."</td>".
+      "<td>".$report['days']."</td>".
       "<td>".$participants."</td>".
       "<td>".locale_string($event_type)."</td>".
       "<td>".(isset($report['regions']) ? sizeof($report['regions']) : ' - ')."</td>".
@@ -156,7 +158,7 @@ if (sizeof($cache['reps']) === 0) {
       "<td value=\"".$report['last_match']['date']."\" data-matchid=\"".$report['last_match']['mid']."\">".date(locale_string("date_format"), $report['last_match']['date'])."</td></tr>";
   }
   if(!$index_list ) {
-    $modules .= "<tr><td></td><td></td><td>...</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
+    $modules .= "<tr><td></td><td></td><td>...</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>";
   }
 
   $modules .= "</table>";

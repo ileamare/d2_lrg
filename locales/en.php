@@ -20,6 +20,8 @@
     "heroes_picked"=> "Heroes picked",
     "heroes_pickbanned"=> "Heroes picked and banned",
     "heroes_banned"=>"Heroes banned",
+    "heroes_unpicked" => "Unpicked heroes",
+    "least_contested" => "Least contested",
     "buybacks_total_game" => "Match with most buybacks",
     "obs_total" => "Total observer wards planted",
     "obs_killed_total" => "Total observer wards destroyed",

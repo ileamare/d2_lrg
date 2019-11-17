@@ -56,13 +56,51 @@ function rg_generator_pickban($table_id, $context, $context_total_matches, $hero
 }
 
 function rg_generator_uncontested($context, $contested, $small = false, $heroes_flag = true) {
-  foreach($contested as $id => $el) {
-    unset($context[$id]);
+  if ($heroes_flag) {
+    // uncontested
+    // unpicked : matches_picked 0
+    // least contested : uasort, get the last 10%
+    if (sizeof($contested) == sizeof($context)) {
+      $context_tmp = [];
+      foreach ($contested as $tid => $v) {
+        if ($v['matches_picked'] == 0)
+          $context_tmp[$tid] = $context[$tid];
+      }
+
+      if (sizeof($context_tmp) == 0) {
+        $loc = "least_contested";
+        $sz = floor(sizeof($contested) * 0.1);
+        uasort($contested, function($a, $b) {
+          if ($a['matches_total'] == $b['matches_total']) return 0;
+          return $a['matches_total'] < $b['matches_total'] ? -1 : 1;
+        });
+        $i = 0;
+        foreach ($contested as $tid => $v) {
+          $context_tmp[$tid] = $context[$tid];
+          $i++;
+          if ($i == $sz) break;
+        }
+      } else {
+        $loc = "heroes_unpicked";
+      }
+      $context = $context_tmp;
+    } else {
+      foreach($contested as $id => $el) {
+        unset($context[$id]);
+      }
+      $loc = "heroes_uncontested";
+    }
+  } else {
+    foreach($contested as $id => $el) {
+      unset($context[$id]);
+    }
+    $loc = "players_uncontested";
   }
+
   $res = "";
   if(sizeof($context)) {
     $res .= "<div class=\"content-text ".($small ? "small-heroes" : "")."\"><h1>".
-      locale_string($heroes_flag ? "heroes_uncontested" : "players_uncontested").
+      locale_string($loc).
       ": ".sizeof($context)."</h1><div class=\"hero-list\">";
 
     if ($heroes_flag)

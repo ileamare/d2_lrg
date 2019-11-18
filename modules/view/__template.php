@@ -34,17 +34,17 @@
       }
 
           if(isset($override_style) && file_exists("res/custom_styles/".$override_style.".css"))
-              echo "<link href=\"res/custom_styles/".$override_style.".css\" rel=\"stylesheet\" type=\"text/css\" />";
+              echo "<link href=\"res/custom_styles/".$override_style.".css$__postfix\" rel=\"stylesheet\" type=\"text/css\" />";
           else if(isset($custom_style))
-              echo "<link href=\"res/custom_styles/".$custom_style.".css\" rel=\"stylesheet\" type=\"text/css\" />";
+              echo "<link href=\"res/custom_styles/".$custom_style.".css$__postfix\" rel=\"stylesheet\" type=\"text/css\" />";
           else {
             if(empty($leaguetag) && !empty($noleague_style))
-              echo "<link href=\"res/custom_styles/".$noleague_style.".css\" rel=\"stylesheet\" type=\"text/css\" />";
+              echo "<link href=\"res/custom_styles/".$noleague_style.".css$__postfix\" rel=\"stylesheet\" type=\"text/css\" />";
             else if(!empty($default_style))
-              echo "<link href=\"res/custom_styles/".$default_style.".css\" rel=\"stylesheet\" type=\"text/css\" />";
+              echo "<link href=\"res/custom_styles/".$default_style.".css$__postfix\" rel=\"stylesheet\" type=\"text/css\" />";
           }
           if(isset($custom_logo))
-              echo "<link href=\"res/custom_styles/logos/".$custom_logo.".css\" rel=\"stylesheet\" type=\"text/css\" />";
+              echo "<link href=\"res/custom_styles/logos/".$custom_logo.".css$__postfix\" rel=\"stylesheet\" type=\"text/css\" />";
      if (!empty($custom_head)) echo $custom_head; ?>
   </head>
   <body>

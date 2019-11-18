@@ -333,6 +333,8 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
 
   $res .= "<div class=\"content-header\">".locale_string("draft")."</div>";
 
+  $res .= rg_draft_accuracy_test($context['pickban'], $context['draft']);
+
   if($report['settings']['overview_top_contested']) {
     $res .= rg_generator_pickban_overview($prefix."-pickban", $context['pickban'], $context_total_matches, $report['settings']['overview_top_contested_count']);
   }

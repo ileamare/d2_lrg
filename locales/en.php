@@ -292,6 +292,7 @@
     "desc_roster" => "This page contains basic information about the team's active roster.",
     "desc_teams_summary_softgen" => "This section uses teams data based on full report.",
     "desc_players_summary_softgen" => "This section uses players data based on full report.",
+    "desc_inaccurate_draft" => "Draft stages data may be incorrect due to replay analysis issues.",
 
     "limiter_h" => "Higher limiter",
     "limiter_l" => "Lower limiter",

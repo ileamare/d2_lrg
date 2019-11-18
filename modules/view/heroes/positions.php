@@ -44,7 +44,7 @@ function rg_view_generate_heroes_positions() {
           }
         }
 
-        $res["position_$i.$j"] = rg_generator_summary("heroes-positions-$i-$j", $report['hero_positions'][$i][$j]);
+        $res["position_$i.$j"] = rg_generator_summary("heroes-positions-$i-$j", $report['hero_positions'][$i][$j], true, true);
 
         $res["position_$i.$j"] .= "<div class=\"content-text\">".locale_string("desc_heroes_positions")."</div>";
         if (!$i) { break; }

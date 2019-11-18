@@ -62,4 +62,15 @@ function compound_ranking_sort($a, $b, $total_matches) {
   else return ($a_rank < $b_rank) ? 1 : -1;
 }
 
+function positions_ranking_sort($a, $b, $total_matches) {
+  $a_popularity = $a['matches_s']/$total_matches;
+  $b_popularity = $b['matches_s']/$total_matches;
+
+  $a_rank = wilson_rating( $a['matches_s']*$a['winrate_s'], $a['matches_s'], 1-$a_popularity );
+  $b_rank = wilson_rating( $b['matches_s']*$b['winrate_s'], $b['matches_s'], 1-$b_popularity );
+
+  if($a_rank == $b_rank) return 0;
+  else return ($a_rank < $b_rank) ? 1 : -1;
+}
+
 ?>

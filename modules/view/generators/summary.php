@@ -3,18 +3,47 @@ include_once($root."/modules/view/functions/hero_name.php");
 include_once($root."/modules/view/functions/player_name.php");
 include_once($root."/modules/view/functions/convert_time.php");
 
-function rg_generator_summary($table_id, $context, $hero_flag = true) {
+function rg_generator_summary($table_id, $context, $hero_flag = true, $rank = false) {
   if(!sizeof($context)) return "";
 
   global $report;
 
   $keys = array_keys( array_values($context)[0] );
 
+  if ($rank) {
+    $ranks = [];
+    $context_copy = $context;
+    $total_matches = 0;
+    foreach ($context as $c) {
+      if ($total_matches < $c['matches_s']) $total_matches = $c['matches_s'];
+    }
+
+    uasort($context_copy, function($a, $b) use ($total_matches) {
+      return positions_ranking_sort($a, $b, $total_matches);
+    });
+
+    $increment = 100 / sizeof($context_copy); $i = 0;
+
+    foreach ($context_copy as $id => $el) {
+      if(isset($last) && $el['matches_s'] == $last['matches_s'] && $el['winrate_s'] == $last['winrate_s']) {
+        $i++;
+        $ranks[$id] = $last_rank;
+      } else
+        $ranks[$id] = 100 - $increment*$i++;
+      $last = $el;
+      $last_rank = $ranks[$id];
+    }
+    unset($last);
+
+    unset($context_copy);
+  }
+
   $res = "<table id=\"$table_id\" class=\"list wide sortable\"><thead><tr>".
           ($hero_flag ? "<th class=\"sorter-no-parser\" width=\"1%\"></th>" : "").
           "<th data-sortInitialOrder=\"asc\">".locale_string($hero_flag ? "hero" : "player")."</th>";
 
   for($k=0, $end=sizeof($keys); $k < $end; $k++) {
+    if ($k == 2 && $rank) $res .= "<th>".locale_string("rank")."</th>";
     $res .= "<th>".locale_string($keys[$k])."</th>";
   }
   $res .= "</tr></thead><tbody>";
@@ -24,7 +53,8 @@ function rg_generator_summary($table_id, $context, $hero_flag = true) {
               ($hero_flag ? hero_portrait($id)."</td><td>".hero_name($id) : player_name($id)).
             "</td>".
             "<td>".$el['matches_s']."</td>".
-            "<td>".number_format($el['winrate_s']*100,1)."%</td>";
+            "<td>".number_format($el['winrate_s']*100,1)."%</td>".
+            ($rank ? "<td>".number_format($ranks[$id],2)."</td>" : "");
 
     for($k=2, $end=sizeof($keys); $k < $end; $k++) {
       $res .= "<td>";

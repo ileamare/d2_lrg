@@ -34,7 +34,7 @@ function rg_view_generate_regions_heroes_positions($region, $reg_report, $modstr
           continue;
         }
 
-        $res["position_$i.$j"] = rg_generator_summary("region$region-heroes-positions-$i-$j", $reg_report['hero_positions'][$i][$j]);
+        $res["position_$i.$j"] = rg_generator_summary("region$region-heroes-positions-$i-$j", $reg_report['hero_positions'][$i][$j], true, true);
 
         $res["position_$i.$j"] .= "<div class=\"content-text\">".locale_string("desc_heroes_positions")."</div>";
         if (!$i) { break; }

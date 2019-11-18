@@ -34,8 +34,15 @@ function rg_generator_pickban($table_id, $context, $context_total_matches, $hero
   $increment = 100 / sizeof($context); $i = 0;
 
   foreach ($context as $id => $el) {
-    $ranks[$id] = 100 - $increment*$i++;
+    if(isset($last) && $el == $last) {
+      $i++;
+      $ranks[$id] = $last_rank;
+    } else
+      $ranks[$id] = 100 - $increment*$i++;
+    $last = $el;
+    $last_rank = $ranks[$id];
   }
+  unset($last);
   unset($context_copy);
 
   foreach($context as $id => $el) {

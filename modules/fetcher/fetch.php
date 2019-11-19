@@ -47,7 +47,7 @@ function fetch($match) {
     $matchdata = json_decode($json, true);
     $bad_replay = true;
   } else {
-    echo("Requesting OpenDota.");
+    echo("Requesting.");
 
     if (!empty($players_list) || !empty($rank_limit)) {
       $request = "https://api.stratz.com/api/v1/match?include=Player,PickBan&matchid=$match";
@@ -57,9 +57,11 @@ function fetch($match) {
       $players = $stratz[0]['players'];
       foreach ($players as $pl) {
         if (!empty($players_list) && !in_array($pl['steamId'], $players_list)) {
+          echo "Not in players list, skipping.\n";
           return true;
         }
         if (!empty($rank_limit) && isset($pl['steamAccount']['seasonRank']) && $pl['steamAccount']['seasonRank'] < $rank_limit) {
+          echo "Rank lower than required, skipping.\n";
           return true;
         }
       }

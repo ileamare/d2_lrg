@@ -122,7 +122,7 @@ function rg_view_generate_teams_profiles($context, $context_mod, $foreword = "")
                   continue;
                 }
 
-                $res["team".$tid]['heroes']['positions']["position_$i.$j"] = rg_generator_summary("team$tid-heroes-positions-$i-$j", $context[$tid]['hero_positions'][$i][$j]);
+                $res["team".$tid]['heroes']['positions']["position_$i.$j"] = rg_generator_summary("team$tid-heroes-positions-$i-$j", $context[$tid]['hero_positions'][$i][$j], true, true);
                 $res["team".$tid]['heroes']['positions']["position_$i.$j"] .= "<div class=\"content-text\">".locale_string("desc_heroes_positions")."</div>";
                 if (!$i) { break; }
               }

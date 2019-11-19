@@ -34,6 +34,8 @@ function rg_generator_positions_overview($table_id, $context, $hero_flag = true)
     for ($j=1; $j<6 && $j>0; $j++) {
       if (!$i) { $j = 0; }
 
+      if (!sizeof($context[$i][$j])) continue;
+
       $ranks[$i][$j] = [];
       $context_copy = $context[$i][$j];
       $total_matches = 0;
@@ -54,7 +56,7 @@ function rg_generator_positions_overview($table_id, $context, $hero_flag = true)
         } else
           $ranks[$i][$j][$id] = 100 - $increment*$k++;
         $last = $el;
-        $last_rank = $ranks[$id];
+        $last_rank = $ranks[$i][$j][$id];
       }
       unset($last);
       unset($context_copy);

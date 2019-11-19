@@ -59,10 +59,7 @@ function rg_generator_overview_combos($table_id, $caption, $context, $limiter = 
   unset($combo);
 
   $res = "<table id=\"$table_id\" class=\"list\"><caption>$caption</caption><thead><tr>".
-         (($heroes_flag && !$i++) ? "<th width=\"1%\"></th>" : "").
-         "<th>".locale_string($heroes_flag ? "hero" : "player")." 1</th>".
-         (($heroes_flag && $i++) ? "<th width=\"1%\"></th>" : "").
-         "<th>".locale_string($heroes_flag ? "hero" : "player")." 2</th>".
+         ($heroes_flag ? "<th colspan=\"4\">".locale_string("heroes")."</th>" : "<th colspan=\"2\">".locale_string("players")."</th>").
          (
            $trios ?
            (($heroes_flag && $i++) ? "<th width=\"1%\"></th>" : "").
@@ -71,7 +68,8 @@ function rg_generator_overview_combos($table_id, $caption, $context, $limiter = 
            ).
          "<th>".locale_string("matches")."</th>".
          "<th>".locale_string("winrate")."</th>".
-         ($expectation ? "<th>".locale_string("pair_expectation")."</th>".
+         ($expectation ? "<th>".locale_string("winrate_diff")."</th>".
+                         "<th>".locale_string("pair_expectation")."</th>".
                          "<th>".locale_string("pair_deviation")."</th>".
                          "<th>".locale_string("percentage")."</th>" : "").
          ($lane_rate ? "<th>".locale_string("lane_rate")."</th>" : "").
@@ -102,8 +100,9 @@ function rg_generator_overview_combos($table_id, $caption, $context, $limiter = 
                   ).
                 "<td>".$combo['matches']."</td>".
                 "<td>".number_format($combo['winrate']*100,2)."%</td>".
-                ($expectation ? "<td>".number_format($combo['expectation'], 3)."</td>".
-                                "<td>".number_format($combo['matches']-$combo['expectation'], 3)."</td>".
+                ($expectation ? "<td>".number_format($combo['wr_diff']*100, 2)."%</td>".
+                                "<td>".number_format($combo['expectation'], 0)."</td>".
+                                "<td>".number_format($combo['matches']-$combo['expectation'], 0)."</td>".
                                 "<td>".number_format(($combo['matches']-$combo['expectation'])*100/$combo['matches'], 2)."%</td>" : "").
                 ($lane_rate ? "<td>".number_format($combo['lane_rate']*100, 2)."%</td>" : "").
                 ($lane ? "<td>".locale_string("lane_".$combo['lane'])."</td>" : "").

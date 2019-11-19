@@ -77,7 +77,7 @@ function rg_generator_overview_positions_section($tables_prefix, $context, &$pic
   $res = "<div class=\"small-list-wrapper\">";
 
   foreach ($overview as $k => $heroes) {
-    $res .= "<table id=\"$table_id\" class=\"list list-small\"><caption>".locale_string("position_$k")."</caption><thead><tr>".
+    $res .= "<table id=\"$tables_prefix\" class=\"list list-small\"><caption>".locale_string("position_$k")."</caption><thead><tr>".
       "<th></th>".
       "<th>".locale_string("hero")."</th>".
       "<th>".locale_string("matches_s")."</th>".

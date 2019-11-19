@@ -59,7 +59,7 @@ function fetch($match) {
         if (!empty($players_list) && !in_array($pl['steamId'], $players_list)) {
           return true;
         }
-        if (!empty($rank_limit) && $pl['steamAccount']['seasonRank'] < $rank_limit) {
+        if (!empty($rank_limit) && isset($pl['steamAccount']['seasonRank']) && $pl['steamAccount']['seasonRank'] < $rank_limit) {
           return true;
         }
       }

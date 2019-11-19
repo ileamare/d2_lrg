@@ -3,6 +3,7 @@ include_once($root."/modules/view/functions/hero_name.php");
 include_once($root."/modules/view/functions/player_name.php");
 include_once($root."/modules/view/functions/ranking.php");
 include_once($root."/modules/view/generators/draft.php");
+include_once($root."/modules/view/generators/positions_overview_section.php");
 
 function rg_generator_overview_chart($name, $labels, $context) {
   if(!sizeof($context)) return "";

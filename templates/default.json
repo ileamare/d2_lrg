@@ -134,6 +134,10 @@
     "overview_top_bans" : true,
     "overview_top_bans_count" : 5,
 
+    "overview_positions": true,
+    "overview_positions_count": 5,
+    "overview_positions_sort": "matches",
+
     "overview_top_hero_pairs" : true,
     "overview_top_hero_pairs_count" : 5,
 

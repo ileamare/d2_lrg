@@ -115,7 +115,7 @@ function rg_generator_positions_overview($table_id, $context, $hero_flag = true)
         $res .= "<td class=\"separator\">".$v['matches']."</td>".
                     "<td>".number_format($v['rank'],1)."</td>".
                     "<td>".number_format($v['matches']*100/$el['total'],2)."%</td>".
-                    "<td>".number_format($v['wr']*100,2)."%</th>";
+                    "<td>".number_format($v['wr']*100,2)."%</td>";
       }
     }
     $res .= "</tr>";

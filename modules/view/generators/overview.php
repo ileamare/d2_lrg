@@ -443,6 +443,17 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
     $res .= "</div>";
   }
 
+  if($report['settings']['overview_positions'] ?? true) {
+    generate_positions_strings();
+    $res .= "<div class=\"content-text\"><h1>".locale_string("positions")."</h1></div>";
+    $res .= rg_generator_overview_positions_section($prefix, 
+      $context['hero_positions'], 
+      $context['pickban'],
+      $report['settings']['overview_positions_count'] ?? $report['settings']['overview_top_picked_count'] ?? 5,
+      $report['settings']['overview_positions_sort'] ?? "matches"
+    );
+  }
+
   if($report['settings']['overview_top_hero_pairs'] && isset($context['hero_pairs']) && !empty($context['hero_pairs'])) {
     $res .= rg_generator_overview_combos($prefix."hero-pairs",
               locale_string("top_pick_pairs")." (".locale_string("deviation").")",

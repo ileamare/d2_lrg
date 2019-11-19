@@ -470,7 +470,11 @@ function rg_view_generator_overview($modlink, $context, $foreword = "") {
             "heroes-draft".(empty($linkvars) ? "" : "&".$linkvars)."\">".locale_string("full_draft").
             "</a> / ".
             "<a href=\"?league=$leaguetag&mod=".$modlink."heroes-meta_graph".(empty($linkvars) ? "" : "&".$linkvars)."\">".
-            locale_string("meta_graph")."</a>".
+            locale_string("meta_graph")."</a> / ".
+            "<a href=\"?league=$leaguetag&mod=".$modlink."heroes-positions".(empty($linkvars) ? "" : "&".$linkvars)."\">".
+            locale_string("positions")."</a> / ".
+            "<a href=\"?league=$leaguetag&mod=".$modlink."heroes-combos".(empty($linkvars) ? "" : "&".$linkvars)."\">".
+            locale_string("combos")."</a>".
           "</div>";
 
   if(!isset($report['teams']) && $report['settings']['overview_top_player_pairs'] && isset($context['player_pairs']) && !empty($context['player_pairs'])) {

@@ -14,6 +14,24 @@ $conn->set_charset('utf8mb4');
 
 if ($conn->connect_error) die("[F] Connection to SQL server failed: ".$conn->connect_error."\n");
 
+// Queries generators
+include_once("modules/analyzer/__queries/hero_pairs.php");
+// pickban
+// draft
+// lane combos
+// trios
+// combo graph
+// positions
+// sides
+// versus_hero
+
+// players additional data
+// players draft
+// players positions
+// players graph
+// players pvp
+// players trios
+
 $meta = new lrg_metadata;
 
 $result = [];

@@ -2,9 +2,16 @@
 
 class lrg_metadata implements ArrayAccess {
   private $metadata = [];
+  private $dir;
+
+  public function __construct($dir = "metadata") {
+    $this->dir = $dir;
+  }
 
   private function load($metafile) {
-    $content = file_get_contents("metadata/$metafile.json") or die("[F] Can't open metadata\n");
+    if (!file_exists("{$this->dir}/$metafile.json"))
+      throw new \Exception("wrong metadata endpoint"."-- {$this->dir}/$metafile.json");
+    $content = file_get_contents("{$this->dir}/$metafile.json");
     $this->metadata[ $metafile ] = json_decode($content, true);
   }
 

@@ -190,6 +190,7 @@ if ($conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag'])) {
     KEY `advmatchlines_matchid_heroid_IDX` (`matchid`,`heroid`) USING BTREE,
     UNIQUE KEY `advmatchlines_matchid_playerid_IDX` (`matchid`,`playerid`) USING BTREE,
     KEY `advmatchlines_heroid_iscore_IDX` (`heroid`,`isCore`) USING BTREE,
+    KEY `advmatchlines_heroid_lane_IDX` (`heroid`,`lane`) USING BTREE,
     KEY `advmatchlines_playerid_iscore_IDX` (`playerid`,`isCore`) USING BTREE,
     KEY `advmatchlines_playerid_heroid_IDX` (`playerid`,`heroid`) USING BTREE
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");

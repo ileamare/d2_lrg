@@ -181,7 +181,8 @@ function rg_generator_draft($table_id, $context_pickban, $context_draft, $contex
 
   $res .= "</tbody></table>";
 
-  $res = rg_draft_accuracy_test($context_pickban, $context_draft).$res;
+  if ($hero_flag)
+    $res = rg_draft_accuracy_test($context_pickban, $context_draft).$res;
 
   return $res;
 }

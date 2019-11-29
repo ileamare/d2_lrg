@@ -158,8 +158,8 @@ if ($conn->select_db($lrg_db_prefix."_".$lg_settings['league_tag'])) {
     `denies` smallint(6) NOT NULL,
     KEY `matchlines_matchid_heroid_IDX` (`matchid`,`heroid`) USING BTREE,
     UNIQUE KEY `matchlines_matchid_playerid_IDX` (`matchid`,`playerid`) USING BTREE,
-    UNIQUE KEY `matchlines_heroid_isradiant_IDX` (`heroid`,`isRadiant`) USING BTREE,
-    UNIQUE KEY `matchlines_playerid_isradiant_IDX` (`playerid`,`isRadiant`) USING BTREE,
+    KEY `matchlines_heroid_isradiant_IDX` (`heroid`,`isRadiant`) USING BTREE,
+    KEY `matchlines_playerid_isradiant_IDX` (`playerid`,`isRadiant`) USING BTREE,
     KEY `matchlines_playerid_heroid_IDX` (`playerid`,`heroid`) USING BTREE
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
     if ($conn->connect_error) die("[F] Can't create table `matchlines`: ".$conn->connect_error."\n");

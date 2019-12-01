@@ -18,7 +18,7 @@ function rg_query_hero_trios(&$conn, &$pickban, $matches_total, $limiter = 0, $c
                 ON m1.matchid = matches.matchid ".
               ($team === null ? "" : " JOIN teams_matches
                 ON m1.matchid = teams_matches.matchid AND teams_matches.is_radiant = m1.isRadiant ").
-          (!empty($wheres) ? "WHERE ".implode(" AND ", $cluster) : "").
+          (!empty($wheres) ? "WHERE ".implode(" AND ", $wheres) : "").
         " GROUP BY m1.heroid, m2.heroid, m3.heroid
           HAVING match_count > $limiter
           ORDER BY match_count DESC, winrate DESC;";

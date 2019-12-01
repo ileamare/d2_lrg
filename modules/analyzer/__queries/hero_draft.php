@@ -11,7 +11,7 @@ function rg_query_hero_draft(&$conn, $cluster = null, $team = null) {
               ($team === null ? "" : " JOIN teams_matches ON teams_matches.matchid = draft.matchid AND draft.is_radiant = teams_matches.is_radiant ").
             " WHERE is_pick = ".($pick ? "true" : "false")." AND stage = ".$stage." ".
               ($cluster === null ? "" : " AND matches.cluster IN (".implode(",", $clusters).") ").
-              ($team === null ? "" : " AND teams_matches.teamid = ".$id." ").
+              ($team === null ? "" : " AND teams_matches.teamid = ".$team." ").
             " GROUP BY draft.hero_id ORDER BY winrate DESC, matches DESC";
       if ($conn->multi_query($sql) === TRUE);# echo "[S] Requested data for DRAFT STAGE $pick $stage.\n";
       else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");

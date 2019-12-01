@@ -35,7 +35,7 @@ if (check_module($parent_mod."profiles")) {
   $res["region".$region]['teams']['profiles'] = rg_view_generate_teams_profiles(
     $reg_report['teams'],
     $parent_mod."profiles-",
-    $reg_report['settings']['teams_summary_softgen'] ? "<div class=\"content-text\">".locale_string("desc_teams_summary_softgen")."</div>" : ""
+    ( $reg_report['settings']['teams_summary_softgen'] ?? false ) ? "<div class=\"content-text\">".locale_string("desc_teams_summary_softgen")."</div>" : ""
   );
 }
 

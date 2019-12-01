@@ -1,5 +1,5 @@
 <?php
 
-$result["pickban"] = rg_query_hero_pickban();
+$result["pickban"] = rg_query_hero_pickban($conn);
 
 ?>

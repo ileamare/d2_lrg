@@ -1,6 +1,6 @@
 <?php 
 
-function rg_query_hero_pickban($team = null, $cluster = null) {
+function rg_query_hero_pickban(&$conn, $team = null, $cluster = null) {
   $res = [];
 
   $sql = "SELECT draft.hero_id hero_id, 

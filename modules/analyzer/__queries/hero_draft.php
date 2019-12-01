@@ -1,6 +1,6 @@
 <?php 
 
-function rg_query_hero_draft($cluster = null, $team = null) {
+function rg_query_hero_draft(&$conn, $cluster = null, $team = null) {
   $result = [];
   //echo "[S] Requested data for HERO DRAFT\n";
 

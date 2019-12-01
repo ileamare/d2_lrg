@@ -1,6 +1,6 @@
 <?php
 
-function rg_query_hero_pairs(&$pickban, $matches_total, $limiter = 0, $cluster = null) {
+function rg_query_hero_pairs(&$conn, &$pickban, $matches_total, $limiter = 0, $cluster = null) {
   global $conn;
 
   $result = [];
@@ -56,7 +56,7 @@ function rg_query_hero_pairs(&$pickban, $matches_total, $limiter = 0, $cluster =
   return $result;
 }
 
-function rg_query_hero_pairs_matches(&$hero_pairs) {
+function rg_query_hero_pairs_matches(&$conn, &$hero_pairs) {
   $result = [];
 
   foreach($hero_pairs as $pair) {

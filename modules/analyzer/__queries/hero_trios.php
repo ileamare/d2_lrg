@@ -1,6 +1,6 @@
 <?php
 
-function rg_query_hero_trios(&$pickban, $matches_total, $limiter = 0, $cluster = null, $team = null) {
+function rg_query_hero_trios(&$conn, &$pickban, $matches_total, $limiter = 0, $cluster = null, $team = null) {
   $result = [];
 
   $wheres = [];
@@ -52,7 +52,7 @@ function rg_query_hero_trios(&$pickban, $matches_total, $limiter = 0, $cluster =
   return $result;
 }
 
-function rg_query_hero_trios_matches(&$trios) {
+function rg_query_hero_trios_matches(&$conn, &$trios) {
   $result = [];
 
   foreach($trios as $pair) {

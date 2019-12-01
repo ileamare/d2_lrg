@@ -37,7 +37,7 @@ function rg_query_hero_pickban(&$conn, $team = null, $cluster = null) {
     ($team === null ? "" : "JOIN teams_matches ON draft.matchid = teams_matches.matchid AND draft.is_radiant = teams_matches.is_radiant ").
   " WHERE is_pick = false ".
     ($cluster !== null ? " AND matches.cluster IN (".implode(",", $cluster).") " : "").
-    ($team === null ? "" : " AND teams_matches.teamid = $id ").
+    ($team === null ? "" : " AND teams_matches.teamid = $team ").
   " GROUP BY draft.hero_id;";
 
   if ($conn->multi_query($sql) === TRUE);

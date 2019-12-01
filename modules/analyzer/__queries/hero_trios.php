@@ -26,7 +26,7 @@ function rg_query_hero_trios(&$conn, &$pickban, $matches_total, $limiter = 0, $c
   # 1 match = every possible pair
   # 2 matches = may be a coincedence
 
-  if ($conn->multi_query($sql) === TRUE) echo "[S] Requested data for HERO TRIPLETS.\n";
+  if ($conn->multi_query($sql) === TRUE);# echo "[S] Requested data for HERO TRIPLETS.\n";
   else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
 
   $query_res = $conn->store_result();

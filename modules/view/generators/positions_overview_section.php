@@ -18,10 +18,12 @@ function rg_generator_overview_positions_section($tables_prefix, $context, &$pic
   }
 
   for ($i=1; $i>=0; $i--) {
-    for ($j=1; $j<6 && $j>0; $j++) {
+    for ($j=1; $j<4 && $j>0; $j++) {
       if (!$i) { $j = 0; }
-      if(sizeof($context[$i][$j]))
+      if(!empty($context[$i][$j])) {
         $position_overview_template = array("matches" => 0, "wr" => 0);
+        break;
+      }
       if (!$i) { break; }
     }
   }
@@ -33,7 +35,10 @@ function rg_generator_overview_positions_section($tables_prefix, $context, &$pic
     for ($j=1; $j<4 && $j>0; $j++) {
       if (!$i) { $j = 0; }
 
-      if (!sizeof($context[$i][$j])) continue;
+      if (empty($context[$i][$j])) {
+        if (!$i) { break; }
+        continue;
+      }
 
       $ranks[$i][$j] = [];
       $context_copy = $context[$i][$j];
@@ -77,6 +82,7 @@ function rg_generator_overview_positions_section($tables_prefix, $context, &$pic
   $res = "<div class=\"small-list-wrapper\">";
 
   foreach ($overview as $k => $heroes) {
+    if (empty($heroes)) continue;
     $res .= "<table id=\"$tables_prefix\" class=\"list list-small\"><caption>".locale_string("position_$k")."</caption><thead><tr>".
       "<th></th>".
       "<th>".locale_string("hero")."</th>".

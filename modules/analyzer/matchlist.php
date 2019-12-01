@@ -8,17 +8,17 @@ else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n"
 
 $query_res = $conn->store_result();
 
-for ($matchline = 1, $row = $query_res->fetch_row();
+for ($row = $query_res->fetch_row();
      $row != null;
-     $row = $query_res->fetch_row(), $matchline = ($matchline == 10) ? 1 : $matchline+1) {
-  if ($matchline == 1) {
-    $result["matches"][$row[0]] = array();
+     $row = $query_res->fetch_row()) {
+  if (!isset($result["matches"][$row[0]])) {
+    $result["matches"][$row[0]] = [];
   }
-  $result["matches"][$row[0]][] = array (
-    "hero" => $row[1],
-    "player" => $row[2],
-    "radiant" => $row[3]
-  );
+  $result["matches"][$row[0]][] = [
+    "hero" => (int)$row[1],
+    "player" => (int)$row[2],
+    "radiant" => (int)$row[3]
+  ];
 }
 
 

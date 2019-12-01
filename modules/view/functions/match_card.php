@@ -16,15 +16,16 @@ function match_card($mid) {
   $clusters = $meta['clusters'];
   $regions = $meta['regions'];
 
-  for($i=0; $i<10; $i++) {
-    if($report['matches'][$mid][$i]['radiant']) {
-      $players_radi .= "<div class=\"match-player\">".player_name($report['matches'][$mid][$i]['player'], false)."</div>";
-      $heroes_radi .= "<div class=\"match-hero\">".hero_portrait($report['matches'][$mid][$i]['hero'])."</div>";
-    } else {
-      $players_dire .= "<div class=\"match-player\">".player_name($report['matches'][$mid][$i]['player'], false)."</div>";
-      $heroes_dire .= "<div class=\"match-hero\">".hero_portrait($report['matches'][$mid][$i]['hero'])."</div>";
-    }
+  $m = $report['matches'][$mid];
 
+  foreach ($m as $pl) {
+    if($pl['radiant'] == 1) {
+      $players_radi .= "<div class=\"match-player\">".player_name($pl['player'], false)."</div>";
+      $heroes_radi .= "<div class=\"match-hero\">".hero_portrait($pl['hero'])."</div>";
+    } else {
+      $players_dire .= "<div class=\"match-player\">".player_name($pl['player'], false)."</div>";
+      $heroes_dire .= "<div class=\"match-hero\">".hero_portrait($pl['hero'])."</div>";
+    }
   }
   if(isset($report['teams']) && isset($report['match_participants_teams'][$mid])) {
     if(isset($report['match_participants_teams'][$mid]['radiant']) &&

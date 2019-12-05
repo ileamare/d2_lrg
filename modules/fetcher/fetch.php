@@ -51,7 +51,10 @@ function fetch($match) {
 
     if (!empty($players_list) || !empty($rank_limit)) {
       $request = "https://api.stratz.com/api/v1/match?include=Player,PickBan&matchid=$match";
-      $json = @file_get_contents($request);
+      $json = false;
+      do {
+        $json = @file_get_contents($request);
+      } while (!$json);
       $stratz = empty($json) ? [] : json_decode($json, true);
 
       $players = $stratz[0]['players'];

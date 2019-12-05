@@ -61,6 +61,11 @@ function rg_generator_combos($table_id, $context, $context_matches, $heroes_flag
 
 
   foreach($context as $combo) {
+    if (!empty($context_matches))
+      $matches_head = locale_string("matches")." : ".
+        ($heroes_flag ? hero_name($combo[$id.'1']) : player_name($combo[$id.'1']))." + ".
+        ($heroes_flag ? hero_name($combo[$id.'2']) : player_name($combo[$id.'2'])).
+        ($trios ? " + ".($heroes_flag ? hero_name($combo[$id.'3']) : player_name($combo[$id.'3'])) : "");
     $res .= "<tr>".
                 ($heroes_flag ? "<td>".hero_portrait($combo[$id.'1'])."</td>" : "").
                 "<td>".($heroes_flag ? hero_name($combo[$id.'1']) : player_name($combo[$id.'1']))."</td>".
@@ -82,14 +87,9 @@ function rg_generator_combos($table_id, $context, $context_matches, $heroes_flag
                 ($lane ? "<td>".locale_string("lane_".$combo['lane'])."</td>" : "").
                 ((is_array($context_matches) && !empty($context_matches)) ?
                   "<td><a onclick=\"showModal('".htmlspecialchars(
-                      join_matches($context_matches[ $combo[$id.'1'].'-'.$combo[$id.'2'].($trios ? '-'.$combo[$id.'3'] : "") ])).
-                      "', '".locale_string("matches")." : ".
-                      ($heroes_flag ? hero_name($combo[$id.'1']) : player_name($combo[$id.'1']))." + ".
-                      ($heroes_flag ? hero_name($combo[$id.'2']) : player_name($combo[$id.'2'])).
-                      ($trios ? " + ".($heroes_flag ? hero_name($combo[$id.'3']) : player_name($combo[$id.'3'])) : "")
-                      ."');\">".
-                      locale_string("matches")."</a></td>" :
-                  "").
+                    join_matches($context_matches[ $combo[$id.'1'].'-'.$combo[$id.'2'].($trios ? '-'.$combo[$id.'3'] : "") ])).
+                    "', '".addslashes($matches_head)."');\">".locale_string("matches")."</a></td>" :
+                "").
             "</tr>";
   }
   $res .= "</tbody></table>";

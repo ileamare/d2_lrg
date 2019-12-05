@@ -34,7 +34,10 @@ function rg_generator_positions_overview($table_id, $context, $hero_flag = true)
     for ($j=1; $j<6 && $j>0; $j++) {
       if (!$i) { $j = 0; }
 
-      if (!sizeof($context[$i][$j])) continue;
+      if (!sizeof($context[$i][$j])) {
+        if (!$i) break;
+        continue;
+      }
 
       $ranks[$i][$j] = [];
       $context_copy = $context[$i][$j];

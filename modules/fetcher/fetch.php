@@ -498,7 +498,7 @@ function fetch($match) {
 
           $row = $query_res->fetch_row();
           $t_adv_matchlines[$i]['lane'] = $row[0];
-          if($row[0] == 5)
+          if($row[0] == 5 || $row[0] == 4)
             $t_adv_matchlines[$i]['is_core'] = 0;
 
           $query_res->free_result();

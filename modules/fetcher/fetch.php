@@ -459,7 +459,7 @@ function fetch($match) {
         if ($matchdata['players'][$j]['lane_efficiency'] < 0.55 && $matchdata['players'][$j]['win']) $support_indicators++;
         if ($matchdata['players'][$j]['lane_efficiency'] < 0.50) $support_indicators++;
         if ($matchdata['players'][$j]['lane_efficiency'] < 0.35) $support_indicators++;
-        if ($matchdata['players'][$j]['is_roaming']) $support_indicators+=3;
+        if ($matchdata['players'][$j]['is_roaming'] || $matchdata['players'][$j]['lane_role'] == 4) $support_indicators+=3;
       }
 
       if ($matchdata['players'][$j]['gold_per_min'] < 420 && $matchdata['players'][$j]['win']) $support_indicators++;

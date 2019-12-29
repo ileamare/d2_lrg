@@ -19,7 +19,7 @@ include_once("modules/analyzer/__queries/hero_pairs.php");
 include_once("modules/analyzer/__queries/hero_pickban.php");
 include_once("modules/analyzer/__queries/hero_draft.php");
 include_once("modules/analyzer/__queries/hero_trios.php");
-// lane combos
+include_once("modules/analyzer/__queries/lane_combos.php");
 // combo graph
 // positions
 // sides

@@ -1,15 +1,15 @@
 <?php 
 
-function rg_query_hero_summary(&$conn, $cluster = null) {
+function rg_query_player_summary(&$conn, $cluster = null) {
   $res = [];
 
   $sql = "SELECT
-            am.heroid hid,
+            am.playerid pid,
             SUM(1) matches,
             SUM(NOT m.radiantWin XOR ml.isradiant)/SUM(1) winrate,
-            SUM(ml.kills)/SUM(1) kills,
-            SUM(ml.deaths)/SUM(1) deaths,
-            SUM(ml.assists)/SUM(1) assists,
+            (SUM(ml.kills)+SUM(ml.assists))/(SUM(ml.deaths)) kills,
+            COUNT(DISTINCT ml.heroid) heropool,
+            ((COUNT(DISTINCT ml.heroid)/mhpt.mhp) * (COUNT(DISTINCT ml.heroid)/SUM(1))) diversity,
             SUM(ml.gpm)/SUM(1) gpm,
             SUM(ml.xpm)/SUM(1) xpm,
             SUM( ml.heal / (m.duration/60) )/SUM(1) avg_heal,
@@ -24,23 +24,26 @@ function rg_query_hero_summary(&$conn, $cluster = null) {
             matchlines ml
                 ON am.matchid = ml.matchid AND am.heroid = ml.heroid
               JOIN matches m
-                ON m.matchid = am.matchid ".
-          ($cluster !== null ? "WHERE m.cluster IN (".implode(",", $clusters).")" : "").
-        " GROUP BY hid
+                ON m.matchid = am.matchid
+              join ( select max(heropool) mhp from
+                ( select COUNT(DISTINCT heroid) heropool, playerid from matchlines group by playerid ) _hp
+              ) mhpt ".
+          ($cluster !== null ? "WHERE m.cluster IN (".implode(",", $cluster).")" : "").
+        " GROUP BY pid
           ORDER BY matches DESC, winrate DESC;";
 
-  if ($conn->multi_query($sql) === TRUE);// echo "[S] Requested data for HERO SUMMARY.\n";
+  if ($conn->multi_query($sql) === TRUE);# echo "[S] Requested data for PLAYER SUMMARY.\n";
   else die("[F] Unexpected problems when requesting database.\n".$conn->error."\n");
 
   $query_res = $conn->store_result();
 
   for ($row = $query_res->fetch_row(); $row != null; $row = $query_res->fetch_row()) {
-    $res[$row[0]] = [
+    $res = [
       "matches_s"=> $row[1],
       "winrate_s"=> $row[2],
-      "kills" => $row[3],
-      "deaths" => $row[4],
-      "assists"  => $row[5],
+      "hero_pool" => $row[4],
+      "diversity" => $row[5],
+      "kda"  => $row[3],
       "gpm"    => $row[6],
       "xpm"    => $row[7],
       "heal_per_min_s" => $row[8],
@@ -50,7 +53,7 @@ function rg_query_hero_summary(&$conn, $cluster = null) {
       "stuns" => $row[12],
       "lh_at10" => $row[13],
       "lasthits_per_min_s" => $row[14],
-      "duration" => $row[15]
+      "duration" => $row[15],
     ];
   }
 

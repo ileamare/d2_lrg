@@ -1,8 +1,6 @@
 <?php
 
 function rg_query_lane_combos(&$conn, $limiter = 0, $cluster = null) {
-  global $conn;
-
   $result = [];
 
   $sql = "SELECT fm1.heroid, fm2.heroid,

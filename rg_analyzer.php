@@ -30,8 +30,7 @@ include_once("modules/analyzer/__queries/hero_summary.php");
 
 include_once("modules/analyzer/__queries/player_summary.php");
 include_once("modules/analyzer/__queries/player_draft.php");
-// players draft
-// players positions
+include_once("modules/analyzer/__queries/player_positions.php");
 // players graph
 // players pvp
 // players trios

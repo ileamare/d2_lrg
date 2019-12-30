@@ -58,4 +58,6 @@ function rg_query_player_summary(&$conn, $cluster = null) {
   }
 
   $query_res->free_result();
+
+  return $res;
 }

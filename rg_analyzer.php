@@ -14,17 +14,22 @@ $conn->set_charset('utf8mb4');
 
 if ($conn->connect_error) die("[F] Connection to SQL server failed: ".$conn->connect_error."\n");
 
-// Queries generators
+// Queries generators for reusable queries
+// IN THEORY it would be better to rewrite everthing and make request builders
+// into their own class and so on and on
+// but practically it's better to make separate query builders for
+// every reusable query that may be changed for some reason
+// e.g. formulas or structure
 include_once("modules/analyzer/__queries/hero_pairs.php");
 include_once("modules/analyzer/__queries/hero_pickban.php");
 include_once("modules/analyzer/__queries/hero_draft.php");
 include_once("modules/analyzer/__queries/hero_trios.php");
 include_once("modules/analyzer/__queries/lane_combos.php");
 include_once("modules/analyzer/__queries/hero_positions.php");
-// sides
-// versus_hero
+include_once("modules/analyzer/__queries/hero_summary.php");
 
-// players additional data
+include_once("modules/analyzer/__queries/player_summary.php");
+include_once("modules/analyzer/__queries/player_draft.php");
 // players draft
 // players positions
 // players graph

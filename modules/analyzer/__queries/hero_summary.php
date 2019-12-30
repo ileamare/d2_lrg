@@ -55,4 +55,6 @@ function rg_query_hero_summary(&$conn, $cluster = null) {
   }
 
   $query_res->free_result();
+
+  return $res;
 }

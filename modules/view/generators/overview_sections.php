@@ -100,8 +100,8 @@ function rg_generator_overview_combos($table_id, $caption, $context, $limiter = 
                   ).
                 "<td>".$combo['matches']."</td>".
                 "<td>".number_format($combo['winrate']*100,2)."%</td>".
-                ($expectation ? "<td>".number_format($combo['wr_diff']*100, 2)."%</td>".
-                                "<td>".number_format($combo['expectation'], 0)."</td>".
+                (isset($combo['wr_diff']) ? "<td>".number_format($combo['wr_diff']*100, 2)."%</td>" : "").
+                ($expectation ? "<td>".number_format($combo['expectation'], 0)."</td>".
                                 "<td>".number_format($combo['matches']-$combo['expectation'], 0)."</td>".
                                 "<td>".number_format(($combo['matches']-$combo['expectation'])*100/$combo['matches'], 2)."%</td>" : "").
                 ($lane_rate ? "<td>".number_format($combo['lane_rate']*100, 2)."%</td>" : "").

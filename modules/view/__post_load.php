@@ -13,7 +13,7 @@ function generate_positions_strings() {
   }
 }
 
-if (stripos($mod, "positions") !== FALSE) {
+if (stripos($mod, "positions") !== FALSE && isset($strings['en'])) {
   generate_positions_strings();
 }
 

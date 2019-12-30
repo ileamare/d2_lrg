@@ -32,7 +32,7 @@ include_once("modules/analyzer/__queries/player_summary.php");
 include_once("modules/analyzer/__queries/player_draft.php");
 include_once("modules/analyzer/__queries/player_positions.php");
 include_once("modules/analyzer/__queries/player_pairs.php");
-// players trios
+include_once("modules/analyzer/__queries/player_trios.php");
 // players graph
 // players pvp
 

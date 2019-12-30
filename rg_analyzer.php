@@ -33,7 +33,7 @@ include_once("modules/analyzer/__queries/player_draft.php");
 include_once("modules/analyzer/__queries/player_positions.php");
 include_once("modules/analyzer/__queries/player_pairs.php");
 include_once("modules/analyzer/__queries/player_trios.php");
-// players graph
+include_once("modules/analyzer/__queries/player_graph.php");
 // players pvp
 
 $meta = new lrg_metadata;

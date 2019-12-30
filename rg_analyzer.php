@@ -31,9 +31,10 @@ include_once("modules/analyzer/__queries/hero_summary.php");
 include_once("modules/analyzer/__queries/player_summary.php");
 include_once("modules/analyzer/__queries/player_draft.php");
 include_once("modules/analyzer/__queries/player_positions.php");
+include_once("modules/analyzer/__queries/player_pairs.php");
+// players trios
 // players graph
 // players pvp
-// players trios
 
 $meta = new lrg_metadata;
 

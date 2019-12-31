@@ -11,7 +11,7 @@ include_once("modules/commons/metadata.php");
 # FUNCTIONS
 include_once("modules/view/functions/modules.php");
 
-// FIXME: include_once("modules/view/functions/player_card.php");
+// FIXME: include_once("modules/webapi/functions/player_card.php");
 // FIXME: include_once("modules/view/functions/team_card.php");
 // FIXME: include_once("modules/view/functions/match_card.php");
 
@@ -19,9 +19,9 @@ include_once("modules/view/functions/join_selectors.php");
 include_once("modules/view/functions/links.php");
 include_once("modules/view/functions/join_matches.php");
 
-// FIXME: include_once("modules/view/functions/team_name.php");
-// FIXME: include_once("modules/view/functions/player_name.php");
-// FIXME: include_once("modules/view/functions/hero_name.php");
+include_once("modules/view/functions/team_name.php");
+include_once("modules/view/functions/player_name.php");
+include_once("modules/view/functions/hero_name.php");
 
 include_once("modules/view/functions/has_pair.php");
 

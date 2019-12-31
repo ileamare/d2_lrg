@@ -18,19 +18,16 @@ if (isset($report)) {
 
   $endpoints = [];
 
+
   // overview
   // fallback
-
   // records
-  
-  // - heroes
-  // averages_heroes
   // pickban
-  // draft
-  // hero_positions
-  // hero_sides
-  // hero_pairs
-  // hero_triplets
+  // matches (list/cards)
+  // participants (teams/players)
+
+  // summary
+  // 
 } else {
   // basic response
   // list of matches + category
@@ -51,8 +48,21 @@ if (empty($endp))
 
 try {
   $result = $endp($modline, $report);
-} catch (Exception $e) {
+} catch (\Throwable $e) {
   $result = [
     'error' => $e->getMessage()
   ];
 }
+
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST');
+//header("Access-Control-Allow-Headers: X-Requested-With");
+header('Access-Control-Allow-Headers: token, Content-Type');
+
+
+echo json_encode($response, (isset($_REQUEST['pretty']) ? JSON_PRETTY_PRINT : 0) 
+  | JSON_INVALID_UTF8_SUBSTITUTE 
+  | JSON_UNESCAPED_UNICODE
+  //| JSON_THROW_ON_ERROR
+);
